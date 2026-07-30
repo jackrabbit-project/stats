@@ -2,23 +2,41 @@
    No framework and no build step, matching the rest of the project. */
 
 const DATA_URL = 'data/season.json';
+const TRIALS_URL = 'data/trials.json';
 
 let seasonPromise = null;
+let trialsPromise = null;
+
+function loadJson(url) {
+  return fetch(url).then((response) => {
+    if (!response.ok) throw new Error(`${response.status} loading ${url}`);
+    return response.json();
+  });
+}
 
 /** Fetch season.json once per page load. */
 function loadSeason() {
   if (!seasonPromise) {
-    seasonPromise = fetch(DATA_URL)
-      .then((response) => {
-        if (!response.ok) throw new Error(`${response.status} loading ${DATA_URL}`);
-        return response.json();
-      })
-      .catch((error) => {
-        seasonPromise = null;
-        throw error;
-      });
+    seasonPromise = loadJson(DATA_URL).catch((error) => {
+      seasonPromise = null;
+      throw error;
+    });
   }
   return seasonPromise;
+}
+
+/** Trial results, loaded only by the pages that need them.
+
+    Kept out of season.json so a change to ASFA's trial pages cannot take the
+    rest of the site down with it. */
+function loadTrials() {
+  if (!trialsPromise) {
+    trialsPromise = loadJson(TRIALS_URL).catch((error) => {
+      trialsPromise = null;
+      throw error;
+    });
+  }
+  return trialsPromise;
 }
 
 /* ---------------------------------------------------------------- utilities */
@@ -39,6 +57,11 @@ function ownerUrl(key) {
 
 function breedUrl(slug) {
   return `browse.html?breed=${encodeURIComponent(slug)}`;
+}
+
+/** "Region 8", or an em dash when the owner only ever appears as a co-owner. */
+function regionLabel(region) {
+  return region == null ? '—' : `Region ${region}`;
 }
 
 function param(name) {
@@ -169,6 +192,7 @@ const NAV = [
   ['browse.html', 'Browse'],
   ['leaders.html', 'Leaders'],
   ['kennels.html', 'Kennels'],
+  ['regions.html', 'Regions'],
   ['compare.html', 'Compare'],
   ['about.html', 'About'],
 ];

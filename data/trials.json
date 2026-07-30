@@ -1,0 +1,1540 @@
+{
+  "season": 2026,
+  "as_of": "2026-07-05",
+  "generated": "2026-07-30",
+  "source_url": "https://www.asfa.org/trial/index0111.html",
+  "months": [
+    "2026-01",
+    "2026-02",
+    "2026-03",
+    "2026-04",
+    "2026-05",
+    "2026-06",
+    "2026-07"
+  ],
+  "region_source": "ASFA Constitution & By-Laws, rev. 08/01/2024, Article V, Section 3",
+  "stats": {
+    "trials": 82,
+    "entries": 2453,
+    "clubs": 34,
+    "unassigned_trials": 0,
+    "unassigned_entries": 0
+  },
+  "unmatched_clubs": [],
+  "regions": [
+    {
+      "region": 1,
+      "states": [
+        "Alaska",
+        "Idaho",
+        "Montana",
+        "Oregon",
+        "Washington"
+      ],
+      "note": null
+    },
+    {
+      "region": 2,
+      "states": [
+        "Northern California",
+        "Northern Nevada"
+      ],
+      "note": "California north from the southern boundary of Monterey, Kings, Tulare and Inyo counties; Nevada north of Hwy 6."
+    },
+    {
+      "region": 3,
+      "states": [
+        "Colorado",
+        "New Mexico",
+        "Utah",
+        "Wyoming"
+      ],
+      "note": null
+    },
+    {
+      "region": 4,
+      "states": [
+        "Arkansas",
+        "Louisiana",
+        "Oklahoma",
+        "Texas"
+      ],
+      "note": null
+    },
+    {
+      "region": 5,
+      "states": [
+        "Iowa",
+        "Kansas",
+        "Minnesota",
+        "Missouri",
+        "Nebraska",
+        "North Dakota",
+        "South Dakota"
+      ],
+      "note": null
+    },
+    {
+      "region": 6,
+      "states": [
+        "Illinois",
+        "Indiana",
+        "Kentucky",
+        "Michigan",
+        "Ohio",
+        "Wisconsin"
+      ],
+      "note": null
+    },
+    {
+      "region": 7,
+      "states": [
+        "Alabama",
+        "Florida",
+        "Georgia",
+        "Mississippi",
+        "North Carolina",
+        "South Carolina",
+        "Tennessee"
+      ],
+      "note": null
+    },
+    {
+      "region": 8,
+      "states": [
+        "Delaware",
+        "District of Columbia",
+        "Maryland",
+        "New Jersey",
+        "Pennsylvania",
+        "Virginia",
+        "West Virginia"
+      ],
+      "note": null
+    },
+    {
+      "region": 9,
+      "states": [
+        "Connecticut",
+        "Maine",
+        "Massachusetts",
+        "New Hampshire",
+        "New York",
+        "Rhode Island",
+        "Vermont",
+        "Ontario (Canada)"
+      ],
+      "note": null
+    },
+    {
+      "region": 10,
+      "states": [
+        "Arizona",
+        "Southern California",
+        "Hawaii",
+        "Southern Nevada"
+      ],
+      "note": "Arizona; California south from the northern boundary of San Luis Obispo, Kern and San Bernardino counties; Hawaii; Nevada south of Hwy 6."
+    }
+  ],
+  "by_region": [
+    {
+      "region": 1,
+      "trials": 5,
+      "entries": 196,
+      "clubs": 3,
+      "average_entry": 39.2
+    },
+    {
+      "region": 2,
+      "trials": 4,
+      "entries": 71,
+      "clubs": 3,
+      "average_entry": 17.8
+    },
+    {
+      "region": 3,
+      "trials": 10,
+      "entries": 266,
+      "clubs": 3,
+      "average_entry": 26.6
+    },
+    {
+      "region": 4,
+      "trials": 3,
+      "entries": 59,
+      "clubs": 2,
+      "average_entry": 19.7
+    },
+    {
+      "region": 5,
+      "trials": 16,
+      "entries": 481,
+      "clubs": 6,
+      "average_entry": 30.1
+    },
+    {
+      "region": 6,
+      "trials": 11,
+      "entries": 414,
+      "clubs": 5,
+      "average_entry": 37.6
+    },
+    {
+      "region": 7,
+      "trials": 6,
+      "entries": 141,
+      "clubs": 2,
+      "average_entry": 23.5
+    },
+    {
+      "region": 8,
+      "trials": 12,
+      "entries": 394,
+      "clubs": 5,
+      "average_entry": 32.8
+    },
+    {
+      "region": 9,
+      "trials": 6,
+      "entries": 300,
+      "clubs": 2,
+      "average_entry": 50.0
+    },
+    {
+      "region": 10,
+      "trials": 9,
+      "entries": 131,
+      "clubs": 3,
+      "average_entry": 14.6
+    }
+  ],
+  "by_club": [
+    {
+      "club": "Gazehounds of New England",
+      "slug": "gazehounds-of-new-england",
+      "initials": "GONE",
+      "region": 9,
+      "trials": 4,
+      "entries": 194,
+      "venue": "Waterford, CT",
+      "venue_count": 2
+    },
+    {
+      "club": "Colorado Lure Coursing Association",
+      "slug": "colorado-lure-coursing-association",
+      "initials": "CLCA",
+      "region": 3,
+      "trials": 7,
+      "entries": 182,
+      "venue": "Peyton, CO",
+      "venue_count": 1
+    },
+    {
+      "club": "Iowa Coursing Association",
+      "slug": "iowa-coursing-association",
+      "initials": "ICA",
+      "region": 5,
+      "trials": 5,
+      "entries": 177,
+      "venue": "Des Moines, IA",
+      "venue_count": 2
+    },
+    {
+      "club": "Michigan Gazehound Association",
+      "slug": "michigan-gazehound-association",
+      "initials": "MGA",
+      "region": 6,
+      "trials": 2,
+      "entries": 147,
+      "venue": "Rockwood, MI",
+      "venue_count": 1
+    },
+    {
+      "club": "Minnesota Coursing Association",
+      "slug": "minnesota-coursing-association",
+      "initials": "MCA",
+      "region": 5,
+      "trials": 4,
+      "entries": 129,
+      "venue": "Farmington, MN",
+      "venue_count": 3
+    },
+    {
+      "club": "Upper Chesapeake Bay Saluki Club",
+      "slug": "upper-chesapeake-bay-saluki-club",
+      "initials": "UCBSC",
+      "region": 8,
+      "trials": 4,
+      "entries": 124,
+      "venue": "Littlestown, PA",
+      "venue_count": 2
+    },
+    {
+      "club": "Northern Azawakh Association",
+      "slug": "northern-azawakh-association",
+      "initials": "NAA",
+      "region": 9,
+      "trials": 2,
+      "entries": 106,
+      "venue": "Flamborough, ON CAN",
+      "venue_count": 1
+    },
+    {
+      "club": "St. Louis Area Sighthounds",
+      "slug": "st-louis-area-sighthounds",
+      "initials": "SLASH",
+      "region": 6,
+      "trials": 2,
+      "entries": 102,
+      "venue": "Sorento, IL",
+      "venue_count": 1
+    },
+    {
+      "club": "Coursing Hounds of the Mid-Potomac",
+      "slug": "coursing-hounds-of-the-mid-potomac",
+      "initials": "CHAMP",
+      "region": 8,
+      "trials": 2,
+      "entries": 101,
+      "venue": "Leesburg, VA",
+      "venue_count": 1
+    },
+    {
+      "club": "Lure Enthusiasts of Georgia Sighthounds",
+      "slug": "lure-enthusiasts-of-georgia-sighthounds",
+      "initials": "LEGS",
+      "region": 7,
+      "trials": 4,
+      "entries": 97,
+      "venue": "Whitesburg, GA",
+      "venue_count": 1
+    },
+    {
+      "club": "Silken Windhounds for Endurance, Perf. & Training",
+      "slug": "silken-windhounds-for-endurance-perf-training",
+      "initials": "SWEPT",
+      "region": 1,
+      "trials": 2,
+      "entries": 97,
+      "venue": "Toledo, WA",
+      "venue_count": 2
+    },
+    {
+      "club": "Midwest Coursing Club",
+      "slug": "midwest-coursing-club",
+      "initials": "MWCC",
+      "region": 6,
+      "trials": 4,
+      "entries": 79,
+      "venue": "Caledonia, WI",
+      "venue_count": 2
+    },
+    {
+      "club": "Midwest Borzoi Club",
+      "slug": "midwest-borzoi-club",
+      "initials": "MBC",
+      "region": 6,
+      "trials": 2,
+      "entries": 77,
+      "venue": "Lima, OH",
+      "venue_count": 1
+    },
+    {
+      "club": "Tortoise and Hare Lure Coursers",
+      "slug": "tortoise-and-hare-lure-coursers",
+      "initials": "THLC",
+      "region": 8,
+      "trials": 2,
+      "entries": 71,
+      "venue": "Littlestown, PA",
+      "venue_count": 1
+    },
+    {
+      "club": "Orange Coast Rhodesian Ridgeback Club",
+      "slug": "orange-coast-rhodesian-ridgeback-club",
+      "initials": "OCRRC",
+      "region": 10,
+      "trials": 4,
+      "entries": 69,
+      "venue": "Chino, CA",
+      "venue_count": 1
+    },
+    {
+      "club": "Greater Twin Cities Whippet Club",
+      "slug": "greater-twin-cities-whippet-club",
+      "initials": "GTCWC",
+      "region": 5,
+      "trials": 2,
+      "entries": 65,
+      "venue": "Farmington, MN",
+      "venue_count": 1
+    },
+    {
+      "club": "Southern Idaho Sighthound Field Association",
+      "slug": "southern-idaho-sighthound-field-association",
+      "initials": "SISFA",
+      "region": 1,
+      "trials": 2,
+      "entries": 55,
+      "venue": "Emmett, ID",
+      "venue_count": 1
+    },
+    {
+      "club": "Lobo Lure Coursing Club",
+      "slug": "lobo-lure-coursing-club",
+      "initials": "LLCC",
+      "region": 3,
+      "trials": 2,
+      "entries": 53,
+      "venue": "Mountainaire, NM",
+      "venue_count": 2
+    },
+    {
+      "club": "Ibizan Hound Club of the United States",
+      "slug": "ibizan-hound-club-of-the-united-states",
+      "initials": "IHCUS",
+      "region": 5,
+      "trials": 2,
+      "entries": 51,
+      "venue": "Cedar Falls, IA",
+      "venue_count": 1
+    },
+    {
+      "club": "Sight Hound Organization of Tidewater",
+      "slug": "sight-hound-organization-of-tidewater",
+      "initials": "SHOT",
+      "region": 8,
+      "trials": 2,
+      "entries": 51,
+      "venue": "Dendron,, VA",
+      "venue_count": 2
+    },
+    {
+      "club": "California Coursing Association",
+      "slug": "california-coursing-association",
+      "initials": "CCA",
+      "region": 10,
+      "trials": 2,
+      "entries": 48,
+      "venue": "Chino, CA",
+      "venue_count": 1
+    },
+    {
+      "club": "Nebraska Coursing Association",
+      "slug": "nebraska-coursing-association",
+      "initials": "NCA",
+      "region": 5,
+      "trials": 2,
+      "entries": 47,
+      "venue": "Omaha, NE",
+      "venue_count": 1
+    },
+    {
+      "club": "Tri-State Sighthound Club",
+      "slug": "tri-state-sighthound-club",
+      "initials": "TSSC",
+      "region": 8,
+      "trials": 2,
+      "entries": 47,
+      "venue": "Slippery Rock, PA",
+      "venue_count": 1
+    },
+    {
+      "club": "Gazehound Association of the Smoky Mountains",
+      "slug": "gazehound-association-of-the-smoky-mountains",
+      "initials": "GASM",
+      "region": 7,
+      "trials": 2,
+      "entries": 44,
+      "venue": "Limestone, TN",
+      "venue_count": 1
+    },
+    {
+      "club": "Western Washington Whippet Association",
+      "slug": "western-washington-whippet-association",
+      "initials": "WWWA",
+      "region": 1,
+      "trials": 1,
+      "entries": 44,
+      "venue": "Roy, WA",
+      "venue_count": 1
+    },
+    {
+      "club": "Oklahoma Racing and Coursing Association",
+      "slug": "oklahoma-racing-and-coursing-association",
+      "initials": "ORCA",
+      "region": 4,
+      "trials": 2,
+      "entries": 37,
+      "venue": "Vinita, OK",
+      "venue_count": 1
+    },
+    {
+      "club": "Central Coast Association of Sighthounds",
+      "slug": "central-coast-association-of-sighthounds",
+      "initials": "CCASH",
+      "region": 2,
+      "trials": 1,
+      "entries": 33,
+      "venue": "Arroyo Grande,CA",
+      "venue_count": 1
+    },
+    {
+      "club": "American Whippet Club, Inc.",
+      "slug": "american-whippet-club-inc",
+      "initials": "AWC",
+      "region": 3,
+      "trials": 1,
+      "entries": 31,
+      "venue": "Pasco, WA",
+      "venue_count": 1
+    },
+    {
+      "club": "Northern California Irish Wolfhound Club",
+      "slug": "northern-california-irish-wolfhound-club",
+      "initials": "NCIWC",
+      "region": 2,
+      "trials": 1,
+      "entries": 23,
+      "venue": "Fairfield, CA",
+      "venue_count": 1
+    },
+    {
+      "club": "Borzoi Club of America",
+      "slug": "borzoi-club-of-america",
+      "initials": "BCOA",
+      "region": 4,
+      "trials": 1,
+      "entries": 22,
+      "venue": "Weeping Water, NE",
+      "venue_count": 1
+    },
+    {
+      "club": "Silken Windhounds of California",
+      "slug": "silken-windhounds-of-california",
+      "initials": "SWC",
+      "region": 2,
+      "trials": 2,
+      "entries": 15,
+      "venue": "Elverta, CA",
+      "venue_count": 1
+    },
+    {
+      "club": "Desert Fun Bunch",
+      "slug": "desert-fun-bunch",
+      "initials": "DFB",
+      "region": 10,
+      "trials": 3,
+      "entries": 14,
+      "venue": "Toonopah, AZ",
+      "venue_count": 3
+    },
+    {
+      "club": "Scottish Deerhound Club of America",
+      "slug": "scottish-deerhound-club-of-america",
+      "initials": "SDCA",
+      "region": 5,
+      "trials": 1,
+      "entries": 12,
+      "venue": "Rockwood, PA",
+      "venue_count": 1
+    },
+    {
+      "club": "Irish Wolfhound Club of America",
+      "slug": "irish-wolfhound-club-of-america",
+      "initials": "IWCA",
+      "region": 6,
+      "trials": 1,
+      "entries": 9,
+      "venue": "Gray Summit, MO",
+      "venue_count": 1
+    }
+  ],
+  "trials": [
+    {
+      "club_raw": "DESERT FUN BUNCH",
+      "date": "2026-01-17",
+      "location": "Black Canyon City, AZ",
+      "state": "AZ",
+      "entries": 2,
+      "note": "Silken Windhound Specialty",
+      "club": "Desert Fun Bunch",
+      "club_slug": "desert-fun-bunch",
+      "region": 10,
+      "initials": "DFB"
+    },
+    {
+      "club_raw": "ORANGE COAST RHODESIAN RIDGEBACK CLUB",
+      "date": "2026-02-14",
+      "location": "Chino, CA",
+      "state": "CA",
+      "entries": 10,
+      "note": "Silken Windhound Specialty with LCI",
+      "club": "Orange Coast Rhodesian Ridgeback Club",
+      "club_slug": "orange-coast-rhodesian-ridgeback-club",
+      "region": 10,
+      "initials": "OCRRC"
+    },
+    {
+      "club_raw": "ORANGE COAST RHODESIAN RIDGEBACK CLUB",
+      "date": "2026-02-15",
+      "location": "Chino, CA",
+      "state": "CA",
+      "entries": 14,
+      "note": "Silken Windhound Specialty with LCI",
+      "club": "Orange Coast Rhodesian Ridgeback Club",
+      "club_slug": "orange-coast-rhodesian-ridgeback-club",
+      "region": 10,
+      "initials": "OCRRC"
+    },
+    {
+      "club_raw": "COLORADO LURE COURSING ASSOCIATION",
+      "date": "2026-02-21",
+      "location": "Peyton, CO",
+      "state": "CO",
+      "entries": 24,
+      "note": "",
+      "club": "Colorado Lure Coursing Association",
+      "club_slug": "colorado-lure-coursing-association",
+      "region": 3,
+      "initials": "CLCA"
+    },
+    {
+      "club_raw": "DESERT FUN BUNCH",
+      "date": "2026-02-21",
+      "location": "Tonopah, AZ",
+      "state": "AZ",
+      "entries": 7,
+      "note": "Silken Windhound Specialty",
+      "club": "Desert Fun Bunch",
+      "club_slug": "desert-fun-bunch",
+      "region": 10,
+      "initials": "DFB"
+    },
+    {
+      "club_raw": "COLORADO LURE COURSING ASSOCIATION",
+      "date": "2026-02-22",
+      "location": "Peyton, CO",
+      "state": "CO",
+      "entries": 31,
+      "note": "",
+      "club": "Colorado Lure Coursing Association",
+      "club_slug": "colorado-lure-coursing-association",
+      "region": 3,
+      "initials": "CLCA"
+    },
+    {
+      "club_raw": "DESERT FUN BUNCH",
+      "date": "2026-02-22",
+      "location": "Toonopah, AZ",
+      "state": "AZ",
+      "entries": 5,
+      "note": "Silken Windhound Specialty",
+      "club": "Desert Fun Bunch",
+      "club_slug": "desert-fun-bunch",
+      "region": 10,
+      "initials": "DFB"
+    },
+    {
+      "club_raw": "NORTHERN CALIFORNIA IRISH WOLFHOUND CLUB",
+      "date": "2026-02-28",
+      "location": "Fairfield, CA",
+      "state": "CA",
+      "entries": 23,
+      "note": "",
+      "club": "Northern California Irish Wolfhound Club",
+      "club_slug": "northern-california-irish-wolfhound-club",
+      "region": 2,
+      "initials": "NCIWC"
+    },
+    {
+      "club_raw": "TORTOISE & HARE LURE COURSERS",
+      "date": "2026-03-07",
+      "location": "Littlestown, PA",
+      "state": "PA",
+      "entries": 34,
+      "note": "",
+      "club": "Tortoise and Hare Lure Coursers",
+      "club_slug": "tortoise-and-hare-lure-coursers",
+      "region": 8,
+      "initials": "THLC"
+    },
+    {
+      "club_raw": "TORTOISE & HARE LURE COURSERS",
+      "date": "2026-03-08",
+      "location": "Littlestown, PA",
+      "state": "PA",
+      "entries": 37,
+      "note": "",
+      "club": "Tortoise and Hare Lure Coursers",
+      "club_slug": "tortoise-and-hare-lure-coursers",
+      "region": 8,
+      "initials": "THLC"
+    },
+    {
+      "club_raw": "COLORADO LURE COURSING ASSOCIATION",
+      "date": "2026-03-14",
+      "location": "Peyton, CO",
+      "state": "CO",
+      "entries": 26,
+      "note": "",
+      "club": "Colorado Lure Coursing Association",
+      "club_slug": "colorado-lure-coursing-association",
+      "region": 3,
+      "initials": "CLCA"
+    },
+    {
+      "club_raw": "LURE ENTHUSIASTS OF GEORGIA COURSING CLUB",
+      "date": "2026-03-28",
+      "location": "Whitesburg, GA",
+      "state": "GA",
+      "entries": 25,
+      "note": "",
+      "club": "Lure Enthusiasts of Georgia Sighthounds",
+      "club_slug": "lure-enthusiasts-of-georgia-sighthounds",
+      "region": 7,
+      "initials": "LEGS"
+    },
+    {
+      "club_raw": "SILKEN WINDHOUDS OF CALIFORNIA",
+      "date": "2026-03-28",
+      "location": "Elverta, CA",
+      "state": "CA",
+      "entries": 8,
+      "note": "Silken Windhound Specialty",
+      "club": "Silken Windhounds of California",
+      "club_slug": "silken-windhounds-of-california",
+      "region": 2,
+      "initials": "SWC"
+    },
+    {
+      "club_raw": "ST LOUIS AREA SIGHTHOUNDS",
+      "date": "2026-03-28",
+      "location": "Sorento, IL",
+      "state": "IL",
+      "entries": 51,
+      "note": "",
+      "club": "St. Louis Area Sighthounds",
+      "club_slug": "st-louis-area-sighthounds",
+      "region": 6,
+      "initials": "SLASH"
+    },
+    {
+      "club_raw": "UPPER CHESAPEAKE BAY SALUKI CLUB",
+      "date": "2026-03-28",
+      "location": "Littlestown, PA",
+      "state": "PA",
+      "entries": 34,
+      "note": "",
+      "club": "Upper Chesapeake Bay Saluki Club",
+      "club_slug": "upper-chesapeake-bay-saluki-club",
+      "region": 8,
+      "initials": "UCBSC"
+    },
+    {
+      "club_raw": "LURE ENTHUSIASTS OF GEORGIA COURSING CLUB",
+      "date": "2026-03-29",
+      "location": "Whitesburg, GA",
+      "state": "GA",
+      "entries": 25,
+      "note": "",
+      "club": "Lure Enthusiasts of Georgia Sighthounds",
+      "club_slug": "lure-enthusiasts-of-georgia-sighthounds",
+      "region": 7,
+      "initials": "LEGS"
+    },
+    {
+      "club_raw": "SILKEN WINDHOUDS OF CALIFORNIA",
+      "date": "2026-03-29",
+      "location": "Elverta, CA",
+      "state": "CA",
+      "entries": 7,
+      "note": "Silken Windhound Specialty",
+      "club": "Silken Windhounds of California",
+      "club_slug": "silken-windhounds-of-california",
+      "region": 2,
+      "initials": "SWC"
+    },
+    {
+      "club_raw": "ST LOUIS AREA SIGHTHOUNDS",
+      "date": "2026-03-29",
+      "location": "Sorento, IL",
+      "state": "IL",
+      "entries": 51,
+      "note": "",
+      "club": "St. Louis Area Sighthounds",
+      "club_slug": "st-louis-area-sighthounds",
+      "region": 6,
+      "initials": "SLASH"
+    },
+    {
+      "club_raw": "UPPER CHESAPEAKE BAY SALUKI CLUB",
+      "date": "2026-03-29",
+      "location": "Littlestown, PA",
+      "state": "PA",
+      "entries": 38,
+      "note": "",
+      "club": "Upper Chesapeake Bay Saluki Club",
+      "club_slug": "upper-chesapeake-bay-saluki-club",
+      "region": 8,
+      "initials": "UCBSC"
+    },
+    {
+      "club_raw": "GAZEHOUND ASSOCIATION OF THE SMOKY MOUNTAINS",
+      "date": "2026-04-04",
+      "location": "Limestone, TN",
+      "state": "TN",
+      "entries": 27,
+      "note": "",
+      "club": "Gazehound Association of the Smoky Mountains",
+      "club_slug": "gazehound-association-of-the-smoky-mountains",
+      "region": 7,
+      "initials": "GASM"
+    },
+    {
+      "club_raw": "IOWA COURSING ASSOCIATION, INC",
+      "date": "2026-04-04",
+      "location": "Des Moines, IA",
+      "state": "IA",
+      "entries": 44,
+      "note": "",
+      "club": "Iowa Coursing Association",
+      "club_slug": "iowa-coursing-association",
+      "region": 5,
+      "initials": "ICA"
+    },
+    {
+      "club_raw": "LOBO LURE COURSING CLUB",
+      "date": "2026-04-04",
+      "location": "Mountainair, NM",
+      "state": "NM",
+      "entries": 28,
+      "note": "",
+      "club": "Lobo Lure Coursing Club",
+      "club_slug": "lobo-lure-coursing-club",
+      "region": 3,
+      "initials": "LLCC"
+    },
+    {
+      "club_raw": "MIDWEST BORZOI CLUB",
+      "date": "2026-04-04",
+      "location": "Lima, OH",
+      "state": "OH",
+      "entries": 37,
+      "note": "",
+      "club": "Midwest Borzoi Club",
+      "club_slug": "midwest-borzoi-club",
+      "region": 6,
+      "initials": "MBC"
+    },
+    {
+      "club_raw": "SIGHT HOUND ORGANIZATION OF TIDEWATER",
+      "date": "2026-04-04",
+      "location": "Dendron, VA",
+      "state": "VA",
+      "entries": 29,
+      "note": "",
+      "club": "Sight Hound Organization of Tidewater",
+      "club_slug": "sight-hound-organization-of-tidewater",
+      "region": 8,
+      "initials": "SHOT"
+    },
+    {
+      "club_raw": "GAZEHOUND ASSOCIATION OF THE SMOKY MOUNTAINS",
+      "date": "2026-04-05",
+      "location": "Limestone, TN",
+      "state": "TN",
+      "entries": 17,
+      "note": "",
+      "club": "Gazehound Association of the Smoky Mountains",
+      "club_slug": "gazehound-association-of-the-smoky-mountains",
+      "region": 7,
+      "initials": "GASM"
+    },
+    {
+      "club_raw": "LOBO LURE COURSING CLUB",
+      "date": "2026-04-05",
+      "location": "Mountainaire, NM",
+      "state": "NM",
+      "entries": 25,
+      "note": "",
+      "club": "Lobo Lure Coursing Club",
+      "club_slug": "lobo-lure-coursing-club",
+      "region": 3,
+      "initials": "LLCC"
+    },
+    {
+      "club_raw": "MIDWEST BORZOI CLUB",
+      "date": "2026-04-05",
+      "location": "Lima, OH",
+      "state": "OH",
+      "entries": 40,
+      "note": "",
+      "club": "Midwest Borzoi Club",
+      "club_slug": "midwest-borzoi-club",
+      "region": 6,
+      "initials": "MBC"
+    },
+    {
+      "club_raw": "SIGHT HOUND ORGANIZATION OF TIDEWATER",
+      "date": "2026-04-05",
+      "location": "Dendron,, VA",
+      "state": "VA",
+      "entries": 22,
+      "note": "",
+      "club": "Sight Hound Organization of Tidewater",
+      "club_slug": "sight-hound-organization-of-tidewater",
+      "region": 8,
+      "initials": "SHOT"
+    },
+    {
+      "club_raw": "AMERICAN WHIPPET CLUB",
+      "date": "2026-04-11",
+      "location": "Pasco, WA",
+      "state": "WA",
+      "entries": 31,
+      "note": "",
+      "club": "American Whippet Club, Inc.",
+      "club_slug": "american-whippet-club-inc",
+      "region": 3,
+      "initials": "AWC"
+    },
+    {
+      "club_raw": "GAZEHOUNDS OF NEW ENGLAND",
+      "date": "2026-04-11",
+      "location": "Waterford, CT",
+      "state": "CT",
+      "entries": 47,
+      "note": "",
+      "club": "Gazehounds of New England",
+      "club_slug": "gazehounds-of-new-england",
+      "region": 9,
+      "initials": "GONE"
+    },
+    {
+      "club_raw": "GAZEHOUNDS OF NEW ENGLAND",
+      "date": "2026-04-12",
+      "location": "Waterford, CT",
+      "state": "CT",
+      "entries": 44,
+      "note": "",
+      "club": "Gazehounds of New England",
+      "club_slug": "gazehounds-of-new-england",
+      "region": 9,
+      "initials": "GONE"
+    },
+    {
+      "club_raw": "COLORADO LURE COURSING ASSOCIATION",
+      "date": "2026-04-25",
+      "location": "Peyton, CO",
+      "state": "CO",
+      "entries": 33,
+      "note": "",
+      "club": "Colorado Lure Coursing Association",
+      "club_slug": "colorado-lure-coursing-association",
+      "region": 3,
+      "initials": "CLCA"
+    },
+    {
+      "club_raw": "LURE ENTHUSIASTS OF GEORGIA COURSING CLUB",
+      "date": "2026-04-25",
+      "location": "Whitesburg, GA",
+      "state": "GA",
+      "entries": 24,
+      "note": "",
+      "club": "Lure Enthusiasts of Georgia Sighthounds",
+      "club_slug": "lure-enthusiasts-of-georgia-sighthounds",
+      "region": 7,
+      "initials": "LEGS"
+    },
+    {
+      "club_raw": "MINNESOTA COURSING ASSOCIATION, Inc.",
+      "date": "2026-04-25",
+      "location": "Farmington, MN",
+      "state": "MN",
+      "entries": 38,
+      "note": "",
+      "club": "Minnesota Coursing Association",
+      "club_slug": "minnesota-coursing-association",
+      "region": 5,
+      "initials": "MCA"
+    },
+    {
+      "club_raw": "TRI-STATE SIGHTHOUND CLUB",
+      "date": "2026-04-25",
+      "location": "Slippery Rock, PA",
+      "state": "PA",
+      "entries": 23,
+      "note": "",
+      "club": "Tri-State Sighthound Club",
+      "club_slug": "tri-state-sighthound-club",
+      "region": 8,
+      "initials": "TSSC"
+    },
+    {
+      "club_raw": "COLORADO LURE COURSING ASSOCIATION",
+      "date": "2026-04-26",
+      "location": "Peyton, CO",
+      "state": "CO",
+      "entries": 30,
+      "note": "",
+      "club": "Colorado Lure Coursing Association",
+      "club_slug": "colorado-lure-coursing-association",
+      "region": 3,
+      "initials": "CLCA"
+    },
+    {
+      "club_raw": "LURE ENTHUSIASTS OF GEORGIA COURSING CLUB",
+      "date": "2026-04-26",
+      "location": "Whitesburg, GA",
+      "state": "GA",
+      "entries": 23,
+      "note": "",
+      "club": "Lure Enthusiasts of Georgia Sighthounds",
+      "club_slug": "lure-enthusiasts-of-georgia-sighthounds",
+      "region": 7,
+      "initials": "LEGS"
+    },
+    {
+      "club_raw": "MINNESOTA COURSING ASSOCIATION, Inc.",
+      "date": "2026-04-26",
+      "location": "Farmington, MN",
+      "state": "MN",
+      "entries": 31,
+      "note": "",
+      "club": "Minnesota Coursing Association",
+      "club_slug": "minnesota-coursing-association",
+      "region": 5,
+      "initials": "MCA"
+    },
+    {
+      "club_raw": "TRI-STATE SIGHTHOUND CLUB",
+      "date": "2026-04-26",
+      "location": "Slippery Rock, PA",
+      "state": "PA",
+      "entries": 24,
+      "note": "",
+      "club": "Tri-State Sighthound Club",
+      "club_slug": "tri-state-sighthound-club",
+      "region": 8,
+      "initials": "TSSC"
+    },
+    {
+      "club_raw": "COURSING HOUNDS ASSOCIATION OF MID-POTOMAC",
+      "date": "2026-05-02",
+      "location": "Leesburg, VA",
+      "state": "VA",
+      "entries": 55,
+      "note": "The CHAMP Cup Run",
+      "club": "Coursing Hounds of the Mid-Potomac",
+      "club_slug": "coursing-hounds-of-the-mid-potomac",
+      "region": 8,
+      "initials": "CHAMP"
+    },
+    {
+      "club_raw": "IOWA COURSING ASSOCIATION, INC",
+      "date": "2026-05-02",
+      "location": "Cedar Falls, IA",
+      "state": "IA",
+      "entries": 38,
+      "note": "Denny Reed Memorial Run",
+      "club": "Iowa Coursing Association",
+      "club_slug": "iowa-coursing-association",
+      "region": 5,
+      "initials": "ICA"
+    },
+    {
+      "club_raw": "SOUTHERN IDAHO SIGHTHOUND FIELD ASSOCIATION",
+      "date": "2026-05-02",
+      "location": "Emmett, ID",
+      "state": "ID",
+      "entries": 27,
+      "note": "",
+      "club": "Southern Idaho Sighthound Field Association",
+      "club_slug": "southern-idaho-sighthound-field-association",
+      "region": 1,
+      "initials": "SISFA"
+    },
+    {
+      "club_raw": "COURSING HOUNDS ASSOCIATION OF MID-POTOMAC",
+      "date": "2026-05-03",
+      "location": "Leesburg, VA",
+      "state": "VA",
+      "entries": 46,
+      "note": "",
+      "club": "Coursing Hounds of the Mid-Potomac",
+      "club_slug": "coursing-hounds-of-the-mid-potomac",
+      "region": 8,
+      "initials": "CHAMP"
+    },
+    {
+      "club_raw": "IOWA COURSING ASSOCIATION, INC",
+      "date": "2026-05-03",
+      "location": "Cedar Falls, IA",
+      "state": "IA",
+      "entries": 45,
+      "note": "Denny Reed Memorial Run",
+      "club": "Iowa Coursing Association",
+      "club_slug": "iowa-coursing-association",
+      "region": 5,
+      "initials": "ICA"
+    },
+    {
+      "club_raw": "SOUTHERN IDAHO SIGHTHOUND FIELD ASSOCIATION",
+      "date": "2026-05-03",
+      "location": "Emmett, ID",
+      "state": "ID",
+      "entries": 28,
+      "note": "",
+      "club": "Southern Idaho Sighthound Field Association",
+      "club_slug": "southern-idaho-sighthound-field-association",
+      "region": 1,
+      "initials": "SISFA"
+    },
+    {
+      "club_raw": "BORZOI CLUB OF AMERICA",
+      "date": "2026-05-09",
+      "location": "Weeping Water, NE",
+      "state": "NE",
+      "entries": 22,
+      "note": "Borzoi National Specialty",
+      "club": "Borzoi Club of America",
+      "club_slug": "borzoi-club-of-america",
+      "region": 4,
+      "initials": "BCOA"
+    },
+    {
+      "club_raw": "GREATER TWIN CITIES WHIPPET CLUB",
+      "date": "2026-05-09",
+      "location": "Farmington, MN",
+      "state": "MN",
+      "entries": 30,
+      "note": "",
+      "club": "Greater Twin Cities Whippet Club",
+      "club_slug": "greater-twin-cities-whippet-club",
+      "region": 5,
+      "initials": "GTCWC"
+    },
+    {
+      "club_raw": "MICHIGAN GAZEHOUND ASSOCIATION, Inc.",
+      "date": "2026-05-09",
+      "location": "Rockwood, MI",
+      "state": "MI",
+      "entries": 79,
+      "note": "",
+      "club": "Michigan Gazehound Association",
+      "club_slug": "michigan-gazehound-association",
+      "region": 6,
+      "initials": "MGA"
+    },
+    {
+      "club_raw": "OKLAHOMA RACING & COURSING ASSOCIATION",
+      "date": "2026-05-09",
+      "location": "Vinita, OK",
+      "state": "OK",
+      "entries": 21,
+      "note": "",
+      "club": "Oklahoma Racing and Coursing Association",
+      "club_slug": "oklahoma-racing-and-coursing-association",
+      "region": 4,
+      "initials": "ORCA"
+    },
+    {
+      "club_raw": "GREATER TWIN CITIES WHIPPET CLUB",
+      "date": "2026-05-10",
+      "location": "Farmington, MN",
+      "state": "MN",
+      "entries": 35,
+      "note": "",
+      "club": "Greater Twin Cities Whippet Club",
+      "club_slug": "greater-twin-cities-whippet-club",
+      "region": 5,
+      "initials": "GTCWC"
+    },
+    {
+      "club_raw": "MICHIGAN GAZEHOUND ASSOCIATION, Inc.",
+      "date": "2026-05-10",
+      "location": "Rockwood, MI",
+      "state": "MI",
+      "entries": 68,
+      "note": "",
+      "club": "Michigan Gazehound Association",
+      "club_slug": "michigan-gazehound-association",
+      "region": 6,
+      "initials": "MGA"
+    },
+    {
+      "club_raw": "OKLAHOMA RACING & COURSING ASSOCIATION",
+      "date": "2026-05-10",
+      "location": "Vinita, OK",
+      "state": "OK",
+      "entries": 16,
+      "note": "",
+      "club": "Oklahoma Racing and Coursing Association",
+      "club_slug": "oklahoma-racing-and-coursing-association",
+      "region": 4,
+      "initials": "ORCA"
+    },
+    {
+      "club_raw": "SCOTTISH DEERHOUND CLUB OF AMERICA",
+      "date": "2026-05-10",
+      "location": "Rockwood, PA",
+      "state": "PA",
+      "entries": 12,
+      "note": "Scottish Deerhoumd Sanctional Specialty",
+      "club": "Scottish Deerhound Club of America",
+      "club_slug": "scottish-deerhound-club-of-america",
+      "region": 5,
+      "initials": "SDCA"
+    },
+    {
+      "club_raw": "COLORADO LURE COURSING ASSOCIATION",
+      "date": "2026-05-16",
+      "location": "Peyton, CO",
+      "state": "CO",
+      "entries": 17,
+      "note": "",
+      "club": "Colorado Lure Coursing Association",
+      "club_slug": "colorado-lure-coursing-association",
+      "region": 3,
+      "initials": "CLCA"
+    },
+    {
+      "club_raw": "MIDWEST COURSING CLUB",
+      "date": "2026-05-16",
+      "location": "Caledonia, WI",
+      "state": "WI",
+      "entries": 36,
+      "note": "Ralph Eyles Memorial Trophy",
+      "club": "Midwest Coursing Club",
+      "club_slug": "midwest-coursing-club",
+      "region": 6,
+      "initials": "MWCC"
+    },
+    {
+      "club_raw": "MINNESOTA COURSING ASSOCIATION, Inc.",
+      "date": "2026-05-16",
+      "location": "Waverly, MN",
+      "state": "MN",
+      "entries": 36,
+      "note": "",
+      "club": "Minnesota Coursing Association",
+      "club_slug": "minnesota-coursing-association",
+      "region": 5,
+      "initials": "MCA"
+    },
+    {
+      "club_raw": "COLORADO LURE COURSING ASSOCIATION",
+      "date": "2026-05-17",
+      "location": "Peyton, CO",
+      "state": "CO",
+      "entries": 21,
+      "note": "",
+      "club": "Colorado Lure Coursing Association",
+      "club_slug": "colorado-lure-coursing-association",
+      "region": 3,
+      "initials": "CLCA"
+    },
+    {
+      "club_raw": "MIDWEST COURSING CLUB",
+      "date": "2026-05-17",
+      "location": "Caledonia, WI",
+      "state": "WI",
+      "entries": 28,
+      "note": "",
+      "club": "Midwest Coursing Club",
+      "club_slug": "midwest-coursing-club",
+      "region": 6,
+      "initials": "MWCC"
+    },
+    {
+      "club_raw": "MINNESOTA COURSING ASSOCIATION, Inc.",
+      "date": "2026-05-17",
+      "location": "Waverlly, MN",
+      "state": "MN",
+      "entries": 24,
+      "note": "",
+      "club": "Minnesota Coursing Association",
+      "club_slug": "minnesota-coursing-association",
+      "region": 5,
+      "initials": "MCA"
+    },
+    {
+      "club_raw": "IRISH WOLFHOUND CLUB OF AMERICA",
+      "date": "2026-05-21",
+      "location": "Gray Summit, MO",
+      "state": "MO",
+      "entries": 9,
+      "note": "Irish Wolfhound National Specialty",
+      "club": "Irish Wolfhound Club of America",
+      "club_slug": "irish-wolfhound-club-of-america",
+      "region": 6,
+      "initials": "IWCA"
+    },
+    {
+      "club_raw": "IBIZAN HOUND CLUB OF THE UNITED STATES",
+      "date": "2026-05-22",
+      "location": "Cedar Falls, IA",
+      "state": "IA",
+      "entries": 39,
+      "note": "Beezer Bash",
+      "club": "Ibizan Hound Club of the United States",
+      "club_slug": "ibizan-hound-club-of-the-united-states",
+      "region": 5,
+      "initials": "IHCUS"
+    },
+    {
+      "club_raw": "CENTRAL COAST ASSOCIATION OF SIGHTHOUNDS",
+      "date": "2026-05-23",
+      "location": "Arroyo Grande,CA",
+      "state": "CA",
+      "entries": 33,
+      "note": "",
+      "club": "Central Coast Association of Sighthounds",
+      "club_slug": "central-coast-association-of-sighthounds",
+      "region": 2,
+      "initials": "CCASH"
+    },
+    {
+      "club_raw": "IBIZAN HOUND CLUB OF THE UNITED STATES",
+      "date": "2026-05-23",
+      "location": "Cedar Falls, IA",
+      "state": "IA",
+      "entries": 12,
+      "note": "Beezer Bash - Ibizan Hound Specialty",
+      "club": "Ibizan Hound Club of the United States",
+      "club_slug": "ibizan-hound-club-of-the-united-states",
+      "region": 5,
+      "initials": "IHCUS"
+    },
+    {
+      "club_raw": "NORTHERN AZAWAKH ASSOCIATION",
+      "date": "2026-05-23",
+      "location": "Flamborough, ON CAN",
+      "state": "ON",
+      "entries": 49,
+      "note": "",
+      "club": "Northern Azawakh Association",
+      "club_slug": "northern-azawakh-association",
+      "region": 9,
+      "initials": "NAA"
+    },
+    {
+      "club_raw": "NORTHERN AZAWAKH ASSOCIATION",
+      "date": "2026-05-24",
+      "location": "Flamborough, ON CAN",
+      "state": "ON",
+      "entries": 57,
+      "note": "",
+      "club": "Northern Azawakh Association",
+      "club_slug": "northern-azawakh-association",
+      "region": 9,
+      "initials": "NAA"
+    },
+    {
+      "club_raw": "WESTERN WASHINGTON WHIPPET ASSOCIATION",
+      "date": "2026-05-25",
+      "location": "Roy, WA",
+      "state": "WA",
+      "entries": 44,
+      "note": "",
+      "club": "Western Washington Whippet Association",
+      "club_slug": "western-washington-whippet-association",
+      "region": 1,
+      "initials": "WWWA"
+    },
+    {
+      "club_raw": "CALIFORNIA COURSING ASSOCIATION",
+      "date": "2026-05-30",
+      "location": "Chino, CA",
+      "state": "CA",
+      "entries": 27,
+      "note": "Silken Windhound Specialty with LCI Stakes",
+      "club": "California Coursing Association",
+      "club_slug": "california-coursing-association",
+      "region": 10,
+      "initials": "CCA"
+    },
+    {
+      "club_raw": "CALIFORNIA COURSING ASSOCIATION",
+      "date": "2026-05-31",
+      "location": "Chino, CA",
+      "state": "CA",
+      "entries": 21,
+      "note": "Silken Windhound Specialty with LCI",
+      "club": "California Coursing Association",
+      "club_slug": "california-coursing-association",
+      "region": 10,
+      "initials": "CCA"
+    },
+    {
+      "club_raw": "GAZEHOUNDS OF NEW ENGLAND",
+      "date": "2026-06-06",
+      "location": "Blandford, MA",
+      "state": "MA",
+      "entries": 53,
+      "note": "",
+      "club": "Gazehounds of New England",
+      "club_slug": "gazehounds-of-new-england",
+      "region": 9,
+      "initials": "GONE"
+    },
+    {
+      "club_raw": "NEBRASKA COURSING ASSOCIATION",
+      "date": "2026-06-06",
+      "location": "Omaha, NE",
+      "state": "NE",
+      "entries": 20,
+      "note": "",
+      "club": "Nebraska Coursing Association",
+      "club_slug": "nebraska-coursing-association",
+      "region": 5,
+      "initials": "NCA"
+    },
+    {
+      "club_raw": "GAZEHOUNDS OF NEW ENGLAND",
+      "date": "2026-06-07",
+      "location": "Blandford, MA",
+      "state": "MA",
+      "entries": 50,
+      "note": "",
+      "club": "Gazehounds of New England",
+      "club_slug": "gazehounds-of-new-england",
+      "region": 9,
+      "initials": "GONE"
+    },
+    {
+      "club_raw": "NEBRASKA COURSING ASSOCIATION",
+      "date": "2026-06-07",
+      "location": "Omaha, NE",
+      "state": "NE",
+      "entries": 27,
+      "note": "",
+      "club": "Nebraska Coursing Association",
+      "club_slug": "nebraska-coursing-association",
+      "region": 5,
+      "initials": "NCA"
+    },
+    {
+      "club_raw": "ORANGE COAST RHODESIAN RIDGEBACK CLUB",
+      "date": "2026-06-13",
+      "location": "Chino, CA",
+      "state": "CA",
+      "entries": 19,
+      "note": "",
+      "club": "Orange Coast Rhodesian Ridgeback Club",
+      "club_slug": "orange-coast-rhodesian-ridgeback-club",
+      "region": 10,
+      "initials": "OCRRC"
+    },
+    {
+      "club_raw": "ORANGE COAST RHODESIAN RIDGEBACK CLUB",
+      "date": "2026-06-14",
+      "location": "Chino, CA",
+      "state": "CA",
+      "entries": 26,
+      "note": "",
+      "club": "Orange Coast Rhodesian Ridgeback Club",
+      "club_slug": "orange-coast-rhodesian-ridgeback-club",
+      "region": 10,
+      "initials": "OCRRC"
+    },
+    {
+      "club_raw": "MIDWEST COURSING CLUB",
+      "date": "2026-06-20",
+      "location": "Caledonia,WI",
+      "state": "WI",
+      "entries": 8,
+      "note": "Silken Windhound Specialty",
+      "club": "Midwest Coursing Club",
+      "club_slug": "midwest-coursing-club",
+      "region": 6,
+      "initials": "MWCC"
+    },
+    {
+      "club_raw": "MIDWEST COURSING CLUB",
+      "date": "2026-06-21",
+      "location": "Caledonia, WI",
+      "state": "WI",
+      "entries": 7,
+      "note": "Silken Windhound Specialty",
+      "club": "Midwest Coursing Club",
+      "club_slug": "midwest-coursing-club",
+      "region": 6,
+      "initials": "MWCC"
+    },
+    {
+      "club_raw": "IOWA COURSING ASSOCIATION, INC",
+      "date": "2026-06-27",
+      "location": "Des Moines, IA",
+      "state": "IA",
+      "entries": 23,
+      "note": "LCI & Single Stake",
+      "club": "Iowa Coursing Association",
+      "club_slug": "iowa-coursing-association",
+      "region": 5,
+      "initials": "ICA"
+    },
+    {
+      "club_raw": "IOWA COURSING ASSOCIATION, INC",
+      "date": "2026-06-28",
+      "location": "Des Moines, IA",
+      "state": "IA",
+      "entries": 27,
+      "note": "LCI & Single Specialty",
+      "club": "Iowa Coursing Association",
+      "club_slug": "iowa-coursing-association",
+      "region": 5,
+      "initials": "ICA"
+    },
+    {
+      "club_raw": "SILKEN WINDHOUNDS FOR ENDURANCE,PERFORMANCE & TRAINING",
+      "date": "2026-06-28",
+      "location": "Damascus, OR",
+      "state": "OR",
+      "entries": 57,
+      "note": "",
+      "club": "Silken Windhounds for Endurance, Perf. & Training",
+      "club_slug": "silken-windhounds-for-endurance-perf-training",
+      "region": 1,
+      "initials": "SWEPT"
+    },
+    {
+      "club_raw": "UPPER CHESAPEAKE BAY SALUKI CLUB",
+      "date": "2026-07-04",
+      "location": "Littlestown, PA",
+      "state": "PA",
+      "entries": 27,
+      "note": "",
+      "club": "Upper Chesapeake Bay Saluki Club",
+      "club_slug": "upper-chesapeake-bay-saluki-club",
+      "region": 8,
+      "initials": "UCBSC"
+    },
+    {
+      "club_raw": "SILKEN WINDHOUNDS FOR ENDURANCE,PERFORMANCE & TRAINING",
+      "date": "2026-07-05",
+      "location": "Toledo, WA",
+      "state": "WA",
+      "entries": 40,
+      "note": "",
+      "club": "Silken Windhounds for Endurance, Perf. & Training",
+      "club_slug": "silken-windhounds-for-endurance-perf-training",
+      "region": 1,
+      "initials": "SWEPT"
+    },
+    {
+      "club_raw": "UPPER CHESAPEAKE BAY SALUKI CLUB",
+      "date": "2026-07-05",
+      "location": "Littlesstown, PA",
+      "state": "PA",
+      "entries": 25,
+      "note": "",
+      "club": "Upper Chesapeake Bay Saluki Club",
+      "club_slug": "upper-chesapeake-bay-saluki-club",
+      "region": 8,
+      "initials": "UCBSC"
+    }
+  ]
+}

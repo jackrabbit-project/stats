@@ -166,8 +166,10 @@ def main() -> int:
     owner_totals: dict[str, dict] = {}
     for dog in unique:
         for owner in dog["owners"]:
+            # Aggregate by person ("entity"), not by name ("key") - one name
+            # can cover two owners in different regions.
             record = owner_totals.setdefault(
-                owner["key"], {"hounds": 0, "points": 0, "bob": 0, "bif": 0}
+                owner["entity"], {"hounds": 0, "points": 0, "bob": 0, "bif": 0}
             )
             record["hounds"] += 1
             for stat in ("points", "bob", "bif"):
@@ -228,7 +230,124 @@ def main() -> int:
     ids = [d["id"] for d in dogs]
     check.expect(len(ids) == len(set(ids)), "duplicate dog ids in season.json")
 
+    # 9. Owner identity: one entity never spans two home regions, every owner
+    #    mention on a hound resolves to a real owner record, and a split name
+    #    really does have distinct regions.
+    by_entity = {owner["key"]: owner for owner in season["owners"]}
+    for dog in dogs:
+        for owner in dog["owners"]:
+            check.expect(
+                owner["entity"] in by_entity,
+                f"{dog['id']}: owner entity {owner['entity']} has no owner record",
+            )
+    for owner in season["owners"]:
+        member_regions = {
+            dog["region"]
+            for dog in dogs
+            for mention in dog["owners"]
+            if mention["entity"] == owner["key"] and dog["region"] is not None
+        }
+        if owner["region"] is not None:
+            check.expect(
+                owner["region"] in member_regions or not member_regions,
+                f"owner {owner['name']} is Region {owner['region']} but their "
+                f"hounds carry {sorted(member_regions)}",
+            )
+
+    split_names: dict[str, list] = {}
+    for owner in season["owners"]:
+        split_names.setdefault(owner["owner_key"], []).append(owner)
+    for owner_key, entities in split_names.items():
+        if len(entities) == 1:
+            continue
+        regions = [e["region"] for e in entities]
+        check.expect(
+            len(regions) == len(set(regions)),
+            f"{owner_key} is split into entities sharing a region: {regions}",
+        )
+
+    check_trials(check)
     return check.report()
+
+
+def check_trials(check: Checker) -> None:
+    """Verify data/trials.json against the archived monthly pages."""
+    path = ROOT / "data" / "trials.json"
+    if not path.exists():
+        check.expect(False, "data/trials.json missing - run tools/trials.py")
+        return
+
+    trials = json.loads(path.read_text(encoding="utf-8"))
+    rows = trials["trials"]
+
+    # Crude count straight out of the raw HTML, independent of trials.py.
+    raw_dir = ROOT / "data" / "trials" / "raw"
+    counted = 0
+    for month in trials["months"]:
+        page = raw_dir / f"{month}.html"
+        if not page.exists():
+            check.expect(False, f"archived page missing: {page.name}")
+            continue
+        html = page.read_bytes().decode("cp1252", errors="replace")
+        for tr in re.findall(r"<tr\b[^>]*>(.*?)</tr>", html, re.DOTALL | re.I):
+            if not re.search(r'href="#R\d+"', tr):
+                continue
+            cells = re.findall(r"<td\b[^>]*>(.*?)</td>", tr, re.DOTALL | re.I)
+            if len(cells) == 2 and re.search(r"Entry:\s*\d+", cells[1]):
+                counted += 1
+    check.expect(
+        counted == len(rows),
+        f"trial count: raw HTML has {counted}, trials.json has {len(rows)}",
+    )
+
+    check.expect(
+        trials["stats"]["entries"] == sum(r["entries"] for r in rows),
+        "trials stats.entries does not match a re-sum of the trial rows",
+    )
+
+    # Region and club aggregates must re-sum exactly.
+    for bucket, key in (("by_region", "region"), ("by_club", "club_slug")):
+        totals: dict = {}
+        for row in rows:
+            totals[row[key]] = totals.get(row[key], 0) + row["entries"]
+        for entry in trials[bucket]:
+            lookup = entry["region"] if bucket == "by_region" else entry["slug"]
+            check.expect(
+                entry["entries"] == totals.get(lookup),
+                f"{bucket} {lookup}: {entry['entries']} != re-sum "
+                f"{totals.get(lookup)}",
+            )
+
+    # Every trial is either assigned a region or openly unassigned.
+    for row in rows:
+        if row["region"] is None:
+            check.expect(
+                row["club_raw"] in trials["unmatched_clubs"],
+                f"{row['club_raw']} has no region but is not listed as unmatched",
+            )
+        else:
+            check.expect(
+                1 <= row["region"] <= 10,
+                f"{row['club_raw']}: region {row['region']} out of range",
+            )
+
+    # The club listing must carry no liaison contact data.
+    clubs_path = ROOT / "data" / "clubs.json"
+    if clubs_path.exists():
+        text = clubs_path.read_text(encoding="utf-8")
+        for label, pattern in (
+            ("email address", r"[\w.+-]+@[\w-]+\.[\w.]+"),
+            ("phone number", r"\(\d{3}\)\s*\d{3}-\d{4}"),
+            ("street address", r"\b\d+\s+\w+\s+(?:Street|St|Road|Rd|Drive|Dr|"
+                              r"Avenue|Ave|Lane|Ln|Court|Ct|Place|Pl|Circle)\b"),
+        ):
+            found = re.findall(pattern, text, re.IGNORECASE)
+            # The source_url and note field legitimately contain neither.
+            check.expect(
+                not found,
+                f"data/clubs.json contains a {label}: {found[:2]} - the club "
+                f"listing's contact columns must never be extracted",
+            )
 
 
 if __name__ == "__main__":

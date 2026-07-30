@@ -1,0 +1,14 @@
+{
+  "note": [
+    "Maps a club name as spelled in ASFA's trial results to its name in ASFA's",
+    "club listing PDF, where automatic matching cannot bridge the two.",
+    "Matching is exact on a normalized token set, never fuzzy, so a club that",
+    "does not match lands in a visible 'unassigned' bucket rather than being",
+    "guessed into the wrong region. Add an entry here when that happens.",
+    "Keys are verbatim from the trial results, including any typos."
+  ],
+  "aliases": {
+    "SILKEN WINDHOUDS OF CALIFORNIA": "Silken Windhounds of California",
+    "SILKEN WINDHOUNDS FOR ENDURANCE,PERFORMANCE & TRAINING": "Silken Windhounds for Endurance, Perf. & Training"
+  }
+}

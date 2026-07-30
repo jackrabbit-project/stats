@@ -43,8 +43,14 @@
     <section class="card">
       <h2 class="card-title">Where the numbers come from</h2>
       <p class="text-sm leading-relaxed">
-        A single source: the
-        <a id="source-link" class="lnk" target="_blank" rel="noopener noreferrer">ASFA Top 20 standings page</a>.
+        Three ASFA publications, and nothing else:
+      </p>
+      <ul class="text-sm leading-relaxed list-disc pl-5 mt-2 space-y-1">
+        <li>The <a id="source-link" class="lnk" target="_blank" rel="noopener noreferrer">Top 20 standings page</a> — every hound, rank and figure on this site.</li>
+        <li>The <a href="https://www.asfa.org/trial/index0111.html" class="lnk" target="_blank" rel="noopener noreferrer">monthly trial results</a> — entry counts per trial, used on the Regions page.</li>
+        <li>The <a href="https://www.asfa.org/clubs/index.htm" class="lnk" target="_blank" rel="noopener noreferrer">club listing</a> — which region each club belongs to. Only club name, region, initials and affiliation are read from it; that document also lists each club liaison's home address, phone number and email, and none of that is extracted, stored, or published here.</li>
+      </ul>
+      <p class="text-sm leading-relaxed mt-3">
         Each time ASFA publishes an update, the page is archived verbatim in
         <a href="https://github.com/jackrabbit-project/asfa-top20/tree/main/data/snapshots" class="lnk" target="_blank" rel="noopener noreferrer">this project's repository</a>,
         so every number on this site can be traced back to the bytes ASFA served on a given date.
@@ -117,6 +123,21 @@
           household is spelled several ways. Spellings are merged where the match is mechanical.
           A co-owned hound counts for every owner named on the row, so owner totals sum to more
           than the season total.
+        </li>
+        <li>
+          <strong>Two people can share a name.</strong> ASFA publishes no owner identifier, so
+          this site works out where an owner is based from the rows where they are listed first —
+          that is whose region the row carries. A name that leads in two regions is treated as two
+          people: K.Sanders has six Basenjis in Region 8 and a Silken Windhound in Region 1.
+          A name that leads in two regions but shares a co-owner across them is treated as one
+          person whose hounds live in different places. Where the evidence is thin the split is
+          kept, because inventing a combined record for two real people is the worse mistake.
+        </li>
+        <li>
+          <strong>Regions mean two different things.</strong> In the standings, a region is the
+          <em>owner's</em>. On trial entries, it is the <em>club's</em>, taken from ASFA's club
+          listing — clubs travel, and Borzoi Club of America is a Region 4 club that ran in
+          Nebraska this year. The two are never added together.
         </li>
       </ol>
     </section>

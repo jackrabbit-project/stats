@@ -27,9 +27,14 @@ jobs:
       - name: Fetch latest standings
         run: python tools/fetch.py
 
+      - name: Refresh the club directory
+        # Only changes when ASFA republishes the club listing; cheap to check.
+        run: python tools/clubs.py
+
       - name: Parse, build and verify
         run: |
           python tools/parse.py
+          python tools/trials.py
           python tools/build.py
           python tools/check.py
 

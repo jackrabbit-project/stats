@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#2C6E49">
+  <title>Regions — ASFA Top 20</title>
+  <meta name="description" content="ASFA lure coursing by region: Top 20 hounds, Bowen points, Best of Breed and Best in Field per region, plus which regions and clubs are drawing the most trial entries in 2026.">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="js/theme.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Abel&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/site.css">
+  <link rel="icon" href="assets/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
+</head>
+<body class="min-h-screen flex flex-col">
+  <header id="site-header"></header>
+  <main id="main" class="flex-1 max-w-6xl mx-auto w-full px-4 py-6 space-y-6"></main>
+  <footer id="site-footer" class="bg-asfa-navy text-white py-8"></footer>
+
+  <script src="js/app.js"></script>
+  <script>
+    page('regions.html', (season) => {
+      const main = document.getElementById('main');
+
+      const header = `
+        <div>
+          <h1 class="font-abel text-3xl text-asfa-green">Regions</h1>
+          <p class="text-sm text-asfa-text/70 mt-1">
+            ASFA divides the country into ten regions, each with an elected Regional Director.
+            The two tables below measure different things, and it is worth keeping them apart:
+            <strong>standings follow the owner</strong>, <strong>trials follow the club</strong>.
+          </p>
+        </div>`;
+
+      const standings = () => {
+        const rows = season.regions;
+        const totals = rows.reduce((acc, r) => ({
+          hounds: acc.hounds + r.hounds, points: acc.points + r.points,
+          bob: acc.bob + r.bob, bif: acc.bif + r.bif,
+        }), { hounds: 0, points: 0, bob: 0, bif: 0 });
+
+        return `
+          <section class="card">
+            <h2 class="card-title">Top 20 standings by region</h2>
+            <p class="text-xs text-asfa-text/60 mb-3">
+              Counted by the <strong>owner's</strong> region, as published on each standings row.
+              Season through ${formatDate(season.as_of)}.
+            </p>
+            <div class="tbl-wrap"><table class="tbl">
+              <thead><tr>
+                <th class="num">Region</th><th class="num">Hounds in Top 20</th>
+                <th class="num">Points</th><th class="num">BOB</th>
+                <th class="num">BIF</th><th class="num">Breed firsts</th>
+              </tr></thead>
+              <tbody>
+                ${rows.map((r) => `
+                  <tr>
+                    <td class="num font-semibold">${r.region}</td>
+                    <td class="num">${r.hounds}</td>
+                    <td class="num">${r.points}</td>
+                    <td class="num">${r.bob}</td>
+                    <td class="num ${r.bif ? 'font-semibold text-asfa-accent' : ''}">${r.bif}</td>
+                    <td class="num">${r.firsts}</td>
+                  </tr>`).join('')}
+                <tr class="bg-asfa-bg2 font-semibold">
+                  <td class="num">All</td><td class="num">${totals.hounds}</td>
+                  <td class="num">${totals.points}</td><td class="num">${totals.bob}</td>
+                  <td class="num">${totals.bif}</td><td class="num"></td>
+                </tr>
+              </tbody>
+            </table></div>
+            <p class="text-xs text-asfa-text/55 mt-3">
+              Points are not comparable between breeds, so a region's point total partly reflects
+              which breeds happen to be strong there.
+              ${season.dogs.filter((d) => d.region == null).length} ranked hound(s) carry no region.
+            </p>
+          </section>`;
+      };
+
+      main.innerHTML = header + standings()
+        + '<section id="trials"><div class="card"><p class="text-sm text-asfa-text/60">Loading trial results…</p></div></section>';
+
+      loadTrials().then((trials) => {
+        const byRegion = new Map(trials.regions.map((r) => [r.region, r]));
+        const rows = trials.by_region;
+        const unassigned = rows.find((r) => r.region == null);
+        const assigned = rows.filter((r) => r.region != null);
+
+        const statesFor = (region) => {
+          const def = byRegion.get(region);
+          return def ? def.states.join(', ') : '';
+        };
+
+        document.getElementById('trials').innerHTML = `
+          <div class="card">
+            <h2 class="card-title">Trial entries by region</h2>
+            <p class="text-xs text-asfa-text/60 mb-3">
+              Counted by the <strong>club's</strong> region from ASFA's club listing — not by where
+              the trial was held. Clubs travel: Borzoi Club of America is a Region 4 club that ran
+              in Nebraska this year. ${trials.stats.trials} trials, ${trials.stats.entries.toLocaleString()}
+              entries, posted through ${formatDate(trials.as_of)}.
+            </p>
+            <div class="tbl-wrap"><table class="tbl">
+              <thead><tr>
+                <th class="num">Region</th><th>States</th><th class="num">Clubs</th>
+                <th class="num">Trials</th><th class="num">Entries</th><th class="num">Avg entry</th>
+              </tr></thead>
+              <tbody>
+                ${[...assigned].sort((a, b) => b.entries - a.entries).map((r) => `
+                  <tr>
+                    <td class="num font-semibold">${r.region}</td>
+                    <td class="text-asfa-text/75 text-xs">${esc(statesFor(r.region))}</td>
+                    <td class="num">${r.clubs}</td>
+                    <td class="num">${r.trials}</td>
+                    <td class="num font-semibold text-asfa-accent">${r.entries.toLocaleString()}</td>
+                    <td class="num">${r.average_entry}</td>
+                  </tr>`).join('')}
+                ${unassigned ? `
+                  <tr class="bg-asfa-bg2">
+                    <td class="num">—</td>
+                    <td class="text-asfa-text/75 text-xs">club not matched to the ASFA club listing</td>
+                    <td class="num">${unassigned.clubs}</td>
+                    <td class="num">${unassigned.trials}</td>
+                    <td class="num">${unassigned.entries}</td>
+                    <td class="num">${unassigned.average_entry}</td>
+                  </tr>` : ''}
+              </tbody>
+            </table></div>
+            ${trials.unmatched_clubs.length ? `
+              <p class="text-xs text-asfa-accent mt-3">
+                Not matched to a region: ${trials.unmatched_clubs.map(esc).join('; ')}.
+              </p>` : ''}
+            <p class="text-xs text-asfa-text/55 mt-3">
+              Regions 2 and 10 split California and Nevada by county rather than by state, which is
+              why region comes from ASFA's club listing and is never guessed from a venue's address.
+              Region definitions: ${esc(trials.region_source)}.
+            </p>
+          </div>
+
+          <div class="card mt-6">
+            <h2 class="card-title">Clubs by entries</h2>
+            <p class="text-xs text-asfa-text/60 mb-3">
+              Every club that has held an ASFA trial in ${trials.season} so far.
+            </p>
+            <div class="tbl-wrap"><table class="tbl">
+              <thead><tr>
+                <th class="num">#</th><th>Club</th><th class="num">Region</th>
+                <th class="num">Trials</th><th class="num">Entries</th><th>Where</th>
+              </tr></thead>
+              <tbody>
+                ${trials.by_club.map((c, i) => `
+                  <tr>
+                    <td class="num text-asfa-text/50">${i + 1}</td>
+                    <td class="font-semibold">${esc(c.club)}${
+                      c.initials ? ` <span class="text-xs text-asfa-text/55">${esc(c.initials)}</span>` : ''}</td>
+                    <td class="num">${c.region ?? '—'}</td>
+                    <td class="num">${c.trials}</td>
+                    <td class="num font-semibold text-asfa-accent">${c.entries}</td>
+                    <td class="text-xs text-asfa-text/70">${esc(c.venue)}${
+                      c.venue_count > 1 ? ` <span class="text-asfa-text/50">+${c.venue_count - 1}</span>` : ''}</td>
+                  </tr>`).join('')}
+              </tbody>
+            </table></div>
+            <p class="text-xs text-asfa-text/55 mt-3">
+              Entry counts are as published in ASFA's monthly trial results. A trial's entry is the
+              number of hounds entered, not the number that ran or earned points.
+            </p>
+          </div>`;
+      }).catch((error) => {
+        document.getElementById('trials').innerHTML = `
+          <div class="card">
+            <h2 class="card-title">Trial results unavailable</h2>
+            <p class="text-sm">Could not load <code>data/trials.json</code>: ${esc(error.message)}</p>
+            <p class="text-sm mt-2 text-asfa-text/70">The standings above are unaffected.</p>
+          </div>`;
+        console.error(error);
+      });
+    });
+  </script>
+</body>
+</html>

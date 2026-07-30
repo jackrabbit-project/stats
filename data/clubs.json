@@ -1,0 +1,566 @@
+{
+  "source_url": "https://www.asfa.org/clubs/2026.04.08 Club Listing.pdf",
+  "source_file": "2026.04.08-Club-Listing.pdf",
+  "generated": "2026-07-30",
+  "note": "Club name, region, initials and affiliation only. The source PDF also lists liaison names, addresses, phone numbers and email addresses; those are deliberately not extracted or stored.",
+  "clubs": [
+    {
+      "name": "Afghan Hound Club of America",
+      "slug": "afghan-hound-club-of-america",
+      "initials": "AHCA",
+      "affiliation": "M",
+      "affiliation_label": "Member",
+      "region": 8,
+      "match_key": "afghan america"
+    },
+    {
+      "name": "American Saluki Association",
+      "slug": "american-saluki-association",
+      "initials": "ASA",
+      "affiliation": "M",
+      "affiliation_label": "Member",
+      "region": 5,
+      "match_key": "american saluki"
+    },
+    {
+      "name": "American Whippet Club, Inc.",
+      "slug": "american-whippet-club-inc",
+      "initials": "AWC",
+      "affiliation": "M",
+      "affiliation_label": "Member",
+      "region": 3,
+      "match_key": "american whippet"
+    },
+    {
+      "name": "Basenji Club of America, Inc.",
+      "slug": "basenji-club-of-america-inc",
+      "initials": "BaCOA",
+      "affiliation": "M",
+      "affiliation_label": "Member",
+      "region": 5,
+      "match_key": "america basenji"
+    },
+    {
+      "name": "Bay Area Rhodesian Ridgeback Club",
+      "slug": "bay-area-rhodesian-ridgeback-club",
+      "initials": "BARRC",
+      "affiliation": "M",
+      "affiliation_label": "Member",
+      "region": 2,
+      "match_key": "area bay rhodesian ridgeback"
+    },
+    {
+      "name": "Borzoi Club of America",
+      "slug": "borzoi-club-of-america",
+      "initials": "BCOA",
+      "affiliation": "M",
+      "affiliation_label": "Member",
+      "region": 4,
+      "match_key": "america borzoi"
+    },
+    {
+      "name": "California Coursing Association",
+      "slug": "california-coursing-association",
+      "initials": "CCA",
+      "affiliation": "M",
+      "affiliation_label": "Member",
+      "region": 10,
+      "match_key": "california"
+    },
+    {
+      "name": "Carolina Lure Coursing Society",
+      "slug": "carolina-lure-coursing-society",
+      "initials": "CLCS",
+      "affiliation": "M",
+      "affiliation_label": "Member",
+      "region": 7,
+      "match_key": "carolina"
+    },
+    {
+      "name": "Cascadia Sighthound Association",
+      "slug": "cascadia-sighthound-association",
+      "initials": "CSA",
+      "affiliation": "FTA",
+      "affiliation_label": "Fast Track Affiliate",
+      "region": 1,
+      "match_key": "cascadia"
+    },
+    {
+      "name": "Central Coast Association of Sighthounds",
+      "slug": "central-coast-association-of-sighthounds",
+      "initials": "CCASH",
+      "affiliation": "M",
+      "affiliation_label": "Member",
+      "region": 2,
+      "match_key": "central coast"
+    },
+    {
+      "name": "Colorado Lure Coursing Association",
+      "slug": "colorado-lure-coursing-association",
+      "initials": "CLCA",
+      "affiliation": "M",
+      "affiliation_label": "Member",
+      "region": 3,
+      "match_key": "colorado"
+    },
+    {
+      "name": "Coursing Hounds of the Mid-Potomac",
+      "slug": "coursing-hounds-of-the-mid-potomac",
+      "initials": "CHAMP",
+      "affiliation": "M",
+      "affiliation_label": "Member",
+      "region": 8,
+      "match_key": "mid potomac"
+    },
+    {
+      "name": "Desert Fun Bunch",
+      "slug": "desert-fun-bunch",
+      "initials": "DFB",
+      "affiliation": "FTA",
+      "affiliation_label": "Fast Track Affiliate",
+      "region": 10,
+      "match_key": "bunch desert fun"
+    },
+    {
+      "name": "Elite Coursing Hounds of Ontario",
+      "slug": "elite-coursing-hounds-of-ontario",
+      "initials": "ECHO",
+      "affiliation": "M",
+      "affiliation_label": "Member",
+      "region": 9,
+      "match_key": "elite ontario"
+    },
+    {
+      "name": "Evergreen Basenji Club, Inc",
+      "slug": "evergreen-basenji-club-inc",
+      "initials": "EBC",
+      "affiliation": "M",
+      "affiliation_label": "Member",
+      "region": 1,
+      "match_key": "basenji evergreen"
+    },
+    {
+      "name": "Gazehound Association of the Smoky Mountains",
+      "slug": "gazehound-association-of-the-smoky-mountains",
+      "initials": "GASM",
+      "affiliation": "M",
+      "affiliation_label": "Member",
+      "region": 7,
+      "match_key": "mountains smoky"
+    },
+    {
+      "name": "Gazehounds of New England",
+      "slug": "gazehounds-of-new-england",
+      "initials": "GONE",
+      "affiliation": "M",
+      "affiliation_label": "Member",
+      "region": 9,
+      "match_key": "england new"
+    },
+    {
+      "name": "Greater Ocala Gainesville LC Association",
+      "slug": "greater-ocala-gainesville-lc-association",
+      "initials": "GOGLC",
+      "affiliation": "M",
+      "affiliation_label": "Member",
+      "region": 7,
+      "match_key": "gainesville greater lc ocala"
+    },
+    {
+      "name": "Greater Twin Cities Whippet Club",
+      "slug": "greater-twin-cities-whippet-club",
+      "initials": "GTCWC",
+      "affiliation": "M",
+      "affiliation_label": "Member",
+      "region": 5,
+      "match_key": "cities greater twin whippet"
+    },
+    {
+      "name": "Heartland Coursing Association",
+      "slug": "heartland-coursing-association",
+      "initials": "HCA",
+      "affiliation": "M",
+      "affiliation_label": "Member",
+      "region": 5,
+      "match_key": "heartland"
+    },
+    {
+      "name": "Ibizan Hound Club of the United States",
+      "slug": "ibizan-hound-club-of-the-united-states",
+      "initials": "IHCUS",
+      "affiliation": "M",
+      "affiliation_label": "Member",
+      "region": 5,
+      "match_key": "ibizan states united"
+    },
+    {
+      "name": "International Silken Windhound Society",
+      "slug": "international-silken-windhound-society",
+      "initials": "ISWS",
+      "affiliation": "M",
+      "affiliation_label": "Member",
+      "region": 10,
+      "match_key": "international silken windhound"
+    },
+    {
+      "name": "Iowa Coursing Association",
+      "slug": "iowa-coursing-association",
+      "initials": "ICA",
+      "affiliation": "M",
+      "affiliation_label": "Member",
+      "region": 5,
+      "match_key": "iowa"
+    },
+    {
+      "name": "Irish Wolfhound Association of the West Coast",
+      "slug": "irish-wolfhound-association-of-the-west-coast",
+      "initials": "IWAWC",
+      "affiliation": "M",
+      "affiliation_label": "Member",
+      "region": 2,
+      "match_key": "coast irish west wolfhound"
+    },
+    {
+      "name": "Irish Wolfhound Club of America",
+      "slug": "irish-wolfhound-club-of-america",
+      "initials": "IWCA",
+      "affiliation": "M",
+      "affiliation_label": "Member",
+      "region": 6,
+      "match_key": "america irish wolfhound"
+    },
+    {
+      "name": "Italian Greyhound Club of America",
+      "slug": "italian-greyhound-club-of-america",
+      "initials": "IGCA",
+      "affiliation": "M",
+      "affiliation_label": "Member",
+      "region": 8,
+      "match_key": "america greyhound italian"
+    },
+    {
+      "name": "Lake Country Lure Coursers",
+      "slug": "lake-country-lure-coursers",
+      "initials": "LCLC",
+      "affiliation": "M",
+      "affiliation_label": "Member",
+      "region": 9,
+      "match_key": "country coursers lake"
+    },
+    {
+      "name": "Lehigh Valley Coursing Club",
+      "slug": "lehigh-valley-coursing-club",
+      "initials": "LVCC",
+      "affiliation": "FTA",
+      "affiliation_label": "Fast Track Affiliate",
+      "region": 8,
+      "match_key": "lehigh valley"
+    },
+    {
+      "name": "Lobo Lure Coursing Club",
+      "slug": "lobo-lure-coursing-club",
+      "initials": "LLCC",
+      "affiliation": "M",
+      "affiliation_label": "Member",
+      "region": 3,
+      "match_key": "lobo"
+    },
+    {
+      "name": "Lure Enthusiasts of Georgia Sighthounds",
+      "slug": "lure-enthusiasts-of-georgia-sighthounds",
+      "initials": "LEGS",
+      "affiliation": "FTA",
+      "affiliation_label": "Fast Track Affiliate",
+      "region": 7,
+      "match_key": "enthusiasts georgia"
+    },
+    {
+      "name": "Mason Dixon Ibizan Hound Club",
+      "slug": "mason-dixon-ibizan-hound-club",
+      "initials": "MDIHC",
+      "affiliation": "M",
+      "affiliation_label": "Member",
+      "region": 8,
+      "match_key": "dixon ibizan mason"
+    },
+    {
+      "name": "Michigan Gazehound Association",
+      "slug": "michigan-gazehound-association",
+      "initials": "MGA",
+      "affiliation": "M",
+      "affiliation_label": "Member",
+      "region": 6,
+      "match_key": "michigan"
+    },
+    {
+      "name": "Midwest Borzoi Club",
+      "slug": "midwest-borzoi-club",
+      "initials": "MBC",
+      "affiliation": "A",
+      "affiliation_label": "Affiliate",
+      "region": 6,
+      "match_key": "borzoi midwest"
+    },
+    {
+      "name": "Midwest Coursing Club",
+      "slug": "midwest-coursing-club",
+      "initials": "MWCC",
+      "affiliation": "M",
+      "affiliation_label": "Member",
+      "region": 6,
+      "match_key": "midwest"
+    },
+    {
+      "name": "Minnesota Coursing Association",
+      "slug": "minnesota-coursing-association",
+      "initials": "MCA",
+      "affiliation": "M",
+      "affiliation_label": "Member",
+      "region": 5,
+      "match_key": "minnesota"
+    },
+    {
+      "name": "Nebraska Coursing Association",
+      "slug": "nebraska-coursing-association",
+      "initials": "NCA",
+      "affiliation": "M",
+      "affiliation_label": "Member",
+      "region": 5,
+      "match_key": "nebraska"
+    },
+    {
+      "name": "New England Rhodesian Ridgeback Club",
+      "slug": "new-england-rhodesian-ridgeback-club",
+      "initials": "NERRC",
+      "affiliation": "A",
+      "affiliation_label": "Affiliate",
+      "region": 9,
+      "match_key": "england new rhodesian ridgeback"
+    },
+    {
+      "name": "Northern Azawakh Association",
+      "slug": "northern-azawakh-association",
+      "initials": "NAA",
+      "affiliation": "M",
+      "affiliation_label": "Member",
+      "region": 9,
+      "match_key": "azawakh northern"
+    },
+    {
+      "name": "Northern California Irish Wolfhound Club",
+      "slug": "northern-california-irish-wolfhound-club",
+      "initials": "NCIWC",
+      "affiliation": "M",
+      "affiliation_label": "Member",
+      "region": 2,
+      "match_key": "california irish northern wolfhound"
+    },
+    {
+      "name": "Northern California Whippet Club",
+      "slug": "northern-california-whippet-club",
+      "initials": "NCWC",
+      "affiliation": "A",
+      "affiliation_label": "Affiliate",
+      "region": 2,
+      "match_key": "california northern whippet"
+    },
+    {
+      "name": "Ohio,Kentucky, Indiana Gazehound Organization",
+      "slug": "ohio-kentucky-indiana-gazehound-organization",
+      "initials": "OKIGO",
+      "affiliation": "M",
+      "affiliation_label": "Member",
+      "region": 6,
+      "match_key": "indiana kentucky ohio"
+    },
+    {
+      "name": "Oklahoma Racing and Coursing Association",
+      "slug": "oklahoma-racing-and-coursing-association",
+      "initials": "ORCA",
+      "affiliation": "FTA",
+      "affiliation_label": "Fast Track Affiliate",
+      "region": 4,
+      "match_key": "oklahoma racing"
+    },
+    {
+      "name": "Orange Coast Rhodesian Ridgeback Club",
+      "slug": "orange-coast-rhodesian-ridgeback-club",
+      "initials": "OCRRC",
+      "affiliation": "FTA",
+      "affiliation_label": "Fast Track Affiliate",
+      "region": 10,
+      "match_key": "coast orange rhodesian ridgeback"
+    },
+    {
+      "name": "Pharaoh Hound Club of America",
+      "slug": "pharaoh-hound-club-of-america",
+      "initials": "PHCA",
+      "affiliation": "M",
+      "affiliation_label": "Member",
+      "region": 3,
+      "match_key": "america pharaoh"
+    },
+    {
+      "name": "Rhodesian Ridgeback Club of the United States",
+      "slug": "rhodesian-ridgeback-club-of-the-united-states",
+      "initials": "RRCUS",
+      "affiliation": "M",
+      "affiliation_label": "Member",
+      "region": 9,
+      "match_key": "rhodesian ridgeback states united"
+    },
+    {
+      "name": "Rocky Mountain Coursing Club",
+      "slug": "rocky-mountain-coursing-club",
+      "initials": "RMCC",
+      "affiliation": "M",
+      "affiliation_label": "Member",
+      "region": 3,
+      "match_key": "mountain rocky"
+    },
+    {
+      "name": "Rocky Mountain Irish Wolfhound Association",
+      "slug": "rocky-mountain-irish-wolfhound-association",
+      "initials": "RMIWA",
+      "affiliation": "M",
+      "affiliation_label": "Member",
+      "region": 3,
+      "match_key": "irish mountain rocky wolfhound"
+    },
+    {
+      "name": "Saluki Association of New England",
+      "slug": "saluki-association-of-new-england",
+      "initials": "SANE",
+      "affiliation": "FTA",
+      "affiliation_label": "Fast Track Affiliate",
+      "region": 9,
+      "match_key": "england new saluki"
+    },
+    {
+      "name": "Saluki Club of America",
+      "slug": "saluki-club-of-america",
+      "initials": "SCOA",
+      "affiliation": "M",
+      "affiliation_label": "Member",
+      "region": 7,
+      "match_key": "america saluki"
+    },
+    {
+      "name": "Scottish Deerhound Club of America",
+      "slug": "scottish-deerhound-club-of-america",
+      "initials": "SDCA",
+      "affiliation": "M",
+      "affiliation_label": "Member",
+      "region": 5,
+      "match_key": "america deerhound scottish"
+    },
+    {
+      "name": "Sierra Slopes Ibizan Hounds",
+      "slug": "sierra-slopes-ibizan-hounds",
+      "initials": "SSIH",
+      "affiliation": "A",
+      "affiliation_label": "Affiliate",
+      "region": 2,
+      "match_key": "ibizan sierra slopes"
+    },
+    {
+      "name": "Sight Hound Organization of Tidewater",
+      "slug": "sight-hound-organization-of-tidewater",
+      "initials": "SHOT",
+      "affiliation": "M",
+      "affiliation_label": "Member",
+      "region": 8,
+      "match_key": "sight tidewater"
+    },
+    {
+      "name": "Silken Windhounds for Endurance, Perf. & Training",
+      "slug": "silken-windhounds-for-endurance-perf-training",
+      "initials": "SWEPT",
+      "affiliation": "M",
+      "affiliation_label": "Member",
+      "region": 1,
+      "match_key": "endurance for perf silken training windhounds"
+    },
+    {
+      "name": "Silken Windhounds of California",
+      "slug": "silken-windhounds-of-california",
+      "initials": "SWC",
+      "affiliation": "A",
+      "affiliation_label": "Affiliate",
+      "region": 2,
+      "match_key": "california silken windhounds"
+    },
+    {
+      "name": "Southeastern Greyhound Club",
+      "slug": "southeastern-greyhound-club",
+      "initials": "SEGC",
+      "affiliation": "A",
+      "affiliation_label": "Affiliate",
+      "region": 7,
+      "match_key": "greyhound southeastern"
+    },
+    {
+      "name": "Southern Idaho Sighthound Field Association",
+      "slug": "southern-idaho-sighthound-field-association",
+      "initials": "SISFA",
+      "affiliation": "M",
+      "affiliation_label": "Member",
+      "region": 1,
+      "match_key": "field idaho southern"
+    },
+    {
+      "name": "St. Louis Area Sighthounds",
+      "slug": "st-louis-area-sighthounds",
+      "initials": "SLASH",
+      "affiliation": "M",
+      "affiliation_label": "Member",
+      "region": 6,
+      "match_key": "area louis st"
+    },
+    {
+      "name": "Tortoise and Hare Lure Coursers",
+      "slug": "tortoise-and-hare-lure-coursers",
+      "initials": "THLC",
+      "affiliation": "M",
+      "affiliation_label": "Member",
+      "region": 8,
+      "match_key": "coursers hare tortoise"
+    },
+    {
+      "name": "Tri-State Sighthound Club",
+      "slug": "tri-state-sighthound-club",
+      "initials": "TSSC",
+      "affiliation": "M",
+      "affiliation_label": "Member",
+      "region": 8,
+      "match_key": "state tri"
+    },
+    {
+      "name": "Upper Chesapeake Bay Saluki Club",
+      "slug": "upper-chesapeake-bay-saluki-club",
+      "initials": "UCBSC",
+      "affiliation": "M",
+      "affiliation_label": "Member",
+      "region": 8,
+      "match_key": "bay chesapeake saluki upper"
+    },
+    {
+      "name": "Utah Sighthounds Racing and Coursing Club",
+      "slug": "utah-sighthounds-racing-and-coursing-club",
+      "initials": "USRCC",
+      "affiliation": "M",
+      "affiliation_label": "Member",
+      "region": 3,
+      "match_key": "racing utah"
+    },
+    {
+      "name": "Western Washington Whippet Association",
+      "slug": "western-washington-whippet-association",
+      "initials": "WWWA",
+      "affiliation": "M",
+      "affiliation_label": "Member",
+      "region": 1,
+      "match_key": "washington western whippet"
+    }
+  ]
+}

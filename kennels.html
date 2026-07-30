@@ -30,8 +30,11 @@
       const focus = focusKey && season.owners.find((owner) => owner.key === focusKey);
 
       if (focus) {
-        const dogs = season.dogs.filter((dog) =>
-          dog.owners.some((owner) => owner.key === focus.key));
+        const dogs = season.dogs.filter((dog) => focus.dog_ids.includes(dog.id));
+        // Same name, different person — K.Sanders is one owner in Region 8 and
+        // a different owner in Region 1.
+        const sharesName = season.owners.filter((owner) =>
+          owner.owner_key === focus.owner_key && owner.key !== focus.key);
         document.title = `${focus.name} — ASFA Top 20`;
 
         main.innerHTML = `
@@ -39,8 +42,15 @@
           <section class="card">
             <h1 class="card-title">${esc(focus.name)}</h1>
             <p class="text-sm text-asfa-text/70">
-              ${focus.breeds.map((breed) => esc(breed)).join(' · ')}
+              ${regionLabel(focus.region)} · ${focus.breeds.map((breed) => esc(breed)).join(' · ')}
             </p>
+            ${sharesName.length ? `
+              <p class="text-xs text-asfa-text/65 mt-2">
+                Another owner of the same name appears in
+                ${sharesName.map((o) => `<a href="${ownerUrl(o.key)}" class="lnk">${regionLabel(o.region)}</a>`).join(', ')}.
+                ASFA publishes no owner identifier, so hounds are attributed by the region on each
+                standings row. <a href="about.html" class="lnk">How this works</a>.
+              </p>` : ''}
             <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mt-4">
               <div class="tile"><div class="tile-value">${focus.hounds}</div><div class="tile-label">hounds ranked</div></div>
               <div class="tile"><div class="tile-value">${focus.points}</div><div class="tile-label">Top 20 points</div></div>
@@ -88,7 +98,7 @@
         return `
           <div class="tbl-wrap"><table class="tbl">
             <thead><tr>
-              <th>Owner</th><th>Breeds</th>
+              <th>Owner</th><th class="num">Region</th><th>Breeds</th>
               ${sortable.map(([key, label]) =>
                 `<th class="sortable num" data-key="${key}">${label}${
                   key === sortKey ? ' <i class="fa-solid fa-caret-down"></i>' : ''}</th>`).join('')}
@@ -96,6 +106,7 @@
             <tbody>${owners.map((owner) => `
               <tr>
                 <td><a href="${ownerUrl(owner.key)}" class="lnk font-semibold">${esc(owner.name)}</a></td>
+                <td class="num">${owner.region ?? '—'}</td>
                 <td class="text-asfa-text/75 text-xs">${owner.breeds.slice(0, 3).map(esc).join(', ')}${
                   owner.breeds.length > 3 ? ` +${owner.breeds.length - 3}` : ''}</td>
                 <td class="num font-semibold">${owner.points}</td>
@@ -128,27 +139,9 @@
             </p>
           </section>
 
-          <section class="card">
-            <h2 class="card-title">Regions</h2>
-            <div class="tbl-wrap"><table class="tbl">
-              <thead><tr><th class="num">Region</th><th class="num">Hounds ranked</th>
-                <th class="num">Points</th><th class="num">BOB</th>
-                <th class="num">BIF</th><th class="num">Breed firsts</th></tr></thead>
-              <tbody>${season.regions.map((region) => `
-                <tr>
-                  <td class="num font-semibold">${region.region}</td>
-                  <td class="num">${region.hounds}</td>
-                  <td class="num">${region.points}</td>
-                  <td class="num">${region.bob}</td>
-                  <td class="num ${region.bif ? 'font-semibold text-asfa-accent' : ''}">${region.bif}</td>
-                  <td class="num">${region.firsts}</td>
-                </tr>`).join('')}</tbody>
-            </table></div>
-            <p class="text-xs text-asfa-text/55 mt-3">
-              Region is the owner's ASFA region as published on each row.
-              ${season.dogs.filter((d) => d.region == null).length} ranked hound(s) have no region listed.
-            </p>
-          </section>`;
+          <p class="text-sm">
+            <a href="regions.html" class="lnk">Standings and trial entries by region →</a>
+          </p>`;
 
         main.querySelectorAll('th[data-key]').forEach((th) => {
           th.addEventListener('click', () => { sortKey = th.dataset.key; paint(); });

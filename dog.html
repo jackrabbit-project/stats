@@ -92,7 +92,7 @@
                 ${dog.provisional ? ' · <span class="badge badge-prov">provisional</span>' : ''}
               </p>
               <p class="text-sm mt-1">Owned by ${dog.owners.map((owner) =>
-                `<a href="${ownerUrl(owner.key)}" class="lnk">${esc(owner.name)}</a>`).join(', ')
+                `<a href="${ownerUrl(owner.entity)}" class="lnk">${esc(owner.name)}</a>`).join(', ')
                 || esc(dog.owner_raw)}</p>
               ${movementLine ? `<p class="text-sm mt-2">${movementBadge(movement)}
                 <span class="text-asfa-text/70">${esc(movementLine)}</span></p>` : ''}

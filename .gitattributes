@@ -3,9 +3,13 @@
 # the bytes that were published, and fetch.py compares content hashes against
 # them to decide whether anything changed.
 data/snapshots/*.html -text -diff
+data/trials/raw/*.html -text -diff
+data/clubs/raw/*.pdf   -text -diff
 
 # Generated JSON is large and mechanical; keep it out of diffs.
 data/season.json -diff
+data/trials.json -diff
+data/clubs.json  -diff
 data/snapshots/*.json -diff
 
 * text=auto

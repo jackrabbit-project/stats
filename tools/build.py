@@ -15,7 +15,8 @@ from __future__ import annotations
 
 import json
 import sys
-from datetime import date, timezone, datetime
+from collections import Counter
+from datetime import timezone, datetime
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -115,7 +116,67 @@ def dedupe_hounds(dogs: list[dict]) -> list[dict]:
     return list(grouped.values())
 
 
-def build_owners(dogs: list[dict]) -> list[dict]:
+def home_regions(dogs: list[dict]) -> dict[str, list[int]]:
+    """Work out where each owner is based, from rows where they are listed first.
+
+    The region on a standings row belongs to the hound's first-listed owner.
+    E.& S.Kominek appear under Regions 8, 3, 7 and 1 — but every out-of-region
+    row has them co-owning someone else's hound, and every row where they lead
+    is Region 7. So an owner appearing in several regions is only evidence of
+    two different people when they lead in more than one.
+
+    A name leading in two regions is still one person if the same co-owner
+    turns up in both: F.Bennett leads a Region 5 Saluki and a Region 2 Saluki,
+    but L.Roberts co-owns both, so that is one syndicate whose hounds live in
+    different places, not two people who happen to share a name. K.Sanders
+    co-owns with nobody, so the six Region 8 Basenjis and the one Region 1
+    Silken Windhound stay separate.
+    """
+    leading: dict[str, dict[int, set[str]]] = {}
+    counts: dict[str, Counter] = {}
+    for dog in dogs:
+        if not dog["owners"] or dog["region"] is None:
+            continue
+        key = dog["owners"][0]["key"]
+        others = {owner["key"] for owner in dog["owners"][1:]}
+        leading.setdefault(key, {}).setdefault(dog["region"], set()).update(others)
+        counts.setdefault(key, Counter())[dog["region"]] += 1
+
+    homes: dict[str, list[int]] = {}
+    for key, by_region in leading.items():
+        regions = sorted(by_region)
+        if len(regions) > 1:
+            linked = any(
+                by_region[a] & by_region[b]
+                for i, a in enumerate(regions) for b in regions[i + 1:]
+            )
+            if linked:
+                # One person. Home is where most of their hounds are;
+                # ties break on the lower region number, for reproducibility.
+                regions = [min(counts[key].items(), key=lambda kv: (-kv[1], kv[0]))[0]]
+        homes[key] = regions
+    return homes
+
+
+def owner_identity(key: str, row_region: int | None,
+                   homes: dict[str, list[int]]) -> tuple[str, int | None]:
+    """Map an owner mention to a specific person.
+
+    Where one name leads in two regions those are two people sharing a name —
+    K.Sanders has six Basenjis in Region 8 and one Silken Windhound in Region 1
+    — so the name alone is not an identity and the region is appended.
+    """
+    regions = homes.get(key, [])
+    if len(regions) <= 1:
+        return key, (regions[0] if regions else None)
+    # A split name: place this mention with the person whose region it matches.
+    if row_region in regions:
+        return f"{key}@{row_region}", row_region
+    # A co-owner mention from outside either home region cannot be attributed.
+    return f"{key}@?", None
+
+
+def build_owners(dogs: list[dict], homes: dict[str, list[int]]) -> list[dict]:
     """Aggregate by owning party.
 
     A co-owned hound counts toward every party named on the row; there is no
@@ -124,10 +185,12 @@ def build_owners(dogs: list[dict]) -> list[dict]:
     owners: dict[str, dict] = {}
     for dog in dedupe_hounds(dogs):
         for owner in dog["owners"]:
-            key = owner["key"]
+            key, home = owner_identity(owner["key"], dog["region"], homes)
             record = owners.setdefault(key, {
                 "key": key,
+                "owner_key": owner["key"],
                 "name": owner["name"],
+                "region": home,
                 "names": set(),
                 "hounds": 0,
                 "points": 0,
@@ -162,6 +225,46 @@ def build_owners(dogs: list[dict]) -> list[dict]:
 
     result.sort(key=lambda r: (-r["points"], -r["hounds"], r["name"]))
     return result
+
+
+def write_owner_split_review(dogs: list[dict], homes: dict[str, list[int]]) -> list[str]:
+    """Record every name split into two people, so a wrong split can be spotted.
+
+    Splitting is the safe default — a wrong merge invents a combined record for
+    two real people — but a name leading in two regions on one hound each is
+    just as likely to be somebody who moved. Those thin cases need human eyes.
+    """
+    split_keys = {key: regions for key, regions in homes.items() if len(regions) > 1}
+    if not split_keys:
+        return []
+
+    leading: dict[str, dict[int, list[dict]]] = {}
+    for dog in dogs:
+        if not dog["owners"]:
+            continue
+        key = dog["owners"][0]["key"]
+        if key in split_keys and dog["region"] is not None:
+            leading.setdefault(key, {}).setdefault(dog["region"], []).append(dog)
+
+    review_dir = ROOT / "data" / "review"
+    review_dir.mkdir(parents=True, exist_ok=True)
+    lines = ["owner_key,region,hounds,breeds,example_hound"]
+    thin: list[str] = []
+
+    for key in sorted(split_keys):
+        for region in sorted(leading.get(key, {})):
+            entries = leading[key][region]
+            breeds = "|".join(sorted({d["breed"] for d in entries}))
+            lines.append(
+                f'{key},{region},{len(entries)},{breeds},"{entries[0]["call_name"]}"'
+            )
+        counts = [len(leading.get(key, {}).get(r, [])) for r in split_keys[key]]
+        if max(counts, default=0) <= 1:
+            thin.append(f"{key} ({'/'.join(f'R{r}' for r in split_keys[key])})")
+
+    (review_dir / "owner-splits.csv").write_text(
+        "\n".join(lines) + "\n", encoding="utf-8")
+    return thin
 
 
 def build_regions(dogs: list[dict]) -> list[dict]:
@@ -209,7 +312,7 @@ def build(snapshots: list[dict]) -> dict:
                 "registered_name": dog["registered_name"],
                 "core_name": dog["core_name"],
                 "owner_raw": dog["owner_raw"],
-                "owners": dog["owners"],
+                "owners": [dict(owner) for owner in dog["owners"]],
                 "region": dog["region"],
                 "points": dog["points"],
                 "bob": dog["bob"],
@@ -218,6 +321,17 @@ def build(snapshots: list[dict]) -> dict:
                 "percentile": percentile(dog["rank"], section["total_competing"]),
                 "movement": movement.get(dog["id"]),
             })
+
+    homes = home_regions(dogs)
+    thin_splits = write_owner_split_review(dogs, homes)
+
+    # "key" identifies the name; "entity" identifies the person and is what
+    # links to a kennel page. The two differ where one name covers two owners
+    # in different regions.
+    for dog in dogs:
+        for owner in dog["owners"]:
+            owner["entity"] = owner_identity(
+                owner["key"], dog["region"], homes)[0]
 
     unique = dedupe_hounds(dogs)
     stats = {
@@ -239,8 +353,11 @@ def build(snapshots: list[dict]) -> dict:
         "bob": sum(dog["bob"] for dog in unique),
         "bif": sum(dog["bif"] for dog in unique),
         "hounds_with_bif": sum(1 for dog in unique if dog["bif"]),
-        "owners": len({o["key"] for dog in unique for o in dog["owners"]}),
+        "owners": 0,   # filled in below, once owners are resolved
     }
+
+    owners = build_owners(dogs, homes)
+    stats["owners"] = len(owners)
 
     return {
         "season": current["season"],
@@ -252,8 +369,9 @@ def build(snapshots: list[dict]) -> dict:
         "stats": stats,
         "sections": sections,
         "dogs": dogs,
-        "owners": build_owners(dogs),
+        "owners": owners,
         "regions": build_regions(dogs),
+        "review": {"thin_owner_splits": thin_splits},
     }
 
 
@@ -274,6 +392,14 @@ def main() -> int:
         f"  {stats['points']} points, {stats['bob']} BOB, {stats['bif']} BIF "
         f"held by {stats['hounds_with_bif']} hounds, {stats['owners']} owners"
     )
+    thin = bundle["review"]["thin_owner_splits"]
+    if thin:
+        print(
+            f"  {len(thin)} name(s) split on one hound each - check "
+            f"data/review/owner-splits.csv in case one is a person who moved:"
+        )
+        for entry in thin:
+            print(f"     {entry}")
     return 0
 
 
