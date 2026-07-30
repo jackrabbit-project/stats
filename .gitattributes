@@ -1,0 +1,11 @@
+# Archived snapshots are stored exactly as ASFA served them. Git must never
+# normalize their line endings: the whole point is that the bytes on disk are
+# the bytes that were published, and fetch.py compares content hashes against
+# them to decide whether anything changed.
+data/snapshots/*.html -text -diff
+
+# Generated JSON is large and mechanical; keep it out of diffs.
+data/season.json -diff
+data/snapshots/*.json -diff
+
+* text=auto
