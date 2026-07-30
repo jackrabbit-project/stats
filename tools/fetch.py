@@ -103,7 +103,7 @@ def fetch(force: bool = False) -> Path | None:
     previous = newest_snapshot()
     if previous is not None and not force:
         if hashlib.sha256(previous.read_bytes()).hexdigest() == digest:
-            print(f"Unchanged since {previous.name} — nothing archived.")
+            print(f"Unchanged since {previous.name} - nothing archived.")
             return None
 
     if target.exists() and not force:

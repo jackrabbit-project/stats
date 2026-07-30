@@ -152,7 +152,10 @@ def build_owners(dogs: list[dict]) -> list[dict]:
     result = []
     for record in owners.values():
         # Prefer the longest spelling seen; it is usually the most complete.
-        record["name"] = max(record["names"], key=len)
+        # Ties break alphabetically rather than on set iteration order, which
+        # varies run to run and would otherwise make builds non-reproducible
+        # ("Kaije KNLs" and "Kaije Knls" are the same length).
+        record["name"] = min(record["names"], key=lambda name: (-len(name), name))
         record["breeds"] = sorted(record["breeds"])
         del record["names"]
         result.append(record)
