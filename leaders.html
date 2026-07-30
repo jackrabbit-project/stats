@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#2C6E49">
+  <title>Season leaders — ASFA Top 20</title>
+  <meta name="description" content="Who leads the 2026 ASFA lure coursing season: most Best in Field, most Best of Breed, most Bowen points, and the highest standings within each breed.">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="js/theme.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Abel&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/site.css">
+  <link rel="icon" href="assets/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
+</head>
+<body class="min-h-screen flex flex-col">
+  <header id="site-header"></header>
+
+  <main id="main" class="flex-1 max-w-6xl mx-auto w-full px-4 py-6 space-y-5">
+    <div>
+      <h1 class="font-abel text-3xl text-asfa-green">Season leaders</h1>
+      <p class="text-sm text-asfa-text/70 mt-1" id="subtitle"></p>
+    </div>
+
+    <div class="flex flex-wrap items-center gap-2">
+      <div id="tabs" class="flex flex-wrap gap-1"></div>
+      <label class="ml-auto text-sm text-asfa-text/70">
+        Breed
+        <select id="breed-filter" class="ml-1 border border-asfa-border px-2 py-1.5 text-sm bg-white"></select>
+      </label>
+    </div>
+
+    <p id="note" class="text-xs text-asfa-text/65"></p>
+    <section id="panel"></section>
+  </main>
+
+  <footer id="site-footer" class="bg-asfa-navy text-white py-8"></footer>
+
+  <script src="js/app.js"></script>
+  <script>
+    page('leaders.html', (season) => {
+      const BOARDS = {
+        bif: {
+          label: 'Best in Field',
+          stat: 'bif',
+          heading: 'BIF',
+          note: 'Best in Field is won over every hound at the trial, so it compares fairly across breeds. Most hounds never earn one.',
+        },
+        bob: {
+          label: 'Best of Breed',
+          stat: 'bob',
+          heading: 'BOB',
+          note: 'Best of Breed is won over the rest of the breed at a trial. Comparable across breeds, though a larger breed offers more chances.',
+        },
+        points: {
+          label: 'Top 20 points',
+          stat: 'points',
+          heading: 'Points',
+          note: 'Bowen-system points are NOT comparable between breeds — a breed with 200 hounds competing offers far more of them than one with five. Use this within a breed, or use breed standing to compare across breeds.',
+        },
+        percentile: {
+          label: 'Breed standing',
+          stat: 'percentile',
+          heading: 'Standing',
+          ascending: true,
+          note: 'Each hound’s rank measured against every hound ASFA reports competing in its breed. The fair way to compare a Whippet against an Azawakh.',
+        },
+      };
+
+      const hounds = groupHounds(season.dogs);
+      const tabs = document.getElementById('tabs');
+      const filter = document.getElementById('breed-filter');
+      const panel = document.getElementById('panel');
+      const note = document.getElementById('note');
+
+      document.getElementById('subtitle').textContent =
+        `${season.season} season through ${formatDate(season.as_of)}.`;
+
+      const sections = [...season.sections]
+        .filter((section) => section.ranked)
+        .sort((a, b) => a.breed.localeCompare(b.breed));
+      filter.innerHTML = '<option value="">All breeds &amp; divisions</option>'
+        + sections.map((s) => `<option value="${s.slug}">${esc(s.breed)}</option>`).join('');
+
+      let current = (location.hash || '#bif').slice(1);
+      if (!BOARDS[current]) current = 'bif';
+
+      function paint() {
+        const board = BOARDS[current];
+        tabs.innerHTML = Object.entries(BOARDS).map(([key, item]) =>
+          `<button data-board="${key}" class="px-3 py-1.5 text-sm border ${
+            key === current ? 'bg-asfa-green text-white border-asfa-green'
+                            : 'bg-white border-asfa-border hover:border-asfa-accent'}">${item.label}</button>`
+        ).join('');
+        tabs.querySelectorAll('button[data-board]').forEach((button) => {
+          button.addEventListener('click', () => {
+            current = button.dataset.board;
+            history.replaceState(null, '', `#${current}`);
+            paint();
+          });
+        });
+
+        note.textContent = board.note;
+
+        const slug = filter.value;
+        let list = hounds.filter((dog) => !slug || dog.breed_slug === slug);
+        list = list.filter((dog) => dog[board.stat] != null && dog[board.stat] > 0);
+        list.sort((a, b) => (board.ascending
+          ? a[board.stat] - b[board.stat]
+          : b[board.stat] - a[board.stat]) || a.rank - b.rank);
+        list = list.slice(0, 60);
+
+        if (!list.length) {
+          panel.innerHTML = `<div class="card"><p class="text-sm text-asfa-text/70">
+            No hound has recorded ${esc(board.label.toLowerCase())} in this selection yet.</p></div>`;
+          return;
+        }
+
+        const value = (dog) => board.stat === 'percentile'
+          ? percentileLabel(dog)
+          : dog[board.stat];
+
+        panel.innerHTML = `
+          <div class="card">
+            <div class="tbl-wrap"><table class="tbl">
+              <thead><tr>
+                <th class="num">#</th><th>Hound</th><th>Registered name</th>
+                <th>Breed</th><th>Owner</th><th class="num">${board.heading}</th>
+                <th class="num">Breed rank</th>
+              </tr></thead>
+              <tbody>${list.map((dog, index) => `
+                <tr>
+                  <td class="num text-asfa-text/50">${index + 1}</td>
+                  <td><a href="${dogUrl(dog.id)}" class="lnk font-semibold">${esc(dog.call_name)}</a></td>
+                  <td class="text-asfa-text/80">${esc(dog.registered_name)}</td>
+                  <td><a href="${breedUrl(dog.breed_slug)}" class="lnk">${esc(dog.breed)}</a></td>
+                  <td class="text-asfa-text/80">${esc(dog.owner_raw)}</td>
+                  <td class="num font-semibold text-asfa-accent">${value(dog)}</td>
+                  <td class="num">#${dog.rank}${dog.total_competing ? ` of ${dog.total_competing}` : ''}</td>
+                </tr>`).join('')}</tbody>
+            </table></div>
+            <p class="text-xs text-asfa-text/55 mt-3">
+              Showing ${list.length} hound${list.length === 1 ? '' : 's'}. A hound ranked in both its
+              breed and the Singles stake is counted once.
+            </p>
+          </div>`;
+      }
+
+      filter.addEventListener('change', paint);
+      window.addEventListener('hashchange', () => {
+        const next = location.hash.slice(1);
+        if (BOARDS[next] && next !== current) { current = next; paint(); }
+      });
+      paint();
+    });
+  </script>
+</body>
+</html>

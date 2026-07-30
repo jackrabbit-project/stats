@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#2C6E49">
+  <title>ASFA Top 20 — 2026 Season Standings</title>
+  <meta name="description" content="Search the ASFA lure coursing Top 20 standings by hound name. Best in Field and Best of Breed leaders, Bowen point totals, breed percentiles, kennel leaderboards. Unofficial fan site.">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="js/theme.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Abel&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/site.css">
+  <link rel="icon" href="assets/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
+</head>
+<body class="min-h-screen flex flex-col">
+  <header id="site-header"></header>
+
+  <main id="main" class="flex-1 w-full">
+    <section class="bg-asfa-bg2 border-b border-asfa-border">
+      <div class="max-w-3xl mx-auto px-4 py-10 text-center">
+        <h1 class="font-abel text-4xl md:text-5xl text-asfa-green tracking-tight">Find your hound.</h1>
+        <p class="mt-2 text-asfa-text/75">See exactly where they stand in the breed this season.</p>
+
+        <div class="relative mt-6 text-left">
+          <label for="search" class="sr-only">Search hounds by name</label>
+          <input id="search" type="search" autocomplete="off" placeholder="Call name, registered name, or owner…"
+                 class="w-full border border-asfa-border px-4 py-3 text-lg focus:outline-none focus:ring-2 focus:ring-asfa-green">
+          <div id="search-results" class="search-results absolute z-20 left-0 right-0 mt-1 hidden"></div>
+        </div>
+
+        <p class="mt-3 text-xs text-asfa-text/60" id="coverage"></p>
+      </div>
+    </section>
+
+    <div class="max-w-6xl mx-auto w-full px-4 py-8 space-y-8">
+      <section id="tiles" class="grid grid-cols-2 md:grid-cols-4 gap-3"></section>
+
+      <section class="grid md:grid-cols-2 gap-6">
+        <div class="card">
+          <h2 class="card-title">Most Best in Field</h2>
+          <p class="text-xs text-asfa-text/60 mb-3">BIF beats every hound at the trial, so it compares fairly across breeds.</p>
+          <div id="bif"></div>
+          <a href="leaders.html#bif" class="lnk text-sm inline-block mt-3">Full BIF leaderboard →</a>
+        </div>
+        <div class="card">
+          <h2 class="card-title">Most Best of Breed</h2>
+          <p class="text-xs text-asfa-text/60 mb-3">Wins over the rest of the breed at a trial.</p>
+          <div id="bob"></div>
+          <a href="leaders.html#bob" class="lnk text-sm inline-block mt-3">Full BOB leaderboard →</a>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2 class="card-title">Highest standing in breed</h2>
+        <p class="text-xs text-asfa-text/60 mb-3">
+          Rank measured against every hound ASFA reports competing in that breed — the honest way to
+          compare a Whippet against an Azawakh, since a large breed offers far more points than a small one.
+        </p>
+        <div id="percentile"></div>
+        <a href="leaders.html#percentile" class="lnk text-sm inline-block mt-3">Full standings →</a>
+      </section>
+
+      <section class="grid sm:grid-cols-3 gap-4">
+        <a href="browse.html" class="card hover:border-asfa-accent block">
+          <h3 class="font-abel text-xl text-asfa-green"><i class="fa-solid fa-list-ol mr-2 text-asfa-accent"></i>Browse by breed</h3>
+          <p class="text-sm text-asfa-text/70 mt-1">Every ranked hound, breed by breed, sortable.</p>
+        </a>
+        <a href="kennels.html" class="card hover:border-asfa-accent block">
+          <h3 class="font-abel text-xl text-asfa-green"><i class="fa-solid fa-house-chimney mr-2 text-asfa-accent"></i>Kennels &amp; regions</h3>
+          <p class="text-sm text-asfa-text/70 mt-1">Which owners and regions are having the season.</p>
+        </a>
+        <a href="compare.html" class="card hover:border-asfa-accent block">
+          <h3 class="font-abel text-xl text-asfa-green"><i class="fa-solid fa-code-compare mr-2 text-asfa-accent"></i>Compare two hounds</h3>
+          <p class="text-sm text-asfa-text/70 mt-1">Head to head, side by side.</p>
+        </a>
+      </section>
+    </div>
+  </main>
+
+  <footer id="site-footer" class="bg-asfa-navy text-white py-8"></footer>
+
+  <script src="js/app.js"></script>
+  <script>
+    page('index.html', (season) => {
+      const hounds = groupHounds(season.dogs);
+      const stats = season.stats;
+
+      document.getElementById('coverage').textContent =
+        `${season.season} season standings through ${formatDate(season.as_of)}, as published by ASFA.`;
+
+      const tiles = [
+        [stats.hounds_ranked, 'hounds ranked'],
+        [stats.sections_with_hounds, 'breeds &amp; divisions'],
+        [stats.bif, 'Best in Field awarded'],
+        [stats.total_competing.toLocaleString(), 'hounds competing'],
+      ];
+      document.getElementById('tiles').innerHTML = tiles.map(([value, label]) =>
+        `<div class="tile"><div class="tile-value">${value}</div><div class="tile-label">${label}</div></div>`
+      ).join('');
+
+      const miniList = (list, stat, suffix) => list.map((dog) => `
+        <a href="${dogUrl(dog.id)}" class="flex items-baseline gap-2 py-1.5 border-b border-asfa-border last:border-0 hover:bg-asfa-bg2 -mx-1 px-1">
+          <span class="font-abel text-xl text-asfa-accent w-8 shrink-0">${dog[stat]}</span>
+          <span class="font-semibold text-asfa-green">${esc(dog.call_name)}</span>
+          <span class="text-xs text-asfa-text/60 ml-auto whitespace-nowrap">${esc(dog.breed)} #${dog.rank}</span>
+        </a>`).join('') || `<p class="text-sm text-asfa-text/60">No ${suffix} recorded yet this season.</p>`;
+
+      const byStat = (stat) => hounds
+        .filter((dog) => dog[stat] > 0)
+        .sort((a, b) => b[stat] - a[stat] || a.rank - b.rank)
+        .slice(0, 6);
+
+      document.getElementById('bif').innerHTML = miniList(byStat('bif'), 'bif', 'BIF');
+      document.getElementById('bob').innerHTML = miniList(byStat('bob'), 'bob', 'BOB');
+
+      const top = hounds
+        .filter((dog) => dog.percentile != null)
+        .sort((a, b) => a.percentile - b.percentile || b.points - a.points)
+        .slice(0, 8);
+      document.getElementById('percentile').innerHTML = `
+        <div class="tbl-wrap"><table class="tbl">
+          <thead><tr><th>Hound</th><th>Breed</th><th class="num">Rank</th><th class="num">Of</th><th class="num">Standing</th></tr></thead>
+          <tbody>${top.map((dog) => `
+            <tr>
+              <td><a href="${dogUrl(dog.id)}" class="lnk font-semibold">${esc(dog.call_name)}</a></td>
+              <td>${esc(dog.breed)}</td>
+              <td class="num">${dog.rank}</td>
+              <td class="num">${dog.total_competing}</td>
+              <td class="num font-semibold text-asfa-accent">${percentileLabel(dog)}</td>
+            </tr>`).join('')}</tbody>
+        </table></div>`;
+
+      attachSearch(
+        document.getElementById('search'),
+        document.getElementById('search-results'),
+        season.dogs
+      );
+    });
+  </script>
+</body>
+</html>

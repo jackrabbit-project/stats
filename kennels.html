@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#2C6E49">
+  <title>Kennels &amp; regions — ASFA Top 20</title>
+  <meta name="description" content="Which owners and ASFA regions are having the strongest 2026 lure coursing season, by hounds ranked, Bowen points, Best of Breed and Best in Field.">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="js/theme.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Abel&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/site.css">
+  <link rel="icon" href="assets/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
+</head>
+<body class="min-h-screen flex flex-col">
+  <header id="site-header"></header>
+  <main id="main" class="flex-1 max-w-6xl mx-auto w-full px-4 py-6 space-y-6"></main>
+  <footer id="site-footer" class="bg-asfa-navy text-white py-8"></footer>
+
+  <script src="js/app.js"></script>
+  <script>
+    page('kennels.html', (season) => {
+      const main = document.getElementById('main');
+      const focusKey = param('owner');
+      const focus = focusKey && season.owners.find((owner) => owner.key === focusKey);
+
+      if (focus) {
+        const dogs = season.dogs.filter((dog) =>
+          dog.owners.some((owner) => owner.key === focus.key));
+        document.title = `${focus.name} — ASFA Top 20`;
+
+        main.innerHTML = `
+          <nav class="text-sm text-asfa-text/60"><a href="kennels.html" class="lnk">Kennels</a> › ${esc(focus.name)}</nav>
+          <section class="card">
+            <h1 class="card-title">${esc(focus.name)}</h1>
+            <p class="text-sm text-asfa-text/70">
+              ${focus.breeds.map((breed) => esc(breed)).join(' · ')}
+            </p>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mt-4">
+              <div class="tile"><div class="tile-value">${focus.hounds}</div><div class="tile-label">hounds ranked</div></div>
+              <div class="tile"><div class="tile-value">${focus.points}</div><div class="tile-label">Top 20 points</div></div>
+              <div class="tile"><div class="tile-value">${focus.bob}</div><div class="tile-label">Best of Breed</div></div>
+              <div class="tile"><div class="tile-value">${focus.bif}</div><div class="tile-label">Best in Field</div></div>
+            </div>
+          </section>
+          <section class="card">
+            <h2 class="card-title">Hounds</h2>
+            <div class="tbl-wrap"><table class="tbl">
+              <thead><tr><th>Hound</th><th>Registered name</th><th>Breed</th>
+                <th class="num">Rank</th><th class="num">Points</th>
+                <th class="num">BOB</th><th class="num">BIF</th><th class="num">Standing</th></tr></thead>
+              <tbody>${dogs.sort((a, b) => b.points - a.points).map((dog) => `
+                <tr>
+                  <td><a href="${dogUrl(dog.id)}" class="lnk font-semibold">${esc(dog.call_name)}</a></td>
+                  <td class="text-asfa-text/80">${esc(dog.registered_name)}</td>
+                  <td><a href="${breedUrl(dog.breed_slug)}" class="lnk">${esc(dog.breed)}</a></td>
+                  <td class="num">${dog.rank}</td>
+                  <td class="num font-semibold">${dog.points}</td>
+                  <td class="num">${dog.bob}</td>
+                  <td class="num ${dog.bif ? 'font-semibold text-asfa-accent' : ''}">${dog.bif}</td>
+                  <td class="num">${percentileLabel(dog)}</td>
+                </tr>`).join('')}</tbody>
+            </table></div>
+            <p class="text-xs text-asfa-text/55 mt-3">
+              Co-owned hounds are listed under every owner named on the ASFA row, so totals
+              across owners add to more than the season total.
+            </p>
+          </section>`;
+        return;
+      }
+
+      const sortable = [
+        ['points', 'Points'], ['hounds', 'Hounds'],
+        ['bob', 'BOB'], ['bif', 'BIF'], ['firsts', 'Firsts'],
+      ];
+      let sortKey = 'points';
+
+      function ownerTable() {
+        const owners = [...season.owners]
+          .sort((a, b) => b[sortKey] - a[sortKey] || b.points - a.points)
+          .slice(0, 50);
+
+        return `
+          <div class="tbl-wrap"><table class="tbl">
+            <thead><tr>
+              <th>Owner</th><th>Breeds</th>
+              ${sortable.map(([key, label]) =>
+                `<th class="sortable num" data-key="${key}">${label}${
+                  key === sortKey ? ' <i class="fa-solid fa-caret-down"></i>' : ''}</th>`).join('')}
+            </tr></thead>
+            <tbody>${owners.map((owner) => `
+              <tr>
+                <td><a href="${ownerUrl(owner.key)}" class="lnk font-semibold">${esc(owner.name)}</a></td>
+                <td class="text-asfa-text/75 text-xs">${owner.breeds.slice(0, 3).map(esc).join(', ')}${
+                  owner.breeds.length > 3 ? ` +${owner.breeds.length - 3}` : ''}</td>
+                <td class="num font-semibold">${owner.points}</td>
+                <td class="num">${owner.hounds}</td>
+                <td class="num">${owner.bob}</td>
+                <td class="num ${owner.bif ? 'font-semibold text-asfa-accent' : ''}">${owner.bif}</td>
+                <td class="num">${owner.firsts}</td>
+              </tr>`).join('')}</tbody>
+          </table></div>`;
+      }
+
+      function paint() {
+        main.innerHTML = `
+          <div>
+            <h1 class="font-abel text-3xl text-asfa-green">Kennels &amp; regions</h1>
+            <p class="text-sm text-asfa-text/70 mt-1">
+              ${season.season} season through ${formatDate(season.as_of)}.
+              Owner is the only ownership field ASFA publishes, so these are owning parties
+              rather than kennel prefixes.
+            </p>
+          </div>
+
+          <section class="card">
+            <h2 class="card-title">Owners</h2>
+            <div id="owner-table">${ownerTable()}</div>
+            <p class="text-xs text-asfa-text/55 mt-3">
+              Top 50 by ${esc(sortable.find(([k]) => k === sortKey)[1].toLowerCase())}.
+              A co-owned hound counts for every owner named on the row. Points are summed across
+              breeds, which mixes scales — treat the hound and BIF columns as the sturdier measures.
+            </p>
+          </section>
+
+          <section class="card">
+            <h2 class="card-title">Regions</h2>
+            <div class="tbl-wrap"><table class="tbl">
+              <thead><tr><th class="num">Region</th><th class="num">Hounds ranked</th>
+                <th class="num">Points</th><th class="num">BOB</th>
+                <th class="num">BIF</th><th class="num">Breed firsts</th></tr></thead>
+              <tbody>${season.regions.map((region) => `
+                <tr>
+                  <td class="num font-semibold">${region.region}</td>
+                  <td class="num">${region.hounds}</td>
+                  <td class="num">${region.points}</td>
+                  <td class="num">${region.bob}</td>
+                  <td class="num ${region.bif ? 'font-semibold text-asfa-accent' : ''}">${region.bif}</td>
+                  <td class="num">${region.firsts}</td>
+                </tr>`).join('')}</tbody>
+            </table></div>
+            <p class="text-xs text-asfa-text/55 mt-3">
+              Region is the owner's ASFA region as published on each row.
+              ${season.dogs.filter((d) => d.region == null).length} ranked hound(s) have no region listed.
+            </p>
+          </section>`;
+
+        main.querySelectorAll('th[data-key]').forEach((th) => {
+          th.addEventListener('click', () => { sortKey = th.dataset.key; paint(); });
+        });
+      }
+
+      paint();
+    });
+  </script>
+</body>
+</html>

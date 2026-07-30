@@ -1,0 +1,158 @@
+/* Custom classes layered on top of Tailwind. Flat and square-cornered, to
+   match the rest of the project. */
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+  background: #F7F5EF;
+  color: #2F2F2F;
+}
+
+h1, h2, h3, .font-abel {
+  font-family: 'Abel', sans-serif;
+}
+
+.card {
+  background: #FFFFFF;
+  border: 1px solid #D6DCD7;
+  padding: 1.25rem;
+}
+
+.card-title {
+  font-family: 'Abel', sans-serif;
+  font-size: 1.35rem;
+  line-height: 1.2;
+  color: #2C6E49;
+  border-bottom: 2px solid #A44A2F;
+  display: inline-block;
+  padding-bottom: 0.35rem;
+  margin-bottom: 0.9rem;
+}
+
+/* Stat tiles ------------------------------------------------------------- */
+
+.tile {
+  background: #E8EFEA;
+  border: 1px solid #D6DCD7;
+  padding: 0.9rem 1rem;
+}
+
+.tile-value {
+  font-family: 'Abel', sans-serif;
+  font-size: 1.9rem;
+  line-height: 1;
+  color: #2C6E49;
+}
+
+.tile-label {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: #2F2F2F;
+  opacity: 0.7;
+  margin-top: 0.3rem;
+}
+
+/* Tables ----------------------------------------------------------------- */
+
+.tbl {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+
+.tbl th {
+  background: #2C6E49;
+  color: #FFFFFF;
+  font-family: 'Abel', sans-serif;
+  font-weight: 400;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  text-align: left;
+  padding: 0.5rem 0.6rem;
+  white-space: nowrap;
+}
+
+.tbl th.sortable {
+  cursor: pointer;
+  user-select: none;
+}
+
+.tbl th.sortable:hover {
+  background: #1F4C33;
+}
+
+.tbl td {
+  border-bottom: 1px solid #D6DCD7;
+  padding: 0.5rem 0.6rem;
+  vertical-align: top;
+}
+
+.tbl tbody tr:hover {
+  background: #E8EFEA;
+}
+
+.tbl .num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* Wide tables scroll inside their own container rather than the page. */
+.tbl-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Badges ----------------------------------------------------------------- */
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 0.1rem 0.4rem;
+  white-space: nowrap;
+}
+
+.badge-up    { background: #DCEBE1; color: #1F4C33; }
+.badge-down  { background: #F3E0DA; color: #7A3422; }
+.badge-new   { background: #E8EFEA; color: #2C6E49; }
+.badge-flat  { background: #EFEFEC; color: #6B6B6B; }
+.badge-prov  { background: #FBEFD6; color: #7A5A11; }
+
+/* Search ----------------------------------------------------------------- */
+
+.search-results {
+  background: #FFFFFF;
+  border: 1px solid #D6DCD7;
+  max-height: 24rem;
+  overflow-y: auto;
+}
+
+/* Links ------------------------------------------------------------------ */
+
+.lnk {
+  color: #2C6E49;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.lnk:hover {
+  color: #A44A2F;
+}
+
+/* Rank pill used on profile and compare pages ---------------------------- */
+
+.rank-pill {
+  font-family: 'Abel', sans-serif;
+  font-size: 2.6rem;
+  line-height: 1;
+  color: #A44A2F;
+}
+
+@media print {
+  #site-header, #site-footer, .no-print { display: none !important; }
+  .card { border: 1px solid #999; }
+}

@@ -1,0 +1,47 @@
+name: Refresh standings
+
+# ASFA republishes the Top 20 roughly monthly. Checking weekly catches an
+# update within a few days; fetch.py exits without writing when the page is
+# byte-identical, so a quiet week costs one request.
+on:
+  schedule:
+    - cron: '17 11 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Fetch latest standings
+        run: python tools/fetch.py
+
+      - name: Parse, build and verify
+        run: |
+          python tools/parse.py
+          python tools/build.py
+          python tools/check.py
+
+      - name: Commit if the standings changed
+        run: |
+          git config user.name  'github-actions[bot]'
+          git config user.email 'github-actions[bot]@users.noreply.github.com'
+          if git diff --quiet -- data/; then
+            echo "No change in the published standings."
+            exit 0
+          fi
+          AS_OF=$(python -c "import json;print(json.load(open('data/season.json'))['as_of'])")
+          git add data/
+          git commit -m "Standings through ${AS_OF}"
+          git push

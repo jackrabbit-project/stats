@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#2C6E49">
+  <title>How this is built — ASFA Top 20</title>
+  <meta name="description" content="Where the ASFA Top 20 data comes from, what each column means, how breed standing is calculated, and the limits of what these numbers can tell you.">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="js/theme.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Abel&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/site.css">
+  <link rel="icon" href="assets/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
+</head>
+<body class="min-h-screen flex flex-col">
+  <header id="site-header"></header>
+
+  <main id="main" class="flex-1 max-w-3xl mx-auto w-full px-4 py-6 space-y-6">
+    <div>
+      <h1 class="font-abel text-3xl text-asfa-green">How this is built</h1>
+      <p class="text-sm text-asfa-text/70 mt-1" id="coverage"></p>
+    </div>
+
+    <section class="card">
+      <h2 class="card-title">What this is</h2>
+      <p class="text-sm leading-relaxed">
+        ASFA publishes its Top 20 lure coursing standings as one long page: two dozen breed
+        tables stacked end to end, refreshed every few weeks during the season. Everything you
+        need is in there, but you cannot search it, you cannot look up a single hound, and you
+        cannot see how a hound stacks up against the rest of its breed without counting by hand.
+      </p>
+      <p class="text-sm leading-relaxed mt-3">
+        This site reads that page and rearranges it — nothing more. No figure here is calculated
+        from anything ASFA has not already published.
+      </p>
+    </section>
+
+    <section class="card">
+      <h2 class="card-title">Where the numbers come from</h2>
+      <p class="text-sm leading-relaxed">
+        A single source: the
+        <a id="source-link" class="lnk" target="_blank" rel="noopener noreferrer">ASFA Top 20 standings page</a>.
+        Each time ASFA publishes an update, the page is archived verbatim in
+        <a href="https://github.com/jackrabbit-project/asfa-top20/tree/main/data/snapshots" class="lnk" target="_blank" rel="noopener noreferrer">this project's repository</a>,
+        so every number on this site can be traced back to the bytes ASFA served on a given date.
+      </p>
+      <p class="text-sm leading-relaxed mt-3">
+        The parser refuses to publish if the page shape changes: it checks that every row has
+        eight columns, that ranks form a valid tie-aware sequence within each breed, and that no
+        breed lists more hounds than ASFA reports competing. A silent parsing failure would
+        quietly corrupt every leaderboard here, so it fails loudly instead.
+      </p>
+    </section>
+
+    <section class="card">
+      <h2 class="card-title">What each column means</h2>
+      <dl class="text-sm space-y-3">
+        <div><dt class="font-semibold text-asfa-green">Top 20 points</dt>
+          <dd class="text-asfa-text/85">Points earned under the Bowen system, which scores a hound on
+            the competition it beats rather than on wins alone. ASFA's own explainer is
+            <a href="https://www.asfa.org/forms/Rec%2024--Bowen%20System.pdf" class="lnk" target="_blank" rel="noopener noreferrer">published here</a>.</dd></div>
+        <div><dt class="font-semibold text-asfa-green">BOB — Best of Breed</dt>
+          <dd class="text-asfa-text/85">Wins over the rest of the breed at a trial.</dd></div>
+        <div><dt class="font-semibold text-asfa-green">BIF — Best in Field</dt>
+          <dd class="text-asfa-text/85">Wins over every hound at the trial, across all breeds. Rare —
+            most hounds never earn one, and most breeds record none in a season.</dd></div>
+        <div><dt class="font-semibold text-asfa-green">Region</dt>
+          <dd class="text-asfa-text/85">The ASFA region on the hound's row.</dd></div>
+        <div><dt class="font-semibold text-asfa-green">Breed standing</dt>
+          <dd class="text-asfa-text/85">This site's only derived figure: the hound's rank divided by the
+            number of hounds ASFA reports competing in that breed. Ranked 4th of 25 is
+            <em>top 16%</em>.</dd></div>
+      </dl>
+    </section>
+
+    <section class="card">
+      <h2 class="card-title">What these numbers cannot tell you</h2>
+      <p class="text-sm leading-relaxed mb-3">
+        Worth reading before you draw a conclusion from anything here.
+      </p>
+      <ol class="text-sm space-y-3 list-decimal pl-5">
+        <li>
+          <strong>A Top 20 list holds about twenty hounds per breed.</strong> A hound placing 22nd
+          is absent entirely. Every total on this site covers placings on that list — it is not a
+          complete competition record.
+        </li>
+        <li>
+          <strong>Points do not compare across breeds.</strong> A breed with 200 hounds competing
+          offers far more points than one with five. Comparing a Whippet's point total to an
+          Azawakh's says more about breed size than about either hound. Breed standing and Best in
+          Field are the figures that compare fairly.
+        </li>
+        <li>
+          <strong>The Singles stake overlaps the breed lists.</strong> Hounds that run Singles are
+          also listed under their breed, and both rows can carry the same BIF and BOB. Where this
+          site combines sections it takes the <em>maximum</em> of each figure rather than the sum,
+          so a record can never be inflated by being counted twice. Headline population counts
+          leave the Singles stake out for the same reason.
+        </li>
+        <li>
+          <strong>Standings are provisional.</strong> ASFA marks entries with pending information
+          that may change a rank; those are flagged here as they are published.
+        </li>
+        <li>
+          <strong>Matching a hound across updates is approximate.</strong> There is no registration
+          number in the published data, and a registered name changes during the season as titles
+          are earned. This site strips titles to match a hound to itself between updates. It works
+          almost always; it is not infallible.
+        </li>
+        <li>
+          <strong>Owner grouping is approximate.</strong> Owners are free text, and the same
+          household is spelled several ways. Spellings are merged where the match is mechanical.
+          A co-owned hound counts for every owner named on the row, so owner totals sum to more
+          than the season total.
+        </li>
+      </ol>
+    </section>
+
+    <section class="card">
+      <h2 class="card-title">Corrections</h2>
+      <p class="text-sm leading-relaxed">
+        If something here is wrong, please check it against
+        <a id="source-link-2" class="lnk" target="_blank" rel="noopener noreferrer">ASFA's published standings</a> first.
+        If the two disagree, ASFA is right and this site needs fixing — that is a bug worth
+        reporting. If ASFA's own listing looks wrong, that goes to the ASFA Records Secretary,
+        not here.
+      </p>
+      <p class="text-sm mt-3">
+        <a href="mailto:info@gazehound.io" class="lnk">info@gazehound.io</a> ·
+        <a href="https://github.com/jackrabbit-project/asfa-top20/issues/new" class="lnk" target="_blank" rel="noopener noreferrer">Open an issue</a>
+      </p>
+    </section>
+
+    <section class="card" id="disclaimer">
+      <h2 class="card-title">Disclaimer</h2>
+      <p class="text-sm leading-relaxed">
+        This is an independent, unofficial project by lure coursing enthusiasts. It is
+        <strong>not authorized, approved, or endorsed by the American Sighthound Field
+        Association</strong>, and it is not an ASFA publication. ASFA's name is used only to
+        identify the source of the standings.
+      </p>
+      <p class="text-sm leading-relaxed mt-3">
+        The standings themselves are ASFA's work and remain ASFA's property; they are reproduced
+        here with attribution and a link back to the original. Wherever this site and ASFA's
+        published page disagree, <strong>ASFA's page governs</strong>.
+      </p>
+    </section>
+  </main>
+
+  <footer id="site-footer" class="bg-asfa-navy text-white py-8"></footer>
+
+  <script src="js/app.js"></script>
+  <script>
+    page('about.html', (season) => {
+      document.getElementById('coverage').textContent =
+        `${season.season} season standings, covering January 1 through ${formatDate(season.as_of)}.`;
+      for (const id of ['source-link', 'source-link-2']) {
+        document.getElementById(id).href = season.source_url;
+      }
+    });
+  </script>
+</body>
+</html>
