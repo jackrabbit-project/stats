@@ -118,8 +118,12 @@
       document.getElementById('bif').innerHTML = miniList(byStat('bif'), 'bif', 'BIF');
       document.getElementById('bob').innerHTML = miniList(byStat('bob'), 'bob', 'BOB');
 
+      // Breeds only. The Singles stake and the LCI divisions have their own
+      // competitor pools and their own pages; mixing them into a list headed
+      // "in breed" would be plainly wrong, and both are large enough to crowd
+      // the breeds out of it.
       const top = hounds
-        .filter((dog) => dog.percentile != null)
+        .filter((dog) => dog.percentile != null && dog.is_breed)
         .sort((a, b) => a.percentile - b.percentile || b.points - a.points)
         .slice(0, 8);
       document.getElementById('percentile').innerHTML = `
