@@ -48,7 +48,19 @@
           label: 'Best in Field',
           stat: 'bif',
           heading: 'BIF',
-          note: 'Best in Field is won over every hound at the trial, so it compares fairly across breeds. Most hounds never earn one.',
+          // Ch. V §11: a single run between the day's Best of Breed winners,
+          // offered at the host club's option. Counted live, so the rarity
+          // figures stay true as the season runs.
+          note: (pool) => {
+            const inBreed = pool.filter((dog) => dog.is_breed);
+            const holders = inBreed.filter((dog) => dog.bif);
+            const once = holders.filter((dog) => dog.bif === 1).length;
+            return 'A trial’s top award: one run between that day’s Best of Breed '
+              + 'winners, offered at the host club’s option. Each breed sends a single '
+              + 'hound to it, so unlike points it cannot be inflated by breed size. '
+              + `Rare, too — ${holders.length} of the ${inBreed.length} hounds ranked in a `
+              + `breed hold one, and ${once} of those hold exactly one.`;
+          },
         },
         bob: {
           label: 'Best of Breed',
@@ -104,7 +116,11 @@
           });
         });
 
-        note.textContent = board.note;
+        // A note may be a plain string, or a function of the hound pool where
+        // it quotes live figures.
+        note.textContent = typeof board.note === 'function'
+          ? board.note(hounds)
+          : board.note;
 
         const slug = filter.value;
         let list = hounds.filter((dog) => !slug || dog.breed_slug === slug);
