@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#2C6E49">
+  <title>LCI divisions — ASFA Coursing Stats</title>
+  <meta name="description" content="ASFA Lure Chasing Instinct standings by division — Small, Large and Sighthound Mix — with proficiency points, division standings and LCI, LCA, LCC and LCE titles held.">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="js/theme.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Abel&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/site.css">
+  <link rel="icon" href="assets/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
+</head>
+<body class="min-h-screen flex flex-col">
+  <header id="site-header"></header>
+  <main id="main" class="flex-1 max-w-6xl mx-auto w-full px-4 py-6 space-y-6"></main>
+  <footer id="site-footer" class="bg-asfa-navy text-white py-8"></footer>
+
+  <script src="js/app.js"></script>
+  <script>
+    page('lci.html', (season) => {
+      const main = document.getElementById('main');
+
+      // Definitions from the ASFA LCI Rules (rev 08/01/2024), LCI Ch. IV §4.
+      const DIVISIONS = [
+        { slug: 'lci-small', name: 'LCI Small',
+          rule: '17½ inches or less at the withers, and brachycephalic dogs.',
+          extra: 'Runs 50% of the ASFA course, to a maximum of 400 yards.' },
+        { slug: 'lci-large', name: 'LCI Large',
+          rule: 'Over 17½ inches at the withers.',
+          extra: 'Runs the full ASFA course length.' },
+        { slug: 'lci-sighthound-mix', name: 'LCI Sighthound Mix',
+          rule: 'Dogs with a sighthound breed in their background.',
+          extra: 'Runs the full ASFA course length.' },
+      ];
+
+      // Titles the LCI program awards, in order of progression.
+      const TITLES = [
+        ['LCI',  'Lure Chasing Instinct',            '8 qualifying scores'],
+        ['LCA',  'Lure Chasing Advanced',            '20 qualifying scores'],
+        ['LCC',  'Lure Chasing Champion',            '100 championship points with placements'],
+        ['LCE',  'Lure Chaser Excellent',            'LCC, then 4 firsts with competition and 300 more points'],
+        ['VLCC', 'Veteran Lure Chasing Champion',    'Over 7 years: 2 firsts, or 1 first and 2 seconds, plus 100 points'],
+        ['VLCE', 'Veteran Lure Chasing Excellent',   'VLCC, then 3 firsts and 300 more points'],
+      ];
+
+      const lciDogs = season.dogs.filter((dog) => dog.breed_slug.startsWith('lci-'));
+      const sectionFor = (slug) => season.sections.find((s) => s.slug === slug);
+
+      const ranked = lciDogs.length;
+      const competing = DIVISIONS.reduce(
+        (sum, d) => sum + (sectionFor(d.slug)?.total_competing || 0), 0);
+
+      // Count LCI-program titles held by ranked dogs. A title with a numeral
+      // (LCE2) counts once against its base.
+      const titleCounts = {};
+      for (const dog of lciDogs) {
+        const held = new Set(
+          (dog.titles || []).map((t) => t.replace(/\d+$/, '').toUpperCase()));
+        for (const code of held) {
+          if (TITLES.some(([c]) => c === code)) {
+            titleCounts[code] = (titleCounts[code] || 0) + 1;
+          }
+        }
+      }
+      const titled = lciDogs.filter((dog) =>
+        (dog.titles || []).some((t) =>
+          TITLES.some(([c]) => c === t.replace(/\d+$/, '').toUpperCase()))).length;
+
+      const divisionTable = (division) => {
+        const section = sectionFor(division.slug);
+        if (!section) return '';
+        const dogs = lciDogs
+          .filter((dog) => dog.breed_slug === division.slug)
+          .sort((a, b) => a.rank - b.rank);
+        const showMovement = season.previous_as_of && dogs.some((d) => d.movement);
+
+        return `
+          <section class="card">
+            <div class="flex flex-wrap items-baseline justify-between gap-2">
+              <h2 class="card-title mb-0">${esc(division.name)}</h2>
+              <p class="text-sm text-asfa-text/70">
+                ${section.ranked} ranked of ${section.total_competing} competing
+              </p>
+            </div>
+            <p class="text-xs text-asfa-text/65 mt-3 mb-3">
+              <strong>${esc(division.rule)}</strong> ${esc(division.extra)}
+              Open, Excellent and Veteran stakes run within the division and are
+              combined in these standings.
+            </p>
+            <div class="tbl-wrap"><table class="tbl">
+              <thead><tr>
+                <th class="num">Rank</th><th>Call name</th><th>Registered name</th>
+                <th>Owner</th><th class="num">Region</th><th class="num">Points</th>
+                <th>Titles</th><th class="num">Standing</th>
+                ${showMovement ? '<th class="num">Since</th>' : ''}
+              </tr></thead>
+              <tbody>
+                ${dogs.map((dog) => {
+                  const lciTitles = (dog.titles || []).filter((t) =>
+                    TITLES.some(([c]) => c === t.replace(/\d+$/, '').toUpperCase()));
+                  return `
+                    <tr>
+                      <td class="num font-semibold">${dog.rank}</td>
+                      <td><a href="${dogUrl(dog.id)}" class="lnk font-semibold">${esc(dog.call_name)}</a></td>
+                      <td class="text-asfa-text/80">${esc(dog.registered_name)}</td>
+                      <td class="text-asfa-text/80">${esc(dog.owner_raw)}</td>
+                      <td class="num">${dog.region ?? '—'}</td>
+                      <td class="num font-semibold">${dog.points}</td>
+                      <td class="text-xs text-asfa-accent">${lciTitles.map(esc).join(' ') || '—'}</td>
+                      <td class="num">${percentileLabel(dog)}</td>
+                      ${showMovement ? `<td class="num">${movementBadge(dog.movement)}</td>` : ''}
+                    </tr>`;
+                }).join('')}
+              </tbody>
+            </table></div>
+          </section>`;
+      };
+
+      main.innerHTML = `
+        <div>
+          <h1 class="font-abel text-3xl text-asfa-green">Lure Chasing Instinct</h1>
+          <p class="text-sm text-asfa-text/70 mt-1">
+            LCI is ASFA's program for dogs that are not purebred sighthounds — mixed breeds and
+            dogs otherwise ineligible for the regular stakes. Each dog runs alone and is scored on
+            its desire and ability to chase the lure, in the manner of the Singles stake.
+            Season through ${formatDate(season.as_of)}.
+          </p>
+        </div>
+
+        <section class="grid grid-cols-2 md:grid-cols-4 gap-3">
+          <div class="tile"><div class="tile-value">${ranked}</div><div class="tile-label">dogs ranked</div></div>
+          <div class="tile"><div class="tile-value">${competing}</div><div class="tile-label">dogs competing</div></div>
+          <div class="tile"><div class="tile-value">${DIVISIONS.length}</div><div class="tile-label">divisions</div></div>
+          <div class="tile"><div class="tile-value">${titled}</div><div class="tile-label">holding an LCI title</div></div>
+        </section>
+
+        <section class="card">
+          <h2 class="card-title">How a dog is scored</h2>
+          <p class="text-sm">
+            Two runs — a preliminary and a final — each scored out of 100 by every judge, less a
+            course-delay penalty of 1 to 10 points. A qualifying score is half the combined total.
+          </p>
+          <div class="tbl-wrap mt-3"><table class="tbl">
+            <thead><tr><th>Category</th><th class="num">Points</th><th>Category</th><th class="num">Points</th></tr></thead>
+            <tbody>
+              <tr><td>Enthusiasm</td><td class="num">15</td><td>Agility</td><td class="num">25</td></tr>
+              <tr><td>Follow</td><td class="num">15</td><td>Endurance</td><td class="num">20</td></tr>
+              <tr><td>Speed</td><td class="num">25</td><td class="font-semibold">Total</td><td class="num font-semibold">100</td></tr>
+            </tbody>
+          </table></div>
+          <p class="text-sm mt-4">
+            Placements pay proficiency points scaled to the size of the stake — first place takes
+            four times the number of dogs competing, to a maximum of 40; second three times, to 30;
+            third twice, to 20; fourth the number itself, to 10. No dog places without at least
+            100 points from one judge, or 200 from two, across both runs.
+          </p>
+        </section>
+
+        ${DIVISIONS.map(divisionTable).join('')}
+
+        <section class="card">
+          <h2 class="card-title">Titles</h2>
+          <p class="text-xs text-asfa-text/60 mb-3">
+            Held by the ${ranked} dogs currently ranked. A dog may hold more than one.
+          </p>
+          <div class="tbl-wrap"><table class="tbl">
+            <thead><tr><th>Title</th><th>Name</th><th>Earned by</th><th class="num">Ranked dogs holding it</th></tr></thead>
+            <tbody>
+              ${TITLES.map(([code, name, requirement]) => `
+                <tr>
+                  <td class="font-semibold text-asfa-accent">${code}</td>
+                  <td>${esc(name)}</td>
+                  <td class="text-asfa-text/80 text-xs">${esc(requirement)}</td>
+                  <td class="num font-semibold">${titleCounts[code] || 0}</td>
+                </tr>`).join('')}
+            </tbody>
+          </table></div>
+          <p class="text-xs text-asfa-text/55 mt-3">
+            LCE and VLCE repeat indefinitely — LCE II, III and onward — each needing four more
+            firsts and 300 more points. Counts here are taken from the titles on each dog's
+            registered name as ASFA publishes it, so a title earned but not yet added to the name
+            will not appear.
+          </p>
+        </section>
+
+        <section class="card">
+          <h2 class="card-title">What LCI points are, and are not</h2>
+          <ul class="text-sm space-y-2 list-disc pl-5">
+            <li>
+              LCI awards <strong>proficiency points only</strong>, toward the Lure Chasing Champion
+              and Lure Chaser Excellent titles. No ASFA championship points or placements toward
+              the Field Championship or Lure Courser of Merit titles are earned in these stakes.
+            </li>
+            <li>
+              <strong>No Best of Breed or Best in Field.</strong> Dogs run alone and the divisions
+              are not breed stakes, so neither award exists here. Where a figure appears in one of
+              those columns on an ASFA row it was earned elsewhere, and this site never counts it
+              toward LCI.
+            </li>
+            <li>
+              <strong>Points do not compare between divisions.</strong> Placement points scale with
+              the number of dogs in the stake, so a division drawing 87 dogs offers far more of
+              them than one drawing 39. Standing — rank against the division's competitors — is the
+              fair comparison.
+            </li>
+          </ul>
+          <p class="text-xs text-asfa-text/55 mt-3">
+            Division definitions, scoring and titles from the
+            <a href="https://www.asfa.org/rule/index.htm" class="lnk" target="_blank" rel="noopener noreferrer">ASFA LCI Rules</a>
+            (rev. 08/01/2024), LCI Chapters III–V. Standings from the ASFA Top 20.
+          </p>
+        </section>`;
+    });
+  </script>
+</body>
+</html>

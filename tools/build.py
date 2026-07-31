@@ -337,6 +337,10 @@ def build(snapshots: list[dict]) -> dict:
                 "call_name": dog["call_name"],
                 "registered_name": dog["registered_name"],
                 "core_name": dog["core_name"],
+                # Earned titles, as suffixes on the registered name. The LCI
+                # program is built around them (LCI, LCA, LCC, LCE), so the
+                # LCI page counts them.
+                "titles": [t.strip(".,") for t in dog["titles_suffix"]],
                 "owner_raw": dog["owner_raw"],
                 "owners": [dict(owner) for owner in dog["owners"]],
                 "region": dog["region"],

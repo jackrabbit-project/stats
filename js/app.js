@@ -222,7 +222,7 @@ const NAV = [
   ['leaders.html', 'Leaders'],
   ['kennels.html', 'Kennels'],
   ['regions.html', 'Regions'],
-  ['compare.html', 'Compare'],
+  ['lci.html', 'LCI'],
   ['about.html', 'About'],
 ];
 
