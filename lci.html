@@ -141,28 +141,6 @@
           <div class="tile"><div class="tile-value">${titled}</div><div class="tile-label">holding an LCI title</div></div>
         </section>
 
-        <section class="card">
-          <h2 class="card-title">How a dog is scored</h2>
-          <p class="text-sm">
-            Two runs — a preliminary and a final — each scored out of 100 by every judge, less a
-            course-delay penalty of 1 to 10 points. A qualifying score is half the combined total.
-          </p>
-          <div class="tbl-wrap mt-3"><table class="tbl">
-            <thead><tr><th>Category</th><th class="num">Points</th><th>Category</th><th class="num">Points</th></tr></thead>
-            <tbody>
-              <tr><td>Enthusiasm</td><td class="num">15</td><td>Agility</td><td class="num">25</td></tr>
-              <tr><td>Follow</td><td class="num">15</td><td>Endurance</td><td class="num">20</td></tr>
-              <tr><td>Speed</td><td class="num">25</td><td class="font-semibold">Total</td><td class="num font-semibold">100</td></tr>
-            </tbody>
-          </table></div>
-          <p class="text-sm mt-4">
-            Placements pay proficiency points scaled to the size of the stake — first place takes
-            four times the number of dogs competing, to a maximum of 40; second three times, to 30;
-            third twice, to 20; fourth the number itself, to 10. No dog places without at least
-            100 points from one judge, or 200 from two, across both runs.
-          </p>
-        </section>
-
         ${DIVISIONS.map(divisionTable).join('')}
 
         <section class="card">
@@ -209,7 +187,29 @@
               fair comparison.
             </li>
           </ul>
-          <p class="text-xs text-asfa-text/55 mt-3">
+        </section>
+
+        <section class="card">
+          <h2 class="card-title">How a dog is scored</h2>
+          <p class="text-sm">
+            Two runs — a preliminary and a final — each scored out of 100 by every judge, less a
+            course-delay penalty of 1 to 10 points. A qualifying score is half the combined total.
+          </p>
+          <div class="tbl-wrap mt-3"><table class="tbl">
+            <thead><tr><th>Category</th><th class="num">Points</th><th>Category</th><th class="num">Points</th></tr></thead>
+            <tbody>
+              <tr><td>Enthusiasm</td><td class="num">15</td><td>Agility</td><td class="num">25</td></tr>
+              <tr><td>Follow</td><td class="num">15</td><td>Endurance</td><td class="num">20</td></tr>
+              <tr><td>Speed</td><td class="num">25</td><td class="font-semibold">Total</td><td class="num font-semibold">100</td></tr>
+            </tbody>
+          </table></div>
+          <p class="text-sm mt-4">
+            Placements pay proficiency points scaled to the size of the stake — first place takes
+            four times the number of dogs competing, to a maximum of 40; second three times, to 30;
+            third twice, to 20; fourth the number itself, to 10. No dog places without at least
+            100 points from one judge, or 200 from two, across both runs.
+          </p>
+          <p class="text-xs text-asfa-text/55 mt-4 pt-3 border-t border-asfa-border">
             Division definitions, scoring and titles from the
             <a href="https://www.asfa.org/rule/index.htm" class="lnk" target="_blank" rel="noopener noreferrer">ASFA LCI Rules</a>
             (rev. 08/01/2024), LCI Chapters III–V. Standings from the ASFA Top 20.
