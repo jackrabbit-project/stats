@@ -26,7 +26,7 @@ SNAPSHOT_DIR = Path(__file__).resolve().parent.parent / "data" / "snapshots"
 
 # Identify the project rather than impersonating a browser. One request per run.
 USER_AGENT = (
-    "asfa-top20/1.0 (unofficial ASFA Top 20 statistics site; "
+    "asfa-coursing-stats/1.0 (unofficial ASFA statistics site; "
     "+https://github.com/jackrabbit-project/asfa-top20)"
 )
 

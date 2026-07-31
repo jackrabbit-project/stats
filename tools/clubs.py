@@ -36,7 +36,7 @@ OUTPUT = ROOT / "data" / "clubs.json"
 
 CLUBS_PAGE = "https://www.asfa.org/clubs/index.htm"
 USER_AGENT = (
-    "asfa-top20/1.0 (unofficial ASFA Top 20 statistics site; "
+    "asfa-coursing-stats/1.0 (unofficial ASFA statistics site; "
     "+https://github.com/jackrabbit-project/asfa-top20)"
 )
 PAGE_ENCODING = "cp1252"

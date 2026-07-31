@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#2C6E49">
-  <title>Kennels &amp; regions — ASFA Top 20</title>
+  <title>Kennels &amp; regions — ASFA Coursing Stats</title>
   <meta name="description" content="Which owners and ASFA regions are having the strongest 2026 lure coursing season, by hounds ranked, Bowen points, Best of Breed and Best in Field.">
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="js/theme.js"></script>
@@ -35,7 +35,7 @@
         // a different owner in Region 1.
         const sharesName = season.owners.filter((owner) =>
           owner.owner_key === focus.owner_key && owner.key !== focus.key);
-        document.title = `${focus.name} — ASFA Top 20`;
+        document.title = `${focus.name} — ASFA Coursing Stats`;
 
         main.innerHTML = `
           <nav class="text-sm text-asfa-text/60"><a href="kennels.html" class="lnk">Kennels</a> › ${esc(focus.name)}</nav>

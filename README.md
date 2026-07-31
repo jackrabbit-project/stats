@@ -1,8 +1,8 @@
-# ASFA Top 20 — 2026 Season
+# ASFA Coursing Stats — 2026 Season
 
-A searchable, browsable view of the **American Sighthound Field Association Top 20 lure coursing standings**.
+A searchable, browsable view of **American Sighthound Field Association lure coursing data** — the Top 20 standings, and the trial results behind them.
 
-ASFA publishes the standings as one long page of stacked breed tables. You cannot search it, look up a single hound, or see where a hound sits against the rest of its breed without counting by hand. This site reads that page and rearranges it.
+ASFA publishes the standings as one long page of stacked breed tables, and trial results as a page per month. You cannot search either, look up a single hound, or see where a hound sits against the rest of its breed without counting by hand. This site reads those pages and rearranges them.
 
 - **Search** by call name, registered name, or owner
 - **Hound profiles** — Bowen points, Best of Breed, Best in Field, and standing within the breed
@@ -32,7 +32,7 @@ data/trials.json      Trial entries by club and region — loaded by regions.htm
 data/clubs.json       Club directory: name, region, initials, affiliation only
 ```
 
-The site itself has no build step and no framework: Tailwind and Font Awesome load from CDNs, the Abel webfont from Google Fonts, everything else is vanilla JavaScript. Python runs offline to produce `data/season.json`.
+The site itself has no build step and no framework: Tailwind and Font Awesome load from CDNs, the Abel webfont from Google Fonts, everything else is vanilla JavaScript. Python runs offline to produce the JSON under `data/`.
 
 ## Updating the data
 
@@ -43,7 +43,7 @@ python tools/fetch.py && python tools/clubs.py && python tools/parse.py && pytho
 
 `fetch.py` archives the live page under `data/snapshots/{date}.html`, named for the coverage date the page states about itself rather than the wall clock. It skips the write when the page is unchanged. Raw snapshots are committed so every figure on the site traces back to the bytes ASFA served on a given date — and so movement between publications can be computed.
 
-A [weekly workflow](.github/workflows/refresh.yml) runs the same four commands and commits when the standings change.
+`trials.py` does the same for each monthly trial results page, and `clubs.py` for the club listing PDF that supplies club regions. A [weekly workflow](.github/workflows/refresh.yml) runs the whole chain and commits when anything changes.
 
 ## Serving locally
 
