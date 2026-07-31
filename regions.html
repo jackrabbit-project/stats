@@ -32,52 +32,52 @@
           <h1 class="font-abel text-3xl text-asfa-green">Regions</h1>
           <p class="text-sm text-asfa-text/70 mt-1">
             ASFA divides the country into ten regions, each with an elected Regional Director.
-            The two tables below measure different things, and it is worth keeping them apart:
-            <strong>standings follow the owner</strong>, <strong>trials follow the club</strong>.
+            See <a href="https://www.asfa.org/clubs/index.htm" class="lnk" target="_blank" rel="noopener noreferrer">ASFA's club directory</a>
+            for the member clubs in each one.
           </p>
         </div>`;
 
       const standings = () => {
         const rows = season.regions;
         const totals = rows.reduce((acc, r) => ({
-          hounds: acc.hounds + r.hounds, points: acc.points + r.points,
-          bob: acc.bob + r.bob, bif: acc.bif + r.bif,
-        }), { hounds: 0, points: 0, bob: 0, bif: 0 });
+          hounds: acc.hounds + r.hounds, bob: acc.bob + r.bob,
+          bif: acc.bif + r.bif, firsts: acc.firsts + r.firsts,
+        }), { hounds: 0, bob: 0, bif: 0, firsts: 0 });
+        const regionless = season.dogs.filter((d) => d.region == null).length;
 
         return `
           <section class="card">
-            <h2 class="card-title">Top 20 standings by region</h2>
+            <h2 class="card-title">Top 20 by region</h2>
             <p class="text-xs text-asfa-text/60 mb-3">
-              Counted by the <strong>owner's</strong> region, as published on each standings row.
               Season through ${formatDate(season.as_of)}.
             </p>
             <div class="tbl-wrap"><table class="tbl">
               <thead><tr>
                 <th class="num">Region</th><th class="num">Hounds in Top 20</th>
-                <th class="num">Points</th><th class="num">BOB</th>
-                <th class="num">BIF</th><th class="num">Breed firsts</th>
+                <th class="num">BOB</th><th class="num">BIF</th><th class="num">Ranked #1</th>
               </tr></thead>
               <tbody>
                 ${rows.map((r) => `
                   <tr>
                     <td class="num font-semibold">${r.region}</td>
                     <td class="num">${r.hounds}</td>
-                    <td class="num">${r.points}</td>
                     <td class="num">${r.bob}</td>
                     <td class="num ${r.bif ? 'font-semibold text-asfa-accent' : ''}">${r.bif}</td>
                     <td class="num">${r.firsts}</td>
                   </tr>`).join('')}
                 <tr class="bg-asfa-bg2 font-semibold">
                   <td class="num">All</td><td class="num">${totals.hounds}</td>
-                  <td class="num">${totals.points}</td><td class="num">${totals.bob}</td>
-                  <td class="num">${totals.bif}</td><td class="num"></td>
+                  <td class="num">${totals.bob}</td><td class="num">${totals.bif}</td>
+                  <td class="num">${totals.firsts}</td>
                 </tr>
               </tbody>
             </table></div>
             <p class="text-xs text-asfa-text/55 mt-3">
-              Points are not comparable between breeds, so a region's point total partly reflects
-              which breeds happen to be strong there.
-              ${season.dogs.filter((d) => d.region == null).length} ranked hound(s) carry no region.
+              <strong>Ranked #1</strong> counts hounds in the region currently sitting first in
+              their breed, LCI division or the Singles stake.${
+                regionless ? ` ${regionless} ranked hound${regionless === 1 ? '' : 's'}
+                carr${regionless === 1 ? 'ies' : 'y'} no region, so the totals stop short of the
+                full ${season.stats.hounds_ranked}.` : ''}
             </p>
           </section>`;
       };
@@ -100,10 +100,8 @@
           <div class="card">
             <h2 class="card-title">Trial entries by region</h2>
             <p class="text-xs text-asfa-text/60 mb-3">
-              Counted by the <strong>club's</strong> region from ASFA's club listing — not by where
-              the trial was held. Clubs travel: Borzoi Club of America is a Region 4 club that ran
-              in Nebraska this year. ${trials.stats.trials} trials, ${trials.stats.entries.toLocaleString()}
-              entries, posted through ${formatDate(trials.as_of)}.
+              ${trials.stats.trials} trials, ${trials.stats.entries.toLocaleString()} entries,
+              posted through ${formatDate(trials.as_of)}.
             </p>
             <div class="tbl-wrap"><table class="tbl">
               <thead><tr>
