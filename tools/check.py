@@ -140,15 +140,46 @@ def main() -> int:
             )
 
     # 5. Season totals equal a naive re-sum over deduplicated hounds.
+    # BOB and BIF cannot be won in the Singles stake or the LCI divisions
+    # (Running Rules Ch. V §5(d), §10, §11), so they are credited only from
+    # breed sections - see creditable() in build.py.
+    def credit(dog: dict, stat: str) -> int:
+        return dog[stat] if dog["is_breed"] else 0
+
     seen: dict[str, dict] = {}
     for dog in dogs:
         existing = seen.get(dog["hound_key"])
         if existing is None:
-            seen[dog["hound_key"]] = dict(dog)
+            record = dict(dog)
+            record["bob"] = credit(dog, "bob")
+            record["bif"] = credit(dog, "bif")
+            seen[dog["hound_key"]] = record
         else:
-            for stat in ("points", "bob", "bif"):
-                existing[stat] = max(existing[stat], dog[stat])
+            existing["points"] = max(existing["points"], dog["points"])
+            existing["bob"] = max(existing["bob"], credit(dog, "bob"))
+            existing["bif"] = max(existing["bif"], credit(dog, "bif"))
     unique = list(seen.values())
+
+    # No aggregate may carry a BOB or BIF from a section that cannot award one.
+    breed_only = {
+        stat: sum(d[stat] for d in dogs if d["is_breed"]) for stat in ("bob", "bif")
+    }
+    for stat in ("bob", "bif"):
+        check.expect(
+            season["stats"][stat] == breed_only[stat],
+            f"stats.{stat} is {season['stats'][stat]} but breed sections hold "
+            f"{breed_only[stat]} - a non-breed section is being credited",
+        )
+    for region in season["regions"]:
+        for stat in ("bob", "bif"):
+            expected = sum(
+                credit(d, stat) for d in unique if d["region"] == region["region"]
+            )
+            check.expect(
+                region[stat] == expected,
+                f"region {region['region']}: {stat} is {region[stat]}, "
+                f"breed-only re-sum says {expected}",
+            )
 
     for stat in ("points", "bob", "bif"):
         total = sum(d[stat] for d in unique)

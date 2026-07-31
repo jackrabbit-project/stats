@@ -98,19 +98,45 @@ def build_movement(current: dict, previous: dict | None) -> dict[str, dict]:
     return movement
 
 
+def creditable(dog: dict, stat: str) -> int:
+    """BOB and BIF as achievements of the hound, zero where they cannot be won.
+
+    Hounds run alone in the Singles stake, and its winner "shall not be eligible
+    to compete in Best of Breed nor in Best in Field" (Running Rules Ch. V
+    §5(d)); Ch. V §11 excludes Singles hounds from Best in Field outright. Best
+    of Breed is contested between "first placing hounds in all regular stakes of
+    each breed" (§10), which the LCI divisions are not.
+
+    ASFA still prints BOB and BIF figures on Singles rows — they are the hound's
+    breed-stake record carried across. M.Murray's Saluki "Onyx" shows 6 BOB and
+    6 BIF, and the Singles line "SA Onyx" repeats the same two numbers. Counting
+    them as Singles achievements would be wrong twice over: it double counts the
+    hound, and it credits a stake where the award does not exist.
+
+    The published figures stay untouched in the per-row data, which reproduces
+    ASFA's page. This applies only where figures are aggregated or ranked.
+    """
+    return dog[stat] if dog["is_breed"] else 0
+
+
 def dedupe_hounds(dogs: list[dict]) -> list[dict]:
     """Collapse multi-section entries to one record per hound.
 
-    Stats are combined with max(), not sum() — see hound_key() for why.
+    Stats are combined with max(), not sum() — see hound_key() for why — and
+    BOB/BIF count only from sections that can award them.
     """
     grouped: dict[str, dict] = {}
     for dog in dogs:
         existing = grouped.get(dog["hound_key"])
         if existing is None:
-            grouped[dog["hound_key"]] = dict(dog)
+            record = dict(dog)
+            record["bob"] = creditable(dog, "bob")
+            record["bif"] = creditable(dog, "bif")
+            grouped[dog["hound_key"]] = record
             continue
-        for stat in ("points", "bob", "bif"):
-            existing[stat] = max(existing[stat], dog[stat])
+        existing["points"] = max(existing["points"], dog["points"])
+        existing["bob"] = max(existing["bob"], creditable(dog, "bob"))
+        existing["bif"] = max(existing["bif"], creditable(dog, "bif"))
         if dog["rank"] < existing["rank"]:
             existing["rank"] = dog["rank"]
     return list(grouped.values())

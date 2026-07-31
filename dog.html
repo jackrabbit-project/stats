@@ -116,8 +116,8 @@
           <h2 class="card-title">Where this stands</h2>
           ${dog.total_competing ? `
             <p class="text-sm">
-              ASFA reports <strong>${dog.total_competing}</strong> ${esc(dog.breed)}${
-                dog.total_competing === 1 ? '' : 's'} competing so far in ${season.season}.
+              ASFA reports <strong>${competitorsLabel(dog, dog.total_competing)}</strong>
+              competing so far in ${season.season}.
               Ranked <strong>#${dog.rank}</strong>, ${esc(dog.call_name)} stands in the
               <strong>${percentileLabel(dog)}</strong> of the breed${
                 rankedBelow > 0 ? `, ahead of ${rankedBelow} others` : ''}.
@@ -138,6 +138,18 @@
             a breed with 200 hounds competing offers far more of them than one with five.
             Breed standing is the fair way to compare across breeds.
           </p>
+          ${dog.is_breed ? '' : `
+            <p class="text-xs text-asfa-text/65 mt-2">
+              ${dog.breed === 'Singles'
+                ? `Hounds run alone in the Singles stake, and its winner is not eligible for Best of
+                   Breed or Best in Field (Running Rules Ch. V §5(d), §11).`
+                : `Best of Breed is contested between the breed stakes, which this division is not.`}
+              ${dog.bob || dog.bif
+                ? ` The BOB and BIF above are reproduced as ASFA publishes them on this row, but
+                    were earned in ${esc(dog.call_name)}'s breed competition — they are not counted
+                    toward ${esc(dog.breed)} on any leaderboard or total.`
+                : ''}
+            </p>`}
         </section>
 
         ${alsoRanked.length ? `

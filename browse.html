@@ -124,9 +124,22 @@
               </tbody>
             </table></div>
             <p class="text-xs text-asfa-text/55 mt-3">
-              Standing is this hound's rank measured against the ${section.total_competing ?? '—'}
-              ${esc(section.breed)}${section.total_competing === 1 ? '' : 's'} ASFA reports competing this season.
+              Standing is this hound's rank measured against the
+              ${section.total_competing == null
+                ? `${esc(section.breed)} entries`
+                : competitorsLabel(section, section.total_competing)}
+              ASFA reports competing this season.
             </p>
+            ${section.is_breed ? '' : `
+              <p class="text-xs text-asfa-text/65 mt-2">
+                ${section.breed === 'Singles'
+                  ? `Hounds run alone in the Singles stake, and its winner is not eligible for
+                     Best of Breed or Best in Field (Running Rules Ch. V §5(d), §11).`
+                  : `Best of Breed is contested between the breed stakes, which this division is not.`}
+                Any BOB or BIF shown above was earned in that hound's breed competition, so those
+                figures are reproduced as ASFA publishes them but are not counted toward
+                ${esc(section.breed)} on any leaderboard or total.
+              </p>`}
           </div>`;
 
         panel.querySelectorAll('th[data-key]').forEach((th) => {

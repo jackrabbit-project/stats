@@ -64,6 +64,18 @@ function regionLabel(region) {
   return region == null ? '—' : `Region ${region}`;
 }
 
+/** "25 Afghan Hounds", "1 Sloughi", "224 hounds in Singles".
+
+    Breed names pluralize by adding an s; the stake and division names do not
+    ("Singless"), so those get a noun of their own. */
+function competitorsLabel(section, count) {
+  const name = esc(section.breed);
+  if (!section.is_breed) {
+    return `${count} hound${count === 1 ? '' : 's'} in ${name}`;
+  }
+  return `${count} ${name}${count === 1 ? '' : 's'}`;
+}
+
 function param(name) {
   return new URLSearchParams(window.location.search).get(name);
 }
@@ -99,6 +111,18 @@ function movementBadge(movement) {
   return `<span class="badge ${cls}"><i class="fa-solid ${icon}"></i> ${Math.abs(delta)}</span>`;
 }
 
+/** BOB and BIF as achievements, zero where the stake cannot award them.
+
+    Hounds run alone in Singles, whose winner "shall not be eligible to compete
+    in Best of Breed nor in Best in Field" (Running Rules Ch. V §5(d)), and Best
+    of Breed is contested between breed stakes, which the LCI divisions are not.
+    ASFA still prints both figures on those rows — they are the hound's
+    breed-stake record carried across — so they are shown as published but never
+    counted toward a Singles or LCI total. */
+function creditable(dog, stat) {
+  return dog.is_breed ? dog[stat] : 0;
+}
+
 /** Collapse entries that describe one hound ranked in more than one section.
 
     A hound in the Singles stake is also listed under its breed, with the same
@@ -109,13 +133,18 @@ function groupHounds(dogs) {
   for (const dog of dogs) {
     const existing = grouped.get(dog.hound_key);
     if (!existing) {
-      grouped.set(dog.hound_key, { ...dog, entries: [dog] });
+      grouped.set(dog.hound_key, {
+        ...dog,
+        bob: creditable(dog, 'bob'),
+        bif: creditable(dog, 'bif'),
+        entries: [dog],
+      });
       continue;
     }
     existing.entries.push(dog);
     existing.points = Math.max(existing.points, dog.points);
-    existing.bob = Math.max(existing.bob, dog.bob);
-    existing.bif = Math.max(existing.bif, dog.bif);
+    existing.bob = Math.max(existing.bob, creditable(dog, 'bob'));
+    existing.bif = Math.max(existing.bif, creditable(dog, 'bif'));
     if (dog.rank < existing.rank) {
       existing.rank = dog.rank;
       existing.percentile = dog.percentile;
