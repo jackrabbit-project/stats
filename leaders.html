@@ -48,7 +48,7 @@
           label: 'Best in Field',
           stat: 'bif',
           heading: 'BIF',
-          note: 'Best in Field is won over every hound at the trial, so it compares fairly across breeds. Most hounds never earn one. Singles-stake and LCI hounds cannot win one (Running Rules Ch. V §5(d), §11), so those sections are not counted here.',
+          note: 'Best in Field is won over every hound at the trial, so it compares fairly across breeds. Most hounds never earn one.',
         },
         bob: {
           label: 'Best of Breed',
@@ -112,6 +112,7 @@
         list.sort((a, b) => (board.ascending
           ? a[board.stat] - b[board.stat]
           : b[board.stat] - a[board.stat]) || a.rank - b.rank);
+        const matched = list.length;
         list = list.slice(0, 60);
 
         if (!list.length) {
@@ -143,10 +144,10 @@
                   <td class="num">#${dog.rank}${dog.total_competing ? ` of ${dog.total_competing}` : ''}</td>
                 </tr>`).join('')}</tbody>
             </table></div>
-            <p class="text-xs text-asfa-text/55 mt-3">
-              Showing ${list.length} hound${list.length === 1 ? '' : 's'}. A hound ranked in both its
-              breed and the Singles stake is counted once.
-            </p>
+            ${matched > list.length ? `
+              <p class="text-xs text-asfa-text/55 mt-3">
+                Showing the top ${list.length} of ${matched}. Narrow it with the breed filter.
+              </p>` : ''}
           </div>`;
       }
 
