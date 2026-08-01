@@ -279,8 +279,19 @@ function renderChrome(season, current) {
 
   const footer = document.getElementById('site-footer');
   if (footer && season) {
+    // ASFA's own channels, plus the page where changes to this site are
+    // announced. Kept above the disclaimer rather than beside the site's own
+    // links, so it reads as "where to find ASFA" and not as this site's own.
+    const community = `
+        <p class="flex flex-wrap gap-x-5 gap-y-1.5">
+          <a href="https://www.facebook.com/AmericanSighthoundFieldAssociation" target="_blank" rel="noopener noreferrer" class="underline hover:text-asfa-bg2"><i class="fa-brands fa-facebook mr-1.5" aria-hidden="true"></i>Follow ASFA on Facebook</a>
+          <a href="https://www.asfa.org" target="_blank" rel="noopener noreferrer" class="underline hover:text-asfa-bg2"><i class="fa-solid fa-globe mr-1.5" aria-hidden="true"></i>asfa.org, the official site</a>
+          <a href="https://www.facebook.com/groups/1046065245418921" target="_blank" rel="noopener noreferrer" class="underline hover:text-asfa-bg2"><i class="fa-brands fa-facebook mr-1.5" aria-hidden="true"></i>Join the ASFA II group</a>
+          <a href="https://www.facebook.com/ASFAlureCoursing" target="_blank" rel="noopener noreferrer" class="underline hover:text-asfa-bg2"><i class="fa-brands fa-facebook mr-1.5" aria-hidden="true"></i>ASFA Lure Coursing, where updates to this site are posted</a>
+        </p>`;
+
     footer.innerHTML = `
-      <div class="max-w-4xl mx-auto px-4 text-sm text-white/85 space-y-3">
+      <div class="max-w-4xl mx-auto px-4 text-sm text-white/85 space-y-3">${community}
         <p>
           Standings reproduced from the
           <a href="${esc(season.source_url)}" target="_blank" rel="noopener noreferrer" class="underline hover:text-asfa-bg2">ASFA Top 20</a>,
