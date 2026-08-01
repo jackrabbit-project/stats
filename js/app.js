@@ -268,8 +268,8 @@ function renderChrome(season, current) {
       <div class="bg-asfa-green">
         <div class="max-w-6xl mx-auto px-4 flex flex-wrap items-center gap-x-6 gap-y-1 py-2">
           <a href="index.html" class="flex items-baseline gap-2">
-            <span class="font-abel text-xl md:text-2xl text-white tracking-wide">ASFA Coursing Stats</span>
-            <span class="font-abel text-sm text-asfa-bg2">${season ? season.season : ''} season</span>
+            <span class="font-abel text-xl md:text-2xl text-white tracking-wide">Lure Coursing Stats</span>
+            <span class="font-abel text-sm text-asfa-bg2">ASFA standings · ${season ? season.season : ''}</span>
           </a>
           <nav class="flex flex-wrap -mx-1">${links}</nav>
         </div>

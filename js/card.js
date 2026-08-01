@@ -55,16 +55,19 @@ function drawStatCard(canvas, dog, season) {
   ctx.fillStyle = CARD_COLORS.paper;
   ctx.fillRect(0, 0, CARD_SIZE, CARD_SIZE);
 
-  // Top band
+  // Top band. The site's own name leads; ASFA names the dataset on the right.
+  // A card travels without the page around it, so this band is the one place
+  // the project has to identify itself rather than lead with someone else's.
   ctx.fillStyle = CARD_COLORS.green;
   ctx.fillRect(0, 0, CARD_SIZE, 116);
+  ctx.textBaseline = 'middle';
   ctx.fillStyle = '#FFFFFF';
   ctx.font = cardFont(40);
-  ctx.textBaseline = 'middle';
-  ctx.fillText('ASFA TOP 20', pad, 58);
+  ctx.fillText('LURE COURSING STATS', pad, 58);
   ctx.textAlign = 'right';
   ctx.fillStyle = 'rgba(255,255,255,0.8)';
-  ctx.fillText(`${season.season} SEASON`, CARD_SIZE - pad, 58);
+  ctx.font = cardFont(32);
+  ctx.fillText(`ASFA TOP 20 · ${season.season}`, CARD_SIZE - pad, 58);
   ctx.textAlign = 'left';
 
   let y = 220;
@@ -274,7 +277,7 @@ function showCardModal(dog, season, blob) {
       try {
         await navigator.share({
           files: [file],
-          title: `${dog.call_name} — ASFA Coursing Stats`,
+          title: `${dog.call_name} — Lure Coursing Stats`,
           text: `${dog.call_name}, #${dog.rank} ${rankContext(dog)} in the ${season.season} ASFA standings.`,
         });
       } catch (error) {

@@ -1,4 +1,4 @@
-# ASFA Coursing Stats — 2026 Season
+# Lure Coursing Stats — 2026 ASFA season
 
 A searchable, browsable view of **American Sighthound Field Association lure coursing data** — the Top 20 standings, and the trial results behind them.
 
