@@ -130,7 +130,7 @@
                 rankedBelow > 0 ? `, ahead of ${rankedBelow} others` : ''}.
             </p>
             <div class="mt-3 h-3 bg-asfa-bg2 border border-asfa-border" role="img"
-                 aria-label="Breed standing: ${percentileLabel(dog)}">
+                 aria-label="Standing: ${percentileLabel(dog)}">
               <div class="h-full bg-asfa-accent" style="width: ${Math.max(1, Math.min(100, dog.percentile))}%"></div>
             </div>
             <div class="flex justify-between text-xs text-asfa-text/55 mt-1">
@@ -138,7 +138,7 @@
             </div>` : `
             <p class="text-sm text-asfa-text/70">
               ASFA has not published a competitor count for ${esc(dog.breed)} this season,
-              so a breed standing cannot be calculated.
+              so a standing cannot be calculated.
             </p>`}
           <p class="text-xs text-asfa-text/55 mt-3">
             Points are earned under the Bowen system, which scores a hound on the competition it

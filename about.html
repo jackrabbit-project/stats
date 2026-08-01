@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#2C6E49">
   <title>How this is built — ASFA Coursing Stats</title>
-  <meta name="description" content="Where the ASFA Top 20 data comes from, what each column means, how breed standing is calculated, and the limits of what these numbers can tell you.">
+  <meta name="description" content="Where the ASFA Top 20 data comes from, what each column means, how standing is calculated, and the limits of what these numbers can tell you.">
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="js/theme.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -36,7 +36,7 @@
       <p class="text-sm leading-relaxed mt-3">
         This site fixes that by taking ASFA's published page and making it searchable and
         sortable. That's it. Every number here comes directly from ASFA's official publications.
-        The one figure we work out ourselves is breed standing: a hound's rank against the number
+        The one figure we work out ourselves is standing: a hound's rank against the number
         ASFA reports competing in its breed.
       </p>
     </section>
@@ -64,14 +64,16 @@
             <a href="https://www.asfa.org/forms/Rec%2024--Bowen%20System.pdf" class="lnk" target="_blank" rel="noopener noreferrer">here</a>.</dd></div>
         <div><dt class="font-semibold text-asfa-green">BOB — Best of Breed</dt>
           <dd class="text-asfa-text/85">The number of times the hound won over the rest of its breed at
-            a trial.</dd></div>
+            a trial. Worth knowing that the count says nothing about how many it beat: where a
+            breed has only one entry that day, that hound takes Best of Breed on its own qualifying
+            score, having defeated nobody (Running Rules Ch. V §7).</dd></div>
         <div><dt class="font-semibold text-asfa-green">BIF — Best in Field</dt>
           <dd class="text-asfa-text/85">The top award at a trial, won in a single run among that day's
             Best of Breed winners. This is incredibly rare; most hounds never earn one, and many
             breeds will see none in a given season.</dd></div>
         <div><dt class="font-semibold text-asfa-green">Region</dt>
           <dd class="text-asfa-text/85">The specific ASFA region assigned to the hound.</dd></div>
-        <div><dt class="font-semibold text-asfa-green">Breed standing</dt>
+        <div><dt class="font-semibold text-asfa-green">Standing</dt>
           <dd class="text-asfa-text/85">The only metric calculated by this site. It shows the hound's
             percentile by dividing its rank by the total number of hounds competing in that breed
             (4th out of 25 means the <em>top 16%</em>).</dd></div>
@@ -92,7 +94,7 @@
         <li>
           <strong>Points do not compare across breeds.</strong> A breed with 200 hounds competing
           offers far more points than one with five. Comparing a Whippet's point total to an
-          Azawakh's says more about breed size than about either hound. Breed standing and Best in
+          Azawakh's says more about breed size than about either hound. Standing and Best in
           Field are the figures that compare fairly.
         </li>
         <li>

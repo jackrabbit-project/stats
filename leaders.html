@@ -69,13 +69,22 @@
           label: 'Best of Breed',
           stat: 'bob',
           heading: 'BOB',
-          note: 'Best of Breed is won over the rest of the breed at a trial. Comparable across breeds, though a larger breed offers more chances. It is contested between the breed stakes, so the Singles stake and the LCI divisions are not counted here.',
+          // Ch. V §7 awards Best of Breed to a single entry on its own combined
+          // score, so a count of wins says nothing about the size of the field
+          // beaten. The Rank column already carries that context; this points
+          // at it rather than leaving the reader to notice.
+          note: 'Best of Breed is won over the rest of the breed at a trial, and it is '
+            + 'contested between the breed stakes, so the Singles stake and the LCI divisions '
+            + 'are not counted here. Read the Rank column alongside the count: a breed entering '
+            + 'one hound that day awards it Best of Breed on its own qualifying score, having '
+            + 'beaten nobody, so ten wins in a breed of five is not ten wins in a breed of two '
+            + 'hundred.',
         },
         points: {
           label: 'Top 20 points',
           stat: 'points',
           heading: 'Points',
-          note: 'Bowen-system points are NOT comparable between breeds — a breed with 200 hounds competing offers far more of them than one with five. Use this within a breed, or use breed standing to compare across breeds.',
+          note: 'Bowen-system points are NOT comparable between breeds — a breed with 200 hounds competing offers far more of them than one with five. Use this within a section, or use standing to compare across them.',
         },
         percentile: {
           label: 'Standing',
@@ -150,7 +159,7 @@
               <thead><tr>
                 <th class="num">#</th><th>Hound</th><th>Registered name</th>
                 <th>Breed</th><th>Owner</th><th class="num">${board.heading}</th>
-                <th class="num">Breed rank</th>
+                <th class="num">Rank</th>
               </tr></thead>
               <tbody>${list.map((dog, index) => `
                 <tr>
