@@ -48,10 +48,12 @@ python tools/fetch.py && python tools/clubs.py && python tools/parse.py && pytho
 ## Serving locally
 
 ```bash
-python -m http.server 8765
+python tools/serve.py
 ```
 
 Then open <http://localhost:8765>. The pages fetch `data/season.json`, so opening the files directly with `file://` will not work.
+
+`serve.py` is `http.server` with caching switched off. Plain `python -m http.server` sends no `Cache-Control` header, so browsers apply their own freshness guess and keep serving an edited page or script from cache — which looks exactly like the edit never happened.
 
 ## How the numbers are built
 
