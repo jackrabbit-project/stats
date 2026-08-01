@@ -247,7 +247,7 @@ const NAV = [
   ['regions.html', 'Regions'],
   ['lci.html', 'LCI'],
   ['bowen.html', 'Bowen', 'fa-solid fa-calculator'],
-  ['resources.html', 'Resources'],
+  ['rulebooks.html', 'Rulebooks'],
   ['about.html', 'About'],
 ];
 
