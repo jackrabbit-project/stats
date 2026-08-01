@@ -55,13 +55,14 @@
             const inBreed = pool.filter((dog) => dog.is_breed);
             const holders = inBreed.filter((dog) => dog.bif);
             const once = holders.filter((dog) => dog.bif === 1).length;
-            return 'A trial’s top award: one run between that day’s Best of Breed '
-              + 'winners, offered at the host club’s option. Winning it means outscoring '
-              + 'every other breed’s champion in a single course, which makes it the most '
-              + 'breed-neutral figure here — though a rare breed reaches that run more '
-              + 'easily, since a lone entry takes Best of Breed on its own score. '
-              + `Rare, too: ${holders.length} of the ${inBreed.length} hounds ranked in a `
-              + `breed hold one, and ${once} of those hold exactly one.`;
+            return 'A trial’s top award is a single run among the day’s Best of Breed '
+              + 'winners, offered at the host club’s discretion. Winning it means '
+              + 'outscoring every other breed’s champion in a single course, making it '
+              + 'the most breed-neutral metric here. However, a rare breed does reach '
+              + 'that run more easily, as a lone entry can take Best of Breed on its own '
+              + `score. It is also remarkably rare: only ${holders.length} of the `
+              + `${inBreed.length} hounds ranked in a breed hold one, and ${once} of `
+              + 'those hold exactly one.';
           },
         },
         bob: {
