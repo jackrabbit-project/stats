@@ -143,6 +143,55 @@ h1, h2, h3, .font-abel {
   color: #A44A2F;
 }
 
+/* Rule documents --------------------------------------------------------- */
+
+.rb-s {
+  font-family: 'Abel', sans-serif;
+  font-size: 1.05rem;
+  color: #2C6E49;
+  margin: 1.1rem 0 0.3rem;
+}
+
+.rb-s:first-of-type {
+  margin-top: 0.4rem;
+}
+
+.rb-n {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+  font-size: 0.8rem;
+  font-weight: 400;
+  color: rgba(47, 47, 47, 0.6);
+}
+
+#doc p {
+  font-size: 0.875rem;
+  line-height: 1.65;
+  margin-bottom: 0.6rem;
+}
+
+.rb-l {
+  font-size: 0.875rem;
+  line-height: 1.65;
+  padding-left: 1.4rem;
+  margin-bottom: 0.6rem;
+}
+
+ul.rb-l { list-style: none; padding-left: 1rem; }
+ol.rb-l { list-style: decimal; }
+.rb-l > li { margin-bottom: 0.45rem; }
+.rb-l .rb-l { margin-top: 0.45rem; }
+
+#doc mark {
+  background: #FBEFD6;
+  color: inherit;
+  padding: 0 1px;
+}
+
+#doc mark.mark-active {
+  background: #A44A2F;
+  color: #FFFFFF;
+}
+
 /* Stat card preview ------------------------------------------------------ */
 
 .modal-backdrop {

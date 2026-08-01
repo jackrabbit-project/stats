@@ -11,7 +11,7 @@ ASFA publishes the standings as one long page of stacked breed tables, and trial
 - **Regions** — Top 20 standings per region, plus which regions and clubs are drawing the most trial entries
 - **LCI** — Lure Chasing Instinct standings by division, with the program's scoring and titles
 - **Bowen** — how the point system works, with a calculator
-- **Rulebooks** — ASFA's rulebook, constitution, LCI rules and policies, linked at source
+- **Rulebooks** — ASFA's documents linked at source, plus the Running Rules and LCI rules as searchable pages
 - **Stat cards** — a shareable PNG per hound, rendered in the browser
 
 **This is an independent, unofficial project. It is not authorized, approved, or endorsed by ASFA, and it is not an ASFA publication.** Wherever this site and [ASFA's published standings](https://www.asfa.org/20/index.htm) disagree, ASFA's page governs.

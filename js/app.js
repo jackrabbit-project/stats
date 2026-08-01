@@ -341,3 +341,29 @@ function page(current, render) {
     }
   );
 }
+
+/** Bootstrap for pages whose content is already in the markup.
+
+    rulebook.html and lci-rules.html need no data at all. Routed through
+    page(), a failed season.json fetch would call showFailure() and blank out
+    the entire rule text over a file those pages never read. So paint and hand
+    over first; the season, if it arrives, only fills in the header sub-line. */
+function pageStatic(current, render) {
+  renderChrome(null, current);
+  try {
+    render();
+  } catch (error) {
+    console.error(error);
+    showFailure(
+      'This page could not be drawn',
+      `The page script failed: ${error.message}`,
+      'If the site was updated recently your browser may be holding an old copy of a '
+      + 'script. Reload with <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>R</kbd> '
+      + '(<kbd>Cmd</kbd>+<kbd>Shift</kbd>+<kbd>R</kbd> on a Mac).'
+    );
+  }
+  loadSeason().then(
+    (season) => renderChrome(season, current),
+    (error) => console.warn(`Season unavailable; header shows no season. ${error.message}`)
+  );
+}

@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#2C6E49">
   <title>Rulebooks — Lure Coursing Stats</title>
-  <meta name="description" content="Where to find ASFA's own documents: the Running Rules and Field Procedures, the Constitution and By-Laws, the LCI rules, policies, the judges handbook, and the standings and results this site is built from.">
+  <meta name="description" content="Where to find ASFA's own documents: the Running Rules and Field Procedures, the LCI rules, the Bowen system, the judges handbook, and the standings and results this site is built from.">
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="js/theme.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -24,20 +24,15 @@
     <div>
       <h1 class="font-abel text-3xl text-asfa-green">Rulebooks</h1>
       <p class="text-sm text-asfa-text/70 mt-1">
-        ASFA's own documents, linked at source. Nothing here is hosted on this site — every link
-        goes to asfa.org, so what you open is the current version rather than a copy that may
-        have fallen behind.
+        ASFA's own documents, linked at source, so what you open is the current version rather
+        than a copy that may have fallen behind. The Running Rules and the LCI rules are also
+        here as searchable web pages, for when you need to find a section on a phone at the field.
       </p>
     </div>
 
     <section class="card">
       <h2 class="card-title">Rules</h2>
       <ul id="rules" class="text-sm space-y-3"></ul>
-    </section>
-
-    <section class="card">
-      <h2 class="card-title">Policies and procedure</h2>
-      <ul id="policies" class="text-sm space-y-3"></ul>
     </section>
 
     <section class="card">
@@ -54,17 +49,14 @@
     </section>
 
     <section class="card">
-      <h2 class="card-title">On reproducing these documents</h2>
+      <h2 class="card-title">About the copies on this site</h2>
       <p class="text-sm leading-relaxed">
-        This site links to ASFA's documents rather than republishing them. The rulebook and the
-        rest carry ASFA's copyright, and a mirror goes stale the moment a rule changes — which for
-        the Running Rules is every August 1, when amendments passed at the Convention take effect.
-      </p>
-      <p class="text-sm leading-relaxed mt-3">
-        Where a rule is quoted elsewhere on this site — on the
-        <a href="lci.html" class="lnk">LCI page</a>, the <a href="bowen.html" class="lnk">Bowen page</a>,
-        or in the notes explaining what a column means — it is a short citation with the chapter and
-        section given, so you can check it against the original.
+        The <a href="rulebook.html" class="lnk">Running Rules</a> and the
+        <a href="lci-rules.html" class="lnk">LCI rules</a> are reproduced here so they can be
+        searched and linked to section by section. They are reading copies and nothing more: these
+        are ASFA's documents, they are posted here without ASFA's authorization or endorsement, and
+        <strong>where they differ from the official ASFA publications, the official publications
+        govern.</strong>
       </p>
     </section>
   </main>
@@ -77,23 +69,18 @@
       const RULE = 'https://www.asfa.org/rule/';
 
       // Verified against asfa.org; sizes are what the server reports, so a link
-      // that has quietly gone stale is easier to spot.
+      // that has quietly gone stale is easier to spot. The optional fifth field
+      // is a page on this site carrying the same text, searchable.
       const DOCS = {
         rules: [
           ['ASFA Rulebook', RULE + encodeURIComponent('ASFA Rulebook Website Copy--08-01-24.pdf'),
-           'Running Rules and Field Procedures, rev. 08/01/2024. Chapters I–XIII, appendices and glossary.', '678 KB'],
-          ['Constitution and By-Laws', RULE + encodeURIComponent('ASFA Constitution Website Copy--08-01-24.pdf'),
-           'Rev. 08/01/2024. Membership, conventions, the Board, the ten regions, breed recognition.', '228 KB'],
+           'Running Rules and Field Procedures, rev. 08/01/2024. Chapters I–XIII, appendices and glossary.', '678 KB',
+           'rulebook.html'],
           ['LCI Rules', RULE + encodeURIComponent('2024 Rules Lure Chasing Program.pdf'),
-           'The Lure Chasing Program, 2024. Divisions, scoring, placements and titles.', '341 KB'],
+           'The Lure Chasing Program, 2024. Divisions, scoring, placements and titles.', '341 KB',
+           'lci-rules.html'],
           ['The Bowen System', 'https://www.asfa.org/forms/Rec%2024--Bowen%20System.pdf',
            'How Top 20 points are awarded.', '48 KB'],
-        ],
-        policies: [
-          ['Administrative Policies', RULE + encodeURIComponent('2026 ASFA ADMINISTRATIVE POLICIES 07-26.pdf'),
-           'Current to 07/2026.', '330 KB'],
-          ['Operational Policies', RULE + encodeURIComponent('2026 ASFA OPERATIONAL POLICIES 07-26.pdf'),
-           'Current to 07/2026.', '408 KB'],
         ],
         officials: [
           ['Judges Handbook', RULE + encodeURIComponent('ASFA judges handbook--REFORMATTED 04-10-2022.pdf'),
@@ -122,11 +109,15 @@
         : '<i class="fa-solid fa-arrow-up-right-from-square text-asfa-accent mr-2" aria-hidden="true"></i>';
 
       for (const [id, items] of Object.entries(DOCS)) {
-        document.getElementById(id).innerHTML = items.map(([name, href, note, size]) => `
+        document.getElementById(id).innerHTML = items.map(([name, href, note, size, local]) => `
           <li>
             ${icon(size)}<a href="${href}" class="lnk font-semibold" target="_blank" rel="noopener noreferrer">${esc(name)}</a>${
               size ? ` <span class="text-xs text-asfa-text/50">${size} PDF</span>` : ''}
-            <div class="text-asfa-text/75 text-xs mt-0.5 ml-6">${esc(note)}</div>
+            <div class="text-asfa-text/75 text-xs mt-0.5 ml-6">${esc(note)}</div>${
+              local ? `
+            <div class="text-xs mt-1 ml-6">
+              <i class="fa-solid fa-magnifying-glass text-asfa-accent mr-1" aria-hidden="true"></i><a href="${local}" class="lnk">Read it here, searchable</a>
+            </div>` : ''}
           </li>`).join('');
       }
     });
