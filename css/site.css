@@ -143,6 +143,35 @@ h1, h2, h3, .font-abel {
   color: #A44A2F;
 }
 
+/* Stat card preview ------------------------------------------------------ */
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  background: rgba(31, 31, 31, 0.65);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 1.5rem 1rem;
+  overflow-y: auto;
+}
+
+.modal-panel {
+  background: #F8F4EB;
+  border: 1px solid #D6DCD7;
+  width: 100%;
+  max-width: 30rem;
+  margin: auto;
+}
+
+.modal-card-img {
+  display: block;
+  width: 100%;
+  height: auto;
+  background: #FFFFFF;
+}
+
 /* Rank pill used on profile and compare pages ---------------------------- */
 
 .rank-pill {
