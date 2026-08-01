@@ -84,8 +84,12 @@
           ['owner_raw', 'Owner', ''],
           ['region', 'Region', 'num'],
           ['points', 'Points', 'num'],
-          ['bob', 'BOB', 'num'],
-          ['bif', 'BIF', 'num'],
+          // Best of Breed and Best in Field do not exist in the Singles stake
+          // or the LCI divisions, so the columns are dropped there rather than
+          // printed with a number that cannot mean what the header says.
+          ...(section.is_breed
+            ? [['bob', 'BOB', 'num'], ['bif', 'BIF', 'num']]
+            : []),
           ['percentile', 'Standing', 'num'],
         ];
 
@@ -116,8 +120,9 @@
                     <td class="text-asfa-text/80">${esc(dog.owner_raw)}</td>
                     <td class="num">${dog.region ?? '—'}</td>
                     <td class="num font-semibold">${dog.points}</td>
-                    <td class="num">${dog.bob}</td>
-                    <td class="num ${dog.bif ? 'font-semibold text-asfa-accent' : ''}">${dog.bif}</td>
+                    ${section.is_breed ? `
+                      <td class="num">${dog.bob}</td>
+                      <td class="num ${dog.bif ? 'font-semibold text-asfa-accent' : ''}">${dog.bif}</td>` : ''}
                     <td class="num">${percentileLabel(dog)}</td>
                     ${showMovement ? `<td class="num">${movementBadge(dog.movement)}</td>` : ''}
                   </tr>`).join('')}
@@ -136,9 +141,9 @@
                   ? `Hounds run alone in the Singles stake, and its winner is not eligible for
                      Best of Breed or Best in Field (Running Rules Ch. V §5(d), §11).`
                   : `Best of Breed is contested between the breed stakes, which this division is not.`}
-                Any BOB or BIF shown above was earned in that hound's breed competition, so those
-                figures are reproduced as ASFA publishes them but are not counted toward
-                ${esc(section.breed)} on any leaderboard or total.
+                There is no BOB or BIF to win here, so those columns are left out. ASFA's page
+                prints them for every section; where a figure appears against a
+                ${esc(section.breed)} entry it was earned in that hound's breed competition.
               </p>`}
           </div>`;
 

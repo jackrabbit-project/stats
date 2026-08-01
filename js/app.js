@@ -137,6 +137,15 @@ function creditable(dog, stat) {
   return dog.is_breed ? dog[stat] : 0;
 }
 
+/** A BOB or BIF cell for a table that mixes breed and non-breed rows.
+
+    There is no Best of Breed or Best in Field to win in the Singles stake or an
+    LCI division, so those rows get an em dash rather than a number that cannot
+    mean what the column header says. */
+function awardCell(dog, stat) {
+  return dog.is_breed ? dog[stat] : '—';
+}
+
 /** Collapse entries that describe one hound ranked in more than one section.
 
     A hound in the Singles stake is also listed under its breed, with the same

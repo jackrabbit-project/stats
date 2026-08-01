@@ -71,8 +71,8 @@
                   <td><a href="${breedUrl(dog.breed_slug)}" class="lnk">${esc(dog.breed)}</a></td>
                   <td class="num">${dog.rank}</td>
                   <td class="num font-semibold">${dog.points}</td>
-                  <td class="num">${dog.bob}</td>
-                  <td class="num ${dog.bif ? 'font-semibold text-asfa-accent' : ''}">${dog.bif}</td>
+                  <td class="num">${awardCell(dog, 'bob')}</td>
+                  <td class="num ${dog.is_breed && dog.bif ? 'font-semibold text-asfa-accent' : ''}">${awardCell(dog, 'bif')}</td>
                   <td class="num">${percentileLabel(dog)}</td>
                 </tr>`).join('')}</tbody>
             </table></div>

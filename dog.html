@@ -176,8 +176,8 @@
                 <td><a href="${dogUrl(other.id)}" class="lnk">${esc(other.call_name)}</a></td>
                 <td class="num">${other.rank}</td>
                 <td class="num">${other.points}</td>
-                <td class="num">${other.bob}</td>
-                <td class="num">${other.bif}</td>
+                <td class="num">${awardCell(other, 'bob')}</td>
+                <td class="num">${awardCell(other, 'bif')}</td>
               </tr>`).join('')}</tbody>
           </table></div>
         </section>` : ''}
