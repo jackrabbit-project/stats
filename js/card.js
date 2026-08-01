@@ -155,13 +155,20 @@ function drawStatCard(canvas, dog, season) {
   });
   ctx.textAlign = 'left';
 
-  // Owner. Sits above the footer divider at CARD_SIZE - 128; with the tallest
-  // possible stack above it (a call name at full size plus two wrapped lines of
-  // registered name) this leaves roughly 20px of clearance.
+  // Owner, labelled so the name is not mistaken for anything else. Sits above
+  // the footer divider at CARD_SIZE - 128; with the tallest possible stack
+  // above it (a call name at full size plus two wrapped lines of registered
+  // name) this leaves roughly 20px of clearance.
+  const ownerY = statTop + 165;
+  ctx.fillStyle = 'rgba(47,47,47,0.55)';
+  ctx.font = cardFont(24, 'Segoe UI');
+  ctx.fillText('OWNER', pad, ownerY);
+  const labelWidth = ctx.measureText('OWNER').width + 16;
+
   ctx.fillStyle = CARD_COLORS.ink;
-  const owner = fitText(ctx, dog.owner_raw, inner, 30, 'Segoe UI');
-  ctx.font = cardFont(owner, 'Segoe UI');
-  ctx.fillText(dog.owner_raw, pad, statTop + 165);
+  const ownerSize = fitText(ctx, dog.owner_raw, inner - labelWidth, 30, 'Segoe UI');
+  ctx.font = cardFont(ownerSize, 'Segoe UI');
+  ctx.fillText(dog.owner_raw, pad + labelWidth, ownerY);
 
   // Footer
   ctx.fillStyle = CARD_COLORS.line;
@@ -172,7 +179,6 @@ function drawStatCard(canvas, dog, season) {
     `Standings through ${formatDate(season.as_of)} · source: asfa.org`,
     pad, CARD_SIZE - 84
   );
-  ctx.fillText('Unofficial fan site · not an ASFA publication', pad, CARD_SIZE - 46);
 }
 
 function cardFilename(dog, season) {
@@ -244,11 +250,6 @@ function showCardModal(dog, season, blob) {
           <i class="fa-solid fa-share-nodes mr-1"></i>Share</button>` : ''}
         <span data-role="status" class="text-xs text-asfa-text/60 self-center ml-auto"></span>
       </div>
-      <p class="px-4 pb-4 text-xs text-asfa-text/55">
-        ${canShareFile
-          ? 'Share opens your phone’s share sheet, which includes Instagram and Facebook.'
-          : 'Instagram and Facebook cannot be posted to from a browser. Download or copy the image, then upload it there — or open this page on a phone, where Share reaches both.'}
-      </p>
     </div>`;
 
   const status = modal.querySelector('[data-role="status"]');
