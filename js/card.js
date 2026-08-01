@@ -175,8 +175,11 @@ function drawStatCard(canvas, dog, season) {
   ctx.fillRect(pad, CARD_SIZE - 128, inner, 2);
   ctx.fillStyle = 'rgba(47,47,47,0.65)';
   ctx.font = cardFont(26, 'Segoe UI');
+  // "unofficial" rides on the line that was already here rather than taking a
+  // second one. A card travels without the page around it, so this is the only
+  // place it can say the site is not ASFA's.
   ctx.fillText(
-    `Standings through ${formatDate(season.as_of)} · source: asfa.org`,
+    `Standings through ${formatDate(season.as_of)} · unofficial · source: asfa.org`,
     pad, CARD_SIZE - 84
   );
 }
