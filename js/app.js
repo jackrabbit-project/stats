@@ -296,22 +296,46 @@ function renderChrome(season, current) {
   }
 }
 
-/** Standard page bootstrap: load data, paint chrome, hand control to the page. */
+function showFailure(heading, detail, advice) {
+  const main = document.getElementById('main');
+  if (!main) return;
+  main.innerHTML = `<div class="card">
+    <h2 class="card-title">${esc(heading)}</h2>
+    <p class="text-sm">${esc(detail)}</p>
+    <p class="text-sm mt-2 text-asfa-text/70">${advice}</p></div>`;
+}
+
+/** Standard page bootstrap: load data, paint chrome, hand control to the page.
+
+    The two ways this can fail want different advice, so they are caught
+    separately. Reporting a script error as "could not load the data" sends
+    people looking in entirely the wrong place. */
 function page(current, render) {
-  loadSeason()
-    .then((season) => {
+  loadSeason().then(
+    (season) => {
       renderChrome(season, current);
-      render(season);
-    })
-    .catch((error) => {
-      renderChrome(null, current);
-      const main = document.getElementById('main');
-      if (main) {
-        main.innerHTML = `<div class="card"><h2 class="card-title">Data unavailable</h2>
-          <p class="text-sm">Could not load <code>${DATA_URL}</code>: ${esc(error.message)}</p>
-          <p class="text-sm mt-2 text-asfa-text/70">If you are running this locally, serve the
-          folder over HTTP (<code>python -m http.server</code>) rather than opening the file directly.</p></div>`;
+      try {
+        render(season);
+      } catch (error) {
+        console.error(error);
+        showFailure(
+          'This page could not be drawn',
+          `The data loaded, but the page script failed: ${error.message}`,
+          'If the site was updated recently your browser may be holding an old copy of a '
+          + 'script. Reload with <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>R</kbd> '
+          + '(<kbd>Cmd</kbd>+<kbd>Shift</kbd>+<kbd>R</kbd> on a Mac).'
+        );
       }
+    },
+    (error) => {
       console.error(error);
-    });
+      renderChrome(null, current);
+      showFailure(
+        'Data unavailable',
+        `Could not load ${DATA_URL}: ${error.message}`,
+        'If you are running this locally, serve the folder over HTTP '
+        + '(<code>python -m http.server</code>) rather than opening the file directly.'
+      );
+    }
+  );
 }
