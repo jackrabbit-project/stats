@@ -266,7 +266,7 @@ function renderChrome(season, current) {
         <a href="about.html#disclaimer" class="underline hover:text-white/80 whitespace-nowrap">Full disclaimer</a>
       </div>
       <div class="bg-asfa-green">
-        <div class="max-w-6xl mx-auto px-4 flex flex-wrap items-center justify-between gap-2 py-2">
+        <div class="max-w-6xl mx-auto px-4 flex flex-wrap items-center gap-x-6 gap-y-1 py-2">
           <a href="index.html" class="flex items-baseline gap-2">
             <span class="font-abel text-xl md:text-2xl text-white tracking-wide">ASFA Coursing Stats</span>
             <span class="font-abel text-sm text-white/70">${season ? season.season : ''} season</span>
