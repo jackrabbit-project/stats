@@ -64,6 +64,20 @@ function regionLabel(region) {
   return region == null ? '—' : `Region ${region}`;
 }
 
+/** What a rank is measured against: "in breed", "in Singles", "in LCI Large".
+
+    A hound ranked in the Singles stake or an LCI division is not ranked in a
+    breed, and saying so on a profile or a stat card is simply wrong. */
+function rankContext(dog) {
+  return dog.is_breed ? 'in breed' : `in ${dog.breed}`;
+}
+
+/** The same thing mid-sentence: "the breed", "the Singles stake", "LCI Large". */
+function sectionNoun(dog) {
+  if (dog.is_breed) return 'the breed';
+  return dog.breed === 'Singles' ? 'the Singles stake' : dog.breed;
+}
+
 /** "25 Afghan Hounds", "1 Sloughi", "224 hounds in Singles".
 
     Breed names pluralize by adding an s; the stake and division names do not

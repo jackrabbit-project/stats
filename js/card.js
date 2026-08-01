@@ -83,10 +83,19 @@ function drawStatCard(canvas, dog, season) {
     y += 44;
   }
 
-  // Breed and region
+  // Section, region, and any other section the same hound is ranked in. A
+  // hound running the Singles stake is usually also listed under its breed,
+  // and a card that shows only one of the two misrepresents the season.
+  const alsoRanked = (season.dogs || []).filter(
+    (other) => other.hound_key === dog.hound_key && other.id !== dog.id
+  );
+  let meta = dog.region ? `${dog.breed} · Region ${dog.region}` : dog.breed;
+  if (alsoRanked.length) {
+    meta += ` · also #${alsoRanked[0].rank} in ${alsoRanked[0].breed}`;
+  }
   ctx.fillStyle = CARD_COLORS.accent;
-  ctx.font = cardFont(36);
-  const meta = dog.region ? `${dog.breed} · Region ${dog.region}` : dog.breed;
+  const metaSize = fitText(ctx, meta.toUpperCase(), inner, 36, 'Abel');
+  ctx.font = cardFont(metaSize);
   ctx.fillText(meta.toUpperCase(), pad, y + 12);
   y += 78;
 
@@ -104,7 +113,7 @@ function drawStatCard(canvas, dog, season) {
   const rankWidth = ctx.measureText(`#${dog.rank}`).width;
   ctx.fillStyle = CARD_COLORS.ink;
   ctx.font = cardFont(34, 'Segoe UI');
-  ctx.fillText('in breed', pad + 60 + rankWidth, y + 82);
+  ctx.fillText(rankContext(dog), pad + 60 + rankWidth, y + 82);
   if (dog.percentile != null) {
     ctx.fillStyle = CARD_COLORS.green;
     ctx.font = cardFont(44);
@@ -115,12 +124,20 @@ function drawStatCard(canvas, dog, season) {
   }
   y += 210;
 
-  // Stat columns
-  const stats = [
-    [dog.points, 'TOP 20 POINTS'],
-    [dog.bob, 'BEST OF BREED'],
-    [dog.bif, 'BEST IN FIELD'],
-  ];
+  // Stat columns. Best of Breed and Best in Field cannot be won in the Singles
+  // stake or an LCI division (Running Rules Ch. V §5(d), §10, §11), so a card
+  // for one of those hounds must not print them as its record — that is the
+  // claim most likely to travel once the card is shared without its page.
+  const stats = dog.is_breed
+    ? [
+        [dog.points, 'TOP 20 POINTS'],
+        [dog.bob, 'BEST OF BREED'],
+        [dog.bif, 'BEST IN FIELD'],
+      ]
+    : [
+        [dog.points, 'TOP 20 POINTS'],
+        [dog.total_competing ?? '—', 'HOUNDS COMPETING'],
+      ];
   const columnWidth = inner / stats.length;
   const statTop = y + 60;
   stats.forEach(([value, label], index) => {
