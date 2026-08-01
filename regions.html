@@ -53,20 +53,21 @@
             </p>
             <div class="tbl-wrap"><table class="tbl">
               <thead><tr>
-                <th class="num">Region</th><th class="num">Hounds in Top 20</th>
+                <th class="num">Region</th><th>States</th><th class="num">Hounds in Top 20</th>
                 <th class="num">BOB</th><th class="num">BIF</th><th class="num">Ranked #1</th>
               </tr></thead>
               <tbody>
                 ${rows.map((r) => `
                   <tr>
                     <td class="num font-semibold">${r.region}</td>
+                    <td class="text-asfa-text/75 text-xs">${esc((r.states || []).join(', '))}</td>
                     <td class="num">${r.hounds}</td>
                     <td class="num">${r.bob}</td>
                     <td class="num ${r.bif ? 'font-semibold text-asfa-accent' : ''}">${r.bif}</td>
                     <td class="num">${r.firsts}</td>
                   </tr>`).join('')}
                 <tr class="bg-asfa-bg2 font-semibold">
-                  <td class="num">All</td><td class="num">${totals.hounds}</td>
+                  <td class="num">All</td><td></td><td class="num">${totals.hounds}</td>
                   <td class="num">${totals.bob}</td><td class="num">${totals.bif}</td>
                   <td class="num">${totals.firsts}</td>
                 </tr>

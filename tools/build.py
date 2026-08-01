@@ -19,6 +19,8 @@ from collections import Counter
 from datetime import timezone, datetime
 from pathlib import Path
 
+from regions import REGIONS
+
 ROOT = Path(__file__).resolve().parent.parent
 SNAPSHOT_DIR = ROOT / "data" / "snapshots"
 OUTPUT = ROOT / "data" / "season.json"
@@ -294,12 +296,22 @@ def write_owner_split_review(dogs: list[dict], homes: dict[str, list[int]]) -> l
 
 
 def build_regions(dogs: list[dict]) -> list[dict]:
+    """Standings by the owner's region, carrying each region's states.
+
+    The states come from the Constitution (see tools/regions.py). They ride
+    along here so the standings table can label a region without waiting on
+    data/trials.json, which loads separately and may not load at all.
+    """
     regions: dict[int, dict] = {}
     for dog in dedupe_hounds(dogs):
         if dog["region"] is None:
             continue
+        definition = REGIONS.get(dog["region"], {})
         record = regions.setdefault(dog["region"], {
-            "region": dog["region"], "hounds": 0,
+            "region": dog["region"],
+            "states": definition.get("states", []),
+            "note": definition.get("note"),
+            "hounds": 0,
             "points": 0, "bob": 0, "bif": 0, "firsts": 0,
         })
         record["hounds"] += 1
