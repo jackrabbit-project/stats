@@ -303,7 +303,7 @@ function renderChrome(season, current) {
           American Sighthound Field Association.
           <a href="about.html" class="underline hover:text-asfa-bg2">How these numbers are built</a> ·
           <a href="mailto:info@gazehound.io" class="underline hover:text-asfa-bg2">Report an error</a> ·
-          <a href="https://github.com/jackrabbit-project/stats" target="_blank" rel="noopener noreferrer" class="underline hover:text-asfa-bg2"><i class="fa-brands fa-github mr-1"></i>Source</a>
+          <a href="https://github.com/jackrabbit-project/jackrabbit" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 hover:text-asfa-bg2 whitespace-nowrap align-middle"><img src="assets/jackrabbit-icon-40.png" alt="" width="16" height="16" class="h-4 w-auto inline-block" aria-hidden="true">The Jackrabbit Project</a>
         </p>
       </div>`;
   }
