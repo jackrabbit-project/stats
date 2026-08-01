@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#2C6E49">
+  <title>The Bowen point system — ASFA Coursing Stats</title>
+  <meta name="description" content="How ASFA's Bowen system scores a hound for the Top 20: one point for placing plus one for each hound defeated, with a calculator and the rules for flights, Best of Breed, ties and invalid entries.">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="js/theme.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Abel&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/site.css">
+  <link rel="icon" href="assets/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
+</head>
+<body class="min-h-screen flex flex-col">
+  <header id="site-header"></header>
+
+  <main id="main" class="flex-1 max-w-3xl mx-auto w-full px-4 py-6 space-y-6">
+    <div>
+      <h1 class="font-abel text-3xl text-asfa-green">The Bowen point system</h1>
+      <p class="text-sm text-asfa-text/70 mt-1">
+        Adopted in 1987, the Bowen system is how ASFA scores a hound for the Top 20 rankings —
+        annually by breed, and for the lifetime standings. It is the source of every points figure
+        on this site.
+      </p>
+    </div>
+
+    <section class="card">
+      <h2 class="card-title">The basic rule</h2>
+      <p class="text-sm leading-relaxed">
+        A hound earns <strong>one point for placing, plus one point for every hound it defeated</strong>.
+        Which comes to:
+      </p>
+      <p class="text-center font-abel text-2xl text-asfa-green my-4">
+        points = (hounds in the stake − placement) + 1
+      </p>
+      <p class="text-sm leading-relaxed">
+        Fourth place in a ten-hound stake is <strong>(10 − 4) + 1 = 7 points</strong>. It follows
+        that the winner of a stake takes one point for every hound in it, and that a hound placing
+        last takes one point for turning up and qualifying.
+      </p>
+    </section>
+
+    <section class="card">
+      <h2 class="card-title">Calculator</h2>
+      <div class="grid sm:grid-cols-2 gap-4">
+        <label class="text-sm">
+          <span class="block text-xs uppercase tracking-widest text-asfa-text/60 mb-1">Hounds in the stake</span>
+          <input id="hounds" type="number" min="1" max="200" value="10"
+                 class="w-full border border-asfa-border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-asfa-green">
+        </label>
+        <label class="text-sm">
+          <span class="block text-xs uppercase tracking-widest text-asfa-text/60 mb-1">Placement received</span>
+          <input id="placement" type="number" min="1" max="200" value="4"
+                 class="w-full border border-asfa-border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-asfa-green">
+        </label>
+      </div>
+
+      <div class="tile mt-4 text-center">
+        <div id="result" class="tile-value">7</div>
+        <div id="working" class="tile-label">(10 − 4) + 1</div>
+      </div>
+      <p id="calc-error" class="text-xs text-asfa-accent mt-2 hidden"></p>
+
+      <h3 class="font-abel text-lg text-asfa-green mt-6 mb-2">Every placement in that stake</h3>
+      <div class="tbl-wrap"><table class="tbl">
+        <thead><tr><th class="num">Placement</th><th class="num">Hounds defeated</th><th class="num">Bowen points</th></tr></thead>
+        <tbody id="ladder"></tbody>
+      </table></div>
+      <p class="text-xs text-asfa-text/55 mt-3">
+        This works the basic rule only. Flights, Best of Breed and ties are handled below and are
+        not part of the calculation above.
+      </p>
+    </section>
+
+    <section class="card">
+      <h2 class="card-title">The rest of the rules</h2>
+      <dl class="text-sm space-y-3">
+        <div><dt class="font-semibold text-asfa-green">Stakes split into flights</dt>
+          <dd class="text-asfa-text/85">The overall stake winner takes one point for every hound in the
+            <em>whole</em> stake, not just their flight. A stake of three flights with ten hounds each
+            pays the overall winner 30. The other flight winners receive nothing additional.</dd></div>
+        <div><dt class="font-semibold text-asfa-green">Best of Breed</dt>
+          <dd class="text-asfa-text/85">The winner takes one point for every hound entered in that breed
+            across all classes — whether the run happens or is forfeited. A breed entering a single
+            hound therefore pays its Best of Breed winner one point.</dd></div>
+        <div><dt class="font-semibold text-asfa-green">Best in Field</dt>
+          <dd class="text-asfa-text/85">Earns <strong>no additional Bowen points</strong>. The most a hound
+            can take from a trial is the number of hounds entered in its breed.</dd></div>
+        <div><dt class="font-semibold text-asfa-green">Ties</dt>
+          <dd class="text-asfa-text/85">Points are split evenly between the tied hounds. Only whole numbers
+            are awarded; fractions are dropped.</dd></div>
+        <div><dt class="font-semibold text-asfa-green">Invalid entries</dt>
+          <dd class="text-asfa-text/85">A hound entered invalidly scores nothing itself, but still counts as
+            a hound defeated by everyone above it.</dd></div>
+      </dl>
+    </section>
+
+    <section class="card">
+      <h2 class="card-title">Why points don't compare between breeds</h2>
+      <p class="text-sm leading-relaxed">
+        The whole scale is set by how many hounds turn up. A Whippet winning a stake of forty takes
+        forty points; an Azawakh winning a stake of four takes four. Neither hound ran a better
+        course than the other — one simply had more to beat.
+      </p>
+      <p class="text-sm leading-relaxed mt-3">
+        That is why a point total means something within a breed and very little across breeds, and
+        why this site leads with <a href="about.html" class="lnk">standing</a> — a hound's rank
+        against the number competing in its own breed — wherever the comparison crosses breeds.
+      </p>
+    </section>
+
+    <section class="card">
+      <h2 class="card-title">The official document</h2>
+      <p class="text-sm leading-relaxed">
+        This page is a summary. ASFA's own explainer is the authority, and where the two differ,
+        ASFA's governs.
+      </p>
+      <p class="text-sm mt-3">
+        <a href="https://www.asfa.org/forms/Rec%2024--Bowen%20System.pdf" class="lnk" target="_blank" rel="noopener noreferrer">
+          <i class="fa-solid fa-file-pdf mr-1"></i>The Bowen System (ASFA, PDF)</a><br>
+        <a href="https://www.asfa.org/rule/index.htm" class="lnk" target="_blank" rel="noopener noreferrer">
+          <i class="fa-solid fa-book mr-1"></i>ASFA Rule Book and Policies</a>
+      </p>
+    </section>
+  </main>
+
+  <footer id="site-footer" class="bg-asfa-navy text-white py-8"></footer>
+
+  <script src="js/app.js"></script>
+  <script>
+    page('bowen.html', () => {
+      const houndsInput = document.getElementById('hounds');
+      const placeInput = document.getElementById('placement');
+      const result = document.getElementById('result');
+      const working = document.getElementById('working');
+      const error = document.getElementById('calc-error');
+      const ladder = document.getElementById('ladder');
+
+      const bowen = (hounds, placement) => (hounds - placement) + 1;
+
+      function update() {
+        const hounds = parseInt(houndsInput.value, 10);
+        const placement = parseInt(placeInput.value, 10);
+
+        let problem = '';
+        if (!Number.isInteger(hounds) || hounds < 1) problem = 'Enter how many hounds ran in the stake.';
+        else if (!Number.isInteger(placement) || placement < 1) problem = 'Enter the placement received.';
+        else if (placement > hounds) problem = `A hound cannot place ${placement} in a stake of ${hounds}.`;
+
+        error.textContent = problem;
+        error.classList.toggle('hidden', !problem);
+        if (problem) {
+          result.textContent = '—';
+          working.textContent = '';
+          ladder.innerHTML = '';
+          return;
+        }
+
+        const points = bowen(hounds, placement);
+        result.textContent = points;
+        working.textContent = `(${hounds} − ${placement}) + 1`;
+
+        // Show the whole ladder for this stake, capped so a 200-hound stake
+        // does not render 200 rows.
+        const shown = Math.min(hounds, 20);
+        let rows = '';
+        for (let p = 1; p <= shown; p += 1) {
+          rows += `<tr class="${p === placement ? 'bg-asfa-bg2 font-semibold' : ''}">
+            <td class="num">${p}</td>
+            <td class="num">${hounds - p}</td>
+            <td class="num">${bowen(hounds, p)}</td>
+          </tr>`;
+        }
+        if (hounds > shown) {
+          rows += `<tr><td colspan="3" class="text-xs text-asfa-text/55">
+            … through ${hounds}, each one point fewer.</td></tr>`;
+        }
+        ladder.innerHTML = rows;
+      }
+
+      houndsInput.addEventListener('input', update);
+      placeInput.addEventListener('input', update);
+      update();
+    });
+  </script>
+</body>
+</html>

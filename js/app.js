@@ -246,15 +246,16 @@ const NAV = [
   ['kennels.html', 'Kennels'],
   ['regions.html', 'Regions'],
   ['lci.html', 'LCI'],
+  ['bowen.html', 'Bowen', 'fa-solid fa-calculator'],
   ['about.html', 'About'],
 ];
 
 function renderChrome(season, current) {
-  const links = NAV.map(([href, label]) => {
+  const links = NAV.map(([href, label, icon]) => {
     const active = href === current;
     return `<a href="${href}" class="px-3 py-2 text-sm font-abel uppercase tracking-widest ${
       active ? 'text-white border-b-2 border-asfa-accent' : 'text-white/75 hover:text-white'
-    }">${label}</a>`;
+    }">${icon ? `<i class="${icon} mr-1.5" aria-hidden="true"></i>` : ''}${label}</a>`;
   }).join('');
 
   const header = document.getElementById('site-header');
