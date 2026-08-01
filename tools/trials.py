@@ -44,8 +44,8 @@ ALIASES = ROOT / "data" / "club-aliases.json"
 INDEX_URL = "https://www.asfa.org/trial/index0111.html"
 MONTH_URL = "https://www.asfa.org/trial/index{mm}{yy}.html"
 USER_AGENT = (
-    "asfa-coursing-stats/1.0 (unofficial ASFA statistics site; "
-    "+https://github.com/jackrabbit-project/asfa-top20)"
+    "lure-coursing-stats/1.0 (unofficial ASFA statistics site; "
+    "+https://github.com/jackrabbit-project/stats)"
 )
 PAGE_ENCODING = "cp1252"
 

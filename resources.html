@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#2C6E49">
+  <title>Resources — Lure Coursing Stats</title>
+  <meta name="description" content="Where to find ASFA's own documents: the Running Rules and Field Procedures, the Constitution and By-Laws, the LCI rules, policies, the judges handbook, and the standings and results this site is built from.">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="js/theme.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Abel&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/site.css">
+  <link rel="icon" href="assets/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
+</head>
+<body class="min-h-screen flex flex-col">
+  <header id="site-header"></header>
+
+  <main id="main" class="flex-1 max-w-3xl mx-auto w-full px-4 py-6 space-y-6">
+    <div>
+      <h1 class="font-abel text-3xl text-asfa-green">Resources</h1>
+      <p class="text-sm text-asfa-text/70 mt-1">
+        ASFA's own documents, linked at source. Nothing here is hosted on this site — every link
+        goes to asfa.org, so what you open is the current version rather than a copy that may
+        have fallen behind.
+      </p>
+    </div>
+
+    <section class="card">
+      <h2 class="card-title">Rules</h2>
+      <ul id="rules" class="text-sm space-y-3"></ul>
+    </section>
+
+    <section class="card">
+      <h2 class="card-title">Policies and procedure</h2>
+      <ul id="policies" class="text-sm space-y-3"></ul>
+    </section>
+
+    <section class="card">
+      <h2 class="card-title">For officials</h2>
+      <ul id="officials" class="text-sm space-y-3"></ul>
+    </section>
+
+    <section class="card">
+      <h2 class="card-title">Standings and results</h2>
+      <p class="text-xs text-asfa-text/60 mb-3">
+        The pages this site reads. Everything on Lure Coursing Stats comes from these.
+      </p>
+      <ul id="data" class="text-sm space-y-3"></ul>
+    </section>
+
+    <section class="card">
+      <h2 class="card-title">On reproducing these documents</h2>
+      <p class="text-sm leading-relaxed">
+        This site links to ASFA's documents rather than republishing them. The rulebook and the
+        rest carry ASFA's copyright, and a mirror goes stale the moment a rule changes — which for
+        the Running Rules is every August 1, when amendments passed at the Convention take effect.
+      </p>
+      <p class="text-sm leading-relaxed mt-3">
+        Where a rule is quoted elsewhere on this site — on the
+        <a href="lci.html" class="lnk">LCI page</a>, the <a href="bowen.html" class="lnk">Bowen page</a>,
+        or in the notes explaining what a column means — it is a short citation with the chapter and
+        section given, so you can check it against the original.
+      </p>
+    </section>
+  </main>
+
+  <footer id="site-footer" class="bg-asfa-navy text-white py-8"></footer>
+
+  <script src="js/app.js"></script>
+  <script>
+    page('resources.html', (season) => {
+      const RULE = 'https://www.asfa.org/rule/';
+
+      // Verified against asfa.org; sizes are what the server reports, so a link
+      // that has quietly gone stale is easier to spot.
+      const DOCS = {
+        rules: [
+          ['ASFA Rulebook', RULE + encodeURIComponent('ASFA Rulebook Website Copy--08-01-24.pdf'),
+           'Running Rules and Field Procedures, rev. 08/01/2024. Chapters I–XIII, appendices and glossary.', '678 KB'],
+          ['Constitution and By-Laws', RULE + encodeURIComponent('ASFA Constitution Website Copy--08-01-24.pdf'),
+           'Rev. 08/01/2024. Membership, conventions, the Board, the ten regions, breed recognition.', '228 KB'],
+          ['LCI Rules', RULE + encodeURIComponent('2024 Rules Lure Chasing Program.pdf'),
+           'The Lure Chasing Program, 2024. Divisions, scoring, placements and titles.', '341 KB'],
+          ['The Bowen System', 'https://www.asfa.org/forms/Rec%2024--Bowen%20System.pdf',
+           'How Top 20 points are awarded.', '48 KB'],
+        ],
+        policies: [
+          ['Administrative Policies', RULE + encodeURIComponent('2026 ASFA ADMINISTRATIVE POLICIES 07-26.pdf'),
+           'Current to 07/2026.', '330 KB'],
+          ['Operational Policies', RULE + encodeURIComponent('2026 ASFA OPERATIONAL POLICIES 07-26.pdf'),
+           'Current to 07/2026.', '408 KB'],
+        ],
+        officials: [
+          ['Judges Handbook', RULE + encodeURIComponent('ASFA judges handbook--REFORMATTED 04-10-2022.pdf'),
+           'Reformatted 04/2022.', '1.1 MB'],
+          ['Lure Operators Guide', RULE + encodeURIComponent('FTI 06--Lure Operators Guide.pdf'),
+           'Field Trial Instruction 06.', '5.5 MB'],
+          ['Guidelines for Course Design', RULE + encodeURIComponent('Guidelines for Course Design.pdf'),
+           'Laying out a course.', '13 MB'],
+        ],
+        data: [
+          ['Top 20 standings', 'https://www.asfa.org/20/index.htm',
+           'The current season, by breed. Updated through the season.', ''],
+          ['Lifetime Top 20', 'https://www.asfa.org/20/lifetime.htm',
+           'Career standings from the first ASFA trial in 1972, ranked by hounds defeated.', ''],
+          ['Trial results', 'https://www.asfa.org/trial/index0111.html',
+           'Month by month, with every placement and entry count.', ''],
+          ['Club listing', 'https://www.asfa.org/clubs/index.htm',
+           'Member clubs and the region each belongs to.', ''],
+          ['Rule Book and Policies index', RULE,
+           'Everything above, as ASFA lists it.', ''],
+        ],
+      };
+
+      const icon = (size) => size
+        ? '<i class="fa-solid fa-file-pdf text-asfa-accent mr-2" aria-hidden="true"></i>'
+        : '<i class="fa-solid fa-arrow-up-right-from-square text-asfa-accent mr-2" aria-hidden="true"></i>';
+
+      for (const [id, items] of Object.entries(DOCS)) {
+        document.getElementById(id).innerHTML = items.map(([name, href, note, size]) => `
+          <li>
+            ${icon(size)}<a href="${href}" class="lnk font-semibold" target="_blank" rel="noopener noreferrer">${esc(name)}</a>${
+              size ? ` <span class="text-xs text-asfa-text/50">${size} PDF</span>` : ''}
+            <div class="text-asfa-text/75 text-xs mt-0.5 ml-6">${esc(note)}</div>
+          </li>`).join('');
+      }
+    });
+  </script>
+</body>
+</html>

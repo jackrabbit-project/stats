@@ -26,8 +26,8 @@ SNAPSHOT_DIR = Path(__file__).resolve().parent.parent / "data" / "snapshots"
 
 # Identify the project rather than impersonating a browser. One request per run.
 USER_AGENT = (
-    "asfa-coursing-stats/1.0 (unofficial ASFA statistics site; "
-    "+https://github.com/jackrabbit-project/asfa-top20)"
+    "lure-coursing-stats/1.0 (unofficial ASFA statistics site; "
+    "+https://github.com/jackrabbit-project/stats)"
 )
 
 # The page is legacy Windows-authored HTML with no charset declaration.

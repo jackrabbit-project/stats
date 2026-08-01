@@ -5,3 +5,10 @@ venv/
 .DS_Store
 Thumbs.db
 data/review/
+
+# ASFA's club listing PDF is archived locally by tools/clubs.py, but never
+# committed: alongside the four columns this project reads, it carries every
+# club liaison's name, home address, phone number and email. Publishing the
+# repo would publish all of it, undoing the extraction limits that clubs.py
+# and check.py enforce. Re-fetch it with `python tools/clubs.py`.
+data/clubs/raw/

@@ -247,6 +247,7 @@ const NAV = [
   ['regions.html', 'Regions'],
   ['lci.html', 'LCI'],
   ['bowen.html', 'Bowen', 'fa-solid fa-calculator'],
+  ['resources.html', 'Resources'],
   ['about.html', 'About'],
 ];
 
@@ -291,7 +292,7 @@ function renderChrome(season, current) {
           American Sighthound Field Association.
           <a href="about.html" class="underline hover:text-asfa-bg2">How these numbers are built</a> ·
           <a href="mailto:info@gazehound.io" class="underline hover:text-asfa-bg2">Report an error</a> ·
-          <a href="https://github.com/jackrabbit-project/asfa-top20" target="_blank" rel="noopener noreferrer" class="underline hover:text-asfa-bg2"><i class="fa-brands fa-github mr-1"></i>Source</a>
+          <a href="https://github.com/jackrabbit-project/stats" target="_blank" rel="noopener noreferrer" class="underline hover:text-asfa-bg2"><i class="fa-brands fa-github mr-1"></i>Source</a>
         </p>
       </div>`;
   }
