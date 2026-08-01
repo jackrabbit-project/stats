@@ -56,9 +56,11 @@
             const holders = inBreed.filter((dog) => dog.bif);
             const once = holders.filter((dog) => dog.bif === 1).length;
             return 'A trial’s top award: one run between that day’s Best of Breed '
-              + 'winners, offered at the host club’s option. Each breed sends a single '
-              + 'hound to it, so unlike points it cannot be inflated by breed size. '
-              + `Rare, too — ${holders.length} of the ${inBreed.length} hounds ranked in a `
+              + 'winners, offered at the host club’s option. Winning it means outscoring '
+              + 'every other breed’s champion in a single course, which makes it the most '
+              + 'breed-neutral figure here — though a rare breed reaches that run more '
+              + 'easily, since a lone entry takes Best of Breed on its own score. '
+              + `Rare, too: ${holders.length} of the ${inBreed.length} hounds ranked in a `
               + `breed hold one, and ${once} of those hold exactly one.`;
           },
         },
