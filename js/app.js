@@ -189,15 +189,16 @@ function searchDogs(query, dogs, limit = 40) {
   for (const dog of dogs) {
     const call = dog.call_name.toLowerCase();
     const registered = dog.registered_name.toLowerCase();
-    const owner = dog.owner_raw.toLowerCase();
 
+    // Owner is deliberately not matched. ASFA publishes owners as initials and
+    // a surname ("D.& N.Erickson"), so a search for a full first name never
+    // hits and the box reads as broken. Owners are browsable on Kennels.
     let score = 0;
     if (call === needle) score = 100;
     else if (call.startsWith(needle)) score = 90;
     else if (registered.toLowerCase().startsWith(needle)) score = 80;
     else if (call.includes(needle)) score = 70;
     else if (registered.includes(needle)) score = 60;
-    else if (owner.includes(needle)) score = 40;
     else if (dog.breed.toLowerCase().includes(needle)) score = 20;
 
     if (score) scored.push({ dog, score });
@@ -301,8 +302,12 @@ function renderChrome(season, current) {
         <p class="text-xs text-white/65">
           Independent fan project. Not affiliated with, endorsed by, or sponsored by the
           American Sighthound Field Association.
-          <a href="about.html" class="underline hover:text-asfa-bg2">How these numbers are built</a> ·
-          <a href="mailto:info@gazehound.io" class="underline hover:text-asfa-bg2">Report an error</a> ·
+        </p>
+        <p class="text-xs text-white/65 flex flex-wrap items-center justify-center gap-x-2 gap-y-1.5 text-center">
+          <a href="about.html" class="underline hover:text-asfa-bg2">How these numbers are built</a>
+          <span aria-hidden="true">·</span>
+          <a href="mailto:info@gazehound.io" class="underline hover:text-asfa-bg2">Report an error</a>
+          <span aria-hidden="true">·</span>
           <a href="https://github.com/jackrabbit-project/jackrabbit" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 hover:text-asfa-bg2 whitespace-nowrap align-middle"><img src="assets/jackrabbit-icon-40.png" alt="" width="16" height="16" class="h-4 w-auto inline-block" aria-hidden="true">The Jackrabbit Project</a>
         </p>
       </div>`;
