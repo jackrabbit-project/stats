@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#2C6E49">
+  <title>Find an ASFA Event — Lure Coursing Stats</title>
+  <meta name="description" content="Find an upcoming ASFA lure coursing trial by state, region or month, with premium lists linked at asfa.org. Unofficial; ASFA's published schedule governs.">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="js/theme.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Abel&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/site.css">
+  <link rel="icon" href="assets/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
+</head>
+<body class="min-h-screen flex flex-col">
+  <header id="site-header"></header>
+  <main id="main" class="flex-1 max-w-4xl mx-auto w-full px-4 py-6 space-y-6"></main>
+  <footer id="site-footer" class="bg-asfa-navy text-white py-8"></footer>
+
+  <script src="js/app.js"></script>
+  <script>
+    page('events.html', () => {
+      loadEvents().then(render).catch((error) => {
+        console.error(error);
+        showFailure(
+          'Schedule unavailable',
+          `Could not load data/events.json: ${error.message}`,
+          'The rest of the site is unaffected. ASFA’s own schedule is at '
+          + '<a href="https://www.asfa.org/event/index.htm" class="lnk" target="_blank" rel="noopener noreferrer">asfa.org/event</a>.'
+        );
+      });
+
+      const MONTH_NAMES = ['January', 'February', 'March', 'April', 'May', 'June',
+        'July', 'August', 'September', 'October', 'November', 'December'];
+
+      function fmtRange(startIso, endIso) {
+        const s = new Date(startIso + 'T00:00:00');
+        const e = new Date(endIso + 'T00:00:00');
+        const month = s.toLocaleDateString('en-US', { month: 'short' });
+        if (startIso === endIso) return `${month} ${s.getDate()}`;
+        if (s.getMonth() === e.getMonth()) return `${month} ${s.getDate()}–${e.getDate()}`;
+        return `${month} ${s.getDate()} – ${e.toLocaleDateString('en-US', { month: 'short' })} ${e.getDate()}`;
+      }
+
+      function weekday(iso) {
+        return new Date(iso + 'T00:00:00').toLocaleDateString('en-US', { weekday: 'short' });
+      }
+
+      function render(feed) {
+        // "Today" for filtering: local date, since trials are local-day events.
+        const now = new Date();
+        const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+
+        const states = [...new Set(feed.events.map((e) => e.state).filter(Boolean))].sort();
+        const regionStates = new Map((feed.regions || []).map((r) => [r.region, r.states]));
+
+        // Filters restore from the query string so a filtered view is shareable.
+        const initial = {
+          state: param('state') || '',
+          region: param('region') || '',
+          month: param('month') || '',
+          past: param('past') === '1',
+        };
+
+        const main = document.getElementById('main');
+        main.innerHTML = `
+          <div>
+            <h1 class="font-abel text-3xl text-asfa-green">Find an ASFA event</h1>
+            <p class="text-sm text-asfa-text/70 mt-1">
+              The ${esc(feed.seasons.join('/'))} trial schedule as ASFA publishes it —
+              filter by state, region or month. Entry details are in each trial’s premium list.
+            </p>
+            <p class="text-sm mt-2">
+              <a href="${esc(feed.source_url)}" class="lnk" target="_blank" rel="noopener noreferrer">ASFA’s schedule page</a>${feed.calendar_pdf_url ? ` ·
+              <a href="${esc(feed.calendar_pdf_url)}" class="lnk" target="_blank" rel="noopener noreferrer"><i class="fa-solid fa-file-pdf mr-1"></i>Calendar PDF</a>` : ''}
+            </p>
+          </div>
+
+          <section class="card no-print">
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+              <label class="block">
+                <span class="text-xs font-semibold text-asfa-text/60 uppercase tracking-wide">State</span>
+                <select id="f-state" class="mt-1 w-full border border-asfa-border px-2 py-2 text-sm bg-white">
+                  <option value="">All states</option>
+                  ${states.map((s) => `<option value="${esc(s)}">${esc(s)}</option>`).join('')}
+                </select>
+              </label>
+              <label class="block">
+                <span class="text-xs font-semibold text-asfa-text/60 uppercase tracking-wide">Region</span>
+                <select id="f-region" class="mt-1 w-full border border-asfa-border px-2 py-2 text-sm bg-white">
+                  <option value="">All regions</option>
+                  ${[1,2,3,4,5,6,7,8,9,10].map((r) => `<option value="${r}">Region ${r}</option>`).join('')}
+                </select>
+              </label>
+              <label class="block">
+                <span class="text-xs font-semibold text-asfa-text/60 uppercase tracking-wide">Month</span>
+                <select id="f-month" class="mt-1 w-full border border-asfa-border px-2 py-2 text-sm bg-white">
+                  <option value="">All months</option>
+                  ${MONTH_NAMES.map((m, i) => `<option value="${i + 1}">${m}</option>`).join('')}
+                </select>
+              </label>
+              <label class="flex items-end gap-2 pb-2 cursor-pointer">
+                <input type="checkbox" id="f-past" class="w-4 h-4 accent-asfa-green">
+                <span class="text-sm">Show past events</span>
+              </label>
+            </div>
+            <p id="f-region-states" class="text-xs text-asfa-text/55 mt-2 hidden"></p>
+          </section>
+
+          <div id="event-list" class="space-y-6"></div>
+
+          <section class="card">
+            <h2 class="card-title">About this schedule</h2>
+            <p class="text-sm leading-relaxed">
+              Reproduced from
+              <a href="${esc(feed.source_url)}" class="lnk" target="_blank" rel="noopener noreferrer">ASFA’s trial schedule</a>,
+              fetched ${esc(formatDate(feed.fetched))}. Dates move and trials are added or
+              cancelled through the season — <strong>confirm against the premium list before
+              travelling</strong>. Wherever this page and ASFA’s disagree, ASFA’s governs.
+            </p>
+          </section>`;
+
+        const els = {
+          state: document.getElementById('f-state'),
+          region: document.getElementById('f-region'),
+          month: document.getElementById('f-month'),
+          past: document.getElementById('f-past'),
+          regionStates: document.getElementById('f-region-states'),
+          list: document.getElementById('event-list'),
+        };
+        // A shared link may name a state with no events this season. The select
+        // would silently reject the value and show everything — the opposite of
+        // what was asked. Add the missing option so the empty state shows.
+        if (initial.state && !states.includes(initial.state)) {
+          els.state.insertAdjacentHTML('beforeend',
+            `<option value="${esc(initial.state)}">${esc(initial.state)}</option>`);
+        }
+        els.state.value = initial.state;
+        els.region.value = initial.region;
+        els.month.value = initial.month;
+        els.past.checked = initial.past;
+
+        function syncUrl() {
+          const q = new URLSearchParams();
+          if (els.state.value) q.set('state', els.state.value);
+          if (els.region.value) q.set('region', els.region.value);
+          if (els.month.value) q.set('month', els.month.value);
+          if (els.past.checked) q.set('past', '1');
+          const qs = q.toString();
+          history.replaceState(null, '', qs ? `?${qs}` : location.pathname);
+        }
+
+        function apply() {
+          syncUrl();
+
+          // Naming the region's states saves a trip to the Regions page.
+          const region = els.region.value ? Number(els.region.value) : null;
+          if (region && regionStates.get(region)) {
+            els.regionStates.textContent = `Region ${region}: ${regionStates.get(region).join(', ')}`;
+            els.regionStates.classList.remove('hidden');
+          } else {
+            els.regionStates.classList.add('hidden');
+          }
+
+          const showPast = els.past.checked;
+          const rows = feed.events.filter((e) => {
+            if (!showPast && (e.end < today || e.cancelled)) return false;
+            if (els.state.value && e.state !== els.state.value) return false;
+            if (region && e.region !== region) return false;
+            if (els.month.value && Number(e.start.slice(5, 7)) !== Number(els.month.value)) return false;
+            return true;
+          });
+
+          if (!rows.length) {
+            els.list.innerHTML = `<section class="card">
+              <p class="text-sm">No ${showPast ? '' : 'upcoming '}events match these filters.</p>
+              <button id="clear-filters" class="lnk text-sm mt-2">Clear filters</button>
+            </section>`;
+            document.getElementById('clear-filters').addEventListener('click', () => {
+              els.state.value = ''; els.region.value = ''; els.month.value = ''; apply();
+            });
+            return;
+          }
+
+          // Group by month of the start date.
+          const groups = new Map();
+          for (const e of rows) {
+            const key = e.start.slice(0, 7);
+            if (!groups.has(key)) groups.set(key, []);
+            groups.get(key).push(e);
+          }
+
+          els.list.innerHTML = [...groups.entries()].map(([key, list]) => {
+            const [y, m] = key.split('-').map(Number);
+            return `<section class="card">
+              <h2 class="card-title">${MONTH_NAMES[m - 1]} ${y}</h2>
+              <ul class="divide-y divide-asfa-border">
+                ${list.map(eventRow).join('')}
+              </ul>
+            </section>`;
+          }).join('');
+        }
+
+        function eventRow(e) {
+          const badge = (text, cls) =>
+            `<span class="badge ${cls}">${esc(text)}</span>`;
+          const badges = [];
+          // The type column as published: AB, AB/LCI, SW, IW, breed initials...
+          if (e.type) badges.push(badge(e.type, 'badge-new'));
+          if (e.national) badges.push(badge('National Specialty', 'badge-prov'));
+          else if (e.specialty) badges.push(badge('Specialty', 'badge-prov'));
+          if (e.cancelled) badges.push(badge('CANCELLED', 'badge-down'));
+
+          const struck = e.cancelled ? 'line-through opacity-60' : '';
+          const past = !e.cancelled && e.end < today ? 'opacity-70' : '';
+          const where = [e.venue, e.state].filter(Boolean).join(', ');
+
+          return `<li class="py-3 flex flex-wrap items-baseline gap-x-4 gap-y-1 ${past}">
+            <span class="w-28 shrink-0 text-sm font-semibold text-asfa-green whitespace-nowrap ${struck}">
+              ${fmtRange(e.start, e.end)}
+              <span class="block text-[11px] font-normal text-asfa-text/50">${weekday(e.start)}${e.start !== e.end ? `–${weekday(e.end)}` : ''}</span>
+            </span>
+            <span class="flex-1 min-w-[12rem] ${struck}">
+              <span class="font-semibold">${esc(e.club)}</span>
+              ${e.club !== e.initials ? `<span class="text-asfa-text/50 text-sm"> (${esc(e.initials)})</span>` : ''}
+              <span class="block text-sm text-asfa-text/70">${esc(where)} · ${regionLabel(e.region)}</span>
+            </span>
+            <span class="flex items-center gap-1.5 flex-wrap">${badges.join(' ')}</span>
+            ${e.premium_url ? `<a href="${esc(e.premium_url)}" target="_blank" rel="noopener noreferrer"
+              class="lnk text-sm whitespace-nowrap"><i class="fa-solid fa-file-pdf mr-1"></i>Premium</a>`
+              : '<span class="text-xs text-asfa-text/40">no premium yet</span>'}
+          </li>`;
+        }
+
+        for (const el of [els.state, els.region, els.month, els.past]) {
+          el.addEventListener('change', apply);
+        }
+        apply();
+      }
+    });
+  </script>
+</body>
+</html>

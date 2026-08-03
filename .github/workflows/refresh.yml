@@ -35,6 +35,7 @@ jobs:
         run: |
           python tools/parse.py
           python tools/trials.py
+          python tools/events.py
           python tools/build.py
           python tools/check.py
 

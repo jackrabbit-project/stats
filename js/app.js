@@ -3,9 +3,11 @@
 
 const DATA_URL = 'data/season.json';
 const TRIALS_URL = 'data/trials.json';
+const EVENTS_URL = 'data/events.json';
 
 let seasonPromise = null;
 let trialsPromise = null;
+let eventsPromise = null;
 
 function loadJson(url) {
   return fetch(url).then((response) => {
@@ -37,6 +39,17 @@ function loadTrials() {
     });
   }
   return trialsPromise;
+}
+
+/** The trial schedule, loaded only by events.html — same isolation as trials. */
+function loadEvents() {
+  if (!eventsPromise) {
+    eventsPromise = loadJson(EVENTS_URL).catch((error) => {
+      eventsPromise = null;
+      throw error;
+    });
+  }
+  return eventsPromise;
 }
 
 /* ---------------------------------------------------------------- utilities */
@@ -247,6 +260,8 @@ const NAV = [
   ['kennels.html', 'Kennels'],
   ['regions.html', 'Regions'],
   ['lci.html', 'LCI'],
+  // The stats pages stay up front; Events sits with the reference material.
+  ['events.html', 'Events'],
   ['bowen.html', 'Bowen', 'fa-solid fa-calculator'],
   ['rulebooks.html', 'Rulebooks'],
   ['about.html', 'About'],

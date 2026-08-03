@@ -4,7 +4,8 @@ A searchable, browsable view of **American Sighthound Field Association lure cou
 
 ASFA publishes the standings as one long page of stacked breed tables, and trial results as a page per month. You cannot search either, look up a single hound, or see where a hound sits against the rest of its breed without counting by hand. This site reads those pages and rearranges them.
 
-- **Search** by call name, registered name, or owner
+- **Search** by call name or registered name
+- **Events** — find an upcoming ASFA trial by state, region or month, premium lists linked
 - **Hound profiles** — Bowen points, Best of Breed, Best in Field, and standing within the breed
 - **Leaderboards** — most BIF, most BOB, most points, highest breed standing
 - **Kennels** — which owners are having the season
@@ -19,18 +20,20 @@ ASFA publishes the standings as one long page of stacked breed tables, and trial
 ## Layout
 
 ```
-index.html  browse.html  dog.html  leaders.html  kennels.html  regions.html
-lci.html  bowen.html  rulebooks.html  about.html
+index.html  events.html  browse.html  dog.html  leaders.html  kennels.html
+regions.html  lci.html  bowen.html  rulebooks.html  about.html
 css/site.css          Custom classes on top of Tailwind
 js/theme.js           Shared Tailwind palette
 js/app.js             Data loading, chrome, search, formatting
 js/card.js            Canvas stat-card renderer
-tools/                Python ETL — fetch, parse, clubs, trials, build, check
+tools/                Python ETL — fetch, parse, clubs, trials, events, build, check
 data/snapshots/       Every published standings page, archived verbatim
 data/trials/raw/      Every monthly trial results page, archived verbatim
+data/events/raw/      The trial schedule page, archived verbatim
 data/clubs/raw/       The ASFA club listing PDF — fetched locally, never committed
 data/season.json      Standings — loaded by every page
 data/trials.json      Trial entries by club and region — loaded by regions.html
+data/events.json      The trial schedule — loaded by events.html
 data/clubs.json       Club directory: name, region, initials, affiliation only
 ```
 
@@ -40,7 +43,7 @@ The site itself has no build step and no framework: Tailwind and Font Awesome lo
 
 ```bash
 pip install -r requirements.txt
-python tools/fetch.py && python tools/clubs.py && python tools/parse.py && python tools/trials.py && python tools/build.py && python tools/check.py
+python tools/fetch.py && python tools/clubs.py && python tools/parse.py && python tools/trials.py && python tools/events.py && python tools/build.py && python tools/check.py
 ```
 
 `fetch.py` archives the live page under `data/snapshots/{date}.html`, named for the coverage date the page states about itself rather than the wall clock. It skips the write when the page is unchanged. Raw snapshots are committed so every figure on the site traces back to the bytes ASFA served on a given date — and so movement between publications can be computed.

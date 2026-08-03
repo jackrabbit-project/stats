@@ -298,6 +298,7 @@ def main() -> int:
         )
 
     check_trials(check)
+    check_events(check)
     return check.report()
 
 
@@ -379,6 +380,120 @@ def check_trials(check: Checker) -> None:
                 f"data/clubs.json contains a {label}: {found[:2]} - the club "
                 f"listing's contact columns must never be extracted",
             )
+
+
+def check_events(check: Checker) -> None:
+    """Verify data/events.json against the archived schedule page."""
+    path = ROOT / "data" / "events.json"
+    if not path.exists():
+        check.expect(False, "data/events.json missing - run tools/events.py")
+        return
+
+    feed = json.loads(path.read_text(encoding="utf-8"))
+    events = feed["events"]
+
+    # Crude row count straight from the newest archived page: 13-cell rows whose
+    # day cells hold at least one number, skipping the weekday header strips.
+    raw_dir = ROOT / "data" / "events" / "raw"
+    pages = sorted(raw_dir.glob("*.html"))
+    if not pages:
+        check.expect(False, "no archived schedule page under data/events/raw/")
+        return
+    html = pages[-1].read_bytes().decode("cp1252", errors="replace")
+    counted = 0
+    for tr in re.findall(r"<tr\b[^>]*>(.*?)</tr>", html, re.DOTALL | re.I):
+        cells = re.findall(r"<td\b[^>]*>(.*?)</td>", tr, re.DOTALL | re.I)
+        if len(cells) != 13:
+            continue
+        days = [re.sub(r"<[^>]+>", "", c).replace("&nbsp;", " ").strip()
+                for c in cells[0:7]]
+        days = [d for d in days if d]
+        if days and all(re.fullmatch(r"\d{1,2}", d) for d in days):
+            counted += 1
+    check.expect(
+        counted == len(events),
+        f"event count: raw HTML has {counted}, events.json has {len(events)}",
+    )
+
+    check.expect(
+        feed["stats"]["events"] == len(events)
+        and feed["stats"]["cancelled"] == sum(1 for e in events if e["cancelled"])
+        and feed["stats"]["with_premium"] == sum(1 for e in events if e["premium_url"]),
+        "events stats do not re-sum from the rows",
+    )
+
+    iso = re.compile(r"\d{4}-\d{2}-\d{2}$")
+    for event in events:
+        tag = f"{event['start']} {event['initials']}"
+        check.expect(
+            bool(iso.match(event["start"])) and bool(iso.match(event["end"]))
+            and event["start"] <= event["end"],
+            f"{tag}: bad date range {event['start']}..{event['end']}",
+        )
+        check.expect(
+            event["region"] is None or 1 <= event["region"] <= 10,
+            f"{tag}: region {event['region']} out of range",
+        )
+        check.expect(
+            event["state"] is None or re.fullmatch(r"[A-Z]{2}", event["state"]) is not None,
+            f"{tag}: state {event['state']!r} is not a 2-letter code",
+        )
+        check.expect(
+            event["premium_url"] is None
+            or event["premium_url"].startswith("https://www.asfa.org/"),
+            f"{tag}: premium URL off-site: {event['premium_url']}",
+        )
+        check.expect(
+            event["club"] != "" and event["initials"] != "",
+            f"{tag}: empty club",
+        )
+
+    # An inferred premium is only legitimate when a same-club, same-state
+    # neighbour within one day carries that exact URL natively.
+    from datetime import date as _date
+    for event in events:
+        if not event.get("premium_inferred"):
+            continue
+        tag = f"{event['start']} {event['initials']}"
+        native = [
+            s for s in events
+            if s is not event
+            and s["initials"] == event["initials"]
+            and s["state"] == event["state"]
+            and s["premium_url"] == event["premium_url"]
+            and not s.get("premium_inferred")
+            and (
+                abs((_date.fromisoformat(s["start"])
+                     - _date.fromisoformat(event["end"])).days) <= 1
+                or abs((_date.fromisoformat(event["start"])
+                        - _date.fromisoformat(s["end"])).days) <= 1
+            )
+        ]
+        check.expect(
+            bool(native),
+            f"{tag}: inferred premium has no adjacent native source",
+        )
+
+    # Every unmatched abbreviation must still appear as its own club name -
+    # shown as published, never guessed into a different club.
+    names = {e["initials"]: e["club"] for e in events}
+    for initials in feed["unmatched_initials"]:
+        check.expect(
+            names.get(initials) == initials,
+            f"unmatched {initials} was renamed to {names.get(initials)!r}",
+        )
+
+    # The privacy rule extends to the schedule feed.
+    text = path.read_text(encoding="utf-8")
+    for label, pattern in (
+        ("email address", r"[\w.+-]+@[\w-]+\.[\w.]+"),
+        ("phone number", r"\(\d{3}\)\s*\d{3}-\d{4}"),
+    ):
+        found = re.findall(pattern, text, re.IGNORECASE)
+        check.expect(
+            not found,
+            f"data/events.json contains a {label}: {found[:2]}",
+        )
 
 
 if __name__ == "__main__":
