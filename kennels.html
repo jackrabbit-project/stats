@@ -89,11 +89,30 @@
         ['bob', 'BOB'], ['bif', 'BIF'], ['firsts', 'Firsts'],
       ];
       let sortKey = 'points';
+      let query = '';
+
+      /* The table shows a Top 50, which leaves 325 of the 375 owners with no
+         route to their own page. Search covers the whole list.
+
+         ASFA publishes owners as an initial and a surname ("J. & K.Hicks"), so
+         match on surname: typing "hicks" finds them, "jane hicks" never could. */
+      function matches(owner) {
+        if (!query) return true;
+        return owner.name.toLowerCase().includes(query);
+      }
 
       function ownerTable() {
-        const owners = [...season.owners]
+        const found = season.owners.filter(matches);
+        const owners = [...found]
           .sort((a, b) => b[sortKey] - a[sortKey] || b.points - a.points)
-          .slice(0, 50);
+          .slice(0, query ? 200 : 50);
+
+        if (!owners.length) {
+          return `<p class="text-sm text-asfa-text/70 py-3">
+            No owner matching “${esc(query)}”. ASFA publishes owners as an initial and a surname,
+            so try the surname on its own.
+          </p>`;
+        }
 
         return `
           <div class="tbl-wrap"><table class="tbl">
@@ -118,6 +137,13 @@
           </table></div>`;
       }
 
+      function caption() {
+        const sorted = esc(sortable.find(([k]) => k === sortKey)[1].toLowerCase());
+        if (!query) return `Top 50 by ${sorted}.`;
+        const n = season.owners.filter(matches).length;
+        return `${n} owner${n === 1 ? '' : 's'} matching “${esc(query)}”, by ${sorted}.`;
+      }
+
       function paint() {
         main.innerHTML = `
           <div>
@@ -131,9 +157,16 @@
 
           <section class="card">
             <h2 class="card-title">Owners</h2>
+            <label class="block mb-3">
+              <span class="sr-only">Search owners by name</span>
+              <input id="owner-search" type="search" autocomplete="off"
+                     value="${esc(query)}"
+                     placeholder="Search all ${season.owners.length} owners by surname…"
+                     class="w-full border border-asfa-border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-asfa-green">
+            </label>
             <div id="owner-table">${ownerTable()}</div>
             <p class="text-xs text-asfa-text/55 mt-3">
-              Top 50 by ${esc(sortable.find(([k]) => k === sortKey)[1].toLowerCase())}.
+              <span id="owner-caption">${caption()}</span>
               A co-owned hound counts for every owner named on the row. Points are summed across
               breeds, which mixes scales — treat the hound and BIF columns as the sturdier measures.
             </p>
@@ -143,8 +176,26 @@
             <a href="regions.html" class="lnk">Standings and trial entries by region →</a>
           </p>`;
 
+        wireTable();
+
+        /* Typing must not go through paint(): rewriting main would replace the
+           input mid-keystroke and drop the caret. Redraw the table only. */
+        main.querySelector('#owner-search').addEventListener('input', (event) => {
+          query = event.target.value.trim().toLowerCase();
+          redrawTable();
+        });
+      }
+
+      function redrawTable() {
+        main.querySelector('#owner-table').innerHTML = ownerTable();
+        main.querySelector('#owner-caption').innerHTML = caption();
+        wireTable();
+      }
+
+      // Header sorting is re-bound after every table redraw.
+      function wireTable() {
         main.querySelectorAll('th[data-key]').forEach((th) => {
-          th.addEventListener('click', () => { sortKey = th.dataset.key; paint(); });
+          th.addEventListener('click', () => { sortKey = th.dataset.key; redrawTable(); });
         });
       }
 
