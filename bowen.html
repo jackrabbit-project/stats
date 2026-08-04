@@ -40,9 +40,13 @@
         points = (hounds in the stake − placement) + 1
       </p>
       <p class="text-sm leading-relaxed">
-        Fourth place in a ten-hound stake is <strong>(10 − 4) + 1 = 7 points</strong>. It follows
-        that the winner of a stake takes one point for every hound in it, and that a hound placing
-        last takes one point for turning up and qualifying.
+        Fourth place in a ten-hound stake is <strong>(10 − 4) + 1 = 7 points</strong>. The winner
+        of a stake takes one point for every hound in it.
+      </p>
+      <p class="text-sm leading-relaxed mt-2">
+        Only placing hounds earn Bowen points, and placements stop at <strong>NBQ</strong> — first
+        through fourth, then Next Best Qualified. A hound finishing behind NBQ receives nothing,
+        however many ran.
       </p>
     </section>
 
@@ -55,8 +59,8 @@
                  class="w-full border border-asfa-border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-asfa-green">
         </label>
         <label class="text-sm">
-          <span class="block text-xs uppercase tracking-widest text-asfa-text/60 mb-1">Placement received</span>
-          <input id="placement" type="number" min="1" max="200" value="4"
+          <span class="block text-xs uppercase tracking-widest text-asfa-text/60 mb-1">Placement received (1–4, NBQ = 5)</span>
+          <input id="placement" type="number" min="1" max="5" value="4"
                  class="w-full border border-asfa-border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-asfa-green">
         </label>
       </div>
@@ -152,6 +156,9 @@
         if (!Number.isInteger(hounds) || hounds < 1) problem = 'Enter how many hounds ran in the stake.';
         else if (!Number.isInteger(placement) || placement < 1) problem = 'Enter the placement received.';
         else if (placement > hounds) problem = `A hound cannot place ${placement} in a stake of ${hounds}.`;
+        // Placements run 1st-4th then NBQ and stop. A hound finishing sixth of
+        // ten is unplaced and earns nothing (Bowen System, rule 1).
+        else if (placement > 5) problem = 'Placements stop at NBQ (5th). Hounds finishing behind NBQ receive no Bowen points.';
 
         error.textContent = problem;
         error.classList.toggle('hidden', !problem);
@@ -166,20 +173,21 @@
         result.textContent = points;
         working.textContent = `(${hounds} − ${placement}) + 1`;
 
-        // Show the whole ladder for this stake, capped so a 200-hound stake
-        // does not render 200 rows.
-        const shown = Math.min(hounds, 20);
+        // Placements run 1st-4th then NBQ, so the ladder never has more than
+        // five rows regardless of stake size (Bowen System, rule 1).
+        const shown = Math.min(hounds, 5);
         let rows = '';
         for (let p = 1; p <= shown; p += 1) {
           rows += `<tr class="${p === placement ? 'bg-asfa-bg2 font-semibold' : ''}">
-            <td class="num">${p}</td>
+            <td class="num">${p === 5 ? 'NBQ (5th)' : p}</td>
             <td class="num">${hounds - p}</td>
             <td class="num">${bowen(hounds, p)}</td>
           </tr>`;
         }
-        if (hounds > shown) {
+        if (hounds > 5) {
           rows += `<tr><td colspan="3" class="text-xs text-asfa-text/55">
-            … through ${hounds}, each one point fewer.</td></tr>`;
+            The other ${hounds - 5} hound${hounds - 5 === 1 ? '' : 's'} finished behind NBQ and
+            receive no Bowen points.</td></tr>`;
         }
         ladder.innerHTML = rows;
       }

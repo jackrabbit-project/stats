@@ -128,9 +128,10 @@ function drawStatCard(canvas, dog, season) {
   y += 210;
 
   // Stat columns. Best of Breed and Best in Field cannot be won in the Singles
-  // stake or an LCI division (Running Rules Ch. V §5(d), §10, §11), so a card
-  // for one of those hounds must not print them as its record — that is the
-  // claim most likely to travel once the card is shared without its page.
+  // stake (Running Rules Ch. V §5(d), §11) or an LCI division (LCI Rules
+  // Ch. IV — dogs run alone, only LCC/LCE points awarded), so a card for one
+  // of those hounds must not print them as its record — that is the claim
+  // most likely to travel once the card is shared without its page.
   const stats = dog.is_breed
     ? [
         [dog.points, 'TOP 20 POINTS'],
