@@ -120,7 +120,7 @@
         </section>
 
         <section class="card">
-          <h2 class="card-title">Where this stands</h2>
+          <h2 class="card-title">Standing</h2>
           ${dog.total_competing ? `
             <p class="text-sm">
               ASFA reports <strong>${competitorsLabel(dog, dog.total_competing)}</strong>
@@ -140,11 +140,6 @@
               ASFA has not published a competitor count for ${esc(dog.breed)} this season,
               so a standing cannot be calculated.
             </p>`}
-          <p class="text-xs text-asfa-text/55 mt-3">
-            Points are earned under the Bowen system, which scores a hound on the competition it
-            beats, so they are not comparable between sections — one drawing 200 hounds offers far
-            more of them than one drawing five. Standing is the fair way to compare across them.
-          </p>
           ${dog.is_breed ? '' : `
             <p class="text-xs text-asfa-text/65 mt-2">
               ${dog.breed === 'Singles'
