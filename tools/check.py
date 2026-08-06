@@ -297,6 +297,41 @@ def main() -> int:
             f"{owner_key} is split into entities sharing a region: {regions}",
         )
 
+    # 10. Bare-surname merges, re-derived from the raw snapshot where the
+    #     pre-merge keys survive. The recorded merge set must equal a fresh
+    #     computation of the rule — nothing merged that should not be, nothing
+    #     left unmerged that qualifies.
+    merges = season["review"].get("bare_surname_merges", {})
+    snap_path = ROOT / "data" / "snapshots" / f"{season['as_of']}.json"
+    snapshot = json.loads(snap_path.read_text(encoding="utf-8"))
+    raw_keys: set[str] = set()
+    first_listed: dict[str, set] = {}
+    for sec in snapshot["sections"]:
+        for dog in sec["dogs"]:
+            if not dog["owners"]:
+                continue
+            raw_keys.update(m["key"] for m in dog["owners"])
+            if dog.get("region") is not None:
+                first_listed.setdefault(
+                    dog["owners"][0]["key"], set()).add(dog["region"])
+    expected: dict[str, str] = {}
+    for bare in sorted(k for k in raw_keys if "|" not in k):
+        rivals = [k for k in raw_keys
+                  if "|" in k and k.split("|", 1)[0] == bare]
+        if len(rivals) == 1 and first_listed.get(bare, set()) <= \
+                first_listed.get(rivals[0], set()):
+            expected[bare] = rivals[0]
+    check.expect(
+        merges == expected,
+        f"bare-surname merges disagree with re-derivation: "
+        f"recorded {merges}, expected {expected}",
+    )
+    merged_away = set(merges)
+    check.expect(
+        not any(m["key"] in merged_away for d in dogs for m in d["owners"]),
+        "a merged bare key survived into season.json",
+    )
+
     check_trials(check)
     check_events(check)
     return check.report()

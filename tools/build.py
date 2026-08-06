@@ -255,6 +255,46 @@ def build_owners(dogs: list[dict], homes: dict[str, list[int]]) -> list[dict]:
     return result
 
 
+def absorb_bare_surnames(dogs: list[dict],
+                         homes: dict[str, list[int]]) -> dict[str, str]:
+    """Fold a surname-only owner mention into its initialed entity.
+
+    ASFA sometimes drops the initials in a crowded co-ownership cell —
+    "Hicks/Grant-Beuttler/Beuttler" on a hound whose other rows say
+    "J.& K.Hicks" — which manufactures a second owner holding one hound.
+
+    Merging on a bare surname is an inference, so it is fenced: only when
+    exactly one initialed entity carries that surname anywhere in the season,
+    and every region the bare name is first-listed in is among that entity's
+    home regions. A bare "Sanders" would refuse — two entities carry the
+    surname. Every merge is written to data/review/owner-merges.csv.
+    """
+    all_keys = {owner["key"] for dog in dogs for owner in dog["owners"]}
+    merges: dict[str, str] = {}
+    for bare in sorted(k for k in all_keys if "|" not in k):
+        candidates = [k for k in all_keys
+                      if "|" in k and k.split("|", 1)[0] == bare]
+        if len(candidates) != 1:
+            continue
+        target = candidates[0]
+        if not set(homes.get(bare, [])) <= set(homes.get(target, [])):
+            continue
+        merges[bare] = target
+
+    if merges:
+        for dog in dogs:
+            for owner in dog["owners"]:
+                if owner["key"] in merges:
+                    owner["key"] = merges[owner["key"]]
+        review_dir = ROOT / "data" / "review"
+        review_dir.mkdir(parents=True, exist_ok=True)
+        lines = ["bare_key,merged_into"]
+        lines += [f"{bare},{merges[bare]}" for bare in sorted(merges)]
+        (review_dir / "owner-merges.csv").write_text(
+            "\n".join(lines) + "\n", encoding="utf-8")
+    return merges
+
+
 def write_owner_split_review(dogs: list[dict], homes: dict[str, list[int]]) -> list[str]:
     """Record every name split into two people, so a wrong split can be spotted.
 
@@ -364,6 +404,9 @@ def build(snapshots: list[dict]) -> dict:
                 "movement": movement.get(dog["id"]),
             })
 
+    # First pass supplies the region evidence for the surname merge; a second
+    # pass rebuilds homes over the merged keys so identities are consistent.
+    merges = absorb_bare_surnames(dogs, home_regions(dogs))
     homes = home_regions(dogs)
     thin_splits = write_owner_split_review(dogs, homes)
 
@@ -413,7 +456,10 @@ def build(snapshots: list[dict]) -> dict:
         "dogs": dogs,
         "owners": owners,
         "regions": build_regions(dogs),
-        "review": {"thin_owner_splits": thin_splits},
+        "review": {
+            "thin_owner_splits": thin_splits,
+            "bare_surname_merges": {k: v for k, v in sorted(merges.items())},
+        },
     }
 
 
@@ -442,6 +488,14 @@ def main() -> int:
         )
         for entry in thin:
             print(f"     {entry}")
+    merges = bundle["review"]["bare_surname_merges"]
+    if merges:
+        print(
+            f"  {len(merges)} bare surname(s) folded into their initialed "
+            f"entity - see data/review/owner-merges.csv:"
+        )
+        for bare, target in merges.items():
+            print(f"     {bare} -> {target}")
     return 0
 
 
