@@ -2,9 +2,9 @@
   "seasons": [
     2026
   ],
-  "fetched": "2026-08-03",
+  "fetched": "2026-08-06",
   "source_url": "https://www.asfa.org/event/index.htm",
-  "calendar_pdf_url": "https://www.asfa.org/event/ASFA%20Calendar%2007-02-2026%20Updates.pdf",
+  "calendar_pdf_url": "https://www.asfa.org/event/ASFA%20Calendar%2007-29-2026%20Updates.pdf",
   "region_source": "ASFA Constitution & By-Laws, rev. 08/01/2024, Article V, Section 3",
   "regions": [
     {
@@ -123,9 +123,9 @@
     }
   ],
   "stats": {
-    "events": 112,
-    "cancelled": 5,
-    "with_premium": 64
+    "events": 113,
+    "cancelled": 6,
+    "with_premium": 67
   },
   "unmatched_initials": [
     "IWALE"
@@ -933,7 +933,7 @@
       "initials": "IWALE",
       "specialty": false,
       "national": false,
-      "cancelled": false,
+      "cancelled": true,
       "venue": "Fredonia",
       "state": "NY",
       "region": 9,
@@ -1042,14 +1042,14 @@
       "venue": "Roy",
       "state": "WA",
       "region": 1,
-      "premium_url": null,
+      "premium_url": "https://www.asfa.org/event/premiums/SWEPT%20ASFA%20Aug%208%20&%209th%20%20Roy,%20%202026%20(3)%20(1).pdf",
       "premium_inferred": false,
       "club": "Silken Windhounds for Endurance, Perf. & Training"
     },
     {
       "start": "2026-09-02",
       "end": "2026-09-02",
-      "type": "IW/LCI",
+      "type": "IW",
       "initials": "RMIWA",
       "specialty": true,
       "national": false,
@@ -1177,7 +1177,7 @@
       "venue": "Farmington",
       "state": "MN",
       "region": 5,
-      "premium_url": null,
+      "premium_url": "https://www.asfa.org/event/premiums/GTCWC%20September%202026%20(1).pdf",
       "premium_inferred": false,
       "club": "Greater Twin Cities Whippet Club"
     },
@@ -1375,6 +1375,21 @@
       "premium_url": null,
       "premium_inferred": false,
       "club": "Lure Enthusiasts of Georgia Sighthounds"
+    },
+    {
+      "start": "2026-10-03",
+      "end": "2026-10-04",
+      "type": "SW/LCI",
+      "initials": "OCRRC",
+      "specialty": true,
+      "national": false,
+      "cancelled": false,
+      "venue": "Chino Hills",
+      "state": "CA",
+      "region": 10,
+      "premium_url": "https://www.asfa.org/event/premiums/OCRRC%20ASFA%20Oct%203-4%20Premium%202.pdf",
+      "premium_inferred": false,
+      "club": "Orange Coast Rhodesian Ridgeback Club"
     },
     {
       "start": "2026-10-04",

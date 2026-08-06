@@ -1,7 +1,7 @@
 {
   "season": 2026,
-  "as_of": "2026-07-05",
-  "generated": "2026-08-03",
+  "as_of": "2026-07-19",
+  "generated": "2026-08-06",
   "source_url": "https://www.asfa.org/trial/index0111.html",
   "months": [
     "2026-01",
@@ -14,8 +14,8 @@
   ],
   "region_source": "ASFA Constitution & By-Laws, rev. 08/01/2024, Article V, Section 3",
   "stats": {
-    "trials": 82,
-    "entries": 2453,
+    "trials": 88,
+    "entries": 2659,
     "clubs": 34,
     "unassigned_trials": 0,
     "unassigned_entries": 0
@@ -168,10 +168,10 @@
     },
     {
       "region": 5,
-      "trials": 16,
-      "entries": 481,
+      "trials": 18,
+      "entries": 545,
       "clubs": 6,
-      "average_entry": 30.1
+      "average_entry": 30.3
     },
     {
       "region": 6,
@@ -189,10 +189,10 @@
     },
     {
       "region": 8,
-      "trials": 12,
-      "entries": 394,
+      "trials": 14,
+      "entries": 466,
       "clubs": 5,
-      "average_entry": 32.8
+      "average_entry": 33.3
     },
     {
       "region": 9,
@@ -203,13 +203,23 @@
     },
     {
       "region": 10,
-      "trials": 9,
-      "entries": 131,
+      "trials": 11,
+      "entries": 201,
       "clubs": 3,
-      "average_entry": 14.6
+      "average_entry": 18.3
     }
   ],
   "by_club": [
+    {
+      "club": "Upper Chesapeake Bay Saluki Club",
+      "slug": "upper-chesapeake-bay-saluki-club",
+      "initials": "UCBSC",
+      "region": 8,
+      "trials": 6,
+      "entries": 196,
+      "venue": "Littlestown, PA",
+      "venue_count": 2
+    },
     {
       "club": "Gazehounds of New England",
       "slug": "gazehounds-of-new-england",
@@ -251,6 +261,26 @@
       "venue_count": 1
     },
     {
+      "club": "Orange Coast Rhodesian Ridgeback Club",
+      "slug": "orange-coast-rhodesian-ridgeback-club",
+      "initials": "OCRRC",
+      "region": 10,
+      "trials": 6,
+      "entries": 139,
+      "venue": "Chino, CA",
+      "venue_count": 1
+    },
+    {
+      "club": "Greater Twin Cities Whippet Club",
+      "slug": "greater-twin-cities-whippet-club",
+      "initials": "GTCWC",
+      "region": 5,
+      "trials": 4,
+      "entries": 129,
+      "venue": "Farmington, MN",
+      "venue_count": 1
+    },
+    {
       "club": "Minnesota Coursing Association",
       "slug": "minnesota-coursing-association",
       "initials": "MCA",
@@ -259,16 +289,6 @@
       "entries": 129,
       "venue": "Farmington, MN",
       "venue_count": 3
-    },
-    {
-      "club": "Upper Chesapeake Bay Saluki Club",
-      "slug": "upper-chesapeake-bay-saluki-club",
-      "initials": "UCBSC",
-      "region": 8,
-      "trials": 4,
-      "entries": 124,
-      "venue": "Littlestown, PA",
-      "venue_count": 2
     },
     {
       "club": "Northern Azawakh Association",
@@ -348,26 +368,6 @@
       "trials": 2,
       "entries": 71,
       "venue": "Littlestown, PA",
-      "venue_count": 1
-    },
-    {
-      "club": "Orange Coast Rhodesian Ridgeback Club",
-      "slug": "orange-coast-rhodesian-ridgeback-club",
-      "initials": "OCRRC",
-      "region": 10,
-      "trials": 4,
-      "entries": 69,
-      "venue": "Chino, CA",
-      "venue_count": 1
-    },
-    {
-      "club": "Greater Twin Cities Whippet Club",
-      "slug": "greater-twin-cities-whippet-club",
-      "initials": "GTCWC",
-      "region": 5,
-      "trials": 2,
-      "entries": 65,
-      "venue": "Farmington, MN",
       "venue_count": 1
     },
     {
@@ -1530,6 +1530,78 @@
       "location": "Littlesstown, PA",
       "state": "PA",
       "entries": 25,
+      "note": "",
+      "club": "Upper Chesapeake Bay Saluki Club",
+      "club_slug": "upper-chesapeake-bay-saluki-club",
+      "region": 8,
+      "initials": "UCBSC"
+    },
+    {
+      "club_raw": "GREATER TWIN CITIES WHIPPET CLUB",
+      "date": "2026-07-18",
+      "location": "Farmington, MN",
+      "state": "MN",
+      "entries": 34,
+      "note": "",
+      "club": "Greater Twin Cities Whippet Club",
+      "club_slug": "greater-twin-cities-whippet-club",
+      "region": 5,
+      "initials": "GTCWC"
+    },
+    {
+      "club_raw": "ORANGE COAST RHODESIAN RIDGEBACK CLUB",
+      "date": "2026-07-18",
+      "location": "Chino, CA",
+      "state": "CA",
+      "entries": 37,
+      "note": "",
+      "club": "Orange Coast Rhodesian Ridgeback Club",
+      "club_slug": "orange-coast-rhodesian-ridgeback-club",
+      "region": 10,
+      "initials": "OCRRC"
+    },
+    {
+      "club_raw": "UPPER CHESAPEAKE BAY SALUKI CLUB",
+      "date": "2026-07-18",
+      "location": "Littlestown, PA",
+      "state": "PA",
+      "entries": 30,
+      "note": "",
+      "club": "Upper Chesapeake Bay Saluki Club",
+      "club_slug": "upper-chesapeake-bay-saluki-club",
+      "region": 8,
+      "initials": "UCBSC"
+    },
+    {
+      "club_raw": "GREATER TWIN CITIES WHIPPET CLUB",
+      "date": "2026-07-19",
+      "location": "Farmington, MN",
+      "state": "MN",
+      "entries": 30,
+      "note": "",
+      "club": "Greater Twin Cities Whippet Club",
+      "club_slug": "greater-twin-cities-whippet-club",
+      "region": 5,
+      "initials": "GTCWC"
+    },
+    {
+      "club_raw": "ORANGE COAST RHODESIAN RIDGEBACK CLUB",
+      "date": "2026-07-19",
+      "location": "Chino, CA",
+      "state": "CA",
+      "entries": 33,
+      "note": "",
+      "club": "Orange Coast Rhodesian Ridgeback Club",
+      "club_slug": "orange-coast-rhodesian-ridgeback-club",
+      "region": 10,
+      "initials": "OCRRC"
+    },
+    {
+      "club_raw": "UPPER CHESAPEAKE BAY SALUKI CLUB",
+      "date": "2026-07-19",
+      "location": "Littlestown, PA",
+      "state": "PA",
+      "entries": 42,
       "note": "",
       "club": "Upper Chesapeake Bay Saluki Club",
       "club_slug": "upper-chesapeake-bay-saluki-club",
