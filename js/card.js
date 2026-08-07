@@ -3,17 +3,26 @@
 
 const CARD_SIZE = 1080;
 
+/* The card is a shared artifact — it stays on light paper no matter the
+   viewer's theme, so these are the light tokens, frozen. */
 const CARD_COLORS = {
   paper: '#F7F5EF',
   panel: '#E8EFEA',
   green: '#2C6E49',
   accent: '#A44A2F',
-  ink: '#2F2F2F',
-  line: '#D6DCD7',
+  ink: '#2B2A26',
+  muted: '#6E6C64',
+  line: '#DCD8CC',
 };
 
-function cardFont(size, family = 'Abel', weight = '') {
-  return `${weight} ${size}px "${family}", "Segoe UI", Helvetica, Arial, sans-serif`.trim();
+const CARD_FONTS = {
+  display: '"Fraunces", Georgia, serif',
+  mono: '"IBM Plex Mono", Consolas, monospace',
+  sans: '"Segoe UI", Helvetica, Arial, sans-serif',
+};
+
+function cardFont(size, family = 'display', weight = '') {
+  return `${weight} ${size}px ${CARD_FONTS[family] || CARD_FONTS.sans}`.trim();
 }
 
 /** Shrink text until it fits, so long registered names never overflow. */
@@ -58,29 +67,29 @@ function drawStatCard(canvas, dog, season) {
   // Top band. The site's own name leads; ASFA names the dataset on the right.
   // A card travels without the page around it, so this band is the one place
   // the project has to identify itself rather than lead with someone else's.
-  ctx.fillStyle = CARD_COLORS.green;
-  ctx.fillRect(0, 0, CARD_SIZE, 116);
   ctx.textBaseline = 'middle';
-  ctx.fillStyle = '#FFFFFF';
-  ctx.font = cardFont(40);
-  ctx.fillText('LURE COURSING STATS', pad, 58);
+  ctx.fillStyle = CARD_COLORS.green;
+  ctx.font = cardFont(42, 'display', '600');
+  ctx.fillText('Lure Coursing Stats', pad, 60);
   ctx.textAlign = 'right';
-  ctx.fillStyle = 'rgba(255,255,255,0.8)';
-  ctx.font = cardFont(32);
-  ctx.fillText(`ASFA TOP 20 · ${season.season}`, CARD_SIZE - pad, 58);
+  ctx.fillStyle = CARD_COLORS.muted;
+  ctx.font = cardFont(26, 'mono', '500');
+  ctx.fillText(`ASFA TOP 20 · ${season.season}`, CARD_SIZE - pad, 62);
   ctx.textAlign = 'left';
+  ctx.fillStyle = CARD_COLORS.ink;
+  ctx.fillRect(0, 114, CARD_SIZE, 2);
 
-  let y = 220;
+  let y = 224;
 
   // Call name
-  ctx.fillStyle = CARD_COLORS.green;
-  const nameSize = fitText(ctx, dog.call_name, inner, 116, 'Abel');
+  ctx.fillStyle = CARD_COLORS.ink;
+  const nameSize = fitText(ctx, dog.call_name, inner, 110, 'display', '600');
   ctx.fillText(dog.call_name, pad, y);
   y += nameSize * 0.55 + 34;
 
   // Registered name, wrapped
   ctx.fillStyle = CARD_COLORS.ink;
-  ctx.font = cardFont(34, 'Segoe UI');
+  ctx.font = cardFont(34, 'sans');
   for (const line of wrapText(ctx, dog.registered_name, inner).slice(0, 2)) {
     ctx.fillText(line, pad, y);
     y += 44;
@@ -97,8 +106,8 @@ function drawStatCard(canvas, dog, season) {
     meta += ` · also #${alsoRanked[0].rank} in ${alsoRanked[0].breed}`;
   }
   ctx.fillStyle = CARD_COLORS.accent;
-  const metaSize = fitText(ctx, meta.toUpperCase(), inner, 36, 'Abel');
-  ctx.font = cardFont(metaSize);
+  const metaSize = fitText(ctx, meta.toUpperCase(), inner, 28, 'mono', '500');
+  ctx.font = cardFont(metaSize, 'mono', '500');
   ctx.fillText(meta.toUpperCase(), pad, y + 12);
   y += 78;
 
@@ -110,16 +119,16 @@ function drawStatCard(canvas, dog, season) {
   ctx.strokeRect(pad, y, inner, 210);
 
   ctx.fillStyle = CARD_COLORS.accent;
-  ctx.font = cardFont(150);
+  ctx.font = cardFont(150, 'display', '600');
   ctx.fillText(`#${dog.rank}`, pad + 40, y + 100);
 
   const rankWidth = ctx.measureText(`#${dog.rank}`).width;
   ctx.fillStyle = CARD_COLORS.ink;
-  ctx.font = cardFont(34, 'Segoe UI');
+  ctx.font = cardFont(34, 'sans');
   ctx.fillText(rankContext(dog), pad + 60 + rankWidth, y + 82);
   if (dog.percentile != null) {
     ctx.fillStyle = CARD_COLORS.green;
-    ctx.font = cardFont(44);
+    ctx.font = cardFont(40, 'display', '500');
     ctx.fillText(
       `${percentileLabel(dog)} of ${dog.total_competing} competing`,
       pad + 60 + rankWidth, y + 132
@@ -148,10 +157,10 @@ function drawStatCard(canvas, dog, season) {
     const centre = pad + columnWidth * index + columnWidth / 2;
     ctx.textAlign = 'center';
     ctx.fillStyle = CARD_COLORS.green;
-    ctx.font = cardFont(96);
+    ctx.font = cardFont(96, 'display', '600');
     ctx.fillText(String(value), centre, statTop + 40);
-    ctx.fillStyle = CARD_COLORS.ink;
-    ctx.font = cardFont(26, 'Segoe UI');
+    ctx.fillStyle = CARD_COLORS.muted;
+    ctx.font = cardFont(23, 'mono', '500');
     ctx.fillText(label, centre, statTop + 108);
   });
   ctx.textAlign = 'left';
@@ -161,21 +170,21 @@ function drawStatCard(canvas, dog, season) {
   // above it (a call name at full size plus two wrapped lines of registered
   // name) this leaves roughly 20px of clearance.
   const ownerY = statTop + 165;
-  ctx.fillStyle = 'rgba(47,47,47,0.55)';
-  ctx.font = cardFont(24, 'Segoe UI');
+  ctx.fillStyle = CARD_COLORS.muted;
+  ctx.font = cardFont(23, 'mono', '500');
   ctx.fillText('OWNER', pad, ownerY);
   const labelWidth = ctx.measureText('OWNER').width + 16;
 
   ctx.fillStyle = CARD_COLORS.ink;
-  const ownerSize = fitText(ctx, dog.owner_raw, inner - labelWidth, 30, 'Segoe UI');
-  ctx.font = cardFont(ownerSize, 'Segoe UI');
+  const ownerSize = fitText(ctx, dog.owner_raw, inner - labelWidth, 30, 'sans');
+  ctx.font = cardFont(ownerSize, 'sans');
   ctx.fillText(dog.owner_raw, pad + labelWidth, ownerY);
 
   // Footer
   ctx.fillStyle = CARD_COLORS.line;
   ctx.fillRect(pad, CARD_SIZE - 128, inner, 2);
-  ctx.fillStyle = 'rgba(47,47,47,0.65)';
-  ctx.font = cardFont(26, 'Segoe UI');
+  ctx.fillStyle = CARD_COLORS.muted;
+  ctx.font = cardFont(24, 'mono');
   // "unofficial" rides on the line that was already here rather than taking a
   // second one. A card travels without the page around it, so this is the only
   // place it can say the site is not ASFA's.
@@ -335,7 +344,11 @@ function openStatCard(dog, season) {
   };
 
   if (document.fonts && document.fonts.load) {
-    document.fonts.load('40px Abel').then(render, render);
+    Promise.all([
+      document.fonts.load('600 40px Fraunces'),
+      document.fonts.load('500 26px "IBM Plex Mono"'),
+      document.fonts.load('400 26px "IBM Plex Mono"'),
+    ]).then(render, render);
   } else {
     render();
   }
