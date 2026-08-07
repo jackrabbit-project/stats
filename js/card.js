@@ -201,6 +201,9 @@ function downloadBlob(blob, filename) {
   URL.revokeObjectURL(url);
 }
 
+/* The element that opened the modal, so closing can hand focus back. */
+let cardOpener = null;
+
 function closeStatCard() {
   const existing = document.getElementById('card-modal');
   if (existing) {
@@ -208,10 +211,36 @@ function closeStatCard() {
     existing.remove();
   }
   document.removeEventListener('keydown', onCardKeydown);
+  if (cardOpener) {
+    cardOpener.focus();
+    cardOpener = null;
+  }
 }
 
 function onCardKeydown(event) {
-  if (event.key === 'Escape') closeStatCard();
+  if (event.key === 'Escape') {
+    closeStatCard();
+    return;
+  }
+  // Keep Tab cycling inside the dialog while it is open.
+  if (event.key === 'Tab') {
+    const modal = document.getElementById('card-modal');
+    if (!modal) return;
+    const focusables = modal.querySelectorAll('button');
+    if (!focusables.length) return;
+    const first = focusables[0];
+    const last = focusables[focusables.length - 1];
+    if (!modal.contains(document.activeElement)) {
+      event.preventDefault();
+      first.focus();
+    } else if (event.shiftKey && document.activeElement === first) {
+      event.preventDefault();
+      last.focus();
+    } else if (!event.shiftKey && document.activeElement === last) {
+      event.preventDefault();
+      first.focus();
+    }
+  }
 }
 
 /** Show the rendered card so it can be looked at before it goes anywhere.
@@ -224,6 +253,7 @@ function onCardKeydown(event) {
     browser cannot do it rather than failing on click. */
 function showCardModal(dog, season, blob) {
   closeStatCard();
+  cardOpener = document.activeElement;
   const objectUrl = URL.createObjectURL(blob);
   const filename = cardFilename(dog, season);
   const file = new File([blob], filename, { type: 'image/png' });
@@ -246,13 +276,13 @@ function showCardModal(dog, season, blob) {
       </div>
       <img src="${objectUrl}" alt="Stat card for ${esc(dog.call_name)}" class="modal-card-img">
       <div class="px-4 py-3 border-t border-asfa-border flex flex-wrap gap-2">
-        <button data-act="download" class="px-3 py-2 bg-asfa-green text-white text-sm hover:bg-asfa-greenHover">
+        <button data-act="download" class="btn btn-primary">
           ${icon('download', 'mr-1')}Download</button>
-        ${canCopy ? `<button data-act="copy" class="px-3 py-2 border border-asfa-green text-asfa-green text-sm hover:bg-asfa-bg2">
+        ${canCopy ? `<button data-act="copy" class="btn">
           ${icon('copy', 'mr-1')}Copy image</button>` : ''}
-        ${canShareFile ? `<button data-act="share" class="px-3 py-2 border border-asfa-green text-asfa-green text-sm hover:bg-asfa-bg2">
+        ${canShareFile ? `<button data-act="share" class="btn">
           ${icon('share', 'mr-1')}Share</button>` : ''}
-        <span data-role="status" class="text-xs text-asfa-text/60 self-center ml-auto"></span>
+        <span data-role="status" aria-live="polite" class="text-xs text-asfa-text/70 self-center ml-auto"></span>
       </div>
     </div>`;
 

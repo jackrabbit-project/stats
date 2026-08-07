@@ -42,12 +42,10 @@
           const active = section.slug === activeSlug;
           const disabled = section.ranked === 0;
           return `<button data-slug="${section.slug}" ${disabled ? 'disabled' : ''}
-            class="text-left px-3 py-2 border text-sm ${
-              active ? 'bg-asfa-green text-white border-asfa-green'
-                     : disabled ? 'bg-asfa-bg1 text-asfa-text/35 border-asfa-border cursor-not-allowed'
-                                : 'bg-white border-asfa-border hover:border-asfa-accent'}">
+            class="chip text-sm ${active ? 'chip-selected' : ''}"
+            ${active ? 'aria-pressed="true"' : 'aria-pressed="false"'}>
             <span class="block font-semibold leading-tight">${esc(section.breed)}</span>
-            <span class="block text-xs ${active ? 'text-white/75' : 'text-asfa-text/55'}">
+            <span class="block text-xs text-asfa-muted">
               ${section.ranked ? `${section.ranked} ranked` : 'none ranked'}${
                 section.total_competing ? ` · ${section.total_competing} competing` : ''}
             </span>

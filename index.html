@@ -25,7 +25,7 @@
         <div class="relative mt-6 text-left">
           <label for="search" class="sr-only">Search hounds by name</label>
           <input id="search" type="search" autocomplete="off" placeholder="Call name or registered name…"
-                 class="w-full border border-asfa-border px-4 py-3 text-lg focus:outline-none focus:ring-2 focus:ring-asfa-green">
+                 class="w-full field px-4 py-3 text-lg">
           <div id="search-results" class="search-results absolute z-20 left-0 right-0 mt-1 hidden"></div>
         </div>
 
@@ -114,7 +114,7 @@
       const shareBlurb = 'ASFA Top 20 standings, searchable — every ranked hound, plus a find-an-event tool.';
       const su = encodeURIComponent(shareUrl);
       const st = encodeURIComponent(`${shareTitle} — ${shareBlurb}`);
-      const shareBtn = 'inline-flex items-center gap-2 border border-asfa-border px-3 py-2 text-sm hover:border-asfa-green hover:text-asfa-green transition-colors';
+      const shareBtn = 'btn';
       const shares = [
         ['facebook', 'Facebook', `https://www.facebook.com/sharer/sharer.php?u=${su}`],
         ['x', 'X', `https://twitter.com/intent/tweet?url=${su}&text=${st}`],

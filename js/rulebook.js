@@ -110,7 +110,10 @@ function initRulebook() {
     position = (position + direction + hits.length) % hits.length;
     const hit = hits[position];
     hit.classList.add('mark-active');
-    hit.scrollIntoView({ block: 'center', behavior: 'smooth' });
+    hit.scrollIntoView({
+      block: 'center',
+      behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
+    });
     countEl.textContent = `${position + 1} of ${hits.length}`;
   }
 

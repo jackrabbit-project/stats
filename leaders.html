@@ -26,7 +26,7 @@
       <div id="tabs" class="flex flex-wrap gap-1"></div>
       <label class="ml-auto text-sm text-asfa-text/70">
         Breed
-        <select id="breed-filter" class="ml-1 border border-asfa-border px-2 py-1.5 text-sm bg-white"></select>
+        <select id="breed-filter" class="select ml-1"></select>
       </label>
     </div>
 
@@ -112,9 +112,8 @@
       function paint() {
         const board = BOARDS[current];
         tabs.innerHTML = Object.entries(BOARDS).map(([key, item]) =>
-          `<button data-board="${key}" class="px-3 py-1.5 text-sm border ${
-            key === current ? 'bg-asfa-green text-white border-asfa-green'
-                            : 'bg-white border-asfa-border hover:border-asfa-accent'}">${item.label}</button>`
+          `<button data-board="${key}" class="tab ${key === current ? 'tab-active' : ''}"
+            ${key === current ? 'aria-current="true"' : ''}>${item.label}</button>`
         ).join('');
         tabs.querySelectorAll('button[data-board]').forEach((button) => {
           button.addEventListener('click', () => {

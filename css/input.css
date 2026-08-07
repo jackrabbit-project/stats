@@ -428,6 +428,148 @@ ol.rb-l { list-style: decimal; }
   color: rgb(var(--rust));
 }
 
+/* Controls ---------------------------------------------------------------- */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-weight: 500;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: rgb(var(--ink));
+  background: transparent;
+  border: 1px solid rgb(var(--line-strong));
+  padding: 0.6rem 0.9rem;
+  cursor: pointer;
+  user-select: none;
+  white-space: nowrap;
+}
+
+.btn:hover {
+  border-color: rgb(var(--ink));
+}
+
+.btn:active {
+  transform: scale(0.98);
+}
+
+.btn[disabled] {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.btn[disabled]:hover {
+  border-color: rgb(var(--line-strong));
+}
+
+.btn[disabled]:active {
+  transform: none;
+}
+
+.btn-primary {
+  background: rgb(var(--ink));
+  border-color: rgb(var(--ink));
+  color: rgb(var(--paper));
+}
+
+.btn-primary:hover {
+  background: rgb(var(--ink) / 0.85);
+  border-color: transparent;
+}
+
+.btn-quiet {
+  border-color: transparent;
+}
+
+.btn-quiet:hover {
+  border-color: rgb(var(--line-strong));
+  background: rgb(var(--panel) / 0.5);
+}
+
+/* Underline tabs, matching the nav's active treatment. */
+.tab {
+  font-family: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-weight: 500;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: rgb(var(--ink-muted));
+  padding: 0.5rem 0.65rem;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  user-select: none;
+}
+
+.tab:hover {
+  color: rgb(var(--ink));
+}
+
+.tab-active {
+  color: rgb(var(--ink));
+  border-bottom-color: rgb(var(--rust));
+}
+
+/* Breed picker chips: an almanac index tab — selected gets an ink border
+   and a rust rule down the left edge. */
+.chip {
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: rgb(var(--surface));
+  border: 1px solid rgb(var(--line));
+  padding: 0.5rem 0.75rem;
+  cursor: pointer;
+  transition: border-color 180ms, background-color 180ms, box-shadow 180ms;
+}
+
+.chip:hover {
+  border-color: rgb(var(--ink-muted));
+}
+
+.chip:active {
+  transform: scale(0.98);
+}
+
+.chip-selected {
+  border-color: rgb(var(--ink));
+  box-shadow: inset 3px 0 0 rgb(var(--rust));
+}
+
+.chip[disabled] {
+  background: rgb(var(--paper));
+  color: rgb(var(--ink) / 0.4);
+  cursor: not-allowed;
+}
+
+.chip[disabled]:hover {
+  border-color: rgb(var(--line));
+}
+
+.chip[disabled]:active {
+  transform: none;
+}
+
+/* Text inputs and selects share one chrome. */
+.field,
+.select {
+  background: rgb(var(--surface));
+  border: 1px solid rgb(var(--line-strong));
+  color: rgb(var(--ink));
+}
+
+.field:focus,
+.select:focus {
+  border-color: rgb(var(--ink));
+}
+
+.select {
+  font-size: 0.875rem;
+  padding: 0.5rem;
+}
+
 /* Chrome ------------------------------------------------------------------ */
 
 /* Hidden until keyboard focus, then a small chip pinned top-left. */
