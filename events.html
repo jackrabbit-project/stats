@@ -6,7 +6,6 @@
   <meta name="theme-color" content="#2C6E49">
   <title>Find an ASFA Event — Lure Coursing Stats</title>
   <meta name="description" content="Find an upcoming ASFA lure coursing trial by state, region or month, with premium lists linked at asfa.org. Unofficial; ASFA's published schedule governs.">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Abel&display=swap" rel="stylesheet">
@@ -75,7 +74,7 @@
             </p>
             <p class="text-sm mt-2">
               <a href="${esc(feed.source_url)}" class="lnk" target="_blank" rel="noopener noreferrer">ASFA’s schedule page</a>${feed.calendar_pdf_url ? ` ·
-              <a href="${esc(feed.calendar_pdf_url)}" class="lnk" target="_blank" rel="noopener noreferrer"><i class="fa-solid fa-file-pdf mr-1"></i>Calendar PDF</a>` : ''}
+              <a href="${esc(feed.calendar_pdf_url)}" class="lnk" target="_blank" rel="noopener noreferrer">${icon('file', 'mr-1')}Calendar PDF</a>` : ''}
             </p>
           </div>
 
@@ -230,7 +229,7 @@
             </span>
             <span class="flex items-center gap-1.5 flex-wrap">${badges.join(' ')}</span>
             ${e.premium_url ? `<a href="${esc(e.premium_url)}" target="_blank" rel="noopener noreferrer"
-              class="lnk text-sm whitespace-nowrap"><i class="fa-solid fa-file-pdf mr-1"></i>Premium</a>`
+              class="lnk text-sm whitespace-nowrap">${icon('file', 'mr-1')}Premium</a>`
               : '<span class="text-xs text-asfa-text/40">no premium yet</span>'}
           </li>`;
         }

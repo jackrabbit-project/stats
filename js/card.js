@@ -247,11 +247,11 @@ function showCardModal(dog, season, blob) {
       <img src="${objectUrl}" alt="Stat card for ${esc(dog.call_name)}" class="modal-card-img">
       <div class="px-4 py-3 border-t border-asfa-border flex flex-wrap gap-2">
         <button data-act="download" class="px-3 py-2 bg-asfa-green text-white text-sm hover:bg-asfa-greenHover">
-          <i class="fa-solid fa-download mr-1"></i>Download</button>
+          ${icon('download', 'mr-1')}Download</button>
         ${canCopy ? `<button data-act="copy" class="px-3 py-2 border border-asfa-green text-asfa-green text-sm hover:bg-asfa-bg2">
-          <i class="fa-regular fa-copy mr-1"></i>Copy image</button>` : ''}
+          ${icon('copy', 'mr-1')}Copy image</button>` : ''}
         ${canShareFile ? `<button data-act="share" class="px-3 py-2 border border-asfa-green text-asfa-green text-sm hover:bg-asfa-bg2">
-          <i class="fa-solid fa-share-nodes mr-1"></i>Share</button>` : ''}
+          ${icon('share', 'mr-1')}Share</button>` : ''}
         <span data-role="status" class="text-xs text-asfa-text/60 self-center ml-auto"></span>
       </div>
     </div>`;

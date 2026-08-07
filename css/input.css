@@ -46,6 +46,14 @@
 /* Site components. Plain rules (not @layer) so nothing is tree-shaken and
    they emit here — after the components layer, before utilities. */
 
+/* Inline SVG icons emitted by icon() in js/app.js and as static markup.
+   Sized 1em so they track the surrounding text; nudged onto the baseline. */
+.ic {
+  display: inline-block;
+  vertical-align: -0.125em;
+  flex: none;
+}
+
 .card {
   background: rgb(var(--surface));
   border: 1px solid rgb(var(--line));

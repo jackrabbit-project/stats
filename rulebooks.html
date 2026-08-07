@@ -6,7 +6,6 @@
   <meta name="theme-color" content="#2C6E49">
   <title>Rulebooks — Lure Coursing Stats</title>
   <meta name="description" content="Where to find ASFA's own documents: the Running Rules and Field Procedures, the LCI rules, the Bowen system, the judges handbook, and the standings and results this site is built from.">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Abel&display=swap" rel="stylesheet">
@@ -102,19 +101,19 @@
         ],
       };
 
-      const icon = (size) => size
-        ? '<i class="fa-solid fa-file-pdf text-asfa-accent mr-2" aria-hidden="true"></i>'
-        : '<i class="fa-solid fa-arrow-up-right-from-square text-asfa-accent mr-2" aria-hidden="true"></i>';
+      const docIcon = (size) => size
+        ? icon('file', 'text-asfa-accent mr-2')
+        : icon('external', 'text-asfa-accent mr-2');
 
       for (const [id, items] of Object.entries(DOCS)) {
         document.getElementById(id).innerHTML = items.map(([name, href, note, size, local]) => `
           <li>
-            ${icon(size)}<a href="${href}" class="lnk font-semibold" target="_blank" rel="noopener noreferrer">${esc(name)}</a>${
+            ${docIcon(size)}<a href="${href}" class="lnk font-semibold" target="_blank" rel="noopener noreferrer">${esc(name)}</a>${
               size ? ` <span class="text-xs text-asfa-text/50">${size} PDF</span>` : ''}
             <div class="text-asfa-text/75 text-xs mt-0.5 ml-6">${esc(note)}</div>${
               local ? `
             <div class="text-xs mt-1 ml-6">
-              <i class="fa-solid fa-magnifying-glass text-asfa-accent mr-1" aria-hidden="true"></i><a href="${local}" class="lnk">Read it here, searchable</a>
+              ${icon('search', 'text-asfa-accent mr-1')}<a href="${local}" class="lnk">Read it here, searchable</a>
             </div>` : ''}
           </li>`).join('');
       }
