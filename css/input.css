@@ -173,6 +173,15 @@
   padding: 1.25rem;
 }
 
+/* Seasonal notice — the almanac's "special entry" treatment: a rust rule
+   down the left edge, the same cue the selected breed chip uses. */
+.callout {
+  background: rgb(var(--surface));
+  border: 1px solid rgb(var(--line));
+  box-shadow: inset 3px 0 0 rgb(var(--rust));
+  padding: 1rem 1.25rem;
+}
+
 .card-title {
   font-family: 'Fraunces', Georgia, serif;
   font-weight: 560;

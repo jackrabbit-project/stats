@@ -19,7 +19,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <link rel="preload" href="assets/fonts/fraunces-latin-var.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/plex-mono-400.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="css/app.css?v=20260807">
+  <link rel="stylesheet" href="css/app.css?v=20260807b">
   <link rel="icon" href="assets/favicon.ico" sizes="any">
   <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png">
   <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
@@ -29,7 +29,7 @@
   <main id="main" class="flex-1 max-w-4xl mx-auto w-full px-4 py-6 space-y-6"></main>
   <footer id="site-footer" class="bg-asfa-navy text-white py-8"></footer>
 
-  <script src="js/app.js?v=20260807"></script>
+  <script src="js/app.js?v=20260807b"></script>
   <script>
     page('events.html', () => {
       loadEvents().then(render).catch((error) => {
@@ -87,6 +87,16 @@
               <a href="${esc(feed.calendar_pdf_url)}" class="lnk" target="_blank" rel="noopener noreferrer">${icon('file', 'mr-1')}Calendar PDF</a>` : ''}
             </p>
           </div>
+
+          <!-- Seasonal: the year's marquee event. Take this down (or repoint
+               it at results) once entries close on 2026-09-25. -->
+          <section class="callout" aria-label="ASFA International Invitational">
+            <p class="font-mono text-[11px] uppercase tracking-widest text-asfa-muted">Oct 24–25 · Couch Ranch, Vinita, OK · entries close Sep 25</p>
+            <div class="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2 mt-1.5">
+              <h2 class="font-display text-xl text-asfa-text">The 48th ASFA International Invitational</h2>
+              <a href="https://ii2026.gazehound.io/" class="btn" target="_blank" rel="noopener noreferrer">${icon('external', 'mr-1')}Entry guide &amp; entries</a>
+            </div>
+          </section>
 
           <section class="card no-print">
             <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
@@ -238,6 +248,9 @@
               <span class="block text-sm text-asfa-text/70">${esc(where)} · ${regionLabel(e.region)}</span>
             </span>
             <span class="flex items-center gap-1.5 flex-wrap">${badges.join(' ')}</span>
+            ${e.club === 'ASFA International Invitational' && e.start.startsWith('2026') ? `<a href="https://ii2026.gazehound.io/"
+              target="_blank" rel="noopener noreferrer"
+              class="lnk text-sm whitespace-nowrap">${icon('external', 'mr-1')}Entry guide</a>` : ''}
             ${e.premium_url ? `<a href="${esc(e.premium_url)}" target="_blank" rel="noopener noreferrer"
               class="lnk text-sm whitespace-nowrap">${icon('file', 'mr-1')}Premium</a>`
               : '<span class="text-xs text-asfa-text/65">no premium yet</span>'}
