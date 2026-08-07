@@ -241,7 +241,7 @@ function showCardModal(dog, season, blob) {
   modal.innerHTML = `
     <div class="modal-panel">
       <div class="flex items-baseline justify-between gap-3 px-4 py-3 border-b border-asfa-border">
-        <h2 class="font-abel text-xl text-asfa-green">${esc(dog.call_name)} — stat card</h2>
+        <h2 class="font-display text-xl text-asfa-green">${esc(dog.call_name)} — stat card</h2>
         <button data-act="close" class="text-asfa-text/60 hover:text-asfa-accent text-xl leading-none" aria-label="Close">&times;</button>
       </div>
       <img src="${objectUrl}" alt="Stat card for ${esc(dog.call_name)}" class="modal-card-img">

@@ -6,9 +6,8 @@
   <meta name="theme-color" content="#2C6E49">
   <title>The Bowen point system — Lure Coursing Stats</title>
   <meta name="description" content="How ASFA's Bowen system scores a hound for the Top 20: one point for placing plus one for each hound defeated, with a calculator and the rules for flights, Best of Breed, ties and invalid entries.">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Abel&display=swap" rel="stylesheet">
+  <link rel="preload" href="assets/fonts/fraunces-latin-var.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/plex-mono-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="css/app.css">
   <link rel="icon" href="assets/favicon.ico" sizes="any">
   <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png">
@@ -19,7 +18,7 @@
 
   <main id="main" class="flex-1 max-w-3xl mx-auto w-full px-4 py-6 space-y-6">
     <div>
-      <h1 class="font-abel text-3xl text-asfa-green">The Bowen point system</h1>
+      <h1 class="font-display text-3xl text-asfa-green">The Bowen point system</h1>
       <p class="text-sm text-asfa-text/70 mt-1">
         Adopted in 1987, the Bowen system is how ASFA scores a hound for the Top 20 rankings —
         annually by breed, and for the lifetime standings. It is the source of every points figure
@@ -33,7 +32,7 @@
         A hound earns <strong>one point for placing, plus one point for every hound it defeated</strong>.
         Which comes to:
       </p>
-      <p class="text-center font-abel text-2xl text-asfa-green my-4">
+      <p class="text-center font-display text-2xl text-asfa-green my-4">
         points = (hounds in the stake − placement) + 1
       </p>
       <p class="text-sm leading-relaxed">
@@ -68,7 +67,7 @@
       </div>
       <p id="calc-error" class="text-xs text-asfa-accent mt-2 hidden"></p>
 
-      <h3 class="font-abel text-lg text-asfa-green mt-6 mb-2">Every placement in that stake</h3>
+      <h3 class="font-display text-lg text-asfa-green mt-6 mb-2">Every placement in that stake</h3>
       <div class="tbl-wrap"><table class="tbl">
         <thead><tr><th class="num">Placement</th><th class="num">Hounds defeated</th><th class="num">Bowen points</th></tr></thead>
         <tbody id="ladder"></tbody>

@@ -6,9 +6,8 @@
   <meta name="theme-color" content="#2C6E49">
   <title>Hound profile — Lure Coursing Stats</title>
   <meta name="description" content="Season standing, Bowen points, Best of Breed and Best in Field record, and breed percentile for a hound ranked in the ASFA Top 20.">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Abel&display=swap" rel="stylesheet">
+  <link rel="preload" href="assets/fonts/fraunces-latin-var.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/plex-mono-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="css/app.css">
   <link rel="icon" href="assets/favicon.ico" sizes="any">
   <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png">
@@ -91,7 +90,7 @@
               <div class="text-xs uppercase tracking-widest text-asfa-text/60 mt-1">${esc(rankContext(dog))}</div>
             </div>
             <div class="flex-1 min-w-[16rem]">
-              <h1 class="font-abel text-3xl text-asfa-green leading-tight">${esc(dog.call_name)}</h1>
+              <h1 class="font-display text-3xl text-asfa-green leading-tight">${esc(dog.call_name)}</h1>
               <p class="text-asfa-text/85">${esc(dog.registered_name)}</p>
               <p class="text-sm text-asfa-text/70 mt-1">
                 <a href="${breedUrl(dog.breed_slug)}" class="lnk">${esc(dog.breed)}</a>

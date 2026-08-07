@@ -6,6 +6,42 @@
    Component classes sit between the components and utilities layers, so
    utilities win ties exactly as they did with the CDN build. */
 
+/* Self-hosted webfonts (see tools/build_css.md). Fraunces carries the
+   optical-size axis, so browsers cut display shapes at large sizes on
+   their own. Paths are relative to css/app.css. */
+
+@font-face {
+  font-family: 'Fraunces';
+  src: url('../assets/fonts/fraunces-latin-var.woff2') format('woff2');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Fraunces';
+  src: url('../assets/fonts/fraunces-italic-latin-var.woff2') format('woff2');
+  font-weight: 100 900;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'IBM Plex Mono';
+  src: url('../assets/fonts/plex-mono-400.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'IBM Plex Mono';
+  src: url('../assets/fonts/plex-mono-500.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
 @tailwind base;
 
 @layer base {
@@ -37,7 +73,22 @@
   }
 
   h1, h2, h3 {
-    font-family: 'Abel', sans-serif;
+    font-family: 'Fraunces', Georgia, serif;
+  }
+
+  h1 {
+    font-weight: 580;
+    letter-spacing: -0.015em;
+    line-height: 1.1;
+  }
+
+  h2 {
+    font-weight: 560;
+    letter-spacing: -0.005em;
+  }
+
+  h3 {
+    font-weight: 550;
   }
 }
 
@@ -61,8 +112,9 @@
 }
 
 .card-title {
-  font-family: 'Abel', sans-serif;
-  font-size: 1.35rem;
+  font-family: 'Fraunces', Georgia, serif;
+  font-weight: 560;
+  font-size: 1.3rem;
   line-height: 1.2;
   color: rgb(var(--green));
   border-bottom: 2px solid rgb(var(--rust));
@@ -80,19 +132,22 @@
 }
 
 .tile-value {
-  font-family: 'Abel', sans-serif;
-  font-size: 1.9rem;
+  font-family: 'Fraunces', Georgia, serif;
+  font-weight: 500;
+  font-variant-numeric: lining-nums tabular-nums;
+  font-size: 2.1rem;
   line-height: 1;
   color: rgb(var(--green));
 }
 
 .tile-label {
-  font-size: 0.7rem;
+  font-family: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.6875rem;
   text-transform: uppercase;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.08em;
   color: rgb(var(--ink));
   opacity: 0.7;
-  margin-top: 0.3rem;
+  margin-top: 0.35rem;
 }
 
 /* Tables ----------------------------------------------------------------- */
@@ -106,9 +161,9 @@
 .tbl th {
   background: rgb(var(--green));
   color: #FFFFFF;
-  font-family: 'Abel', sans-serif;
-  font-weight: 400;
-  font-size: 0.8rem;
+  font-family: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-weight: 500;
+  font-size: 0.6875rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   text-align: left;
@@ -153,8 +208,11 @@
   display: inline-flex;
   align-items: center;
   gap: 0.25rem;
-  font-size: 0.7rem;
-  font-weight: 600;
+  font-family: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.6875rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
   padding: 0.1rem 0.4rem;
   white-space: nowrap;
 }
@@ -189,7 +247,8 @@
 /* Rule documents --------------------------------------------------------- */
 
 .rb-s {
-  font-family: 'Abel', sans-serif;
+  font-family: 'Fraunces', Georgia, serif;
+  font-weight: 550;
   font-size: 1.05rem;
   color: rgb(var(--green));
   margin: 1.1rem 0 0.3rem;
@@ -200,8 +259,8 @@
 }
 
 .rb-n {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
-  font-size: 0.8rem;
+  font-family: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.72rem;
   font-weight: 400;
   color: rgb(var(--ink) / 0.6);
 }
@@ -267,8 +326,10 @@ ol.rb-l { list-style: decimal; }
 /* Rank pill used on profile and compare pages ---------------------------- */
 
 .rank-pill {
-  font-family: 'Abel', sans-serif;
-  font-size: 2.6rem;
+  font-family: 'Fraunces', Georgia, serif;
+  font-weight: 620;
+  font-variant-numeric: lining-nums tabular-nums;
+  font-size: 2.75rem;
   line-height: 1;
   color: rgb(var(--rust));
 }
