@@ -67,6 +67,33 @@
     --badge-prov-bg: 248 239 216; --badge-prov-ink: 119 89 18;
   }
 
+  /* Dark theme: same warm family, inverted. Greens and rusts lighten to
+     hold AA contrast on the charcoal paper; the footer well goes deeper
+     than the canvas so it still reads as a well. */
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --paper: 27 25 23;        /* #1B1917 */
+      --panel: 35 42 35;        /* #232A23 */
+      --surface: 34 31 28;      /* #221F1C */
+      --ink: 231 226 214;       /* #E7E2D6 */
+      --ink-muted: 165 160 150; /* #A5A096 */
+      --line: 53 50 44;         /* #35322C */
+      --line-strong: 76 72 64;  /* #4C4840 */
+      --green: 133 183 155;     /* #85B79B */
+      --green-hi: 169 205 182;  /* #A9CDB6 — hover lightens, not darkens */
+      --rust: 206 134 99;       /* #CE8663 */
+      --rust-hi: 224 164 137;   /* #E0A489 */
+      --well: 22 21 19;         /* #161513 */
+      --well-ink: 231 226 214;  /* #E7E2D6 */
+
+      --badge-up-bg: 34 57 44;    --badge-up-ink: 169 211 184;
+      --badge-down-bg: 61 42 33;  --badge-down-ink: 226 169 143;
+      --badge-new-bg: 35 42 35;   --badge-new-ink: 156 199 173;
+      --badge-flat-bg: 43 42 38;  --badge-flat-ink: 171 166 155;
+      --badge-prov-bg: 58 50 32;  --badge-prov-ink: 221 190 110;
+    }
+  }
+
   body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
     background: rgb(var(--paper));
@@ -90,6 +117,13 @@
 
   h3 {
     font-weight: 550;
+  }
+
+  /* Light-on-dark blooms, so display weights back off a step. */
+  @media (prefers-color-scheme: dark) {
+    h1 { font-weight: 540; }
+    h2 { font-weight: 520; }
+    h3 { font-weight: 515; }
   }
 
   /* One focus language everywhere; only keyboard focus draws it. */
@@ -149,6 +183,12 @@
   display: block;
   padding-bottom: 0.5rem;
   margin-bottom: 0.9rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  .card-title {
+    font-weight: 520;
+  }
 }
 
 /* Stat tiles ------------------------------------------------------------- */
@@ -385,7 +425,7 @@ ol.rb-l { list-style: decimal; }
 
 #doc mark.mark-active {
   background: rgb(var(--rust));
-  color: #FFFFFF;
+  color: rgb(var(--paper));
 }
 
 /* Stat card preview ------------------------------------------------------ */
