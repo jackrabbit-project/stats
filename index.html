@@ -143,8 +143,8 @@
         <a href="${dogUrl(dog.id)}" class="flex items-baseline gap-2 py-1.5 border-b border-asfa-border last:border-0 hover:bg-asfa-bg2 -mx-1 px-1">
           <span class="font-display text-xl text-asfa-accent w-8 shrink-0">${dog[stat]}</span>
           <span class="font-semibold text-asfa-green">${esc(dog.call_name)}</span>
-          <span class="text-xs text-asfa-text/60 ml-auto whitespace-nowrap">${esc(dog.breed)} #${dog.rank}</span>
-        </a>`).join('') || `<p class="text-sm text-asfa-text/60">No ${suffix} recorded yet this season.</p>`;
+          <span class="text-xs text-asfa-text/70 ml-auto whitespace-nowrap">${esc(dog.breed)} #${dog.rank}</span>
+        </a>`).join('') || `<p class="text-sm text-asfa-text/70">No ${suffix} recorded yet this season.</p>`;
 
       const byStat = (stat) => hounds
         .filter((dog) => dog[stat] > 0)
@@ -164,7 +164,7 @@
         .slice(0, 8);
       document.getElementById('percentile').innerHTML = `
         <div class="tbl-wrap"><table class="tbl">
-          <thead><tr><th>Hound</th><th>Breed</th><th class="num">Rank</th><th class="num">Of</th><th class="num">Standing</th></tr></thead>
+          <thead><tr><th scope="col">Hound</th><th scope="col">Breed</th><th scope="col" class="num">Rank</th><th scope="col" class="num">Of</th><th scope="col" class="num">Standing</th></tr></thead>
           <tbody>${top.map((dog) => `
             <tr>
               <td><a href="${dogUrl(dog.id)}" class="lnk font-semibold">${esc(dog.call_name)}</a></td>

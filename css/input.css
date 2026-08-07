@@ -180,42 +180,51 @@
 
 /* Tables ----------------------------------------------------------------- */
 
+/* border-collapse: separate, because collapsed borders detach from a
+   position: sticky header the moment it lifts off the table. */
 .tbl {
   width: 100%;
-  border-collapse: collapse;
+  border-collapse: separate;
+  border-spacing: 0;
   font-size: 0.875rem;
 }
 
 .tbl th {
-  background: rgb(var(--green));
-  color: #FFFFFF;
+  color: rgb(var(--ink-muted));
   font-family: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
   font-weight: 500;
   font-size: 0.6875rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   text-align: left;
-  padding: 0.5rem 0.6rem;
+  padding: 0.4rem 0.6rem;
+  border-bottom: 1px solid rgb(var(--line-strong));
   white-space: nowrap;
-}
-
-.tbl th.sortable {
-  cursor: pointer;
-  user-select: none;
-}
-
-.tbl th.sortable:hover {
-  background: rgb(var(--green-hi));
 }
 
 .tbl td {
   border-bottom: 1px solid rgb(var(--line));
-  padding: 0.5rem 0.6rem;
+  padding: 0.45rem 0.6rem;
   vertical-align: top;
 }
 
+/* Table content sits flush with the card title above it. */
+.tbl th:first-child,
+.tbl td:first-child {
+  padding-left: 0;
+}
+
+.tbl th:last-child,
+.tbl td:last-child {
+  padding-right: 0;
+}
+
+.tbl tbody tr {
+  transition: background-color 150ms;
+}
+
 .tbl tbody tr:hover {
-  background: rgb(var(--panel));
+  background: rgb(var(--panel) / 0.55);
 }
 
 .tbl .num {
@@ -224,10 +233,65 @@
   white-space: nowrap;
 }
 
-/* Wide tables scroll inside their own container rather than the page. */
+/* The real button inside a sortable header: inherits the label style,
+   keyboard-operable, caret in rust on the active column only. */
+.th-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font: inherit;
+  text-transform: inherit;
+  letter-spacing: inherit;
+  color: inherit;
+  cursor: pointer;
+  user-select: none;
+}
+
+.th-btn:hover {
+  color: rgb(var(--ink));
+}
+
+.th-btn .ic {
+  color: rgb(var(--rust));
+}
+
+.tbl .num .th-btn {
+  justify-content: flex-end;
+}
+
+/* Wide tables scroll inside their own container rather than the page,
+   with edge fades hinting at the overflow. */
 .tbl-wrap {
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
+}
+
+@media (max-width: 1199.98px) {
+  .tbl-wrap {
+    --edge: var(--surface);
+    background:
+      linear-gradient(90deg, rgb(var(--edge)) 40%, rgb(var(--edge) / 0)) left/48px 100%,
+      linear-gradient(270deg, rgb(var(--edge)) 40%, rgb(var(--edge) / 0)) right/48px 100%,
+      linear-gradient(90deg, rgb(var(--ink) / 0.10), rgb(var(--ink) / 0)) left/16px 100%,
+      linear-gradient(270deg, rgb(var(--ink) / 0.10), rgb(var(--ink) / 0)) right/16px 100%;
+    background-repeat: no-repeat;
+    background-attachment: local, local, scroll, scroll;
+  }
+}
+
+/* Wide screens fit every table without wrapper scrolling, which frees the
+   header row to stick to the top of the viewport on long tables. */
+@media (min-width: 1200px) {
+  .tbl-wrap {
+    overflow-x: visible;
+  }
+
+  .tbl thead th {
+    position: sticky;
+    top: 0;
+    background: rgb(var(--surface));
+    z-index: 1;
+  }
 }
 
 /* Badges ----------------------------------------------------------------- */

@@ -92,10 +92,10 @@
             </p>
             <div class="tbl-wrap"><table class="tbl">
               <thead><tr>
-                <th class="num">Rank</th><th>Call name</th><th>Registered name</th>
-                <th>Owner</th><th class="num">Region</th><th class="num">Points</th>
-                <th>Titles</th><th class="num">Standing</th>
-                ${showMovement ? '<th class="num">Since</th>' : ''}
+                <th scope="col" class="num">Rank</th><th scope="col">Call name</th><th scope="col">Registered name</th>
+                <th scope="col">Owner</th><th scope="col" class="num">Region</th><th scope="col" class="num">Points</th>
+                <th scope="col">Titles</th><th scope="col" class="num">Standing</th>
+                ${showMovement ? '<th scope="col" class="num">Since</th>' : ''}
               </tr></thead>
               <tbody>
                 ${dogs.map((dog) => {
@@ -145,7 +145,7 @@
             Held by the ${ranked} dogs currently ranked. A dog may hold more than one.
           </p>
           <div class="tbl-wrap"><table class="tbl">
-            <thead><tr><th>Title</th><th>Name</th><th>Earned by</th><th class="num">Ranked dogs holding it</th></tr></thead>
+            <thead><tr><th scope="col">Title</th><th scope="col">Name</th><th scope="col">Earned by</th><th scope="col" class="num">Ranked dogs holding it</th></tr></thead>
             <tbody>
               ${TITLES.map(([code, name, requirement]) => `
                 <tr>
@@ -192,7 +192,7 @@
             course-delay penalty of 1 to 10 points. A qualifying score is half the combined total.
           </p>
           <div class="tbl-wrap mt-3"><table class="tbl">
-            <thead><tr><th>Category</th><th class="num">Points</th><th>Category</th><th class="num">Points</th></tr></thead>
+            <thead><tr><th scope="col">Category</th><th scope="col" class="num">Points</th><th scope="col">Category</th><th scope="col" class="num">Points</th></tr></thead>
             <tbody>
               <tr><td>Enthusiasm</td><td class="num">15</td><td>Agility</td><td class="num">25</td></tr>
               <tr><td>Follow</td><td class="num">15</td><td>Endurance</td><td class="num">20</td></tr>

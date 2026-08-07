@@ -78,7 +78,7 @@
       }
 
       main.innerHTML = `
-        <nav class="text-sm text-asfa-text/60">
+        <nav class="text-sm text-asfa-text/70">
           <a href="browse.html" class="lnk">Browse</a> ›
           <a href="${breedUrl(dog.breed_slug)}" class="lnk">${esc(dog.breed)}</a>
         </nav>
@@ -159,8 +159,8 @@
             re-ranks hounds that also compete in their breed stake.
           </p>
           <div class="tbl-wrap"><table class="tbl">
-            <thead><tr><th>Section</th><th>Listed as</th><th class="num">Rank</th>
-              <th class="num">Points</th><th class="num">BOB</th><th class="num">BIF</th></tr></thead>
+            <thead><tr><th scope="col">Section</th><th scope="col">Listed as</th><th scope="col" class="num">Rank</th>
+              <th scope="col" class="num">Points</th><th scope="col" class="num">BOB</th><th scope="col" class="num">BIF</th></tr></thead>
             <tbody>${alsoRanked.map((other) => `
               <tr>
                 <td><a href="${breedUrl(other.breed_slug)}" class="lnk">${esc(other.breed)}</a></td>
@@ -176,10 +176,10 @@
         <section class="card">
           <h2 class="card-title">The rest of ${esc(sectionNoun(dog))}</h2>
           <div class="tbl-wrap"><table class="tbl">
-            <thead><tr><th class="num">Rank</th><th>Hound</th><th>Owner</th>
-              <th class="num">Points</th>
-              ${dog.is_breed ? '<th class="num">BOB</th><th class="num">BIF</th>' : ''}
-              <th class="num">Standing</th></tr></thead>
+            <thead><tr><th scope="col" class="num">Rank</th><th scope="col">Hound</th><th scope="col">Owner</th>
+              <th scope="col" class="num">Points</th>
+              ${dog.is_breed ? '<th scope="col" class="num">BOB</th><th scope="col" class="num">BIF</th>' : ''}
+              <th scope="col" class="num">Standing</th></tr></thead>
             <tbody>${season.dogs
               .filter((d) => d.breed_slug === dog.breed_slug)
               .sort((a, b) => a.rank - b.rank)

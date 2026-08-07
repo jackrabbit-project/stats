@@ -49,8 +49,8 @@
             </p>
             <div class="tbl-wrap"><table class="tbl">
               <thead><tr>
-                <th class="num">Region</th><th>States</th><th class="num">Hounds in Top 20</th>
-                <th class="num">BOB</th><th class="num">BIF</th><th class="num">Ranked #1</th>
+                <th scope="col" class="num">Region</th><th scope="col">States</th><th scope="col" class="num">Hounds in Top 20</th>
+                <th scope="col" class="num">BOB</th><th scope="col" class="num">BIF</th><th scope="col" class="num">Ranked #1</th>
               </tr></thead>
               <tbody>
                 ${rows.map((r) => `
@@ -102,8 +102,8 @@
             </p>
             <div class="tbl-wrap"><table class="tbl">
               <thead><tr>
-                <th class="num">Region</th><th>States</th><th class="num">Clubs</th>
-                <th class="num">Trials</th><th class="num">Entries</th><th class="num">Avg entry</th>
+                <th scope="col" class="num">Region</th><th scope="col">States</th><th scope="col" class="num">Clubs</th>
+                <th scope="col" class="num">Trials</th><th scope="col" class="num">Entries</th><th scope="col" class="num">Avg entry</th>
               </tr></thead>
               <tbody>
                 ${[...assigned].sort((a, b) => b.entries - a.entries).map((r) => `
@@ -144,8 +144,8 @@
             </p>
             <div class="tbl-wrap"><table class="tbl">
               <thead><tr>
-                <th class="num">#</th><th>Club</th><th class="num">Region</th>
-                <th class="num">Trials</th><th class="num">Entries</th><th>Where</th>
+                <th scope="col" class="num">#</th><th scope="col">Club</th><th scope="col" class="num">Region</th>
+                <th scope="col" class="num">Trials</th><th scope="col" class="num">Entries</th><th scope="col">Where</th>
               </tr></thead>
               <tbody>
                 ${trials.by_club.map((c, i) => `

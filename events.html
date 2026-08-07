@@ -219,17 +219,17 @@
           return `<li class="py-3 flex flex-wrap items-baseline gap-x-4 gap-y-1 ${past}">
             <span class="w-28 shrink-0 text-sm font-semibold text-asfa-text whitespace-nowrap ${struck}">
               ${fmtRange(e.start, e.end)}
-              <span class="block text-[11px] font-normal text-asfa-text/50">${weekday(e.start)}${e.start !== e.end ? `–${weekday(e.end)}` : ''}</span>
+              <span class="block text-[11px] font-normal text-asfa-text/65">${weekday(e.start)}${e.start !== e.end ? `–${weekday(e.end)}` : ''}</span>
             </span>
             <span class="flex-1 min-w-[12rem] ${struck}">
               <span class="font-semibold">${esc(e.club)}</span>
-              ${e.club !== e.initials ? `<span class="text-asfa-text/50 text-sm"> (${esc(e.initials)})</span>` : ''}
+              ${e.club !== e.initials ? `<span class="text-asfa-text/65 text-sm"> (${esc(e.initials)})</span>` : ''}
               <span class="block text-sm text-asfa-text/70">${esc(where)} · ${regionLabel(e.region)}</span>
             </span>
             <span class="flex items-center gap-1.5 flex-wrap">${badges.join(' ')}</span>
             ${e.premium_url ? `<a href="${esc(e.premium_url)}" target="_blank" rel="noopener noreferrer"
               class="lnk text-sm whitespace-nowrap">${icon('file', 'mr-1')}Premium</a>`
-              : '<span class="text-xs text-asfa-text/40">no premium yet</span>'}
+              : '<span class="text-xs text-asfa-text/65">no premium yet</span>'}
           </li>`;
         }
 

@@ -34,7 +34,7 @@
         document.title = `${focus.name} — Lure Coursing Stats`;
 
         main.innerHTML = `
-          <nav class="text-sm text-asfa-text/60"><a href="kennels.html" class="lnk">Kennels</a> › ${esc(focus.name)}</nav>
+          <nav class="text-sm text-asfa-text/70"><a href="kennels.html" class="lnk">Kennels</a> › ${esc(focus.name)}</nav>
           <section class="card">
             <h1 class="card-title">${esc(focus.name)}</h1>
             <p class="text-sm text-asfa-text/70">
@@ -57,9 +57,9 @@
           <section class="card">
             <h2 class="card-title">Hounds</h2>
             <div class="tbl-wrap"><table class="tbl">
-              <thead><tr><th>Hound</th><th>Registered name</th><th>Breed</th>
-                <th class="num">Rank</th><th class="num">Points</th>
-                <th class="num">BOB</th><th class="num">BIF</th><th class="num">Standing</th></tr></thead>
+              <thead><tr><th scope="col">Hound</th><th scope="col">Registered name</th><th scope="col">Breed</th>
+                <th scope="col" class="num">Rank</th><th scope="col" class="num">Points</th>
+                <th scope="col" class="num">BOB</th><th scope="col" class="num">BIF</th><th scope="col" class="num">Standing</th></tr></thead>
               <tbody>${dogs.sort((a, b) => b.points - a.points).map((dog) => `
                 <tr>
                   <td><a href="${dogUrl(dog.id)}" class="lnk font-semibold">${esc(dog.call_name)}</a></td>
@@ -113,10 +113,11 @@
         return `
           <div class="tbl-wrap"><table class="tbl">
             <thead><tr>
-              <th>Owner</th><th class="num">Region</th><th>Breeds</th>
+              <th scope="col">Owner</th><th scope="col" class="num">Region</th><th scope="col">Breeds</th>
               ${sortable.map(([key, label]) =>
-                `<th class="sortable num" data-key="${key}">${label}${
-                  key === sortKey ? ` ${icon('chevronDown')}` : ''}</th>`).join('')}
+                `<th scope="col" class="sortable num" ${key === sortKey ? 'aria-sort="descending"' : ''}>
+                  <button type="button" class="th-btn" data-key="${key}">${label}${
+                    key === sortKey ? icon('chevronDown') : ''}</button></th>`).join('')}
             </tr></thead>
             <tbody>${owners.map((owner) => `
               <tr>
@@ -190,8 +191,8 @@
 
       // Header sorting is re-bound after every table redraw.
       function wireTable() {
-        main.querySelectorAll('th[data-key]').forEach((th) => {
-          th.addEventListener('click', () => { sortKey = th.dataset.key; redrawTable(); });
+        main.querySelectorAll('button[data-key]').forEach((btn) => {
+          btn.addEventListener('click', () => { sortKey = btn.dataset.key; redrawTable(); });
         });
       }
 

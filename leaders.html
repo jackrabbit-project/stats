@@ -153,13 +153,13 @@
           <div class="card">
             <div class="tbl-wrap"><table class="tbl">
               <thead><tr>
-                <th class="num">#</th><th>Hound</th><th>Registered name</th>
-                <th>Breed</th><th>Owner</th><th class="num">${board.heading}</th>
-                <th class="num">Rank</th>
+                <th scope="col" class="num">#</th><th scope="col">Hound</th><th scope="col">Registered name</th>
+                <th scope="col">Breed</th><th scope="col">Owner</th><th scope="col" class="num">${board.heading}</th>
+                <th scope="col" class="num">Rank</th>
               </tr></thead>
               <tbody>${list.map((dog, index) => `
                 <tr>
-                  <td class="num text-asfa-text/50">${index + 1}</td>
+                  <td class="num text-asfa-text/70">${index + 1}</td>
                   <td><a href="${dogUrl(dog.id)}" class="lnk font-semibold">${esc(dog.call_name)}</a></td>
                   <td class="text-asfa-text/80">${esc(dog.registered_name)}</td>
                   <td><a href="${breedUrl(dog.breed_slug)}" class="lnk">${esc(dog.breed)}</a></td>

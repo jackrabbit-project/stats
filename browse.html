@@ -102,9 +102,11 @@
             <div class="tbl-wrap mt-4"><table class="tbl">
               <thead><tr>
                 ${columns.map(([k, label, cls]) =>
-                  `<th class="sortable ${cls}" data-key="${k}">${label}${
-                    key === k ? ` ${icon(dir === 1 ? 'chevronUp' : 'chevronDown')}` : ''}</th>`).join('')}
-                ${showMovement ? '<th class="num">Since</th>' : ''}
+                  `<th scope="col" class="sortable ${cls}" aria-sort="${
+                    key === k ? (dir === 1 ? 'ascending' : 'descending') : 'none'}">
+                    <button type="button" class="th-btn" data-key="${k}">${label}${
+                      key === k ? icon(dir === 1 ? 'chevronUp' : 'chevronDown') : ''}</button></th>`).join('')}
+                ${showMovement ? '<th scope="col" class="num">Since</th>' : ''}
               </tr></thead>
               <tbody>
                 ${sorted.map((dog) => `
@@ -143,9 +145,9 @@
               </p>`}
           </div>`;
 
-        panel.querySelectorAll('th[data-key]').forEach((th) => {
-          th.addEventListener('click', () => {
-            const next = th.dataset.key;
+        panel.querySelectorAll('button[data-key]').forEach((btn) => {
+          btn.addEventListener('click', () => {
+            const next = btn.dataset.key;
             // Rank and name read best ascending; every stat reads best descending.
             const ascending = next === 'rank' || next === 'call_name'
               || next === 'registered_name' || next === 'owner_raw' || next === 'percentile';
