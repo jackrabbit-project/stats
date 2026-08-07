@@ -21,12 +21,15 @@ ASFA publishes the standings as one long page of stacked breed tables, and trial
 
 ```
 index.html  events.html  browse.html  dog.html  leaders.html  kennels.html
-regions.html  lci.html  bowen.html  rulebooks.html  about.html
-css/site.css          Custom classes on top of Tailwind
-js/theme.js           Shared Tailwind palette
-js/app.js             Data loading, chrome, search, formatting
+regions.html  lci.html  bowen.html  rulebooks.html  about.html  404.html
+css/input.css         Design tokens (light + dark), fonts, components — the source
+css/app.css           Compiled stylesheet, checked in — what pages load
+tailwind.config.js    Maps the asfa-* color names onto the tokens
+assets/fonts/         Fraunces + IBM Plex Mono, self-hosted woff2
+js/app.js             Data loading, chrome, icons, search, formatting
 js/card.js            Canvas stat-card renderer
 tools/                Python ETL — fetch, parse, clubs, trials, events, build, check
+tools/build_css.ps1   Rebuilds css/app.css (see tools/build_css.md)
 data/snapshots/       Every published standings page, archived verbatim
 data/trials/raw/      Every monthly trial results page, archived verbatim
 data/events/raw/      The trial schedule page, archived verbatim
@@ -37,7 +40,7 @@ data/events.json      The trial schedule — loaded by events.html
 data/clubs.json       Club directory: name, region, initials, affiliation only
 ```
 
-The site itself has no build step and no framework: Tailwind and Font Awesome load from CDNs, the Abel webfont from Google Fonts, everything else is vanilla JavaScript. Python runs offline to produce the JSON under `data/`.
+The site is static files with no framework and no runtime dependencies — no CDNs, no font service, no analytics; every page loads with zero third-party requests. The stylesheet is compiled once with the standalone Tailwind CLI and committed, so deploys stay build-free. **If you change any class in HTML/JS or anything in `css/input.css`, rebuild with `tools/build_css.ps1`** — the how and why live in [tools/build_css.md](tools/build_css.md). It follows the device's light or dark preference automatically. Python runs offline to produce the JSON under `data/`.
 
 ## Updating the data
 
