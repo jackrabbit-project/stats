@@ -1,19 +1,54 @@
-/* Custom classes layered on top of Tailwind. Flat and square-cornered, to
-   match the rest of the project. */
+/* Source stylesheet for the compiled build. Edit this file, then rebuild
+   css/app.css with tools/build_css.ps1 (see tools/build_css.md).
 
-body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
-  background: #F7F5EF;
-  color: #2F2F2F;
+   Design tokens live in the :root block as bare RGB triplets — Tailwind
+   composes them as rgb(var(--x) / alpha) so utility opacity modifiers work.
+   Component classes sit between the components and utilities layers, so
+   utilities win ties exactly as they did with the CDN build. */
+
+@tailwind base;
+
+@layer base {
+  :root {
+    --paper: 247 245 239;      /* page background, warm off-white */
+    --panel: 232 239 234;      /* tiles, hero band, row hover (light sage) */
+    --surface: 255 255 255;    /* cards, dropdowns, modal */
+    --ink: 47 47 47;           /* body text */
+    --ink-muted: 110 108 100;  /* captions, labels (reserved for retheme) */
+    --line: 214 220 215;       /* hairlines, dividers */
+    --line-strong: 214 220 215;/* input borders, thead rule (reserved) */
+    --green: 44 110 73;        /* headings, links */
+    --green-hi: 31 76 51;      /* green hover */
+    --rust: 164 74 47;         /* accent */
+    --rust-hi: 122 52 34;      /* accent hover */
+    --well: 27 48 65;          /* footer */
+
+    --badge-up-bg: 220 235 225;   --badge-up-ink: 31 76 51;
+    --badge-down-bg: 243 224 218; --badge-down-ink: 122 52 34;
+    --badge-new-bg: 232 239 234;  --badge-new-ink: 44 110 73;
+    --badge-flat-bg: 239 239 236; --badge-flat-ink: 107 107 107;
+    --badge-prov-bg: 251 239 214; --badge-prov-ink: 122 90 17;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+    background: rgb(var(--paper));
+    color: rgb(var(--ink));
+  }
+
+  h1, h2, h3 {
+    font-family: 'Abel', sans-serif;
+  }
 }
 
-h1, h2, h3, .font-abel {
-  font-family: 'Abel', sans-serif;
-}
+@tailwind components;
+
+/* Site components. Plain rules (not @layer) so nothing is tree-shaken and
+   they emit here — after the components layer, before utilities. */
 
 .card {
-  background: #FFFFFF;
-  border: 1px solid #D6DCD7;
+  background: rgb(var(--surface));
+  border: 1px solid rgb(var(--line));
   padding: 1.25rem;
 }
 
@@ -21,8 +56,8 @@ h1, h2, h3, .font-abel {
   font-family: 'Abel', sans-serif;
   font-size: 1.35rem;
   line-height: 1.2;
-  color: #2C6E49;
-  border-bottom: 2px solid #A44A2F;
+  color: rgb(var(--green));
+  border-bottom: 2px solid rgb(var(--rust));
   display: inline-block;
   padding-bottom: 0.35rem;
   margin-bottom: 0.9rem;
@@ -31,8 +66,8 @@ h1, h2, h3, .font-abel {
 /* Stat tiles ------------------------------------------------------------- */
 
 .tile {
-  background: #E8EFEA;
-  border: 1px solid #D6DCD7;
+  background: rgb(var(--panel));
+  border: 1px solid rgb(var(--line));
   padding: 0.9rem 1rem;
 }
 
@@ -40,14 +75,14 @@ h1, h2, h3, .font-abel {
   font-family: 'Abel', sans-serif;
   font-size: 1.9rem;
   line-height: 1;
-  color: #2C6E49;
+  color: rgb(var(--green));
 }
 
 .tile-label {
   font-size: 0.7rem;
   text-transform: uppercase;
   letter-spacing: 0.12em;
-  color: #2F2F2F;
+  color: rgb(var(--ink));
   opacity: 0.7;
   margin-top: 0.3rem;
 }
@@ -61,7 +96,7 @@ h1, h2, h3, .font-abel {
 }
 
 .tbl th {
-  background: #2C6E49;
+  background: rgb(var(--green));
   color: #FFFFFF;
   font-family: 'Abel', sans-serif;
   font-weight: 400;
@@ -79,17 +114,17 @@ h1, h2, h3, .font-abel {
 }
 
 .tbl th.sortable:hover {
-  background: #1F4C33;
+  background: rgb(var(--green-hi));
 }
 
 .tbl td {
-  border-bottom: 1px solid #D6DCD7;
+  border-bottom: 1px solid rgb(var(--line));
   padding: 0.5rem 0.6rem;
   vertical-align: top;
 }
 
 .tbl tbody tr:hover {
-  background: #E8EFEA;
+  background: rgb(var(--panel));
 }
 
 .tbl .num {
@@ -116,17 +151,17 @@ h1, h2, h3, .font-abel {
   white-space: nowrap;
 }
 
-.badge-up    { background: #DCEBE1; color: #1F4C33; }
-.badge-down  { background: #F3E0DA; color: #7A3422; }
-.badge-new   { background: #E8EFEA; color: #2C6E49; }
-.badge-flat  { background: #EFEFEC; color: #6B6B6B; }
-.badge-prov  { background: #FBEFD6; color: #7A5A11; }
+.badge-up    { background: rgb(var(--badge-up-bg));   color: rgb(var(--badge-up-ink)); }
+.badge-down  { background: rgb(var(--badge-down-bg)); color: rgb(var(--badge-down-ink)); }
+.badge-new   { background: rgb(var(--badge-new-bg));  color: rgb(var(--badge-new-ink)); }
+.badge-flat  { background: rgb(var(--badge-flat-bg)); color: rgb(var(--badge-flat-ink)); }
+.badge-prov  { background: rgb(var(--badge-prov-bg)); color: rgb(var(--badge-prov-ink)); }
 
 /* Search ----------------------------------------------------------------- */
 
 .search-results {
-  background: #FFFFFF;
-  border: 1px solid #D6DCD7;
+  background: rgb(var(--surface));
+  border: 1px solid rgb(var(--line));
   max-height: 24rem;
   overflow-y: auto;
 }
@@ -134,13 +169,13 @@ h1, h2, h3, .font-abel {
 /* Links ------------------------------------------------------------------ */
 
 .lnk {
-  color: #2C6E49;
+  color: rgb(var(--green));
   text-decoration: underline;
   text-underline-offset: 2px;
 }
 
 .lnk:hover {
-  color: #A44A2F;
+  color: rgb(var(--rust));
 }
 
 /* Rule documents --------------------------------------------------------- */
@@ -148,7 +183,7 @@ h1, h2, h3, .font-abel {
 .rb-s {
   font-family: 'Abel', sans-serif;
   font-size: 1.05rem;
-  color: #2C6E49;
+  color: rgb(var(--green));
   margin: 1.1rem 0 0.3rem;
 }
 
@@ -160,7 +195,7 @@ h1, h2, h3, .font-abel {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
   font-size: 0.8rem;
   font-weight: 400;
-  color: rgba(47, 47, 47, 0.6);
+  color: rgb(var(--ink) / 0.6);
 }
 
 #doc p {
@@ -182,13 +217,13 @@ ol.rb-l { list-style: decimal; }
 .rb-l .rb-l { margin-top: 0.45rem; }
 
 #doc mark {
-  background: #FBEFD6;
+  background: rgb(var(--badge-prov-bg));
   color: inherit;
   padding: 0 1px;
 }
 
 #doc mark.mark-active {
-  background: #A44A2F;
+  background: rgb(var(--rust));
   color: #FFFFFF;
 }
 
@@ -208,7 +243,7 @@ ol.rb-l { list-style: decimal; }
 
 .modal-panel {
   background: #F8F4EB;
-  border: 1px solid #D6DCD7;
+  border: 1px solid rgb(var(--line));
   width: 100%;
   max-width: 30rem;
   margin: auto;
@@ -227,10 +262,12 @@ ol.rb-l { list-style: decimal; }
   font-family: 'Abel', sans-serif;
   font-size: 2.6rem;
   line-height: 1;
-  color: #A44A2F;
+  color: rgb(var(--rust));
 }
 
 @media print {
   #site-header, #site-footer, .no-print { display: none !important; }
   .card { border: 1px solid #999; }
 }
+
+@tailwind utilities;
