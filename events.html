@@ -66,7 +66,7 @@
         const main = document.getElementById('main');
         main.innerHTML = `
           <div>
-            <h1 class="font-display text-3xl text-asfa-green">Find an ASFA event</h1>
+            <h1 class="font-display text-3xl text-asfa-text">Find an ASFA event</h1>
             <p class="text-sm text-asfa-text/70 mt-1">
               The ${esc(feed.seasons.join('/'))} trial schedule as ASFA publishes it —
               filter by state, region or month. Entry details are in each trial’s premium list.
@@ -217,7 +217,7 @@
           const where = [e.venue, e.state].filter(Boolean).join(', ');
 
           return `<li class="py-3 flex flex-wrap items-baseline gap-x-4 gap-y-1 ${past}">
-            <span class="w-28 shrink-0 text-sm font-semibold text-asfa-green whitespace-nowrap ${struck}">
+            <span class="w-28 shrink-0 text-sm font-semibold text-asfa-text whitespace-nowrap ${struck}">
               ${fmtRange(e.start, e.end)}
               <span class="block text-[11px] font-normal text-asfa-text/50">${weekday(e.start)}${e.start !== e.end ? `–${weekday(e.end)}` : ''}</span>
             </span>

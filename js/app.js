@@ -312,27 +312,37 @@ const NAV = [
 function renderChrome(season, current) {
   const links = NAV.map(([href, label]) => {
     const active = href === current;
-    return `<a href="${href}" class="px-3 py-2 text-sm font-display uppercase tracking-widest ${
-      active ? 'text-white border-b-2 border-asfa-accent' : 'text-white/75 hover:text-white'
+    return `<a href="${href}" class="shrink-0 px-2.5 py-2.5 font-mono text-xs uppercase tracking-[0.1em] border-b-2 ${
+      active ? 'text-asfa-text border-asfa-accent' : 'text-asfa-muted border-transparent hover:text-asfa-text'
     }">${label}</a>`;
   }).join('');
 
   const header = document.getElementById('site-header');
   if (header) {
     header.innerHTML = `
-      <div class="bg-asfa-accent text-white text-xs md:text-sm px-4 py-1.5 text-center">
-        Unofficial fan site — not an ASFA publication.
-        <a href="about.html#disclaimer" class="underline hover:text-white/80 whitespace-nowrap">Full disclaimer</a>
+      <a href="#main" class="skip-link">Skip to content</a>
+      <div class="bg-asfa-paper border-b border-asfa-border px-4 py-1.5 text-center font-mono text-[11px] uppercase tracking-widest text-asfa-muted">
+        <span class="text-asfa-accent">Unofficial fan site</span> — not an ASFA publication.
+        <a href="about.html#disclaimer" class="underline hover:text-asfa-text whitespace-nowrap">Full disclaimer</a>
       </div>
-      <div class="bg-asfa-green">
-        <div class="max-w-6xl mx-auto px-4 flex flex-wrap items-center gap-x-6 gap-y-1 py-2">
-          <a href="index.html" class="flex items-baseline gap-2">
-            <span class="font-display text-xl md:text-2xl text-white tracking-wide">Lure Coursing Stats</span>
-            <span class="font-display text-sm text-asfa-bg2">ASFA standings · ${season ? season.season : ''}</span>
+      <div class="bg-asfa-paper border-b border-asfa-border">
+        <div class="max-w-6xl mx-auto px-4 pt-3 lg:pt-0 lg:py-1.5 flex flex-col lg:flex-row lg:items-center gap-x-8">
+          <a href="index.html" class="flex items-baseline gap-2.5 shrink-0">
+            <span class="font-display font-semibold text-xl text-asfa-text">Lure Coursing Stats</span>
+            <span class="font-mono text-[11px] uppercase tracking-widest text-asfa-muted">ASFA standings · ${season ? season.season : ''}</span>
           </a>
-          <nav class="flex flex-wrap -mx-1">${links}</nav>
+          <nav class="nav-scroll edge-fade flex flex-nowrap lg:flex-wrap overflow-x-auto lg:overflow-visible -mx-4 px-4 lg:mx-0 lg:px-0" aria-label="Site">${links}</nav>
         </div>
       </div>`;
+
+    // On a phone the nav is one scrolling line; start it with the current
+    // page's link in view rather than always parked at Home.
+    const nav = header.querySelector('nav');
+    const activeLink = nav && [...nav.children].find((a) => a.getAttribute('href') === current);
+    if (nav && activeLink && nav.scrollWidth > nav.clientWidth) {
+      const offset = activeLink.getBoundingClientRect().left - nav.getBoundingClientRect().left;
+      nav.scrollLeft = Math.max(0, offset - (nav.clientWidth - activeLink.offsetWidth) / 2);
+    }
   }
 
   const footer = document.getElementById('site-footer');
@@ -342,30 +352,30 @@ function renderChrome(season, current) {
     // links, so it reads as "where to find ASFA" and not as this site's own.
     const community = `
         <p class="flex flex-wrap gap-x-5 gap-y-1.5">
-          <a href="https://www.facebook.com/AmericanSighthoundFieldAssociation" target="_blank" rel="noopener noreferrer" class="underline hover:text-asfa-bg2">${icon('facebook', 'mr-1.5')}Follow ASFA on Facebook</a>
-          <a href="https://www.asfa.org" target="_blank" rel="noopener noreferrer" class="underline hover:text-asfa-bg2">${icon('globe', 'mr-1.5')}asfa.org, the official site</a>
-          <a href="https://www.facebook.com/groups/1046065245418921" target="_blank" rel="noopener noreferrer" class="underline hover:text-asfa-bg2">${icon('facebook', 'mr-1.5')}Join the ASFA II group</a>
-          <a href="https://www.facebook.com/ASFAlureCoursing" target="_blank" rel="noopener noreferrer" class="underline hover:text-asfa-bg2">${icon('facebook', 'mr-1.5')}ASFA Lure Coursing, where updates to this site are posted</a>
+          <a href="https://www.facebook.com/AmericanSighthoundFieldAssociation" target="_blank" rel="noopener noreferrer" class="underline hover:text-asfa-wellink">${icon('facebook', 'mr-1.5')}Follow ASFA on Facebook</a>
+          <a href="https://www.asfa.org" target="_blank" rel="noopener noreferrer" class="underline hover:text-asfa-wellink">${icon('globe', 'mr-1.5')}asfa.org, the official site</a>
+          <a href="https://www.facebook.com/groups/1046065245418921" target="_blank" rel="noopener noreferrer" class="underline hover:text-asfa-wellink">${icon('facebook', 'mr-1.5')}Join the ASFA II group</a>
+          <a href="https://www.facebook.com/ASFAlureCoursing" target="_blank" rel="noopener noreferrer" class="underline hover:text-asfa-wellink">${icon('facebook', 'mr-1.5')}ASFA Lure Coursing, where updates to this site are posted</a>
         </p>`;
 
     footer.innerHTML = `
-      <div class="max-w-4xl mx-auto px-4 text-sm text-white/85 space-y-3">${community}
+      <div class="max-w-4xl mx-auto px-4 text-sm text-asfa-wellink/85 space-y-3">${community}
         <p>
           Standings reproduced from the
-          <a href="${esc(season.source_url)}" target="_blank" rel="noopener noreferrer" class="underline hover:text-asfa-bg2">ASFA Top 20</a>,
+          <a href="${esc(season.source_url)}" target="_blank" rel="noopener noreferrer" class="underline hover:text-asfa-wellink">ASFA Top 20</a>,
           covering January 1 through ${formatDate(season.as_of)}.
           ASFA's published page is authoritative wherever it disagrees with this one.
         </p>
-        <p class="text-xs text-white/65">
+        <p class="text-xs text-asfa-wellink/65">
           Independent fan project. Not affiliated with, endorsed by, or sponsored by the
           American Sighthound Field Association.
         </p>
-        <p class="text-xs text-white/65 flex flex-wrap items-center justify-center gap-x-2 gap-y-1.5 text-center">
-          <a href="about.html" class="underline hover:text-asfa-bg2">How these numbers are built</a>
+        <p class="text-xs text-asfa-wellink/65 flex flex-wrap items-center justify-center gap-x-2 gap-y-1.5 text-center">
+          <a href="about.html" class="underline hover:text-asfa-wellink">How these numbers are built</a>
           <span aria-hidden="true">·</span>
-          <a href="mailto:info@gazehound.io" class="underline hover:text-asfa-bg2">Report an error</a>
+          <a href="mailto:info@gazehound.io" class="underline hover:text-asfa-wellink">Report an error</a>
           <span aria-hidden="true">·</span>
-          <a href="https://github.com/jackrabbit-project/jackrabbit" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 hover:text-asfa-bg2 whitespace-nowrap align-middle"><img src="assets/jackrabbit-icon-40.png" alt="" width="16" height="16" class="h-4 w-auto inline-block" aria-hidden="true">The Jackrabbit Project</a>
+          <a href="https://github.com/jackrabbit-project/jackrabbit" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 hover:text-asfa-wellink whitespace-nowrap align-middle"><img src="assets/jackrabbit-icon-40.png" alt="" width="16" height="16" class="h-4 w-auto inline-block" aria-hidden="true">The Jackrabbit Project</a>
         </p>
       </div>`;
   }

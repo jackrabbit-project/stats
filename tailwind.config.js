@@ -21,6 +21,7 @@ module.exports = {
           paper: 'rgb(var(--paper) / <alpha-value>)',
           surface: 'rgb(var(--surface) / <alpha-value>)',
           muted: 'rgb(var(--ink-muted) / <alpha-value>)',
+          wellink: 'rgb(var(--well-ink) / <alpha-value>)',
         },
       },
       fontFamily: {

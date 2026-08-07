@@ -46,24 +46,25 @@
 
 @layer base {
   :root {
-    --paper: 247 245 239;      /* page background, warm off-white */
-    --panel: 232 239 234;      /* tiles, hero band, row hover (light sage) */
-    --surface: 255 255 255;    /* cards, dropdowns, modal */
-    --ink: 47 47 47;           /* body text */
-    --ink-muted: 110 108 100;  /* captions, labels (reserved for retheme) */
-    --line: 214 220 215;       /* hairlines, dividers */
-    --line-strong: 214 220 215;/* input borders, thead rule (reserved) */
-    --green: 44 110 73;        /* headings, links */
-    --green-hi: 31 76 51;      /* green hover */
-    --rust: 164 74 47;         /* accent */
-    --rust-hi: 122 52 34;      /* accent hover */
-    --well: 27 48 65;          /* footer */
+    --paper: 247 245 239;      /* page canvas, warm off-white  #F7F5EF */
+    --panel: 232 239 234;      /* tiles, hero band, row hover  #E8EFEA */
+    --surface: 252 251 246;    /* cards, dropdowns, modal      #FCFBF6 */
+    --ink: 43 42 38;           /* text                         #2B2A26 */
+    --ink-muted: 110 108 100;  /* captions, labels, idle nav   #6E6C64 */
+    --line: 220 216 204;       /* hairlines                    #DCD8CC */
+    --line-strong: 201 196 182;/* input borders, thead rule    #C9C4B6 */
+    --green: 44 110 73;        /* links, positive data         #2C6E49 */
+    --green-hi: 31 76 51;      /* green hover                  #1F4C33 */
+    --rust: 164 74 47;         /* accents, active, focus ring  #A44A2F */
+    --rust-hi: 122 52 34;      /* rust hover                   #7A3422 */
+    --well: 34 38 31;          /* footer, dark in both themes  #22261F */
+    --well-ink: 247 245 239;   /* text on the well             #F7F5EF */
 
     --badge-up-bg: 220 235 225;   --badge-up-ink: 31 76 51;
     --badge-down-bg: 243 224 218; --badge-down-ink: 122 52 34;
     --badge-new-bg: 232 239 234;  --badge-new-ink: 44 110 73;
-    --badge-flat-bg: 239 239 236; --badge-flat-ink: 107 107 107;
-    --badge-prov-bg: 251 239 214; --badge-prov-ink: 122 90 17;
+    --badge-flat-bg: 237 236 230; --badge-flat-ink: 107 103 94;
+    --badge-prov-bg: 248 239 216; --badge-prov-ink: 119 89 18;
   }
 
   body {
@@ -89,6 +90,33 @@
 
   h3 {
     font-weight: 550;
+  }
+
+  /* One focus language everywhere; only keyboard focus draws it. */
+  :focus-visible {
+    outline: 2px solid rgb(var(--rust));
+    outline-offset: 2px;
+  }
+
+  a,
+  button,
+  input,
+  select {
+    transition: color 180ms, background-color 180ms, border-color 180ms,
+      text-decoration-thickness 180ms;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    ::before,
+    ::after {
+      transition-duration: 0.01ms !important;
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+    }
   }
 }
 
@@ -116,10 +144,10 @@
   font-weight: 560;
   font-size: 1.3rem;
   line-height: 1.2;
-  color: rgb(var(--green));
-  border-bottom: 2px solid rgb(var(--rust));
-  display: inline-block;
-  padding-bottom: 0.35rem;
+  color: rgb(var(--ink));
+  border-bottom: 1px solid rgb(var(--line));
+  display: block;
+  padding-bottom: 0.5rem;
   margin-bottom: 0.9rem;
 }
 
@@ -137,7 +165,7 @@
   font-variant-numeric: lining-nums tabular-nums;
   font-size: 2.1rem;
   line-height: 1;
-  color: rgb(var(--green));
+  color: rgb(var(--ink));
 }
 
 .tile-label {
@@ -237,11 +265,13 @@
 .lnk {
   color: rgb(var(--green));
   text-decoration: underline;
+  text-decoration-thickness: 1px;
   text-underline-offset: 2px;
 }
 
 .lnk:hover {
   color: rgb(var(--rust));
+  text-decoration-thickness: 2px;
 }
 
 /* Rule documents --------------------------------------------------------- */
@@ -250,7 +280,7 @@
   font-family: 'Fraunces', Georgia, serif;
   font-weight: 550;
   font-size: 1.05rem;
-  color: rgb(var(--green));
+  color: rgb(var(--ink));
   margin: 1.1rem 0 0.3rem;
 }
 
@@ -300,7 +330,7 @@ ol.rb-l { list-style: decimal; }
   position: fixed;
   inset: 0;
   z-index: 50;
-  background: rgba(31, 31, 31, 0.65);
+  background: rgb(20 18 16 / 0.6);
   display: flex;
   align-items: flex-start;
   justify-content: center;
@@ -309,7 +339,7 @@ ol.rb-l { list-style: decimal; }
 }
 
 .modal-panel {
-  background: #F8F4EB;
+  background: rgb(var(--surface));
   border: 1px solid rgb(var(--line));
   width: 100%;
   max-width: 30rem;
@@ -334,7 +364,62 @@ ol.rb-l { list-style: decimal; }
   color: rgb(var(--rust));
 }
 
+/* Chrome ------------------------------------------------------------------ */
+
+/* Hidden until keyboard focus, then a small chip pinned top-left. */
+.skip-link {
+  position: fixed;
+  left: 0.75rem;
+  top: 0.75rem;
+  z-index: 100;
+  background: rgb(var(--surface));
+  color: rgb(var(--ink));
+  border: 1px solid rgb(var(--line-strong));
+  padding: 0.55rem 0.9rem;
+  font-family: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  transform: translateY(-200%);
+}
+
+.skip-link:focus {
+  transform: none;
+}
+
+/* Single-line horizontal scroll (mobile nav), scrollbar hidden. */
+.nav-scroll {
+  scrollbar-width: none;
+}
+
+.nav-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+/* Scroll affordance for horizontal overflow: paper-toned covers ride the
+   content (background-attachment: local) and reveal the fixed ink fades
+   only on the side that still has more to show. No JavaScript. */
+.edge-fade {
+  --edge: var(--paper);
+  background:
+    linear-gradient(90deg, rgb(var(--edge)) 40%, rgb(var(--edge) / 0)) left/48px 100%,
+    linear-gradient(270deg, rgb(var(--edge)) 40%, rgb(var(--edge) / 0)) right/48px 100%,
+    linear-gradient(90deg, rgb(var(--ink) / 0.10), rgb(var(--ink) / 0)) left/16px 100%,
+    linear-gradient(270deg, rgb(var(--ink) / 0.10), rgb(var(--ink) / 0)) right/16px 100%;
+  background-repeat: no-repeat;
+  background-attachment: local, local, scroll, scroll;
+}
+
 @media print {
+  :root {
+    --paper: 255 255 255;
+    --surface: 255 255 255;
+    --panel: 255 255 255;
+    --ink: 0 0 0;
+    --ink-muted: 85 85 85;
+    --line: 187 187 187;
+    --line-strong: 153 153 153;
+  }
   #site-header, #site-footer, .no-print { display: none !important; }
   .card { border: 1px solid #999; }
 }
