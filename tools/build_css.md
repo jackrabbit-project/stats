@@ -31,6 +31,17 @@ change.
 rebuild is required** — otherwise the class silently does nothing in
 production.
 
+## Cache busting
+
+Pages reference the stylesheet and scripts with a version query
+(`css/app.css?v=YYYYMMDD`). The host serves HTML with
+`max-age=0, must-revalidate` but caches JS/CSS for four hours, so
+without the query a returning visitor can get new HTML with a stale
+script — on this site that breaks JS-rendered pages outright. **When a
+change makes HTML and JS/CSS depend on each other (new function called
+from inline scripts, renamed classes), bump the `?v=` date in every
+page** so fresh HTML always pulls matching assets.
+
 ## Sanity checks after a rebuild
 
 - `css/app.css` still contains `.hidden{` and `.sr-only{` — four JS files
