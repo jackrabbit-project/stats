@@ -7816,9 +7816,10 @@
           "rank": 8,
           "call_name": "MA Dragoon",
           "registered_name": "Surrano Archie Provisional TCP",
-          "core_name": "Surrano Archie Provisional",
+          "core_name": "Surrano Archie",
           "titles_prefix": [],
           "titles_suffix": [
+            "Provisional",
             "TCP"
           ],
           "owner_raw": "D.Hayman",
@@ -7833,7 +7834,7 @@
           "bob": 6,
           "bif": 0,
           "provisional": false,
-          "id": "surrano-archie-provisional--singles"
+          "id": "surrano-archie--singles"
         },
         {
           "rank": 9,

@@ -64,6 +64,11 @@ SUFFIX_TITLES = {
     # Versatility / breed-club / miscellaneous
     "cgc", "cgca", "cgcu", "cgu", "ssr", "str", "vc", "vcx", "rd", "hof",
     "vhma", "vhmp", "fits", "fitb", "fitg", "fitl",
+    # Status annotations ASFA writes into the name itself ("Surrano Archie
+    # Provisional TCP" on a standings row). Not titles, but they must strip
+    # like titles or the same hound gets a different core name on pages that
+    # spell it plainly.
+    "provisional",
 }
 
 # Titles are written in caps; registered names are written in title case. A

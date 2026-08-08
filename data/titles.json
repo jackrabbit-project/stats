@@ -39,7 +39,7 @@
       "Italian Greyhound": 2,
       "Pharaoh Hound": 1
     },
-    "matched_to_profiles": 48
+    "matched_to_profiles": 49
   },
   "titles": [
     {
@@ -184,7 +184,7 @@
       "date": "2026-04-04",
       "owners_raw": "Devorah Hayman",
       "program": "singles",
-      "dog_id": null
+      "dog_id": "surrano-archie--singles"
     },
     {
       "section": "Whippet",
