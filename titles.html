@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#F7F5EF">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#1B1917">
+  <title>New ASFA titles — Lure Coursing Stats</title>
+  <meta name="description" content="Every hound with a new ASFA lure coursing title this season — Field Champions, Lure Courser of Merit and Coursing Proficiency titles, with dates and owners. Unofficial fan site.">
+  <link rel="canonical" href="https://stats.gazehound.io/titles.html">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Lure Coursing Stats">
+  <meta property="og:title" content="New ASFA titles — Lure Coursing Stats">
+  <meta property="og:description" content="Every hound with a new ASFA lure coursing title this season — Field Champions, Lure Courser of Merit and Coursing Proficiency titles, with dates and owners. Unofficial fan site.">
+  <meta property="og:url" content="https://stats.gazehound.io/titles.html">
+  <meta property="og:image" content="https://stats.gazehound.io/assets/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="preload" href="assets/fonts/fraunces-latin-var.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/plex-mono-400.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="css/app.css?v=20260808">
+  <link rel="icon" href="assets/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
+</head>
+<body class="min-h-screen flex flex-col">
+  <header id="site-header"></header>
+  <main id="main" class="flex-1 max-w-5xl mx-auto w-full px-4 py-6 space-y-6"></main>
+  <footer id="site-footer" class="bg-asfa-navy text-white py-8"></footer>
+
+  <script src="js/app.js?v=20260808"></script>
+  <script>
+    page('titles.html', (season) => {
+      const main = document.getElementById('main');
+
+      // The titles feed is separate from the standings, and a problem with it
+      // must not take the chrome down with it.
+      fetch('data/titles.json')
+        .then((response) => {
+          if (!response.ok) throw new Error(`${response.status} loading data/titles.json`);
+          return response.json();
+        })
+        .then(render)
+        .catch((error) => {
+          console.error(error);
+          showFailure(
+            'Titles unavailable',
+            `Could not load data/titles.json: ${error.message}`,
+            'The rest of the site is unaffected. ASFA’s own title listing is at '
+            + '<a href="https://www.asfa.org/titles/index.htm" class="lnk" target="_blank" rel="noopener noreferrer">asfa.org/titles</a>.'
+          );
+        });
+
+      function render(feed) {
+        const programs = feed.stats.by_program;
+        const listed = feed.titles
+          .filter((row) => row.program !== 'lci')
+          .sort((a, b) => b.date.localeCompare(a.date)
+            || a.section.localeCompare(b.section)
+            || a.call_name.localeCompare(b.call_name));
+
+        const hound = (row) => row.dog_id
+          ? `<a href="${dogUrl(row.dog_id)}" class="lnk font-semibold">${esc(row.call_name)}</a>`
+          : `<span class="font-semibold">${esc(row.call_name)}</span>`;
+
+        main.innerHTML = `
+          <div>
+            <h1 class="font-display text-3xl text-asfa-text">New ASFA titles</h1>
+            <p class="text-sm text-asfa-text/70 mt-1">
+              Every hound that finished an ASFA title in ${feed.season}, as posted on
+              <a href="${esc(feed.source_url)}" class="lnk" target="_blank" rel="noopener noreferrer">ASFA's title listing</a>
+              through ${formatDate(feed.as_of)}.
+            </p>
+          </div>
+
+          <section class="grid grid-cols-2 md:grid-cols-4 gap-3">
+            <div class="tile"><div class="tile-value">${feed.stats.total}</div><div class="tile-label">titles awarded</div></div>
+            <div class="tile"><div class="tile-value">${programs.breed || 0}</div><div class="tile-label">breed program</div></div>
+            <div class="tile"><div class="tile-value">${programs.singles || 0}</div><div class="tile-label">Singles program</div></div>
+            <div class="tile"><div class="tile-value">${programs.lci || 0}</div><div class="tile-label">LCI program</div></div>
+          </section>
+
+          <section class="card">
+            <h2 class="card-title">Breed and Singles titles</h2>
+            <div class="tbl-wrap"><table class="tbl">
+              <thead><tr>
+                <th scope="col">Date</th><th scope="col">Title</th><th scope="col">Hound</th>
+                <th scope="col">Registered name</th><th scope="col">Breed</th><th scope="col">Owner</th>
+              </tr></thead>
+              <tbody>
+                ${listed.map((row) => `
+                  <tr>
+                    <td class="num whitespace-nowrap">${formatDate(row.date)}</td>
+                    <td><span class="badge badge-new">${esc(row.title_abbr)}</span></td>
+                    <td>${hound(row)}</td>
+                    <td class="text-asfa-text/80">${esc(row.registered_name)}</td>
+                    <td>${esc(row.section)}</td>
+                    <td class="text-asfa-text/80">${esc(row.owners_raw)}</td>
+                  </tr>`).join('')}
+              </tbody>
+            </table></div>
+            <p class="text-xs text-asfa-text/65 mt-3">
+              The Lure Chasing Instinct program's ${programs.lci || 0} titles this season are counted
+              in the totals above but listed with their own program —
+              <a href="lci.html" class="lnk">LCI standings are here</a>.
+              A hound's name links to its profile where it also appears in the Top 20 standings;
+              titles go to plenty of hounds outside the Top 20, so many rows stand alone.
+            </p>
+            <p class="text-xs text-asfa-text/55 mt-2">
+              Titles are ASFA's determinations, reproduced as posted. Wherever this page and
+              ASFA's listing disagree, ASFA's governs.
+            </p>
+          </section>`;
+      }
+    });
+  </script>
+</body>
+</html>

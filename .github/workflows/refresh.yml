@@ -37,6 +37,7 @@ jobs:
           python tools/trials.py
           python tools/events.py
           python tools/build.py
+          python tools/titles.py
           python tools/check.py
 
       - name: Commit if the standings changed

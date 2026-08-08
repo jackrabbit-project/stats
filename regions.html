@@ -19,7 +19,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <link rel="preload" href="assets/fonts/fraunces-latin-var.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/plex-mono-400.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="css/app.css?v=20260807b">
+  <link rel="stylesheet" href="css/app.css?v=20260808">
   <link rel="icon" href="assets/favicon.ico" sizes="any">
   <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png">
   <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
@@ -29,7 +29,7 @@
   <main id="main" class="flex-1 max-w-6xl mx-auto w-full px-4 py-6 space-y-6"></main>
   <footer id="site-footer" class="bg-asfa-navy text-white py-8"></footer>
 
-  <script src="js/app.js?v=20260807b"></script>
+  <script src="js/app.js?v=20260808"></script>
   <script>
     page('regions.html', (season) => {
       const main = document.getElementById('main');
@@ -95,6 +95,8 @@
 
       loadTrials().then((trials) => {
         const byRegion = new Map(trials.regions.map((r) => [r.region, r]));
+        const bp = trials.stats.by_program;
+        const share = (n) => `${(100 * n / trials.stats.entries).toFixed(1)}%`;
         const rows = trials.by_region;
         const unassigned = rows.find((r) => r.region == null);
         const assigned = rows.filter((r) => r.region != null);
@@ -145,6 +147,42 @@
               Regions 2 and 10 split California and Nevada by county rather than by state, which is
               why region comes from ASFA's club listing and is never guessed from a venue's address.
               Region definitions: ${esc(trials.region_source)}.
+            </p>
+          </div>
+
+          <div class="card mt-6">
+            <h2 class="card-title">Entries by program</h2>
+            <p class="text-xs text-asfa-text/60 mb-3">
+              What those ${trials.stats.entries.toLocaleString()} entries ran: a regular breed
+              stake, the Singles stake, or a Lure Chasing Instinct division.
+            </p>
+            <div class="tbl-wrap"><table class="tbl">
+              <thead><tr>
+                <th scope="col">Program</th>
+                <th scope="col" class="num">Entries</th>
+                <th scope="col" class="num">Share</th>
+              </tr></thead>
+              <tbody>
+                ${[['Breed stakes', bp.breed], ['LCI divisions', bp.lci],
+                   ['Singles stake', bp.singles]].map(([label, n]) => `
+                  <tr>
+                    <td class="font-semibold">${label}</td>
+                    <td class="num font-semibold text-asfa-accent">${n.toLocaleString()}</td>
+                    <td class="num">${share(n)}</td>
+                  </tr>`).join('')}
+                ${bp.absent ? `
+                  <tr>
+                    <td class="text-asfa-text/70">Entered, never ran</td>
+                    <td class="num">${bp.absent}</td>
+                    <td class="num">${share(bp.absent)}</td>
+                  </tr>` : ''}
+              </tbody>
+            </table></div>
+            <p class="text-xs text-asfa-text/55 mt-3">
+              ASFA's per-trial entry figure counts every program together, so this split is
+              re-derived from the flight sizes in each trial's posted results. A flight printed
+              "(0)" is a hound entered that never ran; its program can't be known from the
+              published page, so it is shown separately rather than guessed into one.
             </p>
           </div>
 

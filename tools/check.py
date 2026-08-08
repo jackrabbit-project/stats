@@ -334,6 +334,7 @@ def main() -> int:
 
     check_trials(check)
     check_events(check)
+    check_titles(check)
     return check.report()
 
 
@@ -384,6 +385,59 @@ def check_trials(check: Checker) -> None:
                 f"{bucket} {lookup}: {entry['entries']} != re-sum "
                 f"{totals.get(lookup)}",
             )
+
+    # Program split: each trial's flights plus its absentees equal its Entry
+    # figure, and the season totals re-derive by a different route — splitting
+    # the flat page at its Entry: markers instead of the detail anchors
+    # trials.py walks.
+    derived = {"breed": 0, "singles": 0, "lci": 0}
+    token_re = re.compile(
+        r"(LCI (?:LARGE|SMALL|SIGHTHOUND MIX))"
+        r"|([A-Z][A-Z &().'-]{2,40}?)\s+Judges?:"
+        r"|Flight [A-Z]\((\d+)")
+    for month in trials["months"]:
+        page = raw_dir / f"{month}.html"
+        if not page.exists():
+            continue
+        flat = page.read_bytes().decode("cp1252", errors="replace")
+        flat = re.sub(r"<[^>]+>", " ", flat).replace("&nbsp;", " ")
+        flat = re.sub(r"\s+", " ", flat)
+        parts = re.split(r"Entry:\s*(\d+)", flat)
+        for idx in range(1, len(parts) - 1, 2):
+            block = parts[idx + 1]
+            if "Judge" not in block:
+                continue
+            program = "breed"
+            for token in token_re.finditer(block):
+                lci, header, flight = token.groups()
+                if lci:
+                    program = "lci"
+                elif header:
+                    program = ("singles" if "SINGLE" in header
+                               else "lci" if "LCI" in header else "breed")
+                elif flight:
+                    derived[program] += int(flight)
+    for key in ("breed", "singles", "lci"):
+        check.expect(
+            trials["stats"]["by_program"][key] == derived[key],
+            f"by_program.{key}: trials.json says "
+            f"{trials['stats']['by_program'][key]}, Entry-split re-derivation "
+            f"says {derived[key]}",
+        )
+    for row in rows:
+        split = row["by_program"]
+        check.expect(
+            all(v >= 0 for v in split.values())
+            and sum(split.values()) == row["entries"],
+            f"{row['date']} {row['club_raw']}: program split {split} does not "
+            f"reconcile with Entry {row['entries']}",
+        )
+    for key in ("breed", "singles", "lci", "absent"):
+        check.expect(
+            trials["stats"]["by_program"][key]
+            == sum(r["by_program"][key] for r in rows),
+            f"stats.by_program.{key} does not re-sum from the trial rows",
+        )
 
     # Every trial is either assigned a region or openly unassigned.
     for row in rows:
@@ -528,6 +582,109 @@ def check_events(check: Checker) -> None:
         check.expect(
             not found,
             f"data/events.json contains a {label}: {found[:2]}",
+        )
+
+
+def check_titles(check: Checker) -> None:
+    """Verify data/titles.json against the archived title listing."""
+    path = ROOT / "data" / "titles.json"
+    if not path.exists():
+        check.expect(False, "data/titles.json missing - run tools/titles.py")
+        return
+
+    feed = json.loads(path.read_text(encoding="utf-8"))
+    rows = feed["titles"]
+    season = feed["season"]
+
+    raw_path = ROOT / "data" / "titles" / "raw" / f"{feed['as_of']}.html"
+    if not raw_path.exists():
+        check.expect(False, f"archived title page missing: {raw_path.name}")
+        return
+
+    # Crude count straight out of the raw page, independent of titles.py: a
+    # titled hound cannot have been *born* this season (hounds enter at a
+    # year old), so every mention of the season year is an earned date -
+    # except the navigation's "{year} ASFA II" link and the page's own
+    # "through {date}, {year}" coverage line.
+    text = raw_path.read_bytes().decode("cp1252", errors="replace")
+    text = re.sub(r"<script.*?</script>|<style.*?</style>", " ", text,
+                  flags=re.S | re.I)
+    text = re.sub(r"<[^>]+>", " ", text).replace("&nbsp;", " ")
+    text = re.sub(r"\s+", " ", text)
+    counted = len(re.findall(rf"\b{season}\b", text))
+    counted += len(re.findall(rf"\b\d{{1,2}}-[A-Za-z]{{3,9}}-{season % 100}\b", text))
+    counted -= len(re.findall(rf"{season}\s*ASFA\s*II\b", text))
+    counted -= len(re.findall(
+        rf"through\s+[A-Za-z]{{3,9}}\.?\s*\d{{1,2}},?\s+{season}", text))
+    check.expect(
+        counted == len(rows),
+        f"title count: raw page has {counted} season dates, titles.json has "
+        f"{len(rows)}",
+    )
+
+    # Stats re-sum from the rows.
+    from collections import Counter as _Counter
+    stats = feed["stats"]
+    check.expect(stats["total"] == len(rows), "titles stats.total mismatch")
+    for bucket, key in (("by_program", "program"), ("by_title", "title_abbr"),
+                        ("by_section", "section")):
+        check.expect(
+            stats[bucket] == dict(_Counter(r[key] for r in rows)),
+            f"titles stats.{bucket} does not re-sum from the rows",
+        )
+    check.expect(
+        stats["matched_to_profiles"] == sum(1 for r in rows if r["dog_id"]),
+        "titles stats.matched_to_profiles mismatch",
+    )
+
+    # Program, section and title must tell one story per row, and dates must
+    # sit inside the season and the page's stated coverage.
+    lci_abbrs = {"LCI", "LCC", "VLCC", "LCA", "LCE"}
+    for row in rows:
+        tag = f"{row['call_name']} ({row['section']})"
+        base = row["title_abbr"].rstrip("0123456789")
+        expected_program = ("lci" if base in lci_abbrs
+                            else "singles" if base in ("TCP", "CPX")
+                            else "breed")
+        check.expect(row["program"] == expected_program,
+                     f"{tag}: program {row['program']} != {expected_program}")
+        if expected_program == "lci":
+            check.expect(row["section"].startswith("LCI"),
+                         f"{tag}: LCI title outside an LCI section")
+        elif expected_program == "singles":
+            check.expect(row["section"] == "Singles",
+                         f"{tag}: Singles title outside the Singles section")
+        else:
+            check.expect(
+                not row["section"].startswith("LCI")
+                and row["section"] != "Singles",
+                f"{tag}: breed title inside {row['section']}")
+        check.expect(
+            row["date"].startswith(f"{season}-") and row["date"] <= feed["as_of"],
+            f"{tag}: date {row['date']} outside season/coverage")
+        check.expect(bool(row["registered_name"]), f"{tag}: empty registered name")
+
+    # No record parsed twice, and every profile link points at a real hound.
+    keys = [(r["section"], r["title_abbr"], r["registered_raw"]) for r in rows]
+    check.expect(len(keys) == len(set(keys)), "duplicate title rows parsed")
+    season_ids = {
+        d["id"] for d in json.loads(SEASON.read_text(encoding="utf-8"))["dogs"]
+    }
+    for row in rows:
+        if row["dog_id"] is not None:
+            check.expect(row["dog_id"] in season_ids,
+                         f"{row['call_name']}: dog_id {row['dog_id']} not in season.json")
+
+    # The privacy rule extends to the titles feed.
+    body = path.read_text(encoding="utf-8")
+    for label, pattern in (
+        ("email address", r"[\w.+-]+@[\w-]+\.[\w.]+"),
+        ("phone number", r"\(\d{3}\)\s*\d{3}-\d{4}"),
+    ):
+        found = re.findall(pattern, body, re.IGNORECASE)
+        check.expect(
+            not found,
+            f"data/titles.json contains a {label}: {found[:2]}",
         )
 
 

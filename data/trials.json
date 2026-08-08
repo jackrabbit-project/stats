@@ -1,7 +1,7 @@
 {
   "season": 2026,
   "as_of": "2026-07-19",
-  "generated": "2026-08-06",
+  "generated": "2026-08-08",
   "source_url": "https://www.asfa.org/trial/index0111.html",
   "months": [
     "2026-01",
@@ -18,7 +18,13 @@
     "entries": 2659,
     "clubs": 34,
     "unassigned_trials": 0,
-    "unassigned_entries": 0
+    "unassigned_entries": 0,
+    "by_program": {
+      "breed": 1740,
+      "singles": 446,
+      "lci": 472,
+      "absent": 1
+    }
   },
   "unmatched_clubs": [],
   "regions": [
@@ -559,6 +565,12 @@
       "state": "AZ",
       "entries": 2,
       "note": "Silken Windhound Specialty",
+      "by_program": {
+        "breed": 0,
+        "singles": 2,
+        "lci": 0,
+        "absent": 0
+      },
       "club": "Desert Fun Bunch",
       "club_slug": "desert-fun-bunch",
       "region": 10,
@@ -571,6 +583,12 @@
       "state": "CA",
       "entries": 10,
       "note": "Silken Windhound Specialty with LCI",
+      "by_program": {
+        "breed": 7,
+        "singles": 0,
+        "lci": 3,
+        "absent": 0
+      },
       "club": "Orange Coast Rhodesian Ridgeback Club",
       "club_slug": "orange-coast-rhodesian-ridgeback-club",
       "region": 10,
@@ -583,6 +601,12 @@
       "state": "CA",
       "entries": 14,
       "note": "Silken Windhound Specialty with LCI",
+      "by_program": {
+        "breed": 12,
+        "singles": 0,
+        "lci": 2,
+        "absent": 0
+      },
       "club": "Orange Coast Rhodesian Ridgeback Club",
       "club_slug": "orange-coast-rhodesian-ridgeback-club",
       "region": 10,
@@ -595,6 +619,12 @@
       "state": "CO",
       "entries": 24,
       "note": "",
+      "by_program": {
+        "breed": 12,
+        "singles": 7,
+        "lci": 5,
+        "absent": 0
+      },
       "club": "Colorado Lure Coursing Association",
       "club_slug": "colorado-lure-coursing-association",
       "region": 3,
@@ -607,6 +637,12 @@
       "state": "AZ",
       "entries": 7,
       "note": "Silken Windhound Specialty",
+      "by_program": {
+        "breed": 0,
+        "singles": 7,
+        "lci": 0,
+        "absent": 0
+      },
       "club": "Desert Fun Bunch",
       "club_slug": "desert-fun-bunch",
       "region": 10,
@@ -619,6 +655,12 @@
       "state": "CO",
       "entries": 31,
       "note": "",
+      "by_program": {
+        "breed": 18,
+        "singles": 6,
+        "lci": 6,
+        "absent": 1
+      },
       "club": "Colorado Lure Coursing Association",
       "club_slug": "colorado-lure-coursing-association",
       "region": 3,
@@ -631,6 +673,12 @@
       "state": "AZ",
       "entries": 5,
       "note": "Silken Windhound Specialty",
+      "by_program": {
+        "breed": 0,
+        "singles": 5,
+        "lci": 0,
+        "absent": 0
+      },
       "club": "Desert Fun Bunch",
       "club_slug": "desert-fun-bunch",
       "region": 10,
@@ -643,6 +691,12 @@
       "state": "CA",
       "entries": 23,
       "note": "",
+      "by_program": {
+        "breed": 21,
+        "singles": 2,
+        "lci": 0,
+        "absent": 0
+      },
       "club": "Northern California Irish Wolfhound Club",
       "club_slug": "northern-california-irish-wolfhound-club",
       "region": 2,
@@ -655,6 +709,12 @@
       "state": "PA",
       "entries": 34,
       "note": "",
+      "by_program": {
+        "breed": 17,
+        "singles": 6,
+        "lci": 11,
+        "absent": 0
+      },
       "club": "Tortoise and Hare Lure Coursers",
       "club_slug": "tortoise-and-hare-lure-coursers",
       "region": 8,
@@ -667,6 +727,12 @@
       "state": "PA",
       "entries": 37,
       "note": "",
+      "by_program": {
+        "breed": 18,
+        "singles": 5,
+        "lci": 14,
+        "absent": 0
+      },
       "club": "Tortoise and Hare Lure Coursers",
       "club_slug": "tortoise-and-hare-lure-coursers",
       "region": 8,
@@ -679,6 +745,12 @@
       "state": "CO",
       "entries": 26,
       "note": "",
+      "by_program": {
+        "breed": 7,
+        "singles": 13,
+        "lci": 6,
+        "absent": 0
+      },
       "club": "Colorado Lure Coursing Association",
       "club_slug": "colorado-lure-coursing-association",
       "region": 3,
@@ -691,6 +763,12 @@
       "state": "GA",
       "entries": 25,
       "note": "",
+      "by_program": {
+        "breed": 19,
+        "singles": 5,
+        "lci": 1,
+        "absent": 0
+      },
       "club": "Lure Enthusiasts of Georgia Sighthounds",
       "club_slug": "lure-enthusiasts-of-georgia-sighthounds",
       "region": 7,
@@ -703,6 +781,12 @@
       "state": "CA",
       "entries": 8,
       "note": "Silken Windhound Specialty",
+      "by_program": {
+        "breed": 6,
+        "singles": 2,
+        "lci": 0,
+        "absent": 0
+      },
       "club": "Silken Windhounds of California",
       "club_slug": "silken-windhounds-of-california",
       "region": 2,
@@ -715,6 +799,12 @@
       "state": "IL",
       "entries": 51,
       "note": "",
+      "by_program": {
+        "breed": 42,
+        "singles": 6,
+        "lci": 3,
+        "absent": 0
+      },
       "club": "St. Louis Area Sighthounds",
       "club_slug": "st-louis-area-sighthounds",
       "region": 6,
@@ -727,6 +817,12 @@
       "state": "PA",
       "entries": 34,
       "note": "",
+      "by_program": {
+        "breed": 21,
+        "singles": 5,
+        "lci": 8,
+        "absent": 0
+      },
       "club": "Upper Chesapeake Bay Saluki Club",
       "club_slug": "upper-chesapeake-bay-saluki-club",
       "region": 8,
@@ -739,6 +835,12 @@
       "state": "GA",
       "entries": 25,
       "note": "",
+      "by_program": {
+        "breed": 20,
+        "singles": 2,
+        "lci": 3,
+        "absent": 0
+      },
       "club": "Lure Enthusiasts of Georgia Sighthounds",
       "club_slug": "lure-enthusiasts-of-georgia-sighthounds",
       "region": 7,
@@ -751,6 +853,12 @@
       "state": "CA",
       "entries": 7,
       "note": "Silken Windhound Specialty",
+      "by_program": {
+        "breed": 5,
+        "singles": 2,
+        "lci": 0,
+        "absent": 0
+      },
       "club": "Silken Windhounds of California",
       "club_slug": "silken-windhounds-of-california",
       "region": 2,
@@ -763,6 +871,12 @@
       "state": "IL",
       "entries": 51,
       "note": "",
+      "by_program": {
+        "breed": 40,
+        "singles": 8,
+        "lci": 3,
+        "absent": 0
+      },
       "club": "St. Louis Area Sighthounds",
       "club_slug": "st-louis-area-sighthounds",
       "region": 6,
@@ -775,6 +889,12 @@
       "state": "PA",
       "entries": 38,
       "note": "",
+      "by_program": {
+        "breed": 19,
+        "singles": 9,
+        "lci": 10,
+        "absent": 0
+      },
       "club": "Upper Chesapeake Bay Saluki Club",
       "club_slug": "upper-chesapeake-bay-saluki-club",
       "region": 8,
@@ -787,6 +907,12 @@
       "state": "TN",
       "entries": 27,
       "note": "",
+      "by_program": {
+        "breed": 24,
+        "singles": 3,
+        "lci": 0,
+        "absent": 0
+      },
       "club": "Gazehound Association of the Smoky Mountains",
       "club_slug": "gazehound-association-of-the-smoky-mountains",
       "region": 7,
@@ -799,6 +925,12 @@
       "state": "IA",
       "entries": 44,
       "note": "",
+      "by_program": {
+        "breed": 29,
+        "singles": 4,
+        "lci": 11,
+        "absent": 0
+      },
       "club": "Iowa Coursing Association",
       "club_slug": "iowa-coursing-association",
       "region": 5,
@@ -811,6 +943,12 @@
       "state": "NM",
       "entries": 28,
       "note": "",
+      "by_program": {
+        "breed": 13,
+        "singles": 6,
+        "lci": 9,
+        "absent": 0
+      },
       "club": "Lobo Lure Coursing Club",
       "club_slug": "lobo-lure-coursing-club",
       "region": 3,
@@ -823,6 +961,12 @@
       "state": "OH",
       "entries": 37,
       "note": "",
+      "by_program": {
+        "breed": 32,
+        "singles": 5,
+        "lci": 0,
+        "absent": 0
+      },
       "club": "Midwest Borzoi Club",
       "club_slug": "midwest-borzoi-club",
       "region": 6,
@@ -835,6 +979,12 @@
       "state": "VA",
       "entries": 29,
       "note": "",
+      "by_program": {
+        "breed": 21,
+        "singles": 7,
+        "lci": 1,
+        "absent": 0
+      },
       "club": "Sight Hound Organization of Tidewater",
       "club_slug": "sight-hound-organization-of-tidewater",
       "region": 8,
@@ -847,6 +997,12 @@
       "state": "TN",
       "entries": 17,
       "note": "",
+      "by_program": {
+        "breed": 14,
+        "singles": 3,
+        "lci": 0,
+        "absent": 0
+      },
       "club": "Gazehound Association of the Smoky Mountains",
       "club_slug": "gazehound-association-of-the-smoky-mountains",
       "region": 7,
@@ -859,6 +1015,12 @@
       "state": "NM",
       "entries": 25,
       "note": "",
+      "by_program": {
+        "breed": 12,
+        "singles": 4,
+        "lci": 9,
+        "absent": 0
+      },
       "club": "Lobo Lure Coursing Club",
       "club_slug": "lobo-lure-coursing-club",
       "region": 3,
@@ -871,6 +1033,12 @@
       "state": "OH",
       "entries": 40,
       "note": "",
+      "by_program": {
+        "breed": 36,
+        "singles": 4,
+        "lci": 0,
+        "absent": 0
+      },
       "club": "Midwest Borzoi Club",
       "club_slug": "midwest-borzoi-club",
       "region": 6,
@@ -883,6 +1051,12 @@
       "state": "VA",
       "entries": 22,
       "note": "",
+      "by_program": {
+        "breed": 16,
+        "singles": 6,
+        "lci": 0,
+        "absent": 0
+      },
       "club": "Sight Hound Organization of Tidewater",
       "club_slug": "sight-hound-organization-of-tidewater",
       "region": 8,
@@ -895,6 +1069,12 @@
       "state": "WA",
       "entries": 31,
       "note": "",
+      "by_program": {
+        "breed": 30,
+        "singles": 1,
+        "lci": 0,
+        "absent": 0
+      },
       "club": "American Whippet Club, Inc.",
       "club_slug": "american-whippet-club-inc",
       "region": 3,
@@ -907,6 +1087,12 @@
       "state": "CT",
       "entries": 47,
       "note": "",
+      "by_program": {
+        "breed": 25,
+        "singles": 8,
+        "lci": 14,
+        "absent": 0
+      },
       "club": "Gazehounds of New England",
       "club_slug": "gazehounds-of-new-england",
       "region": 9,
@@ -919,6 +1105,12 @@
       "state": "CT",
       "entries": 44,
       "note": "",
+      "by_program": {
+        "breed": 21,
+        "singles": 7,
+        "lci": 16,
+        "absent": 0
+      },
       "club": "Gazehounds of New England",
       "club_slug": "gazehounds-of-new-england",
       "region": 9,
@@ -931,6 +1123,12 @@
       "state": "CO",
       "entries": 33,
       "note": "",
+      "by_program": {
+        "breed": 22,
+        "singles": 6,
+        "lci": 5,
+        "absent": 0
+      },
       "club": "Colorado Lure Coursing Association",
       "club_slug": "colorado-lure-coursing-association",
       "region": 3,
@@ -943,6 +1141,12 @@
       "state": "GA",
       "entries": 24,
       "note": "",
+      "by_program": {
+        "breed": 19,
+        "singles": 4,
+        "lci": 1,
+        "absent": 0
+      },
       "club": "Lure Enthusiasts of Georgia Sighthounds",
       "club_slug": "lure-enthusiasts-of-georgia-sighthounds",
       "region": 7,
@@ -955,6 +1159,12 @@
       "state": "MN",
       "entries": 38,
       "note": "",
+      "by_program": {
+        "breed": 17,
+        "singles": 8,
+        "lci": 13,
+        "absent": 0
+      },
       "club": "Minnesota Coursing Association",
       "club_slug": "minnesota-coursing-association",
       "region": 5,
@@ -967,6 +1177,12 @@
       "state": "PA",
       "entries": 23,
       "note": "",
+      "by_program": {
+        "breed": 15,
+        "singles": 4,
+        "lci": 4,
+        "absent": 0
+      },
       "club": "Tri-State Sighthound Club",
       "club_slug": "tri-state-sighthound-club",
       "region": 8,
@@ -979,6 +1195,12 @@
       "state": "CO",
       "entries": 30,
       "note": "",
+      "by_program": {
+        "breed": 20,
+        "singles": 6,
+        "lci": 4,
+        "absent": 0
+      },
       "club": "Colorado Lure Coursing Association",
       "club_slug": "colorado-lure-coursing-association",
       "region": 3,
@@ -991,6 +1213,12 @@
       "state": "GA",
       "entries": 23,
       "note": "",
+      "by_program": {
+        "breed": 19,
+        "singles": 2,
+        "lci": 2,
+        "absent": 0
+      },
       "club": "Lure Enthusiasts of Georgia Sighthounds",
       "club_slug": "lure-enthusiasts-of-georgia-sighthounds",
       "region": 7,
@@ -1003,6 +1231,12 @@
       "state": "MN",
       "entries": 31,
       "note": "",
+      "by_program": {
+        "breed": 10,
+        "singles": 5,
+        "lci": 16,
+        "absent": 0
+      },
       "club": "Minnesota Coursing Association",
       "club_slug": "minnesota-coursing-association",
       "region": 5,
@@ -1015,6 +1249,12 @@
       "state": "PA",
       "entries": 24,
       "note": "",
+      "by_program": {
+        "breed": 18,
+        "singles": 3,
+        "lci": 3,
+        "absent": 0
+      },
       "club": "Tri-State Sighthound Club",
       "club_slug": "tri-state-sighthound-club",
       "region": 8,
@@ -1027,6 +1267,12 @@
       "state": "VA",
       "entries": 55,
       "note": "The CHAMP Cup Run",
+      "by_program": {
+        "breed": 46,
+        "singles": 6,
+        "lci": 3,
+        "absent": 0
+      },
       "club": "Coursing Hounds of the Mid-Potomac",
       "club_slug": "coursing-hounds-of-the-mid-potomac",
       "region": 8,
@@ -1039,6 +1285,12 @@
       "state": "IA",
       "entries": 38,
       "note": "Denny Reed Memorial Run",
+      "by_program": {
+        "breed": 28,
+        "singles": 6,
+        "lci": 4,
+        "absent": 0
+      },
       "club": "Iowa Coursing Association",
       "club_slug": "iowa-coursing-association",
       "region": 5,
@@ -1051,6 +1303,12 @@
       "state": "ID",
       "entries": 27,
       "note": "",
+      "by_program": {
+        "breed": 15,
+        "singles": 4,
+        "lci": 8,
+        "absent": 0
+      },
       "club": "Southern Idaho Sighthound Field Association",
       "club_slug": "southern-idaho-sighthound-field-association",
       "region": 1,
@@ -1063,6 +1321,12 @@
       "state": "VA",
       "entries": 46,
       "note": "",
+      "by_program": {
+        "breed": 38,
+        "singles": 6,
+        "lci": 2,
+        "absent": 0
+      },
       "club": "Coursing Hounds of the Mid-Potomac",
       "club_slug": "coursing-hounds-of-the-mid-potomac",
       "region": 8,
@@ -1075,6 +1339,12 @@
       "state": "IA",
       "entries": 45,
       "note": "Denny Reed Memorial Run",
+      "by_program": {
+        "breed": 29,
+        "singles": 7,
+        "lci": 9,
+        "absent": 0
+      },
       "club": "Iowa Coursing Association",
       "club_slug": "iowa-coursing-association",
       "region": 5,
@@ -1087,6 +1357,12 @@
       "state": "ID",
       "entries": 28,
       "note": "",
+      "by_program": {
+        "breed": 16,
+        "singles": 4,
+        "lci": 8,
+        "absent": 0
+      },
       "club": "Southern Idaho Sighthound Field Association",
       "club_slug": "southern-idaho-sighthound-field-association",
       "region": 1,
@@ -1099,6 +1375,12 @@
       "state": "NE",
       "entries": 22,
       "note": "Borzoi National Specialty",
+      "by_program": {
+        "breed": 21,
+        "singles": 1,
+        "lci": 0,
+        "absent": 0
+      },
       "club": "Borzoi Club of America",
       "club_slug": "borzoi-club-of-america",
       "region": 4,
@@ -1111,6 +1393,12 @@
       "state": "MN",
       "entries": 30,
       "note": "",
+      "by_program": {
+        "breed": 16,
+        "singles": 4,
+        "lci": 10,
+        "absent": 0
+      },
       "club": "Greater Twin Cities Whippet Club",
       "club_slug": "greater-twin-cities-whippet-club",
       "region": 5,
@@ -1123,6 +1411,12 @@
       "state": "MI",
       "entries": 79,
       "note": "",
+      "by_program": {
+        "breed": 60,
+        "singles": 17,
+        "lci": 2,
+        "absent": 0
+      },
       "club": "Michigan Gazehound Association",
       "club_slug": "michigan-gazehound-association",
       "region": 6,
@@ -1135,6 +1429,12 @@
       "state": "OK",
       "entries": 21,
       "note": "",
+      "by_program": {
+        "breed": 12,
+        "singles": 2,
+        "lci": 7,
+        "absent": 0
+      },
       "club": "Oklahoma Racing and Coursing Association",
       "club_slug": "oklahoma-racing-and-coursing-association",
       "region": 4,
@@ -1147,6 +1447,12 @@
       "state": "MN",
       "entries": 35,
       "note": "",
+      "by_program": {
+        "breed": 21,
+        "singles": 3,
+        "lci": 11,
+        "absent": 0
+      },
       "club": "Greater Twin Cities Whippet Club",
       "club_slug": "greater-twin-cities-whippet-club",
       "region": 5,
@@ -1159,6 +1465,12 @@
       "state": "MI",
       "entries": 68,
       "note": "",
+      "by_program": {
+        "breed": 54,
+        "singles": 12,
+        "lci": 2,
+        "absent": 0
+      },
       "club": "Michigan Gazehound Association",
       "club_slug": "michigan-gazehound-association",
       "region": 6,
@@ -1171,6 +1483,12 @@
       "state": "OK",
       "entries": 16,
       "note": "",
+      "by_program": {
+        "breed": 8,
+        "singles": 2,
+        "lci": 6,
+        "absent": 0
+      },
       "club": "Oklahoma Racing and Coursing Association",
       "club_slug": "oklahoma-racing-and-coursing-association",
       "region": 4,
@@ -1183,6 +1501,12 @@
       "state": "PA",
       "entries": 12,
       "note": "Scottish Deerhoumd Sanctional Specialty",
+      "by_program": {
+        "breed": 9,
+        "singles": 3,
+        "lci": 0,
+        "absent": 0
+      },
       "club": "Scottish Deerhound Club of America",
       "club_slug": "scottish-deerhound-club-of-america",
       "region": 5,
@@ -1195,6 +1519,12 @@
       "state": "CO",
       "entries": 17,
       "note": "",
+      "by_program": {
+        "breed": 11,
+        "singles": 3,
+        "lci": 3,
+        "absent": 0
+      },
       "club": "Colorado Lure Coursing Association",
       "club_slug": "colorado-lure-coursing-association",
       "region": 3,
@@ -1207,6 +1537,12 @@
       "state": "WI",
       "entries": 36,
       "note": "Ralph Eyles Memorial Trophy",
+      "by_program": {
+        "breed": 22,
+        "singles": 10,
+        "lci": 4,
+        "absent": 0
+      },
       "club": "Midwest Coursing Club",
       "club_slug": "midwest-coursing-club",
       "region": 6,
@@ -1219,6 +1555,12 @@
       "state": "MN",
       "entries": 36,
       "note": "",
+      "by_program": {
+        "breed": 23,
+        "singles": 3,
+        "lci": 10,
+        "absent": 0
+      },
       "club": "Minnesota Coursing Association",
       "club_slug": "minnesota-coursing-association",
       "region": 5,
@@ -1231,6 +1573,12 @@
       "state": "CO",
       "entries": 21,
       "note": "",
+      "by_program": {
+        "breed": 10,
+        "singles": 7,
+        "lci": 4,
+        "absent": 0
+      },
       "club": "Colorado Lure Coursing Association",
       "club_slug": "colorado-lure-coursing-association",
       "region": 3,
@@ -1243,6 +1591,12 @@
       "state": "WI",
       "entries": 28,
       "note": "",
+      "by_program": {
+        "breed": 17,
+        "singles": 8,
+        "lci": 3,
+        "absent": 0
+      },
       "club": "Midwest Coursing Club",
       "club_slug": "midwest-coursing-club",
       "region": 6,
@@ -1255,6 +1609,12 @@
       "state": "MN",
       "entries": 24,
       "note": "",
+      "by_program": {
+        "breed": 15,
+        "singles": 0,
+        "lci": 9,
+        "absent": 0
+      },
       "club": "Minnesota Coursing Association",
       "club_slug": "minnesota-coursing-association",
       "region": 5,
@@ -1267,6 +1627,12 @@
       "state": "MO",
       "entries": 9,
       "note": "Irish Wolfhound National Specialty",
+      "by_program": {
+        "breed": 9,
+        "singles": 0,
+        "lci": 0,
+        "absent": 0
+      },
       "club": "Irish Wolfhound Club of America",
       "club_slug": "irish-wolfhound-club-of-america",
       "region": 6,
@@ -1279,6 +1645,12 @@
       "state": "IA",
       "entries": 39,
       "note": "Beezer Bash",
+      "by_program": {
+        "breed": 32,
+        "singles": 7,
+        "lci": 0,
+        "absent": 0
+      },
       "club": "Ibizan Hound Club of the United States",
       "club_slug": "ibizan-hound-club-of-the-united-states",
       "region": 5,
@@ -1291,6 +1663,12 @@
       "state": "CA",
       "entries": 33,
       "note": "",
+      "by_program": {
+        "breed": 28,
+        "singles": 2,
+        "lci": 3,
+        "absent": 0
+      },
       "club": "Central Coast Association of Sighthounds",
       "club_slug": "central-coast-association-of-sighthounds",
       "region": 2,
@@ -1303,6 +1681,12 @@
       "state": "IA",
       "entries": 12,
       "note": "Beezer Bash - Ibizan Hound Specialty",
+      "by_program": {
+        "breed": 12,
+        "singles": 0,
+        "lci": 0,
+        "absent": 0
+      },
       "club": "Ibizan Hound Club of the United States",
       "club_slug": "ibizan-hound-club-of-the-united-states",
       "region": 5,
@@ -1315,6 +1699,12 @@
       "state": "ON",
       "entries": 49,
       "note": "",
+      "by_program": {
+        "breed": 24,
+        "singles": 6,
+        "lci": 19,
+        "absent": 0
+      },
       "club": "Northern Azawakh Association",
       "club_slug": "northern-azawakh-association",
       "region": 9,
@@ -1327,6 +1717,12 @@
       "state": "ON",
       "entries": 57,
       "note": "",
+      "by_program": {
+        "breed": 25,
+        "singles": 14,
+        "lci": 18,
+        "absent": 0
+      },
       "club": "Northern Azawakh Association",
       "club_slug": "northern-azawakh-association",
       "region": 9,
@@ -1339,6 +1735,12 @@
       "state": "WA",
       "entries": 44,
       "note": "",
+      "by_program": {
+        "breed": 36,
+        "singles": 6,
+        "lci": 2,
+        "absent": 0
+      },
       "club": "Western Washington Whippet Association",
       "club_slug": "western-washington-whippet-association",
       "region": 1,
@@ -1351,6 +1753,12 @@
       "state": "CA",
       "entries": 27,
       "note": "Silken Windhound Specialty with LCI Stakes",
+      "by_program": {
+        "breed": 10,
+        "singles": 12,
+        "lci": 5,
+        "absent": 0
+      },
       "club": "California Coursing Association",
       "club_slug": "california-coursing-association",
       "region": 10,
@@ -1363,6 +1771,12 @@
       "state": "CA",
       "entries": 21,
       "note": "Silken Windhound Specialty with LCI",
+      "by_program": {
+        "breed": 11,
+        "singles": 5,
+        "lci": 5,
+        "absent": 0
+      },
       "club": "California Coursing Association",
       "club_slug": "california-coursing-association",
       "region": 10,
@@ -1375,6 +1789,12 @@
       "state": "MA",
       "entries": 53,
       "note": "",
+      "by_program": {
+        "breed": 29,
+        "singles": 13,
+        "lci": 11,
+        "absent": 0
+      },
       "club": "Gazehounds of New England",
       "club_slug": "gazehounds-of-new-england",
       "region": 9,
@@ -1387,6 +1807,12 @@
       "state": "NE",
       "entries": 20,
       "note": "",
+      "by_program": {
+        "breed": 12,
+        "singles": 3,
+        "lci": 5,
+        "absent": 0
+      },
       "club": "Nebraska Coursing Association",
       "club_slug": "nebraska-coursing-association",
       "region": 5,
@@ -1399,6 +1825,12 @@
       "state": "MA",
       "entries": 50,
       "note": "",
+      "by_program": {
+        "breed": 28,
+        "singles": 8,
+        "lci": 14,
+        "absent": 0
+      },
       "club": "Gazehounds of New England",
       "club_slug": "gazehounds-of-new-england",
       "region": 9,
@@ -1411,6 +1843,12 @@
       "state": "NE",
       "entries": 27,
       "note": "",
+      "by_program": {
+        "breed": 13,
+        "singles": 3,
+        "lci": 11,
+        "absent": 0
+      },
       "club": "Nebraska Coursing Association",
       "club_slug": "nebraska-coursing-association",
       "region": 5,
@@ -1423,6 +1861,12 @@
       "state": "CA",
       "entries": 19,
       "note": "",
+      "by_program": {
+        "breed": 17,
+        "singles": 2,
+        "lci": 0,
+        "absent": 0
+      },
       "club": "Orange Coast Rhodesian Ridgeback Club",
       "club_slug": "orange-coast-rhodesian-ridgeback-club",
       "region": 10,
@@ -1435,6 +1879,12 @@
       "state": "CA",
       "entries": 26,
       "note": "",
+      "by_program": {
+        "breed": 22,
+        "singles": 4,
+        "lci": 0,
+        "absent": 0
+      },
       "club": "Orange Coast Rhodesian Ridgeback Club",
       "club_slug": "orange-coast-rhodesian-ridgeback-club",
       "region": 10,
@@ -1447,6 +1897,12 @@
       "state": "WI",
       "entries": 8,
       "note": "Silken Windhound Specialty",
+      "by_program": {
+        "breed": 3,
+        "singles": 5,
+        "lci": 0,
+        "absent": 0
+      },
       "club": "Midwest Coursing Club",
       "club_slug": "midwest-coursing-club",
       "region": 6,
@@ -1459,6 +1915,12 @@
       "state": "WI",
       "entries": 7,
       "note": "Silken Windhound Specialty",
+      "by_program": {
+        "breed": 3,
+        "singles": 4,
+        "lci": 0,
+        "absent": 0
+      },
       "club": "Midwest Coursing Club",
       "club_slug": "midwest-coursing-club",
       "region": 6,
@@ -1471,6 +1933,12 @@
       "state": "IA",
       "entries": 23,
       "note": "LCI & Single Stake",
+      "by_program": {
+        "breed": 0,
+        "singles": 8,
+        "lci": 15,
+        "absent": 0
+      },
       "club": "Iowa Coursing Association",
       "club_slug": "iowa-coursing-association",
       "region": 5,
@@ -1483,6 +1951,12 @@
       "state": "IA",
       "entries": 27,
       "note": "LCI & Single Specialty",
+      "by_program": {
+        "breed": 0,
+        "singles": 8,
+        "lci": 19,
+        "absent": 0
+      },
       "club": "Iowa Coursing Association",
       "club_slug": "iowa-coursing-association",
       "region": 5,
@@ -1495,6 +1969,12 @@
       "state": "OR",
       "entries": 57,
       "note": "",
+      "by_program": {
+        "breed": 47,
+        "singles": 10,
+        "lci": 0,
+        "absent": 0
+      },
       "club": "Silken Windhounds for Endurance, Perf. & Training",
       "club_slug": "silken-windhounds-for-endurance-perf-training",
       "region": 1,
@@ -1507,6 +1987,12 @@
       "state": "PA",
       "entries": 27,
       "note": "",
+      "by_program": {
+        "breed": 18,
+        "singles": 2,
+        "lci": 7,
+        "absent": 0
+      },
       "club": "Upper Chesapeake Bay Saluki Club",
       "club_slug": "upper-chesapeake-bay-saluki-club",
       "region": 8,
@@ -1519,6 +2005,12 @@
       "state": "WA",
       "entries": 40,
       "note": "",
+      "by_program": {
+        "breed": 35,
+        "singles": 5,
+        "lci": 0,
+        "absent": 0
+      },
       "club": "Silken Windhounds for Endurance, Perf. & Training",
       "club_slug": "silken-windhounds-for-endurance-perf-training",
       "region": 1,
@@ -1531,6 +2023,12 @@
       "state": "PA",
       "entries": 25,
       "note": "",
+      "by_program": {
+        "breed": 15,
+        "singles": 4,
+        "lci": 6,
+        "absent": 0
+      },
       "club": "Upper Chesapeake Bay Saluki Club",
       "club_slug": "upper-chesapeake-bay-saluki-club",
       "region": 8,
@@ -1543,6 +2041,12 @@
       "state": "MN",
       "entries": 34,
       "note": "",
+      "by_program": {
+        "breed": 21,
+        "singles": 4,
+        "lci": 9,
+        "absent": 0
+      },
       "club": "Greater Twin Cities Whippet Club",
       "club_slug": "greater-twin-cities-whippet-club",
       "region": 5,
@@ -1555,6 +2059,12 @@
       "state": "CA",
       "entries": 37,
       "note": "",
+      "by_program": {
+        "breed": 32,
+        "singles": 2,
+        "lci": 3,
+        "absent": 0
+      },
       "club": "Orange Coast Rhodesian Ridgeback Club",
       "club_slug": "orange-coast-rhodesian-ridgeback-club",
       "region": 10,
@@ -1567,6 +2077,12 @@
       "state": "PA",
       "entries": 30,
       "note": "",
+      "by_program": {
+        "breed": 19,
+        "singles": 3,
+        "lci": 8,
+        "absent": 0
+      },
       "club": "Upper Chesapeake Bay Saluki Club",
       "club_slug": "upper-chesapeake-bay-saluki-club",
       "region": 8,
@@ -1579,6 +2095,12 @@
       "state": "MN",
       "entries": 30,
       "note": "",
+      "by_program": {
+        "breed": 19,
+        "singles": 3,
+        "lci": 8,
+        "absent": 0
+      },
       "club": "Greater Twin Cities Whippet Club",
       "club_slug": "greater-twin-cities-whippet-club",
       "region": 5,
@@ -1591,6 +2113,12 @@
       "state": "CA",
       "entries": 33,
       "note": "",
+      "by_program": {
+        "breed": 27,
+        "singles": 3,
+        "lci": 3,
+        "absent": 0
+      },
       "club": "Orange Coast Rhodesian Ridgeback Club",
       "club_slug": "orange-coast-rhodesian-ridgeback-club",
       "region": 10,
@@ -1603,6 +2131,12 @@
       "state": "PA",
       "entries": 42,
       "note": "",
+      "by_program": {
+        "breed": 25,
+        "singles": 4,
+        "lci": 13,
+        "absent": 0
+      },
       "club": "Upper Chesapeake Bay Saluki Club",
       "club_slug": "upper-chesapeake-bay-saluki-club",
       "region": 8,

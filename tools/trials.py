@@ -61,6 +61,17 @@ DATE_RE = re.compile(
 )
 ENTRY_RE = re.compile(r"Entry:\s*(\d+)", re.IGNORECASE)
 
+# Detail blocks: section headers ("WHIPPET Judge:", "SINGLES Judge:",
+# "LCI LARGE Judge:") followed by flight sizes ("Open Flight A(5, 1 NQ)" is a
+# flight of five). The trial's published Entry figure counts entered hounds;
+# flights count the ones that ran, so a flight printed "(0)" — entered, never
+# ran — is how the two can differ.
+PROGRAM_TOKEN_RE = re.compile(
+    r"(LCI (?:LARGE|SMALL|SIGHTHOUND MIX))"
+    r"|([A-Z][A-Z &().'-]{2,40}?)\s+Judges?:"
+    r"|Flight [A-Z]\((\d+)"
+)
+
 
 class TrialParseError(RuntimeError):
     """Raised when a summary row does not match the shape we rely on."""
@@ -107,7 +118,8 @@ def parse_summary_rows(html: str, month: int, season: int) -> list[dict]:
     rows: list[dict] = []
     for tr in re.findall(r"<tr\b[^>]*>(.*?)</tr>", html, re.S | re.I):
         # Summary rows are the ones whose first cell jumps to a detail anchor.
-        if not re.search(r'href="#R\d+"', tr):
+        anchor = re.search(r'href="#R(\d+)"', tr)
+        if not anchor:
             continue
         cells = re.findall(r"<td\b[^>]*>(.*?)</td>", tr, re.S | re.I)
         if len(cells) != 2:
@@ -144,8 +156,55 @@ def parse_summary_rows(html: str, month: int, season: int) -> list[dict]:
             "state": state_match.group(1).upper() if state_match else None,
             "entries": int(entry_match.group(1)),
             "note": note,
+            "detail_ref": anchor.group(1),
         })
     return rows
+
+
+def parse_program_entries(html: str) -> dict[str, dict]:
+    """Sum each trial's flight sizes by program, keyed by its detail anchor.
+
+    The summary's Entry figure includes every program run at the trial —
+    regular breed stakes, Singles and LCI together — which is why the split
+    has to be re-derived from the flights rather than read off the page.
+    """
+    # Anchor names repeat: a stray duplicate "R1" often sits a few characters
+    # after a real anchor. The genuine block starts are strictly increasing
+    # (R1, R2, R3, ...), so anything out of sequence is markup debris.
+    anchors: list[tuple[int, str]] = []
+    highest = 0
+    for match in re.finditer(r'<a\s+name="R(\d+)"', html):
+        number = int(match.group(1))
+        if number > highest:
+            anchors.append((match.start(), match.group(1)))
+            highest = number
+
+    tallies: dict[str, dict] = {}
+    for i, (start, ref) in enumerate(anchors):
+        end = anchors[i + 1][0] if i + 1 < len(anchors) else len(html)
+        segment = html[start:end]
+        flat = collapse(
+            re.sub(r"<[^>]+>", " ", segment).replace("&nbsp;", " "))
+        tally = {"breed": 0, "singles": 0, "lci": 0}
+        program = "breed"
+        for token in PROGRAM_TOKEN_RE.finditer(flat):
+            lci, header, flight = token.groups()
+            if lci:
+                program = "lci"
+            elif header:
+                # Classify by content, not by which alternative fired: the
+                # header capture sometimes starts a few caps tokens early
+                # ("NC) SINGLES"), and a section is what its name says.
+                if "SINGLE" in header:
+                    program = "singles"
+                elif "LCI" in header:
+                    program = "lci"
+                else:
+                    program = "breed"
+            elif flight:
+                tally[program] += int(flight)
+        tallies[ref] = tally
+    return tallies
 
 
 def attach_regions(trials: list[dict]) -> tuple[list[str], dict[str, dict]]:
@@ -247,7 +306,23 @@ def main() -> int:
             target.write_bytes(raw)
             fetched += 1
 
-        trials.extend(parse_summary_rows(html, month, season))
+        month_rows = parse_summary_rows(html, month, season)
+        programs = parse_program_entries(html)
+        for row in month_rows:
+            tally = programs.get(row.pop("detail_ref"))
+            if tally is None:
+                raise TrialParseError(
+                    f"{season}-{month:02d}: {row['club_raw']} has no detail block")
+            ran = sum(tally.values())
+            if ran > row["entries"]:
+                raise TrialParseError(
+                    f"{season}-{month:02d}: {row['club_raw']} flights sum to "
+                    f"{ran} but Entry says {row['entries']}")
+            # Entered-but-never-ran hounds exist ("Champion Flight A(0)");
+            # their program is unknowable, so they are carried separately
+            # rather than guessed into one.
+            row["by_program"] = {**tally, "absent": row["entries"] - ran}
+        trials.extend(month_rows)
 
     trials.sort(key=lambda t: (t["date"], t["club_raw"]))
     unmatched, _ = attach_regions(trials)
@@ -268,6 +343,10 @@ def main() -> int:
             "unassigned_trials": len(trials) - len(assigned),
             "unassigned_entries": sum(
                 t["entries"] for t in trials if t["region"] is None),
+            "by_program": {
+                key: sum(t["by_program"][key] for t in trials)
+                for key in ("breed", "singles", "lci", "absent")
+            },
         },
         "unmatched_clubs": unmatched,
         "regions": regions_as_list(),
@@ -283,7 +362,8 @@ def main() -> int:
         f"{OUTPUT.relative_to(ROOT)}  season {season}, "
         f"{len(months)} month(s), {fetched} page(s) archived\n"
         f"  {stats['trials']} trials, {stats['entries']:,} entries, "
-        f"{stats['clubs']} clubs, through {bundle['as_of']}"
+        f"{stats['clubs']} clubs, through {bundle['as_of']}\n"
+        f"  by program: {stats['by_program']}"
     )
     if unmatched:
         print(f"  {len(unmatched)} club(s) unmatched -> no region:")

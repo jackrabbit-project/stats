@@ -19,7 +19,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <link rel="preload" href="assets/fonts/fraunces-latin-var.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/plex-mono-400.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="css/app.css?v=20260807b">
+  <link rel="stylesheet" href="css/app.css?v=20260808">
   <link rel="icon" href="assets/favicon.ico" sizes="any">
   <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png">
   <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
@@ -47,7 +47,7 @@
     <div class="max-w-6xl mx-auto w-full px-4 py-8 space-y-8">
       <section id="tiles" class="grid grid-cols-2 md:grid-cols-4 gap-3"></section>
 
-      <section class="grid md:grid-cols-2 gap-6">
+      <section id="boards" class="grid md:grid-cols-3 gap-6">
         <div class="card">
           <h2 class="card-title">Most Best in Field</h2>
           <p class="text-xs text-asfa-text/60 mb-3">One run between the day's Best of Breed winners. Breed size matters less here than anywhere else on the site.</p>
@@ -59,6 +59,12 @@
           <p class="text-xs text-asfa-text/60 mb-3">Wins over the rest of the breed at a trial.</p>
           <div id="bob"></div>
           <a href="leaders.html#bob" class="lnk text-sm inline-block mt-3">Full BOB leaderboard →</a>
+        </div>
+        <div id="titles-box" class="card hidden">
+          <h2 class="card-title" id="titles-title">Titles awarded</h2>
+          <p class="text-xs text-asfa-text/60 mb-3" id="titles-coverage"></p>
+          <div id="titles-summary"></div>
+          <a href="titles.html" class="lnk text-sm inline-block mt-3">All hounds with new ASFA titles →</a>
         </div>
       </section>
 
@@ -72,7 +78,7 @@
         <a href="leaders.html#percentile" class="lnk text-sm inline-block mt-3">Full standings →</a>
       </section>
 
-      <section class="grid sm:grid-cols-3 gap-4">
+      <section class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <a href="browse.html" class="card hover:border-asfa-accent block">
           <h3 class="font-display text-xl text-asfa-text"><svg class="ic mr-2 text-asfa-accent" viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 12h11"/><path d="M10 18h11"/><path d="M10 6h11"/><path d="M4 10h2"/><path d="M4 6h1v4"/><path d="M6 18H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg>Browse by breed</h3>
           <p class="text-sm text-asfa-text/70 mt-1">Every ranked hound, breed by breed, sortable.</p>
@@ -84,6 +90,10 @@
         <a href="lci.html" class="card hover:border-asfa-accent block">
           <h3 class="font-display text-xl text-asfa-text"><svg class="ic mr-2 text-asfa-accent" viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="4" r="2"/><circle cx="18" cy="8" r="2"/><circle cx="20" cy="16" r="2"/><path d="M9 10a5 5 0 0 1 5 5v3.5a3.5 3.5 0 0 1-6.84 1.045Q6.52 17.48 4.46 16.84A3.5 3.5 0 0 1 5.5 10Z"/></svg>LCI divisions</h3>
           <p class="text-sm text-asfa-text/70 mt-1">Lure Chasing Instinct standings, by division.</p>
+        </a>
+        <a href="regions.html" class="card hover:border-asfa-accent block">
+          <h3 class="font-display text-xl text-asfa-text"><svg class="ic mr-2 text-asfa-accent" viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.106 5.553a2 2 0 0 0 1.788 0l3.659-1.83A1 1 0 0 1 21 4.619v12.764a1 1 0 0 1-.553.894l-4.553 2.277a2 2 0 0 1-1.788 0l-4.212-2.106a2 2 0 0 0-1.788 0l-3.659 1.83A1 1 0 0 1 3 19.381V6.618a1 1 0 0 1 .553-.894l4.553-2.277a2 2 0 0 1 1.788 0z"/><path d="M15 5.764v15"/><path d="M9 3.236v15"/></svg>Regions</h3>
+          <p class="text-sm text-asfa-text/70 mt-1">Standings, trial entries and which clubs draw, region by region.</p>
         </a>
       </section>
 
@@ -99,7 +109,7 @@
 
   <footer id="site-footer" class="bg-asfa-navy text-white py-8"></footer>
 
-  <script src="js/app.js?v=20260807b"></script>
+  <script src="js/app.js?v=20260808"></script>
   <script>
     page('index.html', (season) => {
       const hounds = groupHounds(season.dogs);
@@ -114,9 +124,47 @@
         [stats.bif, 'Best in Field awarded'],
         [stats.total_competing.toLocaleString(), 'hounds competing'],
       ];
-      document.getElementById('tiles').innerHTML = tiles.map(([value, label]) =>
-        `<div class="tile"><div class="tile-value">${value}</div><div class="tile-label">${label}</div></div>`
-      ).join('');
+      const paintTiles = (grid) => {
+        const el = document.getElementById('tiles');
+        el.className = grid;
+        el.innerHTML = tiles.map(([value, label]) =>
+          `<div class="tile"><div class="tile-value">${value}</div><div class="tile-label">${label}</div></div>`
+        ).join('');
+      };
+      paintTiles('grid grid-cols-2 md:grid-cols-4 gap-3');
+
+      // Titles are their own feed, fetched separately so a problem with the
+      // titles page can never blank the standings. Without it the page simply
+      // shows its four tiles and two boards, as before.
+      fetch('data/titles.json')
+        .then((response) => {
+          if (!response.ok) throw new Error(`${response.status} loading data/titles.json`);
+          return response.json();
+        })
+        .then((titles) => {
+          tiles.splice(2, 0, [titles.stats.total, 'new titles awarded']);
+          paintTiles('grid grid-cols-2 md:grid-cols-5 gap-3');
+
+          const programs = titles.stats.by_program;
+          document.getElementById('titles-title').textContent =
+            `Titles awarded in ${titles.season}`;
+          document.getElementById('titles-coverage').textContent =
+            `Posted by ASFA through ${formatDate(titles.as_of)}.`;
+          document.getElementById('titles-summary').innerHTML = `
+            <table class="tbl">
+              <tbody>
+                <tr><td>Breed program</td><td class="num font-semibold">${programs.breed || 0}</td></tr>
+                <tr><td>LCI program</td><td class="num font-semibold">${programs.lci || 0}</td></tr>
+                <tr><td>Singles program</td><td class="num font-semibold">${programs.singles || 0}</td></tr>
+                <tr><td class="font-semibold">All programs</td><td class="num font-semibold text-asfa-accent">${titles.stats.total}</td></tr>
+              </tbody>
+            </table>`;
+          document.getElementById('titles-box').classList.remove('hidden');
+        })
+        .catch((error) => {
+          console.warn(`Titles unavailable; showing the page without them. ${error.message}`);
+          document.getElementById('boards').className = 'grid md:grid-cols-2 gap-6';
+        });
 
       // Share links, matching the AOK9 / II guide pattern: plain sharer URLs.
       // window.location keeps them right on any domain this is served from.
