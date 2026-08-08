@@ -153,10 +153,10 @@
           document.getElementById('titles-summary').innerHTML = `
             <table class="tbl">
               <tbody>
-                <tr><td>Breed program</td><td class="num font-semibold">${programs.breed || 0}</td></tr>
+                <tr><td>Breed stakes</td><td class="num font-semibold">${programs.breed || 0}</td></tr>
                 <tr><td>LCI program</td><td class="num font-semibold">${programs.lci || 0}</td></tr>
-                <tr><td>Singles program</td><td class="num font-semibold">${programs.singles || 0}</td></tr>
-                <tr><td class="font-semibold">All programs</td><td class="num font-semibold text-asfa-accent">${titles.stats.total}</td></tr>
+                <tr><td>Singles stake</td><td class="num font-semibold">${programs.singles || 0}</td></tr>
+                <tr><td class="font-semibold">Total</td><td class="num font-semibold text-asfa-accent">${titles.stats.total}</td></tr>
               </tbody>
             </table>`;
           document.getElementById('titles-box').classList.remove('hidden');

@@ -154,7 +154,7 @@
             <h2 class="card-title">Entries by program</h2>
             <p class="text-xs text-asfa-text/60 mb-3">
               What those ${trials.stats.entries.toLocaleString()} entries ran: a regular breed
-              stake, the Singles stake, or a Lure Chasing Instinct division.
+              stake, the Singles stake, or the Lure Chasing Instinct program.
             </p>
             <div class="tbl-wrap"><table class="tbl">
               <thead><tr>
@@ -163,7 +163,7 @@
                 <th scope="col" class="num">Share</th>
               </tr></thead>
               <tbody>
-                ${[['Breed stakes', bp.breed], ['LCI divisions', bp.lci],
+                ${[['Breed stakes', bp.breed], ['LCI program', bp.lci],
                    ['Singles stake', bp.singles]].map(([label, n]) => `
                   <tr>
                     <td class="font-semibold">${label}</td>
