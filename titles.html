@@ -19,7 +19,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <link rel="preload" href="assets/fonts/fraunces-latin-var.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/plex-mono-400.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="css/app.css?v=20260808">
+  <link rel="stylesheet" href="css/app.css?v=20260808b">
   <link rel="icon" href="assets/favicon.ico" sizes="any">
   <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png">
   <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
@@ -29,7 +29,7 @@
   <main id="main" class="flex-1 max-w-5xl mx-auto w-full px-4 py-6 space-y-6"></main>
   <footer id="site-footer" class="bg-asfa-navy text-white py-8"></footer>
 
-  <script src="js/app.js?v=20260808"></script>
+  <script src="js/app.js?v=20260808b"></script>
   <script>
     page('titles.html', (season) => {
       const main = document.getElementById('main');
@@ -54,15 +54,36 @@
 
       function render(feed) {
         const programs = feed.stats.by_program;
-        const listed = feed.titles
-          .filter((row) => row.program !== 'lci')
-          .sort((a, b) => b.date.localeCompare(a.date)
-            || a.section.localeCompare(b.section)
-            || a.call_name.localeCompare(b.call_name));
+        const listed = feed.titles.filter((row) => row.program !== 'lci');
+        let sort = { key: 'date', dir: -1 };
+
+        // Color families: Field Champion, Courser of Merit, Coursing
+        // Proficiency. Veteran and numbered tiers stay with their family.
+        const family = (abbr) => {
+          const base = abbr.replace(/\d+$/, '');
+          if (base === 'TCP' || base === 'CPX') return 'badge-t-tcp';
+          if (base.endsWith('FCh')) return 'badge-t-fch';
+          return 'badge-t-lcm';
+        };
 
         const hound = (row) => row.dog_id
           ? `<a href="${dogUrl(row.dog_id)}" class="lnk font-semibold">${esc(row.call_name)}</a>`
           : `<span class="font-semibold">${esc(row.call_name)}</span>`;
+
+        const columns = [
+          ['date', 'Date'],
+          ['title', 'Title'],
+          ['hound', 'Hound'],
+          [null, 'Registered name'],
+          ['breed', 'Breed'],
+          [null, 'Owner'],
+        ];
+        const keyOf = {
+          date: (row) => row.date,
+          title: (row) => row.title_abbr,
+          hound: (row) => row.call_name.toLowerCase(),
+          breed: (row) => row.section,
+        };
 
         main.innerHTML = `
           <div>
@@ -83,24 +104,11 @@
 
           <section class="card">
             <h2 class="card-title">Breed and Singles titles</h2>
-            <div class="tbl-wrap"><table class="tbl">
-              <thead><tr>
-                <th scope="col">Date</th><th scope="col">Title</th><th scope="col">Hound</th>
-                <th scope="col">Registered name</th><th scope="col">Breed</th><th scope="col">Owner</th>
-              </tr></thead>
-              <tbody>
-                ${listed.map((row) => `
-                  <tr>
-                    <td class="num whitespace-nowrap">${formatDate(row.date)}</td>
-                    <td><span class="badge badge-new">${esc(row.title_abbr)}</span></td>
-                    <td>${hound(row)}</td>
-                    <td class="text-asfa-text/80">${esc(row.registered_name)}</td>
-                    <td>${esc(row.section)}</td>
-                    <td class="text-asfa-text/80">${esc(row.owners_raw)}</td>
-                  </tr>`).join('')}
-              </tbody>
-            </table></div>
+            <div id="title-table"></div>
             <p class="text-xs text-asfa-text/65 mt-3">
+              <span class="badge badge-t-fch">FCh</span> Field Champion family ·
+              <span class="badge badge-t-lcm">LCM</span> Lure Courser of Merit family ·
+              <span class="badge badge-t-tcp">TCP</span> Coursing Proficiency (Singles stake).
               The Lure Chasing Instinct program's ${programs.lci || 0} titles this season are counted
               in the totals above but listed with their own program —
               <a href="lci.html" class="lnk">LCI standings are here</a>.
@@ -112,6 +120,51 @@
               ASFA's listing disagree, ASFA's governs.
             </p>
           </section>`;
+
+        function paint() {
+          const sorted = [...listed].sort((a, b) => {
+            const av = keyOf[sort.key](a);
+            const bv = keyOf[sort.key](b);
+            return sort.dir * av.localeCompare(bv)
+              || b.date.localeCompare(a.date)
+              || a.call_name.localeCompare(b.call_name);
+          });
+
+          document.getElementById('title-table').innerHTML = `
+            <div class="tbl-wrap"><table class="tbl">
+              <thead><tr>
+                ${columns.map(([key, label]) => key ? `
+                  <th scope="col" class="sortable" aria-sort="${
+                    sort.key === key ? (sort.dir === 1 ? 'ascending' : 'descending') : 'none'}">
+                    <button type="button" class="th-btn" data-key="${key}">${label}${
+                      sort.key === key ? icon(sort.dir === 1 ? 'chevronUp' : 'chevronDown') : ''}</button></th>`
+                  : `<th scope="col">${label}</th>`).join('')}
+              </tr></thead>
+              <tbody>
+                ${sorted.map((row) => `
+                  <tr>
+                    <td class="num whitespace-nowrap">${formatDate(row.date)}</td>
+                    <td><span class="badge ${family(row.title_abbr)}" title="${esc(row.title)}">${esc(row.title_abbr)}</span></td>
+                    <td>${hound(row)}</td>
+                    <td class="text-asfa-text/80">${esc(row.registered_name)}</td>
+                    <td>${esc(row.section)}</td>
+                    <td class="text-asfa-text/80">${esc(row.owners_raw)}</td>
+                  </tr>`).join('')}
+              </tbody>
+            </table></div>`;
+
+          document.querySelectorAll('#title-table button[data-key]').forEach((btn) => {
+            btn.addEventListener('click', () => {
+              const next = btn.dataset.key;
+              // Dates read best newest-first; the text columns best A-to-Z.
+              sort = sort.key === next
+                ? { key: next, dir: -sort.dir }
+                : { key: next, dir: next === 'date' ? -1 : 1 };
+              paint();
+            });
+          });
+        }
+        paint();
       }
     });
   </script>

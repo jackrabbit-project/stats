@@ -364,6 +364,14 @@
 .badge-flat  { background: rgb(var(--badge-flat-bg)); color: rgb(var(--badge-flat-ink)); }
 .badge-prov  { background: rgb(var(--badge-prov-bg)); color: rgb(var(--badge-prov-ink)); }
 
+/* Title families on the titles page, reusing the badge token pairs so both
+   themes come along: Field Champion sage, Courser of Merit amber, Coursing
+   Proficiency rust, LCI neutral. */
+.badge-t-fch { background: rgb(var(--badge-new-bg));  color: rgb(var(--badge-new-ink)); }
+.badge-t-lcm { background: rgb(var(--badge-prov-bg)); color: rgb(var(--badge-prov-ink)); }
+.badge-t-tcp { background: rgb(var(--badge-down-bg)); color: rgb(var(--badge-down-ink)); }
+.badge-t-lci { background: rgb(var(--badge-flat-bg)); color: rgb(var(--badge-flat-ink)); }
+
 /* Search ----------------------------------------------------------------- */
 
 .search-results {
