@@ -39,7 +39,7 @@
       "Italian Greyhound": 2,
       "Pharaoh Hound": 1
     },
-    "matched_to_profiles": 49
+    "matched_to_profiles": 56
   },
   "titles": [
     {
@@ -196,7 +196,7 @@
       "date": "2026-04-04",
       "owners_raw": "Sophie Wilson & Destinie Stapleton",
       "program": "breed",
-      "dog_id": null
+      "dog_id": "chapleton-uptempo-wherever-i-may-roam--whippet"
     },
     {
       "section": "Basenji",
@@ -208,7 +208,7 @@
       "date": "2026-04-05",
       "owners_raw": "Kelli Harmon",
       "program": "breed",
-      "dog_id": null
+      "dog_id": "kiroja-hockeytown-hero--basenji"
     },
     {
       "section": "LCI Large",
@@ -220,7 +220,7 @@
       "date": "2026-04-05",
       "owners_raw": "Mary Crist",
       "program": "lci",
-      "dog_id": null
+      "dog_id": "omg-rise-of-the-lycan--lci-large"
     },
     {
       "section": "Silken Windhound",
@@ -352,7 +352,7 @@
       "date": "2026-04-26",
       "owners_raw": "Rebecca & Michael Spurbeck",
       "program": "singles",
-      "dog_id": null
+      "dog_id": "spur-s-ullr-the-northern-hunter--singles"
     },
     {
       "section": "Whippet",
@@ -700,7 +700,7 @@
       "date": "2026-05-23",
       "owners_raw": "Marissa Wagenaar",
       "program": "breed",
-      "dog_id": null
+      "dog_id": "palinka-delamontanera-compel--ibizan-hound"
     },
     {
       "section": "LCI Large",
@@ -976,7 +976,7 @@
       "date": "2026-07-18",
       "owners_raw": "Kaitlyon Valverde & Andrew Hipp",
       "program": "lci",
-      "dog_id": null
+      "dog_id": "laszlo--lci-sighthound-mix"
     },
     {
       "section": "LCI Small",
@@ -1024,7 +1024,7 @@
       "date": "2026-07-19",
       "owners_raw": "Diana Darling",
       "program": "breed",
-      "dog_id": null
+      "dog_id": "aria-axxium-s-cold-wind-in-august-ryhka--borzoi"
     },
     {
       "section": "LCI Large",

@@ -251,31 +251,62 @@ def program_of(row: dict) -> str:
 
 
 def attach_dogs(rows: list[dict]) -> int:
-    """Link titled hounds to season profiles by stripped core name."""
+    """Link titled hounds to season profiles by stripped core name.
+
+    The title listing and the standings are typed separately and disagree on
+    spelling more often than one would hope ("Risse"/"Rise", "Lazlo"/
+    "Laszlo", a kennel name garbled outright). After the exact match, two
+    conservative fallbacks run, both confined to the row's own section and
+    both requiring a unique winner: the call name, and then a close
+    similarity on the registered-name slug. No candidate, no link.
+    """
     if not SEASON_JSON.exists():
         for row in rows:
             row["dog_id"] = None
         return 0
 
+    import difflib
+
     season = json.loads(SEASON_JSON.read_text(encoding="utf-8"))
     by_slug: dict[str, list[dict]] = {}
+    by_call: dict[tuple[str, str], list[dict]] = {}
+    by_section: dict[str, list[tuple[str, dict]]] = {}
     for dog in season["dogs"]:
         slug = dog["id"].rsplit("--", 1)[0]
+        breed = dog["breed"].lower()
         by_slug.setdefault(slug, []).append(dog)
+        by_call.setdefault((slugify(dog["call_name"]), breed), []).append(dog)
+        by_section.setdefault(breed, []).append((slug, dog))
 
     matched = 0
     for row in rows:
+        section = row["section"].lower()
         _, core, _ = split_titles(row["registered_name"])
-        candidates = by_slug.get(slugify(core), [])
-        # Prefer the entry ranked in this row's own section; otherwise any
-        # section works — the profile is the same hound either way.
+        slug = slugify(core)
+
         pick = None
+        candidates = by_slug.get(slug, [])
         for dog in candidates:
-            if dog["breed"].lower() == row["section"].lower():
+            if dog["breed"].lower() == section:
                 pick = dog
                 break
         if pick is None and candidates:
+            # Ranked under a different section (a Singles title for a hound
+            # listed under its breed, say) — the profile is the same hound.
             pick = candidates[0]
+
+        if pick is None:
+            calls = by_call.get((slugify(row["call_name"]), section), [])
+            if len(calls) == 1:
+                pick = calls[0]
+
+        if pick is None:
+            pool = by_section.get(section, [])
+            close = [d for s, d in pool
+                     if difflib.SequenceMatcher(None, slug, s).ratio() >= 0.87]
+            if len(close) == 1:
+                pick = close[0]
+
         row["dog_id"] = pick["id"] if pick else None
         matched += 1 if pick else 0
     return matched
