@@ -427,10 +427,10 @@ function page(current, render) {
 
 /** Bootstrap for pages whose content is already in the markup.
 
-    rulebook.html and lci-rules.html need no data at all. Routed through
-    page(), a failed season.json fetch would call showFailure() and blank out
-    the entire rule text over a file those pages never read. So paint and hand
-    over first; the season, if it arrives, only fills in the header sub-line. */
+    rulebook.html needs no data at all. Routed through page(), a failed
+    season.json fetch would call showFailure() and blank out the entire rule
+    text over a file that page never reads. So paint and hand over first; the
+    season, if it arrives, only fills in the header sub-line. */
 function pageStatic(current, render) {
   renderChrome(null, current);
   try {
