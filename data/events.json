@@ -2,9 +2,9 @@
   "seasons": [
     2026
   ],
-  "fetched": "2026-08-06",
+  "fetched": "2026-08-20",
   "source_url": "https://www.asfa.org/event/index.htm",
-  "calendar_pdf_url": "https://www.asfa.org/event/ASFA%20Calendar%2007-29-2026%20Updates.pdf",
+  "calendar_pdf_url": "https://www.asfa.org/event/ASFA%20Calendar%2008-13-2026%20Updates.pdf",
   "region_source": "ASFA Constitution & By-Laws, rev. 08/01/2024, Article V, Section 3",
   "regions": [
     {
@@ -123,9 +123,9 @@
     }
   ],
   "stats": {
-    "events": 113,
+    "events": 116,
     "cancelled": 6,
-    "with_premium": 67
+    "with_premium": 75
   },
   "unmatched_initials": [
     "IWALE"
@@ -1117,7 +1117,7 @@
       "venue": "Hanover Shoe Farms, Littlestown",
       "state": "PA",
       "region": 8,
-      "premium_url": null,
+      "premium_url": "https://www.asfa.org/event/premiums/MDIHC%20Labor%20Day%202026%20(1).pdf",
       "premium_inferred": false,
       "club": "Mason Dixon Ibizan Hound Club"
     },
@@ -1132,7 +1132,7 @@
       "venue": "Roy",
       "state": "WA",
       "region": 1,
-      "premium_url": null,
+      "premium_url": "https://www.asfa.org/event/premiums/SWEPT%20ASFA%20Roy%20Sept%205th,%20%202026.pdf",
       "premium_inferred": false,
       "club": "Silken Windhounds for Endurance, Perf. & Training"
     },
@@ -1192,7 +1192,7 @@
       "venue": "Whitesburg",
       "state": "GA",
       "region": 7,
-      "premium_url": null,
+      "premium_url": "https://www.asfa.org/event/premiums/LEGS%20Premium%20-%20September%2012-13%202026%20(1).pdf",
       "premium_inferred": false,
       "club": "Lure Enthusiasts of Georgia Sighthounds"
     },
@@ -1207,7 +1207,7 @@
       "venue": "Yellow Springs",
       "state": "OH",
       "region": 6,
-      "premium_url": null,
+      "premium_url": "https://www.asfa.org/event/premiums/OKIGO%20ASFA%20Sept%202026%20PL%20rev1.pdf",
       "premium_inferred": false,
       "club": "Ohio,Kentucky, Indiana Gazehound Organization"
     },
@@ -1222,7 +1222,7 @@
       "venue": "Yellow Springs",
       "state": "OH",
       "region": 6,
-      "premium_url": null,
+      "premium_url": "https://www.asfa.org/event/premiums/OKIGO%20ASFA%20Sept%202026%20PL%20rev1.pdf",
       "premium_inferred": false,
       "club": "Ohio,Kentucky, Indiana Gazehound Organization"
     },
@@ -1252,7 +1252,7 @@
       "venue": "Flamborough",
       "state": "ON",
       "region": 9,
-      "premium_url": null,
+      "premium_url": "https://www.asfa.org/event/premiums/NAA%20PL%20V3%20Final.pdf",
       "premium_inferred": false,
       "club": "Northern Azawakh Association"
     },
@@ -1492,7 +1492,7 @@
       "venue": "Griswold",
       "state": "CT",
       "region": 9,
-      "premium_url": null,
+      "premium_url": "https://www.asfa.org/event/premiums/GONE%20ASFA%20Griswold%20October%202026%208.19.26.pdf",
       "premium_inferred": false,
       "club": "Gazehounds of New England"
     },
@@ -1522,7 +1522,7 @@
       "venue": "Lake Erie Metro Park, Rockwood",
       "state": "MI",
       "region": 6,
-      "premium_url": null,
+      "premium_url": "https://www.asfa.org/event/premiums/MGA%20OCt%20%202026%20premium%20ASFA%20approved.pdf",
       "premium_inferred": false,
       "club": "Michigan Gazehound Association"
     },
@@ -1632,6 +1632,21 @@
       "club": "Nebraska Coursing Association"
     },
     {
+      "start": "2026-10-31",
+      "end": "2026-10-31",
+      "type": "AB/LCI",
+      "initials": "SISFA",
+      "specialty": false,
+      "national": false,
+      "cancelled": false,
+      "venue": "Emmett",
+      "state": "ID",
+      "region": 1,
+      "premium_url": null,
+      "premium_inferred": false,
+      "club": "Southern Idaho Sighthound Field Association"
+    },
+    {
       "start": "2026-11-01",
       "end": "2026-11-01",
       "type": "AB",
@@ -1660,6 +1675,21 @@
       "premium_url": null,
       "premium_inferred": false,
       "club": "Nebraska Coursing Association"
+    },
+    {
+      "start": "2026-11-01",
+      "end": "2026-11-01",
+      "type": "AB/LCI",
+      "initials": "SISFA",
+      "specialty": false,
+      "national": false,
+      "cancelled": false,
+      "venue": "Emmett",
+      "state": "ID",
+      "region": 1,
+      "premium_url": null,
+      "premium_inferred": false,
+      "club": "Southern Idaho Sighthound Field Association"
     },
     {
       "start": "2026-11-07",
@@ -1795,6 +1825,21 @@
       "premium_url": null,
       "premium_inferred": false,
       "club": "Tri-State Sighthound Club"
+    },
+    {
+      "start": "2026-12-19",
+      "end": "2026-12-20",
+      "type": "RR",
+      "initials": "OCRRC",
+      "specialty": true,
+      "national": false,
+      "cancelled": false,
+      "venue": "Chino Hills",
+      "state": "CA",
+      "region": 10,
+      "premium_url": null,
+      "premium_inferred": false,
+      "club": "Orange Coast Rhodesian Ridgeback Club"
     },
     {
       "start": "2026-12-27",
