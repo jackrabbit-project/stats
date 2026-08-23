@@ -388,10 +388,12 @@ function renderChrome(season, current) {
       </div>
       <div class="bg-asfa-paper border-b border-asfa-border">
         <div class="max-w-6xl mx-auto px-4 pt-3 lg:pt-0 lg:py-1.5 flex flex-col lg:flex-row lg:items-center gap-x-8 relative">
-          <a href="index.html" class="flex items-baseline gap-2.5 shrink-0 pr-10 lg:pr-0">
-            ${jackrabbitMark('self-center shrink-0 text-asfa-accent', 28)}
-            <span class="font-display font-semibold text-xl text-asfa-text">Lure Coursing Stats</span>
-            <span class="font-mono text-[11px] uppercase tracking-widest text-asfa-muted">ASFA standings · ${season ? season.season : ''}</span>
+          <a href="index.html" class="flex items-center gap-2.5 shrink-0 pr-10 lg:pr-0">
+            ${jackrabbitMark('shrink-0 text-asfa-accent', 32)}
+            <span class="flex flex-col">
+              <span class="font-display font-semibold text-xl leading-tight text-asfa-text whitespace-nowrap">Lure Coursing Stats</span>
+              <span class="font-mono text-[10px] uppercase tracking-widest text-asfa-muted whitespace-nowrap">ASFA standings · ${season ? season.season : ''}</span>
+            </span>
           </a>
           <nav class="nav-scroll edge-fade flex flex-nowrap lg:flex-wrap overflow-x-auto lg:overflow-visible -mx-4 px-4 lg:mx-0 lg:px-0" aria-label="Site">${links}</nav>
           <button id="theme-toggle" type="button" class="absolute right-3 top-2.5 lg:static lg:order-last lg:ml-auto shrink-0 p-2 text-base text-asfa-muted hover:text-asfa-text"></button>
