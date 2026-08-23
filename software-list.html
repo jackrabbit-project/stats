@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#F6F8F3">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#111309">
+  <title>Dog Sport Trial Software</title>
+  <meta name="description" content="Who actually runs the events: entry platforms, trial secretary software, and owner-facing record keeping across North American dog sports — every URL checked, verified August 2026.">
+  <link rel="canonical" href="https://stats.gazehound.io/software-list.html">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Dog Sport Trial Software">
+  <meta property="og:description" content="Who actually runs the events: entry platforms, trial secretary software, and owner-facing record keeping across North American dog sports — every URL checked.">
+  <meta property="og:url" content="https://stats.gazehound.io/software-list.html">
+  <!-- Standalone reference page: deliberately unlinked from the site, styled
+       on its own terms, and the one page here that loads Google Fonts. -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&family=Public+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+  <link rel="icon" href="assets/favicon.ico?v=3" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png?v=3">
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png?v=3">
+
+<style>
+:root{
+  --ground:#F6F8F3;
+  --surface:#FFFFFF;
+  --ink:#14180F;
+  --muted:#5B6353;
+  --faint:#828A79;
+  --accent:#2E5A38;
+  --accent-soft:#E4EDE3;
+  --flag:#8F4E15;
+  --flag-soft:#F5E9DC;
+  --line:#D9DFD0;
+  --line-soft:#E9EDE3;
+  --shadow:0 1px 2px rgba(20,24,15,.05);
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --ground:#111309;
+    --surface:#191C13;
+    --ink:#E9ECE2;
+    --muted:#9BA391;
+    --faint:#7C8472;
+    --accent:#88BC91;
+    --accent-soft:#1E2A1E;
+    --flag:#D99551;
+    --flag-soft:#2C2115;
+    --line:#2B3024;
+    --line-soft:#232719;
+    --shadow:none;
+  }
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0;
+  background:var(--ground);
+  color:var(--ink);
+  font-family:"Public Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+  font-size:16px;
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+a{color:inherit}
+a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:2px}
+
+.wrap{max-width:920px;margin:0 auto;padding:clamp(2rem,5vw,4.5rem) clamp(1.1rem,4vw,2rem) 5rem}
+
+/* ---- masthead ---- */
+.masthead{border-bottom:2px solid var(--ink);padding-bottom:1.6rem;margin-bottom:2.4rem}
+.eyebrow{
+  font-family:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--faint);margin:0 0 .9rem
+}
+h1{
+  font-family:Newsreader,Georgia,"Times New Roman",serif;
+  font-weight:500;
+  font-size:clamp(2.1rem,6vw,3.2rem);
+  line-height:1.08;
+  letter-spacing:-.015em;
+  margin:0 0 .7rem;
+  text-wrap:balance;
+}
+.standfirst{
+  font-size:1.06rem;color:var(--muted);margin:0;max-width:62ch;
+}
+
+/* ---- finding callout ---- */
+.finding{
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-top:3px solid var(--flag);
+  padding:1.5rem clamp(1.1rem,3vw,1.9rem);
+  margin:0 0 3rem;
+  box-shadow:var(--shadow);
+}
+.finding .eyebrow{color:var(--flag);margin-bottom:.7rem}
+.finding h2{
+  font-family:Newsreader,Georgia,serif;
+  font-weight:500;font-size:1.5rem;line-height:1.25;
+  margin:0 0 .8rem;text-wrap:balance;
+}
+.finding p{margin:0 0 .8rem;color:var(--muted);max-width:66ch}
+.finding p:last-child{margin-bottom:0}
+.finding strong{color:var(--ink);font-weight:600}
+.finding ul{margin:.4rem 0 .9rem;padding-left:1.1rem;color:var(--muted);max-width:66ch}
+.finding li{margin-bottom:.4rem}
+
+/* ---- section ---- */
+.section{margin-bottom:3.2rem}
+.section-head{
+  display:flex;align-items:baseline;gap:.85rem;
+  border-bottom:1px solid var(--ink);
+  padding-bottom:.5rem;margin-bottom:.4rem;
+}
+.section-head h2{
+  font-family:Newsreader,Georgia,serif;
+  font-weight:500;font-size:1.45rem;margin:0;letter-spacing:-.01em;
+}
+.count{
+  font-family:"IBM Plex Mono",monospace;font-size:.72rem;
+  color:var(--faint);font-variant-numeric:tabular-nums;
+  margin-left:auto;flex-shrink:0;
+}
+.section-note{
+  color:var(--muted);font-size:.94rem;margin:.9rem 0 0;max-width:66ch;
+}
+
+/* ---- entries ---- */
+.entries{list-style:none;margin:.4rem 0 0;padding:0}
+.entry{
+  border-bottom:1px solid var(--line-soft);
+  padding:1.15rem 0;
+  display:flex;flex-direction:column;gap:.4rem;
+}
+.entry:last-child{border-bottom:none}
+.entry-head{display:flex;flex-wrap:wrap;align-items:center;gap:.55rem}
+.name{
+  font-family:Newsreader,Georgia,serif;
+  font-size:1.18rem;font-weight:600;
+  text-decoration:none;
+  border-bottom:1px solid var(--line);
+  padding-bottom:1px;
+}
+.name:hover{border-bottom-color:var(--accent);color:var(--accent)}
+.entry p{margin:0;color:var(--muted);max-width:70ch}
+.entry .meta{
+  font-family:"IBM Plex Mono",monospace;
+  font-size:.74rem;color:var(--faint);line-height:1.7;
+  max-width:none;
+}
+
+/* ---- chips ---- */
+.chip{
+  font-family:"IBM Plex Mono",monospace;
+  font-size:.63rem;letter-spacing:.08em;text-transform:uppercase;
+  padding:.2rem .48rem;border:1px solid var(--line);
+  color:var(--faint);white-space:nowrap;
+}
+.chip-official{color:var(--accent);border-color:var(--accent);background:var(--accent-soft)}
+.chip-flag{color:var(--flag);border-color:var(--flag);background:var(--flag-soft)}
+
+/* ---- table ---- */
+.tablewrap{overflow-x:auto;margin:.9rem 0 0}
+table{border-collapse:collapse;width:100%;font-size:.9rem;min-width:420px}
+th,td{text-align:left;padding:.5rem .8rem .5rem 0;border-bottom:1px solid var(--line-soft)}
+th{
+  font-family:"IBM Plex Mono",monospace;font-size:.68rem;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--faint);font-weight:500;
+}
+td a{text-decoration:none;border-bottom:1px solid var(--line)}
+td a:hover{color:var(--accent);border-bottom-color:var(--accent)}
+
+/* ---- footer ---- */
+.foot{
+  margin-top:3.5rem;padding-top:1.4rem;
+  border-top:1px solid var(--line);
+  font-size:.85rem;color:var(--faint);max-width:66ch;
+}
+.foot p{margin:0 0 .6rem}
+
+@media (max-width:560px){
+  .count{width:100%;margin-left:0}
+  .section-head{flex-wrap:wrap}
+}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+<header class="masthead">
+  <p class="eyebrow">Reference · verified August 2026</p>
+  <h1>Dog Sport Trial Software</h1>
+  <p class="standfirst">Who actually runs the events. Entry platforms, trial secretary software, and owner-facing record keeping across North American dog sports — with every URL checked.</p>
+</header>
+
+<section class="finding">
+  <p class="eyebrow">Headline finding</p>
+  <h2>No registry certifies third-party trial software. None of them. Anywhere.</h2>
+  <p>AKC, UKC, and CKC operate <strong>no software approval or certification program</strong> and publish no list of approved or certified vendors. Every commercial product below claims zero registry certification, and several disclaim affiliation outright.</p>
+  <p>What exists instead:</p>
+  <ul>
+    <li><strong>AKC licenses superintendents</strong> — companies, not software — and only for conformation shows. Eight hold the license.</li>
+    <li><strong>AKC publishes functional requirements</strong> for agility online entry systems. Requirements, not approvals: no vendor list, no audit, no seal. The club self-attests and names its provider in the premium list.</li>
+    <li>AKC has used those requirements to <em>exclude</em> a service, never to bless one.</li>
+    <li><strong>UKC and CKC</strong> built their own in-house entry systems rather than approving anyone else's.</li>
+  </ul>
+  <p>Watch for two things that get mistaken for a credential: an AKC superintendent's license (a business license held by a company) and "patent pending" (a USPTO filing status, carrying no kennel club meaning at all).</p>
+</section>
+
+<section class="section">
+  <div class="section-head"><h2>Registry-operated systems</h2><span class="count">6</span></div>
+  <p class="section-note">The only genuinely official software. Each registry built its own rather than certifying someone else's.</p>
+  <ul class="entries">
+    <li class="entry">
+      <div class="entry-head"><a class="name" href="https://www.akc.org/sports/agility/exhibitor-resources/ole-akc-online-entry-service/">AKC Online Entry Service</a><span class="chip chip-official">Registry-run</span></div>
+      <p>Official AKC online entry plus secretary-side reports, financials, random draw, and entry export.</p>
+      <p class="meta">AKC agility · $2.00 first entry, $1.00 each additional · free to clubs</p>
+    </li>
+    <li class="entry">
+      <div class="entry-head"><a class="name" href="https://evententry.ukcdogs.com/">UKC Online Event Entry</a><span class="chip chip-official">Registry-run</span></div>
+      <p>UKC builds a custom entry page for each licensed club and handles the money and the entries.</p>
+      <p class="meta">UKC all-breed sports, hunting programs following · free to clubs</p>
+    </li>
+    <li class="entry">
+      <div class="entry-head"><a class="name" href="https://www.canuckdogs.com/">Canuck Dogs</a><span class="chip chip-official">Registry-run</span></div>
+      <p>Canadian event listings, results, standings, and judge records. CKC results went live here in December 2025.</p>
+      <p class="meta">CKC conformation, agility, obedience, rally, field trials, herding, lure coursing · free</p>
+    </li>
+    <li class="entry">
+      <div class="entry-head"><a class="name" href="https://barnhunt.com/register.html">Barn Hunt Register</a><span class="chip chip-official">Registry-run</span></div>
+      <p>Dog registration, leg and title tracking, printable certificates, auto-filled entry forms, event search.</p>
+      <p class="meta">Barn Hunt Association · US and Canada</p>
+    </li>
+    <li class="entry">
+      <div class="entry-head"><a class="name" href="https://www.nadac.com/club-resources/">NADAC Club Portal</a><span class="chip chip-official">Registry-run</span></div>
+      <p>Trial applications and results submission through NADAC's own online forms. No third-party software named or required.</p>
+      <p class="meta">NADAC agility</p>
+    </li>
+    <li class="entry">
+      <div class="entry-head"><a class="name" href="https://flyballdata.com/">NAFA Flyball Database</a><span class="chip chip-official">Registry-run</span></div>
+      <p>Central NAFA records: tournament calendar, club and dog data, points, titles, height cards. The legacy FBScore scoring program is explicitly <em>no longer supported</em> — NAFA currently endorses no scoring software.</p>
+      <p class="meta">NAFA flyball · free</p>
+    </li>
+  </ul>
+</section>
+
+<section class="section">
+  <div class="section-head"><h2>AKC-licensed superintendents</h2><span class="count">8</span></div>
+  <p class="section-note">The one real credential in this space. It is a business license held by the company, for superintending conformation shows — it says nothing about the software each one runs in-house.</p>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>Company</th><th>Site</th></tr></thead>
+      <tbody>
+        <tr><td>MB-F, Inc.</td><td><a href="http://www.infodog.com">infodog.com</a></td></tr>
+        <tr><td>Jack Onofrio Dog Shows</td><td><a href="http://www.onofrio.com">onofrio.com</a></td></tr>
+        <tr><td>Rau Dog Shows</td><td><a href="http://www.raudogshows.com">raudogshows.com</a></td></tr>
+        <tr><td>Foy Trent Dog Shows</td><td><a href="https://www.foytrentdogshows.com">foytrentdogshows.com</a></td></tr>
+        <tr><td>Jack Bradshaw Dog Shows</td><td><a href="http://www.jbradshaw.com">jbradshaw.com</a></td></tr>
+        <tr><td>BaRay Event Services</td><td><a href="http://www.barayevents.com">barayevents.com</a></td></tr>
+        <tr><td>Executive Dog Shows</td><td><a href="http://www.executivedogshows.com">executivedogshows.com</a></td></tr>
+        <tr><td>Emerald Coast Dog Shows</td><td><a href="https://dogshow.com/en/secretary/ecds">dogshow.com/en/secretary/ecds</a></td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="section">
+  <div class="section-head"><h2>Multi-sport entry and secretary platforms</h2><span class="count">7</span></div>
+  <p class="section-note">Commercial. All uncertified by any registry — several say so on their own sites.</p>
+  <ul class="entries">
+    <li class="entry">
+      <div class="entry-head"><a class="name" href="https://akc.software/">AKC.software</a><span class="chip">Commercial</span></div>
+      <p>Cloud event management — registrations, run orders, scoring, payments, reporting. Carries the clearest disclaimer of the group: "not affiliated with, endorsed by, or sponsored by the American Kennel Club."</p>
+      <p class="meta">AKC · USDAA · NADAC · CPE · TDAA · UKC · BHA · NACSW · NADD · NAFA — pay per entry, no contract</p>
+    </li>
+    <li class="entry">
+      <div class="entry-head"><a class="name" href="https://about.eagerdog.com/">Eager Dog</a><span class="chip">Commercial</span></div>
+      <p>Event, class, and seminar management with online entry and queue management. Claims 250+ clubs and 6,000+ owners.</p>
+      <p class="meta">AKC · UKC · BHA · ABI · C-WAGS · CPE — conformation, obedience, rally, scent work, Fast CAT, barn hunt, herding, agility, dock, coursing</p>
+    </li>
+    <li class="entry">
+      <div class="entry-head"><a class="name" href="https://dogshow.com/">DogShow.com</a><span class="chip">Commercial</span></div>
+      <p>Continent-wide entry portal and secretary platform. Also the platform behind licensed superintendent Emerald Coast.</p>
+      <p class="meta">AKC · UKC · BHA · International Silken Windhound Society · NASDA — includes UKC lure coursing · ~7% of entry fees</p>
+    </li>
+    <li class="entry">
+      <div class="entry-head"><a class="name" href="https://dogshow.ca/en/brochure">DogShow.ca</a><span class="chip">Commercial</span></div>
+      <p>Canadian sibling of the above — entry, payments, waiting lists, catalogue generation, ringside app. Free to clubs; funded by a 10% exhibitor service charge.</p>
+      <p class="meta">CKC · Agility Association of Canada · UKC · BHA · CARO and others — conformation, agility, obedience, rally, lure coursing, retriever trials, barn hunt</p>
+    </li>
+    <li class="entry">
+      <div class="entry-head"><a class="name" href="https://mydogentry.com/">MyDogEntry</a><span class="chip">Commercial</span></div>
+      <p>Secretary dashboard covering online, paper, and waitlist entries, with run-order generation that separates same-handler dogs. Strongest agility-venue coverage here.</p>
+      <p class="meta">AKC · USDAA · UKI · CPE · ASCA · NADAC · TDAA — $1 per online entry plus processing</p>
+    </li>
+    <li class="entry">
+      <div class="entry-head"><a class="name" href="https://showentries.info/">ShowEntries.info</a><span class="chip">Commercial</span></div>
+      <p>Online entry, premium lists, paper entry handling, judging programs, plus a full-service "Trial in a Box." Operating since 2007.</p>
+      <p class="meta">AKC companion and performance — obedience, rally, scent work, herding, field trials · ~$175 setup, $100/yr</p>
+    </li>
+    <li class="entry">
+      <div class="entry-head"><a class="name" href="https://secreterrier.com/home">Secreterrier</a><span class="chip">Commercial</span></div>
+      <p>Online entry, trial management, queue management. Newest of the established set — founded November 2023.</p>
+      <p class="meta">Scent work, barn hunt · $1.00 per class capped at $10 per checkout</p>
+    </li>
+  </ul>
+</section>
+
+<section class="section">
+  <div class="section-head"><h2>Sport-specific secretary software</h2><span class="count">8</span></div>
+  <ul class="entries">
+    <li class="entry">
+      <div class="entry-head"><a class="name" href="https://www.entryexpress.net/">Entry Express</a><span class="chip">Commercial</span></div>
+      <p>The dominant platform in the field and hunting world — "the premier entry management system for canine field event entry."</p>
+      <p class="meta">AKC field trials and hunt tests · HRC · spaniel events — no AKC or HRC approval claimed</p>
+    </li>
+    <li class="entry">
+      <div class="entry-head"><a class="name" href="https://myk9t.com/">MyK9T family</a><span class="chip">Commercial</span></div>
+      <p>Modular secretary software — mySWT, myFCT, myAGT and siblings — tracking entries and scores, printing armbands and score sheets, auto-filling registry forms. myK9Q handles check-in and queueing.</p>
+      <p class="meta">AKC Fast CAT and scent work · UKC agility, conformation, nosework, obedience, rally · ASCA scent detection · $0–$150 per module</p>
+    </li>
+    <li class="entry">
+      <div class="entry-head"><a class="name" href="https://www.trialgenie.com/">Trial Genie</a><span class="chip">Commercial</span></div>
+      <p>Long-established desktop secretary database — data entry, mailings, catalogs, statistics, required reports. Runs on Microsoft Access.</p>
+      <p class="meta">AKC agility, ISC classes · $200 new, $100 upgrade</p>
+    </li>
+    <li class="entry">
+      <div class="entry-head"><a class="name" href="https://labtesteddatabases.com/agility.htm">Lab Tested Databases</a><span class="chip">Commercial</span><span class="chip">Free tier</span></div>
+      <p>A paid secretary database paired with a genuinely free online entry front end — any secretary can use the entry service without charge.</p>
+      <p class="meta">AKC and UKC agility · $250 database, entry service free</p>
+    </li>
+    <li class="entry">
+      <div class="entry-head"><a class="name" href="https://topdogwebdesigns.com">TopDogWebDesigns</a><span class="chip">Commercial</span></div>
+      <p>Trial management with real-time entry validation, automatic score calculation, and financial management. The only "approval" on the site is a patent-pending USPTO filing — not a registry credential.</p>
+      <p class="meta">AKC scent work and Fast CAT · UKC · NASDA · ~$2.95 per entry</p>
+    </li>
+    <li class="entry">
+      <div class="entry-head"><a class="name" href="https://www.picalo.com/products.html">Picalo Software</a><span class="chip">Commercial</span></div>
+      <p>Specialty and all-breed show secretary software — premium lists, judging schedules, catalogs, armbands, judges' books. Pricing listed only as "TBD."</p>
+      <p class="meta">AKC conformation, sweepstakes, junior showmanship, obedience, rally</p>
+    </li>
+    <li class="entry">
+      <div class="entry-head"><a class="name" href="https://agilitygate.com/">AgilityGate</a><span class="chip">Commercial</span></div>
+      <p>Gate stewarding only — check-in, conflicts, scratches, and live run-order state from the crating area. Not an entry or scoring system.</p>
+      <p class="meta">Agility, adapted for scent work · free to competitors, $35/day for clubs</p>
+    </li>
+    <li class="entry">
+      <div class="entry-head"><a class="name" href="https://oaklines.com/Software/default.htm">OakLines ExpressEntries</a><span class="chip">Free tier</span></div>
+      <p>Free online entry front end with no per-entry processing fee. The companion SuperTrial management program is still listed as "coming soon."</p>
+      <p class="meta">AKC agility and obedience</p>
+    </li>
+  </ul>
+</section>
+
+<section class="section">
+  <div class="section-head"><h2>Owner-facing record keeping</h2><span class="count">7</span></div>
+  <p class="section-note">Every independent tracker is manual re-entry. None pull from official registry records — owners double-enter, and the registry stays the system of record.</p>
+  <ul class="entries">
+    <li class="entry">
+      <div class="entry-head"><a class="name" href="https://www.dogtitletracker.com/title-trackers">Dog Title Tracker</a><span class="chip">Freemium</span></div>
+      <p>Tracks Qs, points, legs, placements, and title progress across several venues at once. States plainly that it is not affiliated with any dog sport organization.</p>
+      <p class="meta">AKC · ASCA · CPE · UKI · USDAA · NADAC · AKC Fast CAT</p>
+    </li>
+    <li class="entry">
+      <div class="entry-head"><a class="name" href="https://rufftitle.com/">Ruff Title</a><span class="chip">Freemium</span></div>
+      <p>Mobile app for logging runs, tracking title progress, and storing dog profiles and registration numbers. Sport-agnostic.</p>
+      <p class="meta">Any sport · free for 1 dog, $19.99 one-time for unlimited</p>
+    </li>
+    <li class="entry">
+      <div class="entry-head"><a class="name" href="https://www.ukcdogs.com/points-check">UKC Points Check</a><span class="chip chip-official">Registry-run</span></div>
+      <p>Emailed report of a dog's accumulated points and title progress, back within about fifteen minutes. The only automated per-dog lookup that covers lure coursing.</p>
+      <p class="meta">UKC all-breed sports including lure coursing and precision coursing, plus hunting programs · free · results lag events by ~3 weeks</p>
+    </li>
+    <li class="entry">
+      <div class="entry-head"><a class="name" href="https://shop.akc.org/products/proshop-akc-points-and-awards-report">AKC Points Progression</a><span class="chip chip-official">Registry-run</span></div>
+      <p>Free points progression under your dog's details in the AKC account, with a fuller paid Points &amp; Awards Report available by email.</p>
+      <p class="meta">AKC · free tier plus paid report</p>
+    </li>
+    <li class="entry">
+      <div class="entry-head"><a class="name" href="https://www.akc.org/sports/akc-event-search-updates/">AKC Event Search</a><span class="chip chip-official">Registry-run</span></div>
+      <p>Event calendar filtered by breed, judge, location, radius, and date, with club-uploaded premiums, running orders, and entry forms attached. AKC's de facto premium-list aggregator.</p>
+      <p class="meta">All AKC sports · free</p>
+    </li>
+    <li class="entry">
+      <div class="entry-head"><a class="name" href="https://tracker.agilitynerd.com">AgilityNerd Title &amp; Event Goal Tracker</a><span class="chip">Free</span></div>
+      <p>Imports results and shows live progress toward AKC titles and toward event qualification.</p>
+      <p class="meta">AKC agility · donation-ware</p>
+    </li>
+    <li class="entry">
+      <div class="entry-head"><a class="name" href="https://baddogagility.com/">Bad Dog Agility rankings</a><span class="chip">Free</span></div>
+      <p>Quarterly and annual national rankings — Power 60, Preferred Power 60, Breed Power 10 — computed from published trial results.</p>
+      <p class="meta">Primarily AKC agility, some UKI and FCI · free to read</p>
+    </li>
+  </ul>
+</section>
+
+<section class="section">
+  <div class="section-head"><h2>Sighthound and lure coursing</h2><span class="count">8</span></div>
+  <ul class="entries">
+    <li class="entry">
+      <div class="entry-head"><a class="name" href="https://lcsoft.app/">LCSoft</a><span class="chip">Commercial</span></div>
+      <p>The dedicated lure coursing secretary package — "a complete database solution for all Lure Coursing secretarial work." Stores trial data, performs true random draws, and prints judging, draw, score, and entry forms. Desktop Access application, no internet needed. Designed and owned by Eddie Kominek.</p>
+      <p class="meta">AKC · AKC CAT · AKC Fast CAT · ASFA · CKC · ANKC — paid via trial credits · <strong>the vendor's own site claims no ASFA approval, and none of the other five registries approved it either</strong></p>
+    </li>
+    <li class="entry">
+      <div class="entry-head"><a class="name" href="https://aok9rms.gazehound.io">AOK9 Race Secretary</a><span class="chip">Web app</span></div>
+      <p>Browser-based race secretary application for the AOK9 program — R.A.C.E.'s all-breed sprint racing and lure coursing, open to sighthounds and non-sighthounds alike. The only web-native secretary tool in the coursing and racing world; everything else here is desktop software or paper.</p>
+      <p class="meta">AOK9 / R.A.C.E. — sprint racing and lure coursing · independent</p>
+    </li>
+    <li class="entry">
+      <div class="entry-head"><a class="name" href="https://stats.gazehound.io/">Lure Coursing Stats</a><span class="chip">Free</span></div>
+      <p>Per-dog search across ASFA competition — the per-dog query the rest of the sighthound world lacks. BIF and BOB leaderboards, new titles, breed percentile rankings measured against every hound ASFA reports in that breed, kennel leaderboards, regional standings and entries, LCI standings by division. Also hosts the current Running Rules text, revised 08/01/2026.</p>
+      <p class="meta">ASFA lure coursing and LCI · free, no login · unofficial</p>
+    </li>
+    <li class="entry">
+      <div class="entry-head"><a class="name" href="https://coursingclub.com/">Coursing Club</a><span class="chip">Free</span></div>
+      <p>Fast CAT statistics — search by name rather than breed dropdowns, year-by-year speed history with lifetime averages, breed percentile rankings, head-to-head comparison, shareable stat cards. 80,721 dogs and 136,467 races indexed, sourced from AKC and updated weekly.</p>
+      <p class="meta">AKC Fast CAT only · free · independent, states it is "not affiliated with, endorsed by, or sponsored by the American Kennel Club"</p>
+    </li>
+    <li class="entry">
+      <div class="entry-head"><a class="name" href="https://asfa.org/coursing.htm">ASFA records suite</a><span class="chip chip-official">Registry-run</span></div>
+      <p>Hound records, monthly trial results back to 2009, Top 20 standings by breed, and lifetime rankings — all static HTML updated monthly. Entries are PDF forms handled club by club; there is no national online entry portal.</p>
+      <p class="meta">ASFA lure coursing · free, no login · <a href="https://www.asfa.org/records/index.htm">records</a> · <a href="https://www.asfa.org/trial/index0111.html">results</a> · <a href="https://www.asfa.org/20/index.htm">Top 20</a></p>
+    </li>
+    <li class="entry">
+      <div class="entry-head"><a class="name" href="https://www.notra.org/">NOTRA</a><span class="chip chip-official">Registry-run</span></div>
+      <p>Race dates, points and grading guides, rulebook, and published standings — Whippet Top 10, Oval Racing Championship, breed SORCs. No per-dog lookup.</p>
+      <p class="meta">Oval racing, US and Canada · free</p>
+    </li>
+    <li class="entry">
+      <div class="entry-head"><a class="name" href="https://www.asfaregion1.com/">ASFA Region 1</a><span class="chip">Volunteer-run</span></div>
+      <p>Regional premium and flyer aggregator with an event calendar — the closest thing to a lure coursing premium list hub, but Pacific Northwest only.</p>
+      <p class="meta">ASFA coursing and racing, AKC CAT/Fast CAT, AOK9 · WA, OR, ID, MT, AK, BC</p>
+    </li>
+    <li class="entry">
+      <div class="entry-head"><a class="name" href="https://www.ukcdogs.com/points-check">UKC Points Check</a><span class="chip chip-official">Registry-run</span></div>
+      <p>Listed again because it matters here: the single automated per-dog points lookup in the sighthound world.</p>
+      <p class="meta">UKC lure coursing and precision coursing · free</p>
+    </li>
+  </ul>
+
+</section>
+
+<section class="section">
+  <div class="section-head"><h2>Exists, but unverified</h2><span class="count">6</span></div>
+  <p class="section-note">Real products by every indication — but their sites blocked automated checks, so treat the details as unconfirmed until a human looks.</p>
+  <ul class="entries">
+    <li class="entry">
+      <div class="entry-head"><a class="name" href="http://gooddogsoftware.com/">Good Dog Software</a><span class="chip chip-flag">Unverified</span></div>
+      <p>Surfaces in searches for obedience and rally secretary software. Site blocked fetching; function and pricing unconfirmed.</p>
+    </li>
+    <li class="entry">
+      <div class="entry-head"><a class="name" href="https://www.integrityk9scores.com/">Integrity K9 Scores</a><span class="chip chip-flag">Unverified</span></div>
+      <p>Named in a 2026 club premium list, so it is in live use. Certificate error on fetch; scoring versus full secretary service unclear.</p>
+    </li>
+    <li class="entry">
+      <div class="entry-head"><a class="name" href="https://pawtap.net/">Paw Tap</a><span class="chip chip-flag">Unverified</span></div>
+      <p>Trial management for AKC scent work, online entry reportedly in development. All detail comes secondhand from a 2025 round-up, not the vendor.</p>
+      <p class="meta">Reported at $320 plus $75/yr</p>
+    </li>
+    <li class="entry">
+      <div class="entry-head"><a class="name" href="https://www.pawprinttrials.com/">PawPrint Trials</a><span class="chip">Commercial</span></div>
+      <p>Entry, entry management, and real-time running orders on trial day. Roughly 35 AKC clubs and 150 trials a year; no added exhibitor fee.</p>
+      <p class="meta">AKC agility, obedience, rally</p>
+    </li>
+    <li class="entry">
+      <div class="entry-head"><a class="name" href="http://www.prestigepedigrees.com/software/akc-pgm.htm">Prestige Pedigrees Trial Secretary</a><span class="chip chip-flag">Unverified</span></div>
+      <p>URL pattern suggests an older product. Could not confirm it is still maintained.</p>
+    </li>
+    <li class="entry">
+      <div class="entry-head"><a class="name" href="http://www.scottielovers.com/agtsec/">AGTSec</a><span class="chip chip-flag">Unverified</span></div>
+      <p>Appears to be a club-built agility trial secretary tool hosted on a breed club site. Returned an access error.</p>
+    </li>
+  </ul>
+</section>
+
+<footer class="foot">
+  <p>Compiled August 2026. Every URL was fetched and confirmed to resolve unless marked unverified; pricing and feature claims come from vendor sites and may have changed.</p>
+  <p>Sports with no dominant dedicated product: herding, earthdog, dock diving, and UpDog — each covered only as a line item inside a multi-sport platform, if at all.</p>
+</footer>
+
+</div>
+
+</body>
+</html>
