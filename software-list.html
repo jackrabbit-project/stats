@@ -186,6 +186,35 @@ td a:hover{color:var(--accent);border-bottom-color:var(--accent)}
   .count{width:100%;margin-left:0}
   .section-head{flex-wrap:wrap}
 }
+
+/* ---- section tabs ---- */
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+.tabs{
+  position:sticky;top:0;z-index:10;
+  background:var(--ground);
+  display:flex;gap:.45rem;overflow-x:auto;
+  padding:.7rem 0;margin:0 0 2.4rem;
+  border-bottom:1px solid var(--line);
+  scrollbar-width:none;
+}
+.tabs::-webkit-scrollbar{display:none}
+.tab{
+  font-family:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  font-size:.66rem;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--muted);text-decoration:none;white-space:nowrap;
+  padding:.34rem .68rem;border:1px solid var(--line);
+  background:var(--surface);
+}
+.tab:hover{color:var(--accent);border-color:var(--accent)}
+.section{scroll-margin-top:4rem}
+.section-head{border-bottom:2px solid var(--ink);padding-bottom:.55rem}
+.section-head h2{font-size:1.7rem}
+.sec-no{
+  font-family:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  font-size:.72rem;color:var(--accent);letter-spacing:.08em;
+  flex-shrink:0;
+}
 </style>
 </head>
 <body>
@@ -197,6 +226,16 @@ td a:hover{color:var(--accent);border-bottom-color:var(--accent)}
   <h1>Dog Sport Trial Software</h1>
   <p class="standfirst">Who actually runs the events. Entry platforms, trial secretary software, and owner-facing record keeping across North American dog sports.</p>
 </header>
+
+<nav class="tabs" aria-label="Sections">
+  <a class="tab" href="#registry">Registry systems</a>
+  <a class="tab" href="#superintendents">Superintendents</a>
+  <a class="tab" href="#multi-sport">Multi-sport</a>
+  <a class="tab" href="#sport-specific">Sport-specific</a>
+  <a class="tab" href="#owner-records">Owner records</a>
+  <a class="tab" href="#coursing">Coursing &amp; racing</a>
+  <a class="tab" href="#unverified">Unverified</a>
+</nav>
 
 <section class="finding">
   <p class="eyebrow">Headline finding</p>
@@ -210,8 +249,8 @@ td a:hover{color:var(--accent);border-bottom-color:var(--accent)}
   </ul>
 </section>
 
-<section class="section">
-  <div class="section-head"><h2>Registry-operated systems</h2><span class="count">6</span></div>
+<section class="section" id="registry">
+  <div class="section-head"><span class="sec-no">01</span><h2>Registry-operated systems</h2><span class="count">6</span></div>
   <p class="section-note">The only genuinely official software. Each registry built its own rather than certifying someone else's.</p>
   <ul class="entries">
     <li class="entry">
@@ -247,8 +286,8 @@ td a:hover{color:var(--accent);border-bottom-color:var(--accent)}
   </ul>
 </section>
 
-<section class="section">
-  <div class="section-head"><h2>AKC-licensed superintendents</h2><span class="count">8</span></div>
+<section class="section" id="superintendents">
+  <div class="section-head"><span class="sec-no">02</span><h2>AKC-licensed superintendents</h2><span class="count">8</span></div>
   <p class="section-note">The one real credential in this space. It is a business license held by the company, for superintending conformation shows — it says nothing about the software each one runs in-house.</p>
   <div class="tablewrap">
     <table>
@@ -267,8 +306,8 @@ td a:hover{color:var(--accent);border-bottom-color:var(--accent)}
   </div>
 </section>
 
-<section class="section">
-  <div class="section-head"><h2>Multi-sport entry and secretary platforms</h2><span class="count">7</span></div>
+<section class="section" id="multi-sport">
+  <div class="section-head"><span class="sec-no">03</span><h2>Multi-sport entry and secretary platforms</h2><span class="count">7</span></div>
   <p class="section-note">Commercial. All uncertified by any registry — several say so on their own sites.</p>
   <ul class="entries">
     <li class="entry">
@@ -309,8 +348,8 @@ td a:hover{color:var(--accent);border-bottom-color:var(--accent)}
   </ul>
 </section>
 
-<section class="section">
-  <div class="section-head"><h2>Sport-specific secretary software</h2><span class="count">8</span></div>
+<section class="section" id="sport-specific">
+  <div class="section-head"><span class="sec-no">04</span><h2>Sport-specific secretary software</h2><span class="count">8</span></div>
   <ul class="entries">
     <li class="entry">
       <div class="entry-head"><a class="name" href="https://www.entryexpress.net/">Entry Express</a><span class="chip">Commercial</span></div>
@@ -355,8 +394,8 @@ td a:hover{color:var(--accent);border-bottom-color:var(--accent)}
   </ul>
 </section>
 
-<section class="section">
-  <div class="section-head"><h2>Owner-facing record keeping</h2><span class="count">7</span></div>
+<section class="section" id="owner-records">
+  <div class="section-head"><span class="sec-no">05</span><h2>Owner-facing record keeping</h2><span class="count">7</span></div>
   <p class="section-note">Every independent tracker is manual re-entry. None pull from official registry records — owners double-enter, and the registry stays the system of record.</p>
   <ul class="entries">
     <li class="entry">
@@ -397,8 +436,8 @@ td a:hover{color:var(--accent);border-bottom-color:var(--accent)}
   </ul>
 </section>
 
-<section class="section">
-  <div class="section-head"><h2>Lure coursing and racing</h2><span class="count">10</span></div>
+<section class="section" id="coursing">
+  <div class="section-head"><span class="sec-no">06</span><h2>Lure coursing and racing</h2><span class="count">9</span></div>
   <ul class="entries">
     <li class="entry">
       <div class="entry-head"><a class="name" href="https://lcsoft.app/">LCSoft</a><span class="chip">Commercial</span></div>
@@ -445,17 +484,12 @@ td a:hover{color:var(--accent);border-bottom-color:var(--accent)}
       <p>Regional premium and flyer aggregator with an event calendar — the closest thing to a lure coursing premium list hub, but Pacific Northwest only.</p>
       <p class="meta">ASFA coursing and racing, AKC CAT/Fast CAT, AOK9 · WA, OR, ID, MT, AK, BC</p>
     </li>
-    <li class="entry">
-      <div class="entry-head"><a class="name" href="https://www.ukcdogs.com/points-check">UKC Points Check</a><span class="chip chip-official">Registry-run</span></div>
-      <p>Listed again because it matters here: the single automated per-dog points lookup in the sighthound world.</p>
-      <p class="meta">UKC lure coursing and precision coursing · free</p>
-    </li>
   </ul>
 
 </section>
 
-<section class="section">
-  <div class="section-head"><h2>Exists, but unverified</h2><span class="count">6</span></div>
+<section class="section" id="unverified">
+  <div class="section-head"><span class="sec-no">07</span><h2>Exists, but unverified</h2><span class="count">6</span></div>
   <p class="section-note">Real products by every indication — but their sites blocked automated checks, so treat the details as unconfirmed until a human looks.</p>
   <ul class="entries">
     <li class="entry">
