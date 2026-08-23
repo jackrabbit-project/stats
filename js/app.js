@@ -76,6 +76,9 @@ const ICON_STROKES = {
   mail: '<path d="m22 7-8.991 5.727a2 2 0 0 1-2.009 0L2 7"/><rect x="2" y="4" width="20" height="16" rx="2"/>',
   link: '<path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>',
   globe: '<circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/>',
+  sun: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/>',
+  moon: '<path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>',
+  monitor: '<rect width="20" height="14" x="2" y="3" rx="2"/><line x1="8" x2="16" y1="21" y2="21"/><line x1="12" x2="12" y1="17" y2="21"/>',
 };
 
 const ICON_FILLS = {
@@ -309,6 +312,56 @@ const NAV = [
   ['about.html', 'About'],
 ];
 
+/* ------------------------------------------------------------------- theme */
+
+/* Three states: follow the device (the default, no attribute), dark, light.
+   js/theme.js re-applies the saved override before first paint on every page;
+   this button cycles the states and keeps the browser-chrome color in step.
+   The icon names the state you are IN, the label the switch a click makes. */
+const THEME_STATES = {
+  auto: { glyph: 'monitor', label: 'Theme follows your device. Switch to dark.' },
+  dark: { glyph: 'moon', label: 'Dark theme. Switch to light.' },
+  light: { glyph: 'sun', label: 'Light theme. Follow the device again.' },
+};
+
+function themeApply(state) {
+  const root = document.documentElement;
+  if (state === 'dark' || state === 'light') {
+    root.dataset.theme = state;
+    try { localStorage.setItem('theme', state); } catch (e) { /* private mode */ }
+  } else {
+    delete root.dataset.theme;
+    try { localStorage.removeItem('theme'); } catch (e) { /* private mode */ }
+  }
+  // Keep the browser chrome (mobile address bar) on the effective color: an
+  // override pins both theme-color metas, auto restores their media split.
+  document.querySelectorAll('meta[name="theme-color"]').forEach((meta) => {
+    const forDark = (meta.getAttribute('media') || '').includes('dark');
+    const dark = state === 'dark'
+      || (state !== 'light' && matchMedia('(prefers-color-scheme: dark)').matches);
+    meta.setAttribute('content',
+      (state === 'dark' || state === 'light' ? dark : forDark) ? '#1B1917' : '#F7F5EF');
+  });
+}
+
+function initThemeToggle(button) {
+  if (!button) return;
+  const state = () => document.documentElement.dataset.theme || 'auto';
+  const paint = () => {
+    const { glyph, label } = THEME_STATES[state()];
+    button.innerHTML = icon(glyph);
+    button.setAttribute('aria-label', label);
+    button.title = label;
+  };
+  button.addEventListener('click', () => {
+    const order = ['auto', 'dark', 'light'];
+    themeApply(order[(order.indexOf(state()) + 1) % order.length]);
+    paint();
+  });
+  themeApply(state()); // sync the theme-color metas with any saved override
+  paint();
+}
+
 function renderChrome(season, current) {
   const links = NAV.map(([href, label]) => {
     const active = href === current;
@@ -326,14 +379,16 @@ function renderChrome(season, current) {
         <a href="about.html#disclaimer" class="underline hover:text-asfa-text whitespace-nowrap">Full disclaimer</a>
       </div>
       <div class="bg-asfa-paper border-b border-asfa-border">
-        <div class="max-w-6xl mx-auto px-4 pt-3 lg:pt-0 lg:py-1.5 flex flex-col lg:flex-row lg:items-center gap-x-8">
-          <a href="index.html" class="flex items-baseline gap-2.5 shrink-0">
+        <div class="max-w-6xl mx-auto px-4 pt-3 lg:pt-0 lg:py-1.5 flex flex-col lg:flex-row lg:items-center gap-x-8 relative">
+          <a href="index.html" class="flex items-baseline gap-2.5 shrink-0 pr-10 lg:pr-0">
             <span class="font-display font-semibold text-xl text-asfa-text">Lure Coursing Stats</span>
             <span class="font-mono text-[11px] uppercase tracking-widest text-asfa-muted">ASFA standings · ${season ? season.season : ''}</span>
           </a>
           <nav class="nav-scroll edge-fade flex flex-nowrap lg:flex-wrap overflow-x-auto lg:overflow-visible -mx-4 px-4 lg:mx-0 lg:px-0" aria-label="Site">${links}</nav>
+          <button id="theme-toggle" type="button" class="absolute right-3 top-2.5 lg:static lg:order-last lg:ml-auto shrink-0 p-2 text-base text-asfa-muted hover:text-asfa-text"></button>
         </div>
       </div>`;
+    initThemeToggle(header.querySelector('#theme-toggle'));
 
     // On a phone the nav is one scrolling line; start it with the current
     // page's link in view rather than always parked at Home.
