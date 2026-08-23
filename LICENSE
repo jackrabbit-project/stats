@@ -38,8 +38,9 @@ the following, which are included under separate terms:
 
 2. LOGO / ICON FILES — "assets/favicon.ico" (and its root-level copy
    "favicon.ico"), "assets/favicon-16x16.png", "assets/favicon-32x32.png",
-   "assets/apple-touch-icon.png", and "assets/jackrabbit-icon-40.png" are taken
-   from the Jackrabbit Project logo, a brand mark of the project maintainer.
+   "assets/apple-touch-icon.png", and the inline Jackrabbit mark vector in the
+   footer are taken from the Jackrabbit Project logo, a brand mark of the
+   project maintainer.
    They are included to identify this project. Nothing in the MIT license above
    grants rights to use that mark for other purposes.
 
