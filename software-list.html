@@ -215,6 +215,24 @@ html{scroll-behavior:smooth}
   font-size:.72rem;color:var(--accent);letter-spacing:.08em;
   flex-shrink:0;
 }
+
+/* ---- finding as dropdown ---- */
+.finding{padding:0}
+.finding summary{
+  list-style:none;cursor:pointer;position:relative;
+  padding:1.5rem clamp(1.1rem,3vw,1.9rem);
+}
+.finding summary::-webkit-details-marker{display:none}
+.finding summary::after{
+  content:"+";position:absolute;top:1.3rem;right:clamp(1.1rem,3vw,1.9rem);
+  font-family:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  font-size:1.05rem;color:var(--flag);
+}
+.finding[open] summary::after{content:"2"}
+.finding .eyebrow{display:block}
+.finding summary h2{margin:0}
+.finding summary:hover h2{color:var(--flag)}
+.finding-body{padding:0 clamp(1.1rem,3vw,1.9rem) 1.5rem}
 </style>
 </head>
 <body>
@@ -237,9 +255,12 @@ html{scroll-behavior:smooth}
   <a class="tab" href="#unverified">Unverified</a>
 </nav>
 
-<section class="finding">
-  <p class="eyebrow">Headline finding</p>
-  <h2>No national dog sport organization appears to certify third-party trial software.</h2>
+<details class="finding">
+  <summary>
+    <span class="eyebrow">Headline finding</span>
+    <h2>No national dog sport organization appears to certify third-party trial software.</h2>
+  </summary>
+  <div class="finding-body">
   <p>AKC, UKC, and CKC operate <strong>no software approval or certification program</strong> and publish no list of approved or certified vendors, and nothing of the kind turned up at the sanctioning organizations either. Every commercial product below claims zero certification from any of them, and several disclaim affiliation outright.</p>
   <p>What exists instead:</p>
   <ul>
@@ -247,7 +268,8 @@ html{scroll-behavior:smooth}
     <li><strong>AKC publishes functional requirements</strong> for agility online entry systems. Requirements, not approvals: no vendor list, no audit, no seal. The club self-attests and names its provider in the premium list.</li>
     <li><strong>UKC and CKC went in-house</strong> — UKC with its own online entry service, CKC with its own event platform, Canuck Dogs — rather than approving anyone else's.</li>
   </ul>
-</section>
+  </div>
+</details>
 
 <section class="section" id="registry">
   <div class="section-head"><span class="sec-no">01</span><h2>Registry-operated systems</h2><span class="count">6</span></div>
