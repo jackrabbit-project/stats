@@ -320,6 +320,57 @@ function jackrabbitMark(cls, size) {
   return `<svg class="${cls}" width="${size}" height="${Math.round(size * 438 / 420)}" viewBox="42 185 420 438" aria-hidden="true"><path fill="currentColor" fill-rule="evenodd" d="${JACKRABBIT_PATH}"/></svg>`;
 }
 
+/* ----------------------------------------------------------------- countup */
+
+/* Rolls a headline number up from zero — an ease-out ramp on
+   requestAnimationFrame, started when the element scrolls into view.
+   Dependency-free on purpose; reduced-motion users get the final value
+   immediately. */
+function countUp(el, to, { duration = 1.1, separator = false } = {}) {
+  const fmt = (n) => {
+    const rounded = Math.round(n);
+    return separator ? rounded.toLocaleString('en-US') : String(rounded);
+  };
+  if (!('IntersectionObserver' in window)
+      || matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    el.textContent = fmt(to);
+    return;
+  }
+  el.textContent = fmt(0);
+  const observer = new IntersectionObserver(([entry]) => {
+    if (!entry.isIntersecting) return;
+    observer.disconnect();
+    const start = performance.now();
+    const tick = (now) => {
+      const progress = Math.min(1, (now - start) / (duration * 1000));
+      el.textContent = fmt(to * (1 - Math.pow(1 - progress, 3)));
+      if (progress < 1) requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+  });
+  observer.observe(el);
+}
+
+/* The home tiles repaint when the titles feed lands, so remember what has
+   already rolled: a repainted tile keeps its final value and only genuinely
+   new tiles animate. */
+const countedTiles = new Map();
+
+function animateTiles(container) {
+  if (!container) return;
+  container.querySelectorAll('.tile').forEach((tile) => {
+    const valueEl = tile.querySelector('.tile-value');
+    const label = tile.querySelector('.tile-label')?.textContent ?? '';
+    if (!valueEl) return;
+    const raw = valueEl.textContent.trim();
+    const target = Number(raw.replace(/,/g, ''));
+    if (!Number.isFinite(target) || raw === '') return;
+    if (countedTiles.get(label) === target) return;
+    countedTiles.set(label, target);
+    countUp(valueEl, target, { separator: raw.includes(',') });
+  });
+}
+
 /* ------------------------------------------------------------------- theme */
 
 /* Three states: follow the device (the default, no attribute), dark, light.

@@ -112,7 +112,7 @@
 
   <footer id="site-footer" class="bg-asfa-navy text-white py-8"></footer>
 
-  <script src="js/app.js?v=20260823b"></script>
+  <script src="js/app.js?v=20260827"></script>
   <script>
     page('index.html', (season) => {
       const hounds = groupHounds(season.dogs);
@@ -133,6 +133,7 @@
         el.innerHTML = tiles.map(([value, label]) =>
           `<div class="tile"><div class="tile-value">${value}</div><div class="tile-label">${label}</div></div>`
         ).join('');
+        animateTiles(el);
       };
       paintTiles('grid grid-cols-2 md:grid-cols-4 gap-3');
 
