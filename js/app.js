@@ -326,7 +326,7 @@ function jackrabbitMark(cls, size) {
    requestAnimationFrame, started when the element scrolls into view.
    Dependency-free on purpose; reduced-motion users get the final value
    immediately. */
-function countUp(el, to, { duration = 1.1, separator = false } = {}) {
+function countUp(el, to, { duration = 2, separator = false } = {}) {
   const fmt = (n) => {
     const rounded = Math.round(n);
     return separator ? rounded.toLocaleString('en-US') : String(rounded);
