@@ -64,6 +64,9 @@
       const ranked = lciDogs.length;
       const competing = DIVISIONS.reduce(
         (sum, d) => sum + (sectionFor(d.slug)?.total_competing || 0), 0);
+      // The points-don't-compare example quotes the real spread, so it can
+      // never fall behind the season.
+      const divisionDraws = DIVISIONS.map((d) => sectionFor(d.slug)?.total_competing || 0);
 
       // Count LCI-program titles held by ranked dogs. A title with a numeral
       // (LCE2) counts once against its base.
@@ -181,17 +184,12 @@
           <ul class="text-sm space-y-2 list-disc pl-5">
             <li>
               LCI awards <strong>proficiency points only</strong>, toward the Lure Chasing Champion
-              and Lure Chaser Excellent titles. No ASFA championship points or placements toward
-              the Field Championship or Lure Courser of Merit titles are earned in these stakes.
-            </li>
-            <li>
-              <strong>No Best of Breed or Best in Field.</strong> Dogs run alone and the divisions
-              are not breed stakes, so neither award exists here.
+              and Lure Chasing Excellent titles.
             </li>
             <li>
               <strong>Points do not compare between divisions.</strong> Placement points scale with
-              the number of dogs in the stake, so a division drawing 87 dogs offers far more of
-              them than one drawing 39. Standing — rank against the division's competitors — is the
+              the number of dogs in the stake, so a division drawing ${Math.max(...divisionDraws)} dogs offers far more of
+              them than one drawing ${Math.min(...divisionDraws)}. Standing — rank against the division's competitors — is the
               fair comparison.
             </li>
           </ul>
