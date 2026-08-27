@@ -1,7 +1,7 @@
 {
   "season": 2026,
-  "as_of": "2026-07-19",
-  "generated": "2026-08-08",
+  "as_of": "2026-08-09",
+  "generated": "2026-08-27",
   "source_url": "https://www.asfa.org/trial/index0111.html",
   "months": [
     "2026-01",
@@ -10,19 +10,20 @@
     "2026-04",
     "2026-05",
     "2026-06",
-    "2026-07"
+    "2026-07",
+    "2026-08"
   ],
   "region_source": "ASFA Constitution & By-Laws, rev. 08/01/2024, Article V, Section 3",
   "stats": {
-    "trials": 88,
-    "entries": 2659,
-    "clubs": 34,
+    "trials": 96,
+    "entries": 2949,
+    "clubs": 35,
     "unassigned_trials": 0,
     "unassigned_entries": 0,
     "by_program": {
-      "breed": 1740,
-      "singles": 446,
-      "lci": 472,
+      "breed": 1924,
+      "singles": 488,
+      "lci": 536,
       "absent": 1
     }
   },
@@ -146,10 +147,10 @@
   "by_region": [
     {
       "region": 1,
-      "trials": 5,
-      "entries": 196,
+      "trials": 7,
+      "entries": 275,
       "clubs": 3,
-      "average_entry": 39.2
+      "average_entry": 39.3
     },
     {
       "region": 2,
@@ -160,10 +161,10 @@
     },
     {
       "region": 3,
-      "trials": 10,
-      "entries": 266,
+      "trials": 13,
+      "entries": 333,
       "clubs": 3,
-      "average_entry": 26.6
+      "average_entry": 25.6
     },
     {
       "region": 4,
@@ -195,17 +196,17 @@
     },
     {
       "region": 8,
-      "trials": 14,
-      "entries": 466,
-      "clubs": 5,
-      "average_entry": 33.3
+      "trials": 15,
+      "entries": 503,
+      "clubs": 6,
+      "average_entry": 33.5
     },
     {
       "region": 9,
-      "trials": 6,
-      "entries": 300,
+      "trials": 8,
+      "entries": 407,
       "clubs": 2,
-      "average_entry": 50.0
+      "average_entry": 50.9
     },
     {
       "region": 10,
@@ -217,6 +218,26 @@
   ],
   "by_club": [
     {
+      "club": "Gazehounds of New England",
+      "slug": "gazehounds-of-new-england",
+      "initials": "GONE",
+      "region": 9,
+      "trials": 6,
+      "entries": 301,
+      "venue": "Blandford, MA",
+      "venue_count": 2
+    },
+    {
+      "club": "Colorado Lure Coursing Association",
+      "slug": "colorado-lure-coursing-association",
+      "initials": "CLCA",
+      "region": 3,
+      "trials": 10,
+      "entries": 249,
+      "venue": "Peyton, CO",
+      "venue_count": 1
+    },
+    {
       "club": "Upper Chesapeake Bay Saluki Club",
       "slug": "upper-chesapeake-bay-saluki-club",
       "initials": "UCBSC",
@@ -227,26 +248,6 @@
       "venue_count": 2
     },
     {
-      "club": "Gazehounds of New England",
-      "slug": "gazehounds-of-new-england",
-      "initials": "GONE",
-      "region": 9,
-      "trials": 4,
-      "entries": 194,
-      "venue": "Waterford, CT",
-      "venue_count": 2
-    },
-    {
-      "club": "Colorado Lure Coursing Association",
-      "slug": "colorado-lure-coursing-association",
-      "initials": "CLCA",
-      "region": 3,
-      "trials": 7,
-      "entries": 182,
-      "venue": "Peyton, CO",
-      "venue_count": 1
-    },
-    {
       "club": "Iowa Coursing Association",
       "slug": "iowa-coursing-association",
       "initials": "ICA",
@@ -255,6 +256,16 @@
       "entries": 177,
       "venue": "Des Moines, IA",
       "venue_count": 2
+    },
+    {
+      "club": "Silken Windhounds for Endurance, Perf. & Training",
+      "slug": "silken-windhounds-for-endurance-perf-training",
+      "initials": "SWEPT",
+      "region": 1,
+      "trials": 4,
+      "entries": 176,
+      "venue": "Roy, WA",
+      "venue_count": 3
     },
     {
       "club": "Michigan Gazehound Association",
@@ -335,16 +346,6 @@
       "entries": 97,
       "venue": "Whitesburg, GA",
       "venue_count": 1
-    },
-    {
-      "club": "Silken Windhounds for Endurance, Perf. & Training",
-      "slug": "silken-windhounds-for-endurance-perf-training",
-      "initials": "SWEPT",
-      "region": 1,
-      "trials": 2,
-      "entries": 97,
-      "venue": "Toledo, WA",
-      "venue_count": 2
     },
     {
       "club": "Midwest Coursing Club",
@@ -464,6 +465,16 @@
       "trials": 1,
       "entries": 44,
       "venue": "Roy, WA",
+      "venue_count": 1
+    },
+    {
+      "club": "Mason Dixon Ibizan Hound Club",
+      "slug": "mason-dixon-ibizan-hound-club",
+      "initials": "MDIHC",
+      "region": 8,
+      "trials": 1,
+      "entries": 37,
+      "venue": "Littlestown, PA",
       "venue_count": 1
     },
     {
@@ -2141,6 +2152,150 @@
       "club_slug": "upper-chesapeake-bay-saluki-club",
       "region": 8,
       "initials": "UCBSC"
+    },
+    {
+      "club_raw": "GAZEHOUNDS OF NEW ENGLAND",
+      "date": "2026-08-01",
+      "location": "Blandford, MA",
+      "state": "MA",
+      "entries": 57,
+      "note": "",
+      "by_program": {
+        "breed": 28,
+        "singles": 13,
+        "lci": 16,
+        "absent": 0
+      },
+      "club": "Gazehounds of New England",
+      "club_slug": "gazehounds-of-new-england",
+      "region": 9,
+      "initials": "GONE"
+    },
+    {
+      "club_raw": "GAZEHOUNDS OF NEW ENGLAND",
+      "date": "2026-08-02",
+      "location": "Blandford, MA",
+      "state": "MA",
+      "entries": 50,
+      "note": "",
+      "by_program": {
+        "breed": 23,
+        "singles": 13,
+        "lci": 14,
+        "absent": 0
+      },
+      "club": "Gazehounds of New England",
+      "club_slug": "gazehounds-of-new-england",
+      "region": 9,
+      "initials": "GONE"
+    },
+    {
+      "club_raw": "MASON DIXON IBIZAN HOUND CLUB",
+      "date": "2026-08-02",
+      "location": "Littlestown, PA",
+      "state": "PA",
+      "entries": 37,
+      "note": "",
+      "by_program": {
+        "breed": 19,
+        "singles": 3,
+        "lci": 15,
+        "absent": 0
+      },
+      "club": "Mason Dixon Ibizan Hound Club",
+      "club_slug": "mason-dixon-ibizan-hound-club",
+      "region": 8,
+      "initials": "MDIHC"
+    },
+    {
+      "club_raw": "COLORADO LURE COURSING ASSOCIATION",
+      "date": "2026-08-07",
+      "location": "Peyton, CO",
+      "state": "CO",
+      "entries": 16,
+      "note": "Desert Dog",
+      "by_program": {
+        "breed": 12,
+        "singles": 0,
+        "lci": 4,
+        "absent": 0
+      },
+      "club": "Colorado Lure Coursing Association",
+      "club_slug": "colorado-lure-coursing-association",
+      "region": 3,
+      "initials": "CLCA"
+    },
+    {
+      "club_raw": "COLORADO LURE COURSING ASSOCIATION",
+      "date": "2026-08-08",
+      "location": "Peyton, CO",
+      "state": "CO",
+      "entries": 21,
+      "note": "Desert Dog",
+      "by_program": {
+        "breed": 15,
+        "singles": 2,
+        "lci": 4,
+        "absent": 0
+      },
+      "club": "Colorado Lure Coursing Association",
+      "club_slug": "colorado-lure-coursing-association",
+      "region": 3,
+      "initials": "CLCA"
+    },
+    {
+      "club_raw": "SILKEN WINDHOUNDS FOR ENDURANCE,PERFORMANCE & TRAINING",
+      "date": "2026-08-08",
+      "location": "Roy, WA",
+      "state": "WA",
+      "entries": 42,
+      "note": "",
+      "by_program": {
+        "breed": 39,
+        "singles": 3,
+        "lci": 0,
+        "absent": 0
+      },
+      "club": "Silken Windhounds for Endurance, Perf. & Training",
+      "club_slug": "silken-windhounds-for-endurance-perf-training",
+      "region": 1,
+      "initials": "SWEPT"
+    },
+    {
+      "club_raw": "COLORADO LURE COURSING ASSOCIATION",
+      "date": "2026-08-09",
+      "location": "Peyton, CO",
+      "state": "CO",
+      "entries": 30,
+      "note": "Desert Dog",
+      "by_program": {
+        "breed": 19,
+        "singles": 3,
+        "lci": 8,
+        "absent": 0
+      },
+      "club": "Colorado Lure Coursing Association",
+      "club_slug": "colorado-lure-coursing-association",
+      "region": 3,
+      "initials": "CLCA"
+    },
+    {
+      "club_raw": "SILKEN WINDHOUNDS FOR ENDURANCE,PERFORMANCE & TRAINING",
+      "date": "2026-08-09",
+      "location": "Roy, WA",
+      "state": "WA",
+      "entries": 37,
+      "note": "",
+      "by_program": {
+        "breed": 29,
+        "singles": 5,
+        "lci": 3,
+        "absent": 0
+      },
+      "club": "Silken Windhounds for Endurance, Perf. & Training",
+      "club_slug": "silken-windhounds-for-endurance-perf-training",
+      "region": 1,
+      "initials": "SWEPT"
     }
   ]
 }

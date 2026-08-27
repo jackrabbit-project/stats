@@ -2,9 +2,9 @@
   "seasons": [
     2026
   ],
-  "fetched": "2026-08-20",
+  "fetched": "2026-08-27",
   "source_url": "https://www.asfa.org/event/index.htm",
-  "calendar_pdf_url": "https://www.asfa.org/event/ASFA%20Calendar%2008-13-2026%20Updates.pdf",
+  "calendar_pdf_url": "https://www.asfa.org/event/ASFA%20Calendar%2008-21-2026%20Updates.pdf",
   "region_source": "ASFA Constitution & By-Laws, rev. 08/01/2024, Article V, Section 3",
   "regions": [
     {
@@ -123,9 +123,9 @@
     }
   ],
   "stats": {
-    "events": 116,
+    "events": 118,
     "cancelled": 6,
-    "with_premium": 75
+    "with_premium": 78
   },
   "unmatched_initials": [
     "IWALE"
@@ -1237,7 +1237,7 @@
       "venue": "Peyton",
       "state": "CO",
       "region": 3,
-      "premium_url": null,
+      "premium_url": "https://www.asfa.org/event/premiums/CLCA%20ASFA%20Grand%20National%2052%20Premium%20List_One%20Tuff%20Bunny%20(2).pdf",
       "premium_inferred": false,
       "club": "Colorado Lure Coursing Association"
     },
@@ -1255,6 +1255,21 @@
       "premium_url": "https://www.asfa.org/event/premiums/NAA%20PL%20V3%20Final.pdf",
       "premium_inferred": false,
       "club": "Northern Azawakh Association"
+    },
+    {
+      "start": "2026-09-19",
+      "end": "2026-09-20",
+      "type": "RR",
+      "initials": "OCRRC",
+      "specialty": false,
+      "national": false,
+      "cancelled": false,
+      "venue": "Chino Hills",
+      "state": "CA",
+      "region": 10,
+      "premium_url": null,
+      "premium_inferred": false,
+      "club": "Orange Coast Rhodesian Ridgeback Club"
     },
     {
       "start": "2026-09-26",
@@ -1297,7 +1312,7 @@
       "venue": "Bolduc Farm, Blandford",
       "state": "MA",
       "region": 9,
-      "premium_url": null,
+      "premium_url": "https://www.asfa.org/event/premiums/FINAL-2026%20SANE%20ASFA%20SW%20Spec%20(2).pdf",
       "premium_inferred": false,
       "club": "Saluki Association of New England"
     },
@@ -1357,7 +1372,7 @@
       "venue": "Antique Acres, Cedar Falls",
       "state": "IA",
       "region": 5,
-      "premium_url": null,
+      "premium_url": "https://www.asfa.org/event/premiums/2026%20ICA%20ASFA%20-%2010.3-10.4.2026.pdf",
       "premium_inferred": false,
       "club": "Iowa Coursing Association"
     },
@@ -1402,7 +1417,7 @@
       "venue": "Shelbyville",
       "state": "TN",
       "region": 7,
-      "premium_url": "https://www.asfa.org/event/premiums/BaCoA%202026%20ASFA%20Premium.pdf",
+      "premium_url": "https://www.asfa.org/event/premiums/BaCoA%202026%20ASFA%20Premium%20(1).pdf",
       "premium_inferred": false,
       "club": "Basenji Club of America, Inc."
     },
@@ -1830,6 +1845,21 @@
       "start": "2026-12-19",
       "end": "2026-12-20",
       "type": "RR",
+      "initials": "OCRRC",
+      "specialty": true,
+      "national": false,
+      "cancelled": false,
+      "venue": "Chino Hills",
+      "state": "CA",
+      "region": 10,
+      "premium_url": null,
+      "premium_inferred": false,
+      "club": "Orange Coast Rhodesian Ridgeback Club"
+    },
+    {
+      "start": "2026-12-26",
+      "end": "2026-12-27",
+      "type": "SW/LCI",
       "initials": "OCRRC",
       "specialty": true,
       "national": false,
