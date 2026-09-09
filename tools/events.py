@@ -152,9 +152,12 @@ def parse_rows(html: str) -> tuple[list[dict], int]:
         if region is not None and not 1 <= region <= 10:
             raise EventParseError(f"{year}-{month:02d}: region {region} out of range in {flat!r}")
 
-        # The premium link lives on the club cell (and again on the go button).
-        href_m = re.search(r'href="([^"]+\.pdf)"', cells[8], re.I) or re.search(
-            r'href="([^"]+\.pdf)"', cells[12], re.I
+        # The premium link lives on the go button and again on the club cell.
+        # When ASFA revises a premium the go button gets the newer file while
+        # the club-name link can keep the old one (the May 2026 IHCUS
+        # Specialty row differed), so the button wins where they disagree.
+        href_m = re.search(r'href="([^"]+\.pdf)"', cells[12], re.I) or re.search(
+            r'href="([^"]+\.pdf)"', cells[8], re.I
         )
         premium = None
         if href_m:

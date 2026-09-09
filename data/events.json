@@ -2,7 +2,7 @@
   "seasons": [
     2026
   ],
-  "fetched": "2026-08-27",
+  "fetched": "2026-09-09",
   "source_url": "https://www.asfa.org/event/index.htm",
   "calendar_pdf_url": "https://www.asfa.org/event/ASFA%20Calendar%2008-21-2026%20Updates.pdf",
   "region_source": "ASFA Constitution & By-Laws, rev. 08/01/2024, Article V, Section 3",
@@ -125,7 +125,7 @@
   "stats": {
     "events": 118,
     "cancelled": 6,
-    "with_premium": 78
+    "with_premium": 93
   },
   "unmatched_initials": [
     "IWALE"
@@ -742,7 +742,7 @@
       "venue": "Antique Acres, Cedar Falls",
       "state": "IA",
       "region": 5,
-      "premium_url": "https://www.asfa.org/event/premiums/IHCUS%202026%20ASFA%20LC%20-%20Saturday%20Beezer%20Bash%20-%20Updated%20JP.pdf",
+      "premium_url": "https://www.asfa.org/event/premiums/IHCUS%202026%20ASFA%20LC%20-%20Sat%20Beezer%20Bash%20-%20FINAL%20UPDATE.pdf",
       "premium_inferred": false,
       "club": "Ibizan Hound Club of the United States"
     },
@@ -1072,7 +1072,7 @@
       "venue": "Kominek Farm, Limestone",
       "state": "TN",
       "region": 7,
-      "premium_url": null,
+      "premium_url": "https://www.asfa.org/event/premiums/2025-09-gasm-asfa-premium-list%20(2).pdf",
       "premium_inferred": false,
       "club": "Gazehound Association of the Smoky Mountains"
     },
@@ -1117,7 +1117,7 @@
       "venue": "Hanover Shoe Farms, Littlestown",
       "state": "PA",
       "region": 8,
-      "premium_url": "https://www.asfa.org/event/premiums/MDIHC%20Labor%20Day%202026%20(1).pdf",
+      "premium_url": "https://www.asfa.org/event/premiums/MDIHC%20Labor%20Day%202026%20(3).pdf",
       "premium_inferred": false,
       "club": "Mason Dixon Ibizan Hound Club"
     },
@@ -1207,7 +1207,7 @@
       "venue": "Yellow Springs",
       "state": "OH",
       "region": 6,
-      "premium_url": "https://www.asfa.org/event/premiums/OKIGO%20ASFA%20Sept%202026%20PL%20rev1.pdf",
+      "premium_url": "https://www.asfa.org/event/premiums/OKIGO%20ASFA%20Sept%202026%20PL%20rev2.pdf",
       "premium_inferred": false,
       "club": "Ohio,Kentucky, Indiana Gazehound Organization"
     },
@@ -1267,7 +1267,7 @@
       "venue": "Chino Hills",
       "state": "CA",
       "region": 10,
-      "premium_url": null,
+      "premium_url": "https://www.asfa.org/event/premiums/OCRRC%20Sept%2019-20%20ASFA%20RR%20Specialty%20replaced%20map%20(1).pdf",
       "premium_inferred": false,
       "club": "Orange Coast Rhodesian Ridgeback Club"
     },
@@ -1297,7 +1297,7 @@
       "venue": "Peyton",
       "state": "CO",
       "region": 3,
-      "premium_url": null,
+      "premium_url": "https://www.asfa.org/event/premiums/RMCC%20ASFA%20Premium%20Sept%202026.pdf",
       "premium_inferred": false,
       "club": "Rocky Mountain Coursing Club"
     },
@@ -1327,7 +1327,7 @@
       "venue": "Hanover",
       "state": "PA",
       "region": 8,
-      "premium_url": null,
+      "premium_url": "https://www.asfa.org/event/premiums/UCBSC%20Grand%20Prix%20-%20September%2026-27,%202026%20Rev%202.pdf",
       "premium_inferred": false,
       "club": "Upper Chesapeake Bay Saluki Club"
     },
@@ -1342,7 +1342,7 @@
       "venue": "Goshen",
       "state": "UT",
       "region": 3,
-      "premium_url": null,
+      "premium_url": "https://www.asfa.org/event/premiums/USRCC%20ASFA%20September%202026%20-%20Premium%20(2).pdf",
       "premium_inferred": false,
       "club": "Utah Sighthounds Racing and Coursing Club"
     },
@@ -1387,7 +1387,7 @@
       "venue": "Whitesburg",
       "state": "GA",
       "region": 7,
-      "premium_url": null,
+      "premium_url": "https://www.asfa.org/event/premiums/LEGS%20Premium%20-%20October%203-4%202026%20(2).pdf",
       "premium_inferred": false,
       "club": "Lure Enthusiasts of Georgia Sighthounds"
     },
@@ -1432,8 +1432,8 @@
       "venue": "Whitesburg",
       "state": "GA",
       "region": 7,
-      "premium_url": null,
-      "premium_inferred": false,
+      "premium_url": "https://www.asfa.org/event/premiums/LEGS%20Premium%20-%20October%203-4%202026%20(2).pdf",
+      "premium_inferred": true,
       "club": "Lure Enthusiasts of Georgia Sighthounds"
     },
     {
@@ -1462,7 +1462,7 @@
       "venue": "Peyton",
       "state": "CO",
       "region": 3,
-      "premium_url": null,
+      "premium_url": "https://www.asfa.org/event/premiums/CLCA%20ASFA%20October%202026%20Premium%20List.pdf",
       "premium_inferred": false,
       "club": "Colorado Lure Coursing Association"
     },
@@ -1477,7 +1477,7 @@
       "venue": "Rookie Retriever Grounds, Waverly",
       "state": "MN",
       "region": 5,
-      "premium_url": null,
+      "premium_url": "https://www.asfa.org/event/premiums/MCA.ASFA.2026-10%20(1).pdf",
       "premium_inferred": false,
       "club": "Minnesota Coursing Association"
     },
@@ -1492,7 +1492,7 @@
       "venue": "Dix",
       "state": "IL",
       "region": 6,
-      "premium_url": null,
+      "premium_url": "https://www.asfa.org/event/premiums/MBC%202026%20October%20Premium.pdf",
       "premium_inferred": false,
       "club": "Midwest Borzoi Club"
     },
@@ -1552,7 +1552,7 @@
       "venue": "Burge Farm, Dix",
       "state": "IL",
       "region": 6,
-      "premium_url": null,
+      "premium_url": "https://www.asfa.org/event/premiums/SLASH%202026%20October%20Premium%20(2).pdf",
       "premium_inferred": false,
       "club": "St. Louis Area Sighthounds"
     },
@@ -1612,7 +1612,7 @@
       "venue": "Vinita",
       "state": "OK",
       "region": 4,
-      "premium_url": "https://www.asfa.org/event/premiums/2026%20ASFA%20II%20Premium%20Final%20Final.pdf",
+      "premium_url": "https://www.asfa.org/event/premiums/2026%20ASFA%20II%20Premium%20Final%20Final%20Rev.pdf",
       "premium_inferred": false,
       "club": "ASFA International Invitational"
     },
@@ -1657,7 +1657,7 @@
       "venue": "Emmett",
       "state": "ID",
       "region": 1,
-      "premium_url": null,
+      "premium_url": "https://www.asfa.org/event/premiums/SISFA-ASFA-LCI-FALL-2026-PREMIUM%20(1).pdf",
       "premium_inferred": false,
       "club": "Southern Idaho Sighthound Field Association"
     },
@@ -1702,8 +1702,8 @@
       "venue": "Emmett",
       "state": "ID",
       "region": 1,
-      "premium_url": null,
-      "premium_inferred": false,
+      "premium_url": "https://www.asfa.org/event/premiums/SISFA-ASFA-LCI-FALL-2026-PREMIUM%20(1).pdf",
+      "premium_inferred": true,
       "club": "Southern Idaho Sighthound Field Association"
     },
     {
@@ -1792,7 +1792,7 @@
       "venue": "Chino Hills",
       "state": "CA",
       "region": 10,
-      "premium_url": null,
+      "premium_url": "https://www.asfa.org/event/premiums/OCRRC%20ASFA%20All%20Breed%20Regional%20Nov%2027%202026%20Rev%20(1).pdf",
       "premium_inferred": false,
       "club": "Orange Coast Rhodesian Ridgeback Club"
     },
@@ -1822,7 +1822,7 @@
       "venue": "Chino Hills",
       "state": "CA",
       "region": 10,
-      "premium_url": null,
+      "premium_url": "https://www.asfa.org/event/premiums/OCRRC%20ASFA%20Silken%20Specialty%20%20PL%20Nov%2028-29%202026%20Rev%20(1).pdf",
       "premium_inferred": false,
       "club": "Orange Coast Rhodesian Ridgeback Club"
     },
