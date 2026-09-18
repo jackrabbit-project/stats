@@ -70,7 +70,7 @@ function drawStatCard(canvas, dog, season) {
   ctx.textBaseline = 'middle';
   ctx.fillStyle = CARD_COLORS.green;
   ctx.font = cardFont(42, 'display', '600');
-  ctx.fillText('Lure Coursing Stats', pad, 60);
+  ctx.fillText('Gazehound Stats', pad, 60);
   ctx.textAlign = 'right';
   ctx.fillStyle = CARD_COLORS.muted;
   ctx.font = cardFont(26, 'mono', '500');
@@ -321,7 +321,7 @@ function showCardModal(dog, season, blob) {
       try {
         await navigator.share({
           files: [file],
-          title: `${dog.call_name} — Lure Coursing Stats`,
+          title: `${dog.call_name} — Gazehound Stats`,
           text: `${dog.call_name}, #${dog.rank} ${rankContext(dog)} in the ${season.season} ASFA standings.`,
         });
       } catch (error) {

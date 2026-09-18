@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#F7F5EF">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#1B1917">
+  <title>ASFA lure coursing standings — Gazehound Stats</title>
+  <meta name="description" content="Search the ASFA lure coursing Top 20 standings by hound name. Best in Field and Best of Breed leaders, Bowen point totals, breed percentiles, kennel leaderboards. Unofficial fan site.">
+  <link rel="canonical" href="https://stats.gazehound.io/asfa.html">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Gazehound Stats">
+  <meta property="og:title" content="ASFA lure coursing standings — Gazehound Stats">
+  <meta property="og:description" content="Search the ASFA lure coursing Top 20 standings by hound name. Best in Field and Best of Breed leaders, Bowen point totals, breed percentiles, kennel leaderboards. Unofficial fan site.">
+  <meta property="og:url" content="https://stats.gazehound.io/asfa.html">
+  <meta property="og:image" content="https://stats.gazehound.io/assets/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="preload" href="assets/fonts/fraunces-latin-var.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/plex-mono-400.woff2" as="font" type="font/woff2" crossorigin>
+  <script src="js/theme.js?v=20260823"></script>
+  <link rel="stylesheet" href="css/app.css?v=20260917">
+  <link rel="icon" href="assets/favicon.ico?v=3" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png?v=3">
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png?v=3">
+</head>
+<body class="min-h-screen flex flex-col">
+  <header id="site-header"></header>
+
+  <main id="main" class="flex-1 w-full">
+    <section class="bg-asfa-bg2 border-b border-asfa-border">
+      <div class="max-w-3xl mx-auto px-4 py-10 text-center">
+        <h1 class="font-display text-4xl md:text-5xl text-asfa-text tracking-tight">Find your hound.</h1>
+        <p class="mt-2 text-asfa-text/75">See exactly where they stand in the breed this season.</p>
+
+        <div class="relative mt-6 text-left">
+          <label for="search" class="sr-only">Search hounds by name</label>
+          <input id="search" type="search" autocomplete="off" placeholder="Call name or registered name…"
+                 class="w-full field px-4 py-3 text-lg">
+          <div id="search-results" class="search-results absolute z-20 left-0 right-0 mt-1 hidden"></div>
+        </div>
+
+        <p class="mt-3 text-xs text-asfa-text/60" id="coverage"></p>
+      </div>
+    </section>
+
+    <div class="max-w-6xl mx-auto w-full px-4 py-8 space-y-8">
+      <section id="tiles" class="grid grid-cols-2 md:grid-cols-4 gap-3"></section>
+
+      <section id="boards" class="grid md:grid-cols-3 gap-6">
+        <div class="card">
+          <h2 class="card-title">Most Best in Field</h2>
+          <p class="text-xs text-asfa-text/60 mb-3">One run between the day's Best of Breed winners. Breed size matters less here than anywhere else on the site.</p>
+          <div id="bif"></div>
+          <a href="leaders.html#bif" class="lnk text-sm inline-block mt-3">Full BIF leaderboard →</a>
+        </div>
+        <div class="card">
+          <h2 class="card-title">Most Best of Breed</h2>
+          <p class="text-xs text-asfa-text/60 mb-3">Wins over the rest of the breed at a trial.</p>
+          <div id="bob"></div>
+          <a href="leaders.html#bob" class="lnk text-sm inline-block mt-3">Full BOB leaderboard →</a>
+        </div>
+        <div id="titles-box" class="card hidden">
+          <h2 class="card-title" id="titles-title">Titles awarded</h2>
+          <p class="text-xs text-asfa-text/60 mb-3" id="titles-coverage"></p>
+          <div id="titles-summary"></div>
+          <a href="titles.html" class="lnk text-sm inline-block mt-3">All hounds with new ASFA titles →</a>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2 class="card-title">Highest standing in breed</h2>
+        <p class="text-xs text-asfa-text/60 mb-3">
+          Rank measured against every hound ASFA reports competing in that breed — the honest way to
+          compare a Whippet against an Azawakh, since a large breed offers far more points than a small one.
+        </p>
+        <div id="percentile"></div>
+        <a href="leaders.html#percentile" class="lnk text-sm inline-block mt-3">Full standings →</a>
+      </section>
+
+      <section class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <a href="browse.html" class="card hover:border-asfa-accent block">
+          <h3 class="font-display text-xl text-asfa-text"><svg class="ic mr-2 text-asfa-accent" viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 12h11"/><path d="M10 18h11"/><path d="M10 6h11"/><path d="M4 10h2"/><path d="M4 6h1v4"/><path d="M6 18H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg>Browse by breed</h3>
+          <p class="text-sm text-asfa-text/70 mt-1">Every ranked hound, breed by breed, sortable.</p>
+        </a>
+        <a href="kennels.html" class="card hover:border-asfa-accent block">
+          <h3 class="font-display text-xl text-asfa-text"><svg class="ic mr-2 text-asfa-accent" viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>Kennels</h3>
+          <p class="text-sm text-asfa-text/70 mt-1">Which owners are having the season.</p>
+        </a>
+        <a href="lci.html" class="card hover:border-asfa-accent block">
+          <h3 class="font-display text-xl text-asfa-text"><svg class="ic mr-2 text-asfa-accent" viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="4" r="2"/><circle cx="18" cy="8" r="2"/><circle cx="20" cy="16" r="2"/><path d="M9 10a5 5 0 0 1 5 5v3.5a3.5 3.5 0 0 1-6.84 1.045Q6.52 17.48 4.46 16.84A3.5 3.5 0 0 1 5.5 10Z"/></svg>LCI divisions</h3>
+          <p class="text-sm text-asfa-text/70 mt-1">Lure Chasing Instinct standings, by division.</p>
+        </a>
+        <a href="regions.html" class="card hover:border-asfa-accent block">
+          <h3 class="font-display text-xl text-asfa-text"><svg class="ic mr-2 text-asfa-accent" viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.106 5.553a2 2 0 0 0 1.788 0l3.659-1.83A1 1 0 0 1 21 4.619v12.764a1 1 0 0 1-.553.894l-4.553 2.277a2 2 0 0 1-1.788 0l-4.212-2.106a2 2 0 0 0-1.788 0l-3.659 1.83A1 1 0 0 1 3 19.381V6.618a1 1 0 0 1 .553-.894l4.553-2.277a2 2 0 0 1 1.788 0z"/><path d="M15 5.764v15"/><path d="M9 3.236v15"/></svg>Regions</h3>
+          <p class="text-sm text-asfa-text/70 mt-1">Standings, trial entries and which clubs draw, region by region.</p>
+        </a>
+      </section>
+
+      <!-- Share targets are plain links, as on the AOK9 and II guide sites: no
+           platform scripts, nothing fetched, nobody tracked who never clicks. -->
+      <section class="card">
+        <h2 class="card-title">Track your ASFA lure coursing season</h2>
+        <p class="text-sm text-asfa-text/70 mb-3">The ultimate companion for ASFA lure coursing enthusiasts. Look up any hound,
+          follow the breed standings, watch new titles land, and find where to run next.</p>
+        <p class="text-sm text-asfa-text/70 mb-3">Know someone chasing a Top 20 spot, a new title, or next weekend's trial? Pass it on.</p>
+        <div id="share-links" class="flex flex-wrap gap-2"></div>
+      </section>
+    </div>
+  </main>
+
+  <footer id="site-footer" class="bg-asfa-navy text-white py-8"></footer>
+
+  <script src="js/app.js?v=20260917"></script>
+  <script>
+    page('asfa.html', (season) => {
+      const hounds = groupHounds(season.dogs);
+      const stats = season.stats;
+
+      document.getElementById('coverage').textContent =
+        `${season.season} season standings through ${formatDate(season.as_of)}, as published by ASFA.`;
+
+      const tiles = [
+        [stats.hounds_ranked, 'hounds ranked'],
+        [stats.sections_with_hounds, 'breeds &amp; divisions'],
+        [stats.bif, 'Best in Field awarded'],
+        [stats.total_competing.toLocaleString(), 'hounds competing'],
+      ];
+      const paintTiles = (grid) => {
+        const el = document.getElementById('tiles');
+        el.className = grid;
+        el.innerHTML = tiles.map(([value, label]) =>
+          `<div class="tile"><div class="tile-value">${value}</div><div class="tile-label">${label}</div></div>`
+        ).join('');
+        animateTiles(el);
+      };
+      paintTiles('grid grid-cols-2 md:grid-cols-4 gap-3');
+
+      // Titles are their own feed, fetched separately so a problem with the
+      // titles page can never blank the standings. Without it the page simply
+      // shows its four tiles and two boards, as before.
+      fetch('data/titles.json')
+        .then((response) => {
+          if (!response.ok) throw new Error(`${response.status} loading data/titles.json`);
+          return response.json();
+        })
+        .then((titles) => {
+          tiles.splice(2, 0, [titles.stats.total, 'new titles awarded']);
+          paintTiles('grid grid-cols-2 md:grid-cols-5 gap-3');
+
+          const programs = titles.stats.by_program;
+          document.getElementById('titles-title').textContent =
+            `Titles awarded in ${titles.season}`;
+          document.getElementById('titles-coverage').textContent =
+            `Posted by ASFA through ${formatDate(titles.as_of)}.`;
+          document.getElementById('titles-summary').innerHTML = `
+            <table class="tbl">
+              <tbody>
+                <tr><td>Breed stakes</td><td class="num font-semibold">${programs.breed || 0}</td></tr>
+                <tr><td>LCI program</td><td class="num font-semibold">${programs.lci || 0}</td></tr>
+                <tr><td>Singles stake</td><td class="num font-semibold">${programs.singles || 0}</td></tr>
+                <tr><td class="font-semibold">Total</td><td class="num font-semibold text-asfa-accent">${titles.stats.total}</td></tr>
+              </tbody>
+            </table>`;
+          document.getElementById('titles-box').classList.remove('hidden');
+        })
+        .catch((error) => {
+          console.warn(`Titles unavailable; showing the page without them. ${error.message}`);
+          document.getElementById('boards').className = 'grid md:grid-cols-2 gap-6';
+        });
+
+      // Share links, matching the AOK9 / II guide pattern: plain sharer URLs.
+      // window.location keeps them right on any domain this is served from.
+      const shareUrl = window.location.origin + window.location.pathname;
+      const shareTitle = 'Gazehound Stats — ASFA lure coursing';
+      const shareBlurb = 'ASFA Top 20 standings, searchable — every ranked hound, plus a find-an-event tool.';
+      const su = encodeURIComponent(shareUrl);
+      const st = encodeURIComponent(`${shareTitle} — ${shareBlurb}`);
+      const shareBtn = 'btn';
+      const shares = [
+        ['facebook', 'Facebook', `https://www.facebook.com/sharer/sharer.php?u=${su}`],
+        ['x', 'X', `https://twitter.com/intent/tweet?url=${su}&text=${st}`],
+        ['whatsapp', 'WhatsApp', `https://wa.me/?text=${st}%20${su}`],
+        ['mail', 'Email', `mailto:?subject=${encodeURIComponent(shareTitle)}&body=${st}%0A%0A${su}`],
+      ];
+      document.getElementById('share-links').innerHTML = shares.map(([glyph, label, href]) =>
+        `<a href="${href}" target="_blank" rel="noopener noreferrer" class="${shareBtn}" title="Share on ${label}">
+           ${icon(glyph)}${label}</a>`
+      ).join('') +
+        `<button type="button" id="share-copy" class="${shareBtn}" title="Copy the link to this site">
+           ${icon('link')}<span>Copy link</span></button>`;
+      document.getElementById('share-copy').addEventListener('click', async (event) => {
+        const label = event.currentTarget.querySelector('span');
+        try {
+          await navigator.clipboard.writeText(shareUrl);
+          label.textContent = 'Copied';
+          setTimeout(() => { label.textContent = 'Copy link'; }, 2000);
+        } catch {
+          // Clipboard blocked — leave the label rather than claim a copy that
+          // did not happen.
+        }
+      });
+
+      const miniList = (list, stat, suffix) => list.map((dog) => `
+        <a href="${dogUrl(dog.id)}" class="flex items-baseline gap-2 py-1.5 border-b border-asfa-border last:border-0 hover:bg-asfa-bg2 -mx-1 px-1">
+          <span class="font-display text-xl text-asfa-accent w-8 shrink-0">${dog[stat]}</span>
+          <span class="font-semibold text-asfa-green">${esc(dog.call_name)}</span>
+          <span class="text-xs text-asfa-text/70 ml-auto whitespace-nowrap">${esc(dog.breed)} #${dog.rank}</span>
+        </a>`).join('') || `<p class="text-sm text-asfa-text/70">No ${suffix} recorded yet this season.</p>`;
+
+      const byStat = (stat) => hounds
+        .filter((dog) => dog[stat] > 0)
+        .sort((a, b) => b[stat] - a[stat] || a.rank - b.rank)
+        .slice(0, 6);
+
+      document.getElementById('bif').innerHTML = miniList(byStat('bif'), 'bif', 'BIF');
+      document.getElementById('bob').innerHTML = miniList(byStat('bob'), 'bob', 'BOB');
+
+      // Breeds only. The Singles stake and the LCI divisions have their own
+      // competitor pools and their own pages; mixing them into a list headed
+      // "in breed" would be plainly wrong, and both are large enough to crowd
+      // the breeds out of it.
+      const top = hounds
+        .filter((dog) => dog.percentile != null && dog.is_breed)
+        .sort((a, b) => a.percentile - b.percentile || b.points - a.points)
+        .slice(0, 8);
+      document.getElementById('percentile').innerHTML = `
+        <div class="tbl-wrap"><table class="tbl">
+          <thead><tr><th scope="col">Hound</th><th scope="col">Breed</th><th scope="col" class="num">Rank</th><th scope="col" class="num">Of</th><th scope="col" class="num">Standing</th></tr></thead>
+          <tbody>${top.map((dog) => `
+            <tr>
+              <td><a href="${dogUrl(dog.id)}" class="lnk font-semibold">${esc(dog.call_name)}</a></td>
+              <td>${esc(dog.breed)}</td>
+              <td class="num">${dog.rank}</td>
+              <td class="num">${dog.total_competing}</td>
+              <td class="num font-semibold text-asfa-accent">${percentileLabel(dog)}</td>
+            </tr>`).join('')}</tbody>
+        </table></div>`;
+
+      attachSearch(
+        document.getElementById('search'),
+        document.getElementById('search-results'),
+        season.dogs
+      );
+    });
+  </script>
+</body>
+</html>
