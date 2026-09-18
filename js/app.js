@@ -657,7 +657,7 @@ function renderChrome(feed, current, sectionKey = sectionOf(current)) {
           Not affiliated with, endorsed by, or sponsored by the American Sighthound Field
           Association, the Large Gazehound Racing Association, or Racing and Coursing
           Enthusiasts (R.A.C.E.), which runs the AOK9 program.
-          <a href="${section.disclaimer}" class="underline hover:text-asfa-wellink whitespace-nowrap">Full disclaimer</a>
+          ${sectionKey === 'hub' ? '' : `<a href="${section.disclaimer}" class="underline hover:text-asfa-wellink whitespace-nowrap">Full disclaimer</a>`}
         </p>
         <p class="text-xs text-asfa-wellink/65 flex flex-wrap items-center justify-center gap-x-2 gap-y-1.5 text-center">
           ${howBuilt}
