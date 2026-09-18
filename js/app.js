@@ -371,13 +371,14 @@ const SECTIONS = {
   lgra: {
     home: 'lgra.html', nav: NAV_LGRA,
     tagline: () => 'LGRA straight racing',
-    banner: 'not an LGRA publication',
+    // No banner on the racing pages: the footer carries the disclaimer.
+    banner: null,
     disclaimer: 'about.html#disclaimer-lgra',
   },
   aok9: {
     home: 'aok9.html', nav: NAV_AOK9,
     tagline: () => 'AOK9 sprint racing',
-    banner: 'not an AOK9 publication',
+    banner: null,
     disclaimer: 'about.html#disclaimer-aok9',
   },
 };
@@ -601,10 +602,11 @@ function renderChrome(feed, current, sectionKey = sectionOf(current)) {
   if (header) {
     header.innerHTML = `
       <a href="#main" class="skip-link">Skip to content</a>
+      ${section.banner ? `
       <div class="bg-asfa-paper border-b border-asfa-border px-4 py-1.5 text-center font-mono text-[11px] uppercase tracking-widest text-asfa-muted">
         <span class="text-asfa-accent">Unofficial fan site</span> — ${section.banner}.
         <a href="${section.disclaimer}" class="underline hover:text-asfa-text whitespace-nowrap">Full disclaimer</a>
-      </div>
+      </div>` : ''}
       <div class="bg-asfa-paper border-b border-asfa-border">
         <div class="max-w-6xl mx-auto px-4 pt-3 lg:pt-0 lg:py-1.5 flex flex-col lg:flex-row lg:items-center gap-x-8 relative">
           <div class="flex items-center gap-2.5 shrink-0 pr-10 lg:pr-0">

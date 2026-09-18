@@ -445,10 +445,10 @@ function renderRacingOverview(org, feed, main) {
       </p>
       ${sections.length > 30 ? `
         <label class="block mb-3">
-          <span class="sr-only">Filter breeds</span>
-          <input id="breed-filter" type="search" autocomplete="off" placeholder="Filter ${sections.length} breeds…" class="w-full field px-3 py-2">
-        </label>` : ''}
-      <div id="breed-grid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2"></div>
+          <span class="sr-only">Breed</span>
+          <select id="breed-select" class="select w-full sm:w-auto sm:min-w-[20rem] px-3 py-2"></select>
+        </label>` : `
+        <div id="breed-grid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2"></div>`}
       <div id="table-panel" class="mt-4"></div>
     </section>
 
@@ -471,27 +471,39 @@ function renderRacingOverview(org, feed, main) {
 
   /* ----- browse: breed chips + sortable table, with the registry on demand */
   const grid = document.getElementById('breed-grid');
+  const breedSelect = document.getElementById('breed-select');
   const panel = document.getElementById('table-panel');
-  const filterInput = document.getElementById('breed-filter');
   const sort = { key: 'rank_breed', dir: 1 };
   let registryDogs = null;
   let showAll = false;
   let currentSlug = null;
   let ownerKey = param('owner');
 
+  const countLabel = (section) => section.ytd ? `${section.ytd} with points`
+    : section.active ? `${section.active} active` : `${section.registry} all time`;
+
+  /* AOK9 lists 118 breeds, most of them a dog or two: a dropdown, not a wall
+     of chips. Breeds with points this year come first. */
   function paintGrid(activeSlug) {
-    const needle = filterInput ? filterInput.value.trim().toLowerCase() : '';
-    const shown = sections.filter((s) => !needle || s.breed.toLowerCase().includes(needle));
-    grid.innerHTML = shown.map((section) => {
+    if (breedSelect) {
+      const order = (a, b) => (b.ytd > 0) - (a.ytd > 0) || (b.active > 0) - (a.active > 0)
+        || a.breed.localeCompare(b.breed);
+      breedSelect.innerHTML = `<option value="">Choose a breed…</option>` + [...sections].sort(order)
+        .map((section) => `<option value="${section.slug}" ${section.active === 0 ? 'disabled' : ''} ${
+          section.slug === activeSlug ? 'selected' : ''}>${esc(section.breed)} · ${countLabel(section)}</option>`)
+        .join('');
+      breedSelect.value = activeSlug || '';
+      return;
+    }
+    grid.innerHTML = sections.map((section) => {
       const active = section.slug === activeSlug;
       const disabled = section.active === 0;
       return `<button data-slug="${section.slug}" ${disabled ? 'disabled' : ''}
         class="chip text-sm ${active ? 'chip-selected' : ''}" aria-pressed="${active ? 'true' : 'false'}">
         <span class="block font-semibold leading-tight">${esc(section.breed)}</span>
-        <span class="block text-xs text-asfa-muted">${
-          section.ytd ? `${section.ytd} with points` : section.active ? `${section.active} active` : `${section.registry} all time`}</span>
+        <span class="block text-xs text-asfa-muted">${countLabel(section)}</span>
       </button>`;
-    }).join('') || `<p class="text-sm text-asfa-text/70 col-span-full">No breed matches.</p>`;
+    }).join('');
     grid.querySelectorAll('button[data-slug]').forEach((button) => {
       button.addEventListener('click', () => select(button.dataset.slug));
     });
@@ -587,7 +599,11 @@ function renderRacingOverview(org, feed, main) {
     paintTable();
   }
 
-  if (filterInput) filterInput.addEventListener('input', () => paintGrid(currentSlug));
+  if (breedSelect) {
+    breedSelect.addEventListener('change', () => {
+      if (breedSelect.value) select(breedSelect.value);
+    });
+  }
 
   const requested = param('breed');
   const initial = sections.find((s) => s.slug === requested && s.active)
