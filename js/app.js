@@ -294,12 +294,12 @@ function searchRow(dog) {
 }
 
 /** Wire an input + results container into a live search box. */
-function attachSearch(input, results, dogs, { onEmpty, row = searchRow } = {}) {
+function attachSearch(input, results, dogs, { onEmpty, row = searchRow, empty = 'No hound matches that name.' } = {}) {
   const render = () => {
     const matches = searchDogs(input.value, dogs);
     if (!matches.length) {
       results.innerHTML = input.value.trim().length >= 2
-        ? '<p class="p-4 text-sm text-asfa-text/60">No hound matches that name.</p>'
+        ? `<p class="p-4 text-sm text-asfa-text/60">${esc(empty)}</p>`
         : '';
       results.classList.toggle('hidden', !input.value.trim());
       if (onEmpty) onEmpty();

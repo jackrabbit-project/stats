@@ -20,7 +20,7 @@
   <link rel="preload" href="assets/fonts/fraunces-latin-var.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/plex-mono-400.woff2" as="font" type="font/woff2" crossorigin>
   <script src="js/theme.js?v=20260823"></script>
-  <link rel="stylesheet" href="css/app.css?v=20260918i">
+  <link rel="stylesheet" href="css/app.css?v=20260918j">
   <link rel="icon" href="assets/favicon.ico?v=3" sizes="any">
   <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png?v=3">
   <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png?v=3">
@@ -33,6 +33,7 @@
       <div class="max-w-3xl mx-auto px-4 py-10 text-center">
         <h1 class="font-display text-4xl md:text-5xl text-asfa-text tracking-tight">Find your hound.</h1>
         <p class="mt-2 text-asfa-text/75">See exactly where they stand in the breed this season.</p>
+        <p class="mt-1 text-sm text-asfa-text/60">Only hounds ranked in ASFA's Top 20 for their breed are listed; ASFA publishes no more.</p>
 
         <div class="relative mt-6 text-left">
           <label for="search" class="sr-only">Search hounds by name</label>
@@ -112,14 +113,14 @@
 
   <footer id="site-footer" class="bg-asfa-navy text-white py-8"></footer>
 
-  <script src="js/app.js?v=20260918i"></script>
+  <script src="js/app.js?v=20260918j"></script>
   <script>
     page('asfa.html', (season) => {
       const hounds = groupHounds(season.dogs);
       const stats = season.stats;
 
       document.getElementById('coverage').textContent =
-        `${season.season} season standings through ${formatDate(season.as_of)}, as published by ASFA.`;
+        `${season.season} season Top 20 standings through ${formatDate(season.as_of)}, as published by ASFA.`;
 
       const tiles = [
         [stats.hounds_ranked, 'hounds ranked'],
@@ -241,7 +242,8 @@
       attachSearch(
         document.getElementById('search'),
         document.getElementById('search-results'),
-        season.dogs
+        season.dogs,
+        { empty: "No hound matches that name. Only hounds in ASFA's Top 20 for their breed are listed." }
       );
     });
   </script>
