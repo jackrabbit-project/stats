@@ -360,6 +360,7 @@ function renderRacingOverview(org, feed, main) {
               <td class="num font-semibold text-asfa-accent">${ptsLabel(section.leader.ytd)}</td>
             </tr>`).join('')}</tbody>
         </table></div>` : `<p class="text-sm text-asfa-text/70">No ${nouns} have points yet this year.</p>`}
+        <a href="${spec.page}#standings" class="lnk text-sm inline-block mt-3">Full standings by breed →</a>
       </div>`;
 
   // With two career streams (AOK9) the boards stack in one column, so each
