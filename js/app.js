@@ -533,7 +533,6 @@ const FOOTER_LINKS = [
     ['globe', 'asfa.org, the official site', 'https://www.asfa.org'],
     ['facebook', 'ASFA on Facebook', 'https://www.facebook.com/AmericanSighthoundFieldAssociation'],
     ['facebook', 'ASFA II group', 'https://www.facebook.com/groups/1046065245418921'],
-    ['facebook', 'ASFA Lure Coursing, where updates to this site are posted', 'https://www.facebook.com/ASFAlureCoursing'],
   ]],
   ['LGRA straight racing', [
     ['globe', 'lgra.club, the official site', 'https://lgra.club'],
