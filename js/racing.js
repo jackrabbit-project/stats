@@ -38,7 +38,7 @@ const ORGS = {
     photo: {
       src: 'assets/hero-lgra.jpg',
       alt: 'Three Afghan Hounds in numbered racing blankets and muzzles breaking from the starting boxes',
-      credit: 'Photo: Matt Schumitz Photography',
+      credit: null,
       position: 'object-[50%_62%]',
     },
   },
@@ -414,7 +414,7 @@ function renderRacingOverview(org, feed, main) {
       <img src="${spec.photo.src}" alt="${esc(spec.photo.alt)}"
            class="w-full aspect-[3/1] object-cover ${spec.photo.position} border border-asfa-border"
            onload="this.parentElement.classList.remove('hidden')">
-      <figcaption class="text-right font-mono text-[10px] uppercase tracking-widest text-asfa-muted mt-1.5">${esc(spec.photo.credit)}</figcaption>
+      ${spec.photo.credit ? `<figcaption class="text-right font-mono text-[10px] uppercase tracking-widest text-asfa-muted mt-1.5">${esc(spec.photo.credit)}</figcaption>` : ''}
     </figure>` : ''}
 
     <section id="overview" class="space-y-8">
