@@ -54,9 +54,9 @@
         (d) => d.hound_key === dog.hound_key && d.id !== dog.id
       );
 
-      // Titles ride along in the registered name. ASFA's own are shown as
-      // badges in the families the titles page uses; anything else (AKC
-      // coursing, obedience, whatever the owner added) is listed as written.
+      // Titles ride along in the registered name. Only ASFA's own are shown,
+      // as badges in the families the titles page uses; other bodies' titles
+      // stay in the registered name line and nowhere else.
       const ASFA_TITLES = new Set(['FCH', 'VFCH', 'LCM', 'VLCM', 'LCX', 'TCP', 'CPX',
         'LCI', 'LCC', 'VLCC', 'LCA', 'LCE']);
       const isAsfaTitle = (t) => ASFA_TITLES.has(t.replace(/\d+$/, '').toUpperCase());
@@ -68,7 +68,6 @@
         return 'badge-t-lcm';
       };
       const asfaTitles = dog.titles.filter(isAsfaTitle);
-      const otherTitles = dog.titles.filter((t) => !isAsfaTitle(t));
 
       const rankedBelow = dog.total_competing ? dog.total_competing - dog.rank : null;
       // Best of Breed and Best in Field cannot be won in the Singles stake or
@@ -147,8 +146,6 @@
             <p class="text-sm">ASFA lure coursing:
               ${asfaTitles.map((t) => `<span class="badge ${titleFamily(t)}">${esc(t)}</span>`).join(' ')}</p>` : `
             <p class="text-sm text-asfa-text/70" id="titles-none">No ASFA lure coursing title in the registered name yet.</p>`}
-          ${otherTitles.length ? `
-            <p class="text-sm text-asfa-text/70 mt-2">Other titles as written: ${otherTitles.map(esc).join(', ')}</p>` : ''}
           <div id="titles-new"></div>
           <p class="text-xs text-asfa-text/55 mt-3">
             Read from the registered name as ASFA prints it on the standings. ASFA does not publish
