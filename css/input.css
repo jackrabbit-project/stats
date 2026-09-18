@@ -57,6 +57,7 @@
     --green-hi: 31 76 51;      /* green hover                  #1F4C33 */
     --rust: 164 74 47;         /* accents, active, focus ring  #A44A2F */
     --rust-hi: 122 52 34;      /* rust hover                   #7A3422 */
+    --slate: 61 90 128;        /* the LGRA program colour      #3D5A80 */
     --well: 34 38 31;          /* footer, dark in both themes  #22261F */
     --well-ink: 247 245 239;   /* text on the well             #F7F5EF */
 
@@ -83,6 +84,7 @@
       --green-hi: 169 205 182;  /* #A9CDB6 — hover lightens, not darkens */
       --rust: 206 134 99;       /* #CE8663 */
       --rust-hi: 224 164 137;   /* #E0A489 */
+      --slate: 138 168 205;     /* #8AA8CD */
       --well: 22 21 19;         /* #161513 */
       --well-ink: 231 226 214;  /* #E7E2D6 */
 
@@ -105,6 +107,7 @@
     --green-hi: 169 205 182;  /* #A9CDB6 — hover lightens, not darkens */
     --rust: 206 134 99;       /* #CE8663 */
     --rust-hi: 224 164 137;   /* #E0A489 */
+    --slate: 138 168 205;     /* #8AA8CD */
     --well: 22 21 19;         /* #161513 */
     --well-ink: 231 226 214;  /* #E7E2D6 */
     --badge-up-bg: 34 57 44;    --badge-up-ink: 169 211 184;
@@ -204,6 +207,23 @@
   box-shadow: inset 3px 0 0 rgb(var(--rust));
   padding: 1rem 1.25rem;
 }
+
+/* The hub's program cards: each program in its own colour — rust for ASFA
+   (the site's accent), slate for LGRA, moss for AOK9 — as a rule across the
+   top, a faint wash below it, and the heading and figures in the colour. */
+.program-card {
+  --program: var(--rust);
+  border-top: 3px solid rgb(var(--program));
+  background:
+    linear-gradient(rgb(var(--program) / 0.07), rgb(var(--program) / 0) 45%),
+    rgb(var(--surface));
+}
+.program-card:hover { border-color: rgb(var(--program)); }
+.program-card h2, .program-card .tile-value { color: rgb(var(--program)); }
+.program-card .tile { border-color: rgb(var(--program) / 0.35); }
+.program-asfa { --program: var(--rust); }
+.program-lgra { --program: var(--slate); }
+.program-aok9 { --program: var(--green); }
 
 .card-title {
   font-family: 'Fraunces', Georgia, serif;

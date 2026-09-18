@@ -13,3 +13,10 @@ data/review/
 # repo would publish all of it, undoing the extraction limits that clubs.py
 # and check.py enforce. Re-fetch it with `python tools/clubs.py`.
 data/clubs/raw/
+
+# The LGRA and AOK9 grading guides are archived locally by tools/lgra.py and
+# tools/aok9.py but never committed: the workbooks are large (2 MB a week for
+# LGRA) and their header rows carry the registrars' mailing details. The parsed
+# snapshots under data/lgra/snapshots and data/aok9/snapshots are the archive.
+data/lgra/raw/
+data/aok9/raw/

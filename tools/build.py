@@ -263,35 +263,74 @@ def absorb_bare_surnames(dogs: list[dict],
     "Hicks/Grant-Beuttler/Beuttler" on a hound whose other rows say
     "J.& K.Hicks" — which manufactures a second owner holding one hound.
 
-    Merging on a bare surname is an inference, so it is fenced: only when
-    exactly one initialed entity carries that surname anywhere in the season,
-    and every region the bare name is first-listed in is among that entity's
-    home regions. A bare "Sanders" would refuse — two entities carry the
-    surname. Every merge is written to data/review/owner-merges.csv.
+    The same happens when a household is written out one person at a time —
+    "A.Macarthur/E.Kominek/S.Kominek" beside rows that say "E.& S.Kominek" —
+    which manufactures two one-hound owners next to the household. A
+    single-initial mention folds into the one household key for that surname
+    that names the initial.
+
+    Both are inferences, so both are fenced: only when exactly one candidate
+    entity qualifies anywhere in the season, and every region the mention is
+    first-listed in is among that entity's home regions. A bare "Sanders"
+    would refuse — two entities carry the surname. Every merge is written to
+    data/review/owner-merges.csv.
     """
     all_keys = {owner["key"] for dog in dogs for owner in dog["owners"]}
-    merges: dict[str, str] = {}
-    for bare in sorted(k for k in all_keys if "|" not in k):
-        candidates = [k for k in all_keys
-                      if "|" in k and k.split("|", 1)[0] == bare]
-        if len(candidates) != 1:
-            continue
-        target = candidates[0]
-        if not set(homes.get(bare, [])) <= set(homes.get(target, [])):
-            continue
-        merges[bare] = target
+    merges = owner_merges(all_keys, homes)
 
     if merges:
         for dog in dogs:
+            kept, seen = [], set()
             for owner in dog["owners"]:
                 if owner["key"] in merges:
                     owner["key"] = merges[owner["key"]]
+                # "E.Kominek/S.Kominek" both fold into one household; the
+                # hound must count for it once.
+                if owner["key"] in seen:
+                    continue
+                seen.add(owner["key"])
+                kept.append(owner)
+            dog["owners"] = kept
         review_dir = ROOT / "data" / "review"
         review_dir.mkdir(parents=True, exist_ok=True)
-        lines = ["bare_key,merged_into"]
-        lines += [f"{bare},{merges[bare]}" for bare in sorted(merges)]
+        lines = ["mention_key,merged_into"]
+        lines += [f"{key},{merges[key]}" for key in sorted(merges)]
         (review_dir / "owner-merges.csv").write_text(
             "\n".join(lines) + "\n", encoding="utf-8")
+    return merges
+
+
+def owner_initials(key: str) -> list[str]:
+    return key.split("|", 1)[1].split(".") if "|" in key else []
+
+
+def owner_merges(all_keys: set[str], homes: dict[str, list[int]]) -> dict[str, str]:
+    """The merge rule on its own, so check.py can restate it independently.
+
+    A bare surname folds into the one initialed key with that surname; a
+    single initial folds into the one multi-initial (household) key with
+    that surname that lists the initial. Region evidence must agree.
+    """
+    households = [k for k in all_keys if len(owner_initials(k)) > 1]
+    merges: dict[str, str] = {}
+    for key in sorted(all_keys):
+        surname = key.split("|", 1)[0]
+        initials = owner_initials(key)
+        if len(initials) > 1:
+            continue
+        if not initials:
+            candidates = [k for k in all_keys
+                          if "|" in k and k.split("|", 1)[0] == surname]
+        else:
+            candidates = [k for k in households
+                          if k.split("|", 1)[0] == surname
+                          and initials[0] in owner_initials(k)]
+        if len(candidates) != 1:
+            continue
+        target = candidates[0]
+        if not set(homes.get(key, [])) <= set(homes.get(target, [])):
+            continue
+        merges[key] = target
     return merges
 
 
@@ -458,7 +497,7 @@ def build(snapshots: list[dict]) -> dict:
         "regions": build_regions(dogs),
         "review": {
             "thin_owner_splits": thin_splits,
-            "bare_surname_merges": {k: v for k, v in sorted(merges.items())},
+            "owner_merges": {k: v for k, v in sorted(merges.items())},
         },
     }
 
@@ -488,11 +527,11 @@ def main() -> int:
         )
         for entry in thin:
             print(f"     {entry}")
-    merges = bundle["review"]["bare_surname_merges"]
+    merges = bundle["review"]["owner_merges"]
     if merges:
         print(
-            f"  {len(merges)} bare surname(s) folded into their initialed "
-            f"entity - see data/review/owner-merges.csv:"
+            f"  {len(merges)} owner mention(s) folded into their entity - "
+            f"see data/review/owner-merges.csv:"
         )
         for bare, target in merges.items():
             print(f"     {bare} -> {target}")

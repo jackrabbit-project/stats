@@ -297,11 +297,12 @@ def main() -> int:
             f"{owner_key} is split into entities sharing a region: {regions}",
         )
 
-    # 10. Bare-surname merges, re-derived from the raw snapshot where the
-    #     pre-merge keys survive. The recorded merge set must equal a fresh
-    #     computation of the rule — nothing merged that should not be, nothing
-    #     left unmerged that qualifies.
-    merges = season["review"].get("bare_surname_merges", {})
+    # 10. Owner merges (a bare surname into its initialed entity, a single
+    #     initial into its household), re-derived from the raw snapshot where
+    #     the pre-merge keys survive. The recorded merge set must equal a
+    #     fresh computation of the rule — nothing merged that should not be,
+    #     nothing left unmerged that qualifies.
+    merges = season["review"].get("owner_merges", {})
     snap_path = ROOT / "data" / "snapshots" / f"{season['as_of']}.json"
     snapshot = json.loads(snap_path.read_text(encoding="utf-8"))
     raw_keys: set[str] = set()
@@ -314,27 +315,45 @@ def main() -> int:
             if dog.get("region") is not None:
                 first_listed.setdefault(
                     dog["owners"][0]["key"], set()).add(dog["region"])
+    def initials_of(key: str) -> list[str]:
+        return key.split("|", 1)[1].split(".") if "|" in key else []
+
     expected: dict[str, str] = {}
-    for bare in sorted(k for k in raw_keys if "|" not in k):
-        rivals = [k for k in raw_keys
-                  if "|" in k and k.split("|", 1)[0] == bare]
-        if len(rivals) == 1 and first_listed.get(bare, set()) <= \
+    for key in sorted(raw_keys):
+        surname = key.split("|", 1)[0]
+        initials = initials_of(key)
+        if len(initials) > 1:
+            continue
+        if not initials:
+            rivals = [k for k in raw_keys
+                      if "|" in k and k.split("|", 1)[0] == surname]
+        else:
+            rivals = [k for k in raw_keys
+                      if len(initials_of(k)) > 1 and k.split("|", 1)[0] == surname
+                      and initials[0] in initials_of(k)]
+        if len(rivals) == 1 and first_listed.get(key, set()) <= \
                 first_listed.get(rivals[0], set()):
-            expected[bare] = rivals[0]
+            expected[key] = rivals[0]
     check.expect(
         merges == expected,
-        f"bare-surname merges disagree with re-derivation: "
+        f"owner merges disagree with re-derivation: "
         f"recorded {merges}, expected {expected}",
     )
     merged_away = set(merges)
     check.expect(
         not any(m["key"] in merged_away for d in dogs for m in d["owners"]),
-        "a merged bare key survived into season.json",
+        "a merged owner key survived into season.json",
+    )
+    check.expect(
+        all(len({m["key"] for m in d["owners"]}) == len(d["owners"]) for d in dogs),
+        "a hound lists the same owner entity twice",
     )
 
     check_trials(check)
     check_events(check)
     check_titles(check)
+    check_racing(check, "lgra")
+    check_racing(check, "aok9")
     return check.report()
 
 
@@ -686,6 +705,365 @@ def check_titles(check: Checker) -> None:
             not found,
             f"data/titles.json contains a {label}: {found[:2]}",
         )
+
+
+RACING = {
+    # Everything a re-derivation needs, restated here rather than imported
+    # from tools/racing.py: two routes to the same numbers is the point.
+    "lgra": {
+        "waves": ["wave"],
+        "meet_streams": ["meets"],
+        "champion": [("grc", "titled_grc", "grc")],
+        "supreme": [("ngrc", "sgrc")],
+        "career_ranks": [("ngrc", "rank_career")],
+        "owner_sums": ["ytd", "ngrc"],
+        "owner_best": "wave",
+        "wave_agreement": 0.98,
+        "expected_sections": {
+            "A": "AFGHAN", "AZ": "AZAWAKH", "B": "BORZOI", "BA": "BASENJI",
+            "C": "CIRNECO DELL'ETNA", "CP": "CHART POLSKI", "G": "GREYHOUND",
+            "I": "IBIZAN HOUND", "IG": "ITALIAN GREYHOUND", "IW": "IRISH WOLFHOUND",
+            "M": "MAGYAR AGAR", "P": "PHARAOH HOUND",
+            "PM": "PORTUGUESE PODENGO MEDIO", "PPP": "PORTUGUESE PODENGO PEQUENO",
+            "R": "RHODESIAN RIDGEBACK", "S": "SALUKI", "SD": "SCOTTISH DEERHOUND",
+            "SL": "SLOUGHI", "SW": "SILKEN WINDHOUND",
+        },
+    },
+    "aok9": {
+        "waves": ["bwave", "mwave"],
+        "meet_streams": ["meets_breed", "meets_mixed"],
+        "champion": [("brc", "titled_brc", "brc"), ("mrc", "titled_mrc", "mrc")],
+        "supreme": [("nbrc", "sbrc"), ("nmrc", "smrc"), ("trc", "strc")],
+        "career_ranks": [("nbrc", "rank_career_breed"), ("nmrc", "rank_career_mixed")],
+        "owner_sums": ["ytd", "nbrc", "nmrc"],
+        "owner_best": "bwave",
+        # AOK9's registrar overrides the arithmetic far more often than
+        # LGRA's (published figures with no score listed, older rows not
+        # recomputed); 85% agreement is what the guide actually shows.
+        "wave_agreement": 0.85,
+        "expected_sections": None,
+    },
+}
+
+# LGRA year letters, enumerated rather than computed: A..Z then AA..AZ.
+_LGRA_LETTERS = [chr(c) for c in range(ord("A"), ord("Z") + 1)]
+_LGRA_LETTERS += ["A" + chr(c) for c in range(ord("A"), ord("Z") + 1)]
+LGRA_YEARS = {letters: 1995 + index for index, letters in enumerate(_LGRA_LETTERS)}
+
+
+def _racing_wave(meets: list[list]) -> float | None:
+    """[(m1) + 0.7 (m2) + 0.5 (m3)] / 2.2 over complete meets, written as a loop."""
+    scores = [(row[3], row[4]) for row in meets if row[3] is not None]
+    if not scores:
+        return None
+    complete = [score for score, done in scores if done]
+    if not complete:
+        return sum(score for score, _ in scores) / len(scores)
+    total = weight_sum = 0.0
+    for score, weight in zip(complete[:3], (1.0, 0.7, 0.5)):
+        total += score * weight
+        weight_sum += weight
+    return total / weight_sum
+
+
+def _racing_rank(rows: list[dict], field: str) -> dict[str, int | None]:
+    """Competition ranking, ties share, zero and missing unranked."""
+    ranked = sorted(
+        (row for row in rows if (row.get(field) or 0) > 0),
+        key=lambda row: -row[field],
+    )
+    result: dict[str, int | None] = {row["id"]: None for row in rows}
+    last_value, last_rank = None, 0
+    for position, row in enumerate(ranked, 1):
+        if row[field] != last_value:
+            last_value, last_rank = row[field], position
+        result[row["id"]] = last_rank
+    return result
+
+
+def check_racing(check: Checker, org: str) -> None:
+    """Re-derive data/<org>.json and its registry from the archived snapshot."""
+    import datetime as dt
+
+    spec = RACING[org]
+    feed_path = ROOT / "data" / f"{org}.json"
+    registry_path = ROOT / "data" / f"{org}-registry.json"
+    snapshot_dir = ROOT / "data" / org / "snapshots"
+    check.expect(feed_path.exists() and registry_path.exists(),
+                 f"{org}: feed or registry missing; run tools/{org}.py")
+    if not (feed_path.exists() and registry_path.exists()):
+        return
+    feed = json.loads(feed_path.read_text(encoding="utf-8"))
+    registry = json.loads(registry_path.read_text(encoding="utf-8"))
+    columns = registry["columns"]
+    rows = [dict(zip(columns, row)) for row in registry["rows"]]
+    by_id = {row["id"]: row for row in rows}
+    stats = feed["stats"]
+    season = feed["season"]
+    label = feed["name"]
+
+    snapshot_path = snapshot_dir / f"{feed['guide_date']}.json"
+    check.expect(snapshot_path.exists(), f"{label}: snapshot {snapshot_path.name} missing")
+    snapshot = (json.loads(snapshot_path.read_text(encoding="utf-8"))
+                if snapshot_path.exists() else None)
+    check.expect(
+        feed["snapshots"] == sorted(p.stem for p in snapshot_dir.glob("*.json")),
+        f"{label}: feed.snapshots does not list the archived snapshots",
+    )
+
+    # 1. Counts survive snapshot -> registry -> feed, and every hound sits
+    #    under the breed header its registration prefix expects.
+    if snapshot:
+        snapshot_ids = [dog["id"] for section in snapshot["sections"] for dog in section["dogs"]]
+        check.expect(len(snapshot_ids) == len(rows) == stats["hounds_registry"],
+                     f"{label}: registry {len(rows)} vs snapshot {len(snapshot_ids)} "
+                     f"vs stats {stats['hounds_registry']}")
+        check.expect(set(snapshot_ids) == set(by_id),
+                     f"{label}: registry ids differ from the snapshot")
+        expected_sections = spec["expected_sections"]
+        if expected_sections:
+            for section in snapshot["sections"]:
+                prefixes = {dog["prefix"] for dog in section["dogs"]}
+                check.expect(
+                    all(expected_sections.get(p) == section["breed_raw"] for p in prefixes),
+                    f"{label}: {sorted(prefixes)} filed under {section['breed_raw']!r}",
+                )
+            check.expect(
+                {s["breed_raw"] for s in snapshot["sections"]} == set(expected_sections.values()),
+                f"{label}: the guide's breed headers changed",
+            )
+        else:
+            homes: dict[str, set[str]] = {}
+            for section in snapshot["sections"]:
+                for dog in section["dogs"]:
+                    homes.setdefault(dog["prefix"], set()).add(section["breed_raw"])
+            check.expect(all(len(v) == 1 for v in homes.values()),
+                         f"{label}: a registration prefix appears under two breeds")
+    check.expect(len(set(by_id)) == len(rows), f"{label}: duplicate ids in the registry")
+    check.expect(all(re.match(r"^[A-Z]{1,8}-\d+(-\d+)?$", row["id"]) for row in rows),
+                 f"{label}: an id does not look like PREFIX-NUMBER")
+    duplicates = [row for row in rows if row.get("duplicate_of")]
+    check.expect(all(row["id"].startswith(row["duplicate_of"] + "-") for row in duplicates),
+                 f"{label}: a duplicate_of does not match its id")
+    check.expect(len(duplicates) == stats["hounds_duplicate_numbers"],
+                 f"{label}: stats.hounds_duplicate_numbers is {stats['hounds_duplicate_numbers']}, "
+                 f"registry has {len(duplicates)}")
+
+    sections = feed["sections"]
+    check.expect(stats["breeds"] == len(sections), f"{label}: stats.breeds != len(sections)")
+    check.expect(sum(s["registry"] for s in sections) == len(rows),
+                 f"{label}: section registry counts do not sum to the registry")
+    by_slug: dict[str, list[dict]] = {}
+    for row in rows:
+        by_slug.setdefault(row["breed_slug"], []).append(row)
+    check.expect({s["slug"] for s in sections} == set(by_slug),
+                 f"{label}: section slugs differ from the registry's breed slugs")
+
+    # 2. The feed is the active subset, and agrees with the registry.
+    active_rows = [row for row in rows if row["active"]]
+    check.expect(len(feed["dogs"]) == len(active_rows) == stats["hounds_active"],
+                 f"{label}: feed dogs {len(feed['dogs'])} vs active registry rows "
+                 f"{len(active_rows)} vs stats {stats['hounds_active']}")
+    shared = ["call_name", "registered_name", "owner_raw", "ytd", "rank_breed",
+              "rank_all", "last_raced"] + spec["waves"]
+    for dog in feed["dogs"]:
+        row = by_id.get(dog["id"])
+        check.expect(row is not None and all(dog.get(f) == row.get(f) for f in shared),
+                     f"{label}: {dog['id']} differs between feed and registry")
+    check.expect(stats["hounds_ytd"] == sum((row["ytd"] or 0) > 0 for row in rows),
+                 f"{label}: stats.hounds_ytd is not the count of hounds with points")
+    raced = [row for row in rows
+             if any(meet[1] == season for stream in spec["meet_streams"] for meet in row[stream])]
+    check.expect(stats["hounds_raced"] == len(raced),
+                 f"{label}: stats.hounds_raced {stats['hounds_raced']} vs {len(raced)} re-counted")
+    check.expect(stats["breeds_raced"] == len({row["breed_slug"] for row in raced}),
+                 f"{label}: stats.breeds_raced disagrees with a re-count")
+    check.expect(stats["hounds_ytd"] <= stats["hounds_raced"] <= stats["hounds_active"],
+                 f"{label}: points {stats['hounds_ytd']} / raced {stats['hounds_raced']} / "
+                 f"active {stats['hounds_active']} are out of order")
+    for section in sections:
+        members = by_slug.get(section["slug"], [])
+        check.expect(section["registry"] == len(members)
+                     and section["active"] == sum(bool(m["active"]) for m in members)
+                     and section["ytd"] == sum((m["ytd"] or 0) > 0 for m in members),
+                     f"{label}: section counts wrong for {section['breed']}")
+
+    # 3. Standings: competition ranking on this season's points, per breed
+    #    and overall, and on career points.
+    for slug, members in by_slug.items():
+        expected = _racing_rank(members, "ytd")
+        check.expect(all(m["rank_breed"] == expected[m["id"]] for m in members),
+                     f"{label}: breed standings disagree for {slug}")
+        leaders = sorted((m for m in members if m["rank_breed"] == 1),
+                         key=lambda m: m["call_name"])
+        section = next(s for s in sections if s["slug"] == slug)
+        check.expect(
+            (section["leader"] or {}).get("id") == (leaders[0]["id"] if leaders else None),
+            f"{label}: section leader wrong for {slug}",
+        )
+    expected_all = _racing_rank(rows, "ytd")
+    check.expect(all(row["rank_all"] == expected_all[row["id"]] for row in rows),
+                 f"{label}: all-breed standings disagree")
+    check.expect(any(row["rank_all"] == 1 for row in rows) == (stats["hounds_ytd"] > 0),
+                 f"{label}: nobody ranked first although hounds have points")
+    for field, key in spec["career_ranks"]:
+        expected_career = _racing_rank(rows, field)
+        check.expect(all(row[key] == expected_career[row["id"]] for row in rows),
+                     f"{label}: career standings ({key}) disagree")
+
+    # 4. WAVE arithmetic, with the registrar's overrides tolerated in bulk
+    #    but flagged one by one; grades follow the bands.
+    for wave_field, stream in zip(spec["waves"], spec["meet_streams"]):
+        rated = [row for row in rows if row[wave_field] is not None]
+        agree = 0
+        for row in rated:
+            computed = _racing_wave(row[stream])
+            if computed is not None and abs(computed - row[wave_field]) <= 0.01:
+                agree += 1
+        share = agree / max(1, len(rated))
+        check.expect(share >= spec["wave_agreement"],
+                     f"{label}: {wave_field} agrees with the rule for only {share:.1%}")
+        for dog in feed["dogs"]:
+            computed = _racing_wave(by_id[dog["id"]][stream])
+            matches = (dog[wave_field] is not None and computed is not None
+                       and abs(computed - dog[wave_field]) <= 0.01)
+            check.expect(dog[f"{wave_field}_matches"] == matches,
+                         f"{label}: {dog['id']} {wave_field}_matches flag is wrong")
+        grade_field = {"wave": "grade", "bwave": "bgrade", "mwave": "mgrade"}[wave_field]
+        for row in rows:
+            value = row[wave_field]
+            expected = (None if value is None else "A" if value >= 11 else "B" if value >= 8
+                        else "C" if value >= 5.5 else "D")
+            check.expect(row[grade_field] == expected,
+                         f"{label}: {row['id']} grade {row[grade_field]} for WAVE {value}")
+
+    # 5. Meet codes decode to plausible years and, where the scheme gives
+    #    one, dates. LGRA numbered meets sequentially before 2012 and by
+    #    day of the year since; AOK9 numbers them sequentially and dates
+    #    only its oldest rows.
+    guide_date = dt.date.fromisoformat(feed["guide_date"])
+    listed = undecoded = weekend = dated = 0
+    this_year: set[str] = set()
+    for row in rows:
+        for stream in spec["meet_streams"]:
+            for code, year, when, _score, _complete in row[stream]:
+                listed += 1
+                if year is None:
+                    undecoded += 1
+                    continue
+                check.expect(1995 <= year <= season, f"{label}: meet {code} year {year} out of range")
+                if year == season:
+                    this_year.add(code)
+                if org == "lgra":
+                    match = re.match(r"^([A-Z]{1,2})(\d{1,3})", code)
+                    check.expect(bool(match) and LGRA_YEARS.get(match.group(1)) == year,
+                                 f"{label}: meet {code} year {year} does not match its letters")
+                    check.expect((when is not None) == (year >= 2012),
+                                 f"{label}: meet {code} dated {when} for year {year}")
+                if when is None:
+                    continue
+                dated += 1
+                day = dt.date.fromisoformat(when)
+                check.expect(day.year == year, f"{label}: meet {code} date {when} is not in {year}")
+                check.expect(day <= guide_date, f"{label}: meet {code} dated after the guide")
+                if org == "lgra":
+                    check.expect(day.timetuple().tm_yday == int(match.group(2)),
+                                 f"{label}: meet {code} decodes to {when}, not its own day number")
+                    weekend += day.weekday() >= 5
+    check.expect(listed == stats["meets_listed"] and undecoded == stats["meets_undecoded"],
+                 f"{label}: meet counts {listed}/{undecoded} vs stats "
+                 f"{stats['meets_listed']}/{stats['meets_undecoded']}")
+    check.expect(undecoded <= max(5, listed * 0.002),
+                 f"{label}: {undecoded} undecodable meet codes of {listed}")
+    if org == "lgra":
+        check.expect(weekend / max(1, dated) >= 0.85,
+                     f"{label}: only {weekend / max(1, dated):.0%} of dated meets fall on a weekend")
+    check.expect(len(this_year) == stats["meets_this_year"],
+                 f"{label}: meets this year {len(this_year)} vs stats {stats['meets_this_year']}")
+
+    # 6. Titles follow the points columns.
+    for field, stat_key, flag in spec["champion"]:
+        check.expect(stats[stat_key] == sum((row[field] or 0) >= 12 for row in rows),
+                     f"{label}: stats.{stat_key} is not the count of hounds at 12 {field} points")
+        for dog in feed["dogs"]:
+            check.expect(dog["titled"][flag] == ((dog[field] or 0) >= 12),
+                         f"{label}: {dog['id']} titled.{flag} disagrees with {field}")
+    for field, flag in spec["supreme"]:
+        for dog in feed["dogs"]:
+            level = int((dog[field] or 0) // 30)
+            check.expect(dog["titled"][flag] == level,
+                         f"{label}: {dog['id']} titled.{flag} != {field} // 30")
+    if org == "lgra":
+        named = [dog for dog in feed["dogs"]
+                 if any(re.match(r"^S?GRC\d*$", t, re.IGNORECASE) for t in dog["titles"])]
+        agree = sum((dog["grc"] or 0) >= 12 for dog in named)
+        check.expect(agree >= 0.95 * len(named),
+                     f"{label}: {len(named) - agree} hounds carry GRC in their name "
+                     f"without 12 points")
+
+    # 7. Owners re-summed over the active hounds, one row per surname per breed.
+    expected_owners: dict[str, dict] = {}
+    for dog in feed["dogs"]:
+        for party in dog["owners"]:
+            entry = expected_owners.setdefault(
+                f"{party['key']}|{dog['breed_slug']}",
+                {"hounds": 0, "best": None, **{f: 0.0 for f in spec["owner_sums"]}})
+            entry["hounds"] += 1
+            for f in spec["owner_sums"]:
+                entry[f] += dog.get(f) or 0
+            best = dog.get(spec["owner_best"])
+            if best is not None:
+                entry["best"] = best if entry["best"] is None else max(entry["best"], best)
+    check.expect(len(feed["owners"]) == len(expected_owners) == stats["owners_active"],
+                 f"{label}: owner count {len(feed['owners'])} vs {len(expected_owners)}")
+    for owner in feed["owners"]:
+        expected = expected_owners.get(owner["key"])
+        check.expect(owner["key"] == f"{owner['surname_key']}|{owner['breed_slug']}"
+                     and owner["breeds"] == [owner["breed"]],
+                     f"{label}: owner {owner['key']} is not one surname within one breed")
+        check.expect(
+            expected is not None and owner["hounds"] == expected["hounds"]
+            and all(abs(owner[f] - expected[f]) < 0.001 for f in spec["owner_sums"])
+            and owner[f"best_{spec['owner_best']}"] == expected["best"],
+            f"{label}: owner {owner['key']} aggregates disagree",
+        )
+
+    # 8. Movement against the previous snapshot, or none at all.
+    previous = feed["previous_guide_date"]
+    if previous is None:
+        check.expect(all(dog["movement"] is None for dog in feed["dogs"]),
+                     f"{label}: movement present without a previous guide")
+        check.expect(feed["titles_since_previous"] == [],
+                     f"{label}: titles_since_previous without a previous guide")
+    else:
+        prior = json.loads((snapshot_dir / f"{previous}.json").read_text(encoding="utf-8"))
+        prior_ids = {dog["id"]: dog for section in prior["sections"] for dog in section["dogs"]}
+        for dog in feed["dogs"]:
+            move = dog["movement"]
+            before = prior_ids.get(dog["id"])
+            check.expect(move is not None and move["since"] == previous
+                         and move["new"] == (before is None),
+                         f"{label}: {dog['id']} movement.new is wrong")
+            if before is not None and move:
+                expected_delta = (round(dog["ytd"] - before["ytd"], 3)
+                                  if dog["ytd"] is not None and before["ytd"] is not None
+                                  else None)
+                check.expect(move["ytd_delta"] == expected_delta,
+                             f"{label}: {dog['id']} ytd_delta disagrees")
+
+    # 9. Nothing personal beyond names travels into the published data.
+    for path in (feed_path, registry_path, snapshot_path):
+        if not path.exists():
+            continue
+        body = path.read_text(encoding="utf-8")
+        for name, pattern in (
+            ("email address", r"[\w.+-]+@[\w-]+\.[\w.]+"),
+            ("phone number", r"\(\d{3}\)\s*\d{3}-\d{4}"),
+            ("street address",
+             r"\b\d{2,5}\s+\w+\s+(?:Ave|Avenue|St|Street|Rd|Road|Dr|Drive|Ln|Lane)\b"),
+        ):
+            found = re.findall(pattern, body, re.IGNORECASE)
+            check.expect(not found, f"{label}: {path.name} contains a {name}: {found[:2]}")
 
 
 if __name__ == "__main__":

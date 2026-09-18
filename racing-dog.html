@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#F7F5EF">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#1B1917">
+  <title>Racing record — Gazehound Stats</title>
+  <meta name="description" content="One hound's LGRA or AOK9 racing record from the grading guide: standing in the breed this year, WAVE and grade, points toward each title, the last three meets. Unofficial fan site.">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Gazehound Stats">
+  <meta property="og:title" content="Racing record — Gazehound Stats">
+  <meta property="og:description" content="One hound's LGRA or AOK9 racing record from the grading guide: standing in the breed this year, WAVE and grade, points toward each title, the last three meets.">
+  <meta property="og:image" content="https://stats.gazehound.io/assets/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="preload" href="assets/fonts/fraunces-latin-var.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/plex-mono-400.woff2" as="font" type="font/woff2" crossorigin>
+  <script src="js/theme.js?v=20260823"></script>
+  <link rel="stylesheet" href="css/app.css?v=20260917">
+  <link rel="icon" href="assets/favicon.ico?v=3" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png?v=3">
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png?v=3">
+</head>
+<body class="min-h-screen flex flex-col">
+  <header id="site-header"></header>
+  <main id="main" class="flex-1 max-w-5xl mx-auto w-full px-4 py-6 space-y-6"></main>
+  <footer id="site-footer" class="bg-asfa-navy text-white py-8"></footer>
+
+  <script src="js/app.js?v=20260917"></script>
+  <script src="js/racing.js?v=20260917"></script>
+  <script>
+    (() => {
+      const org = param('org');
+      if (org !== 'lgra' && org !== 'aok9') {
+        renderChrome(null, 'racing-dog.html', 'hub');
+        document.getElementById('main').innerHTML = `<div class="card">
+          <h1 class="card-title">Unknown racing program</h1>
+          <p class="text-sm">This page shows one hound's LGRA or AOK9 record; the link is missing which.</p>
+          <p class="text-sm mt-2"><a href="lgra.html" class="lnk">LGRA standings →</a> ·
+            <a href="aok9.html" class="lnk">AOK9 standings →</a></p>
+        </div>`;
+        return;
+      }
+      pageRacing('racing-dog.html', org, (feed) => {
+        renderRacingDog(org, feed, document.getElementById('main'));
+      });
+    })();
+  </script>
+</body>
+</html>

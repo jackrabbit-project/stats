@@ -1,6 +1,6 @@
-# Lure Coursing Stats — 2026 ASFA season
+# Gazehound Stats — ASFA lure coursing, LGRA and AOK9 racing
 
-A searchable, browsable view of **American Sighthound Field Association lure coursing data** — the Top 20 standings, and the trial results behind them.
+A searchable, browsable view of **American Sighthound Field Association lure coursing data** (the Top 20 standings and the trial results behind them), and of the **LGRA** and **AOK9** sprint-racing grading guides.
 
 ASFA publishes the standings as one long page of stacked breed tables, and trial results as a page per month. You cannot search either, look up a single hound, or see where a hound sits against the rest of its breed without counting by hand. This site reads those pages and rearranges them.
 
@@ -14,21 +14,27 @@ ASFA publishes the standings as one long page of stacked breed tables, and trial
 - **Bowen** — how the point system works, with a calculator
 - **Rulebooks** — ASFA's documents linked at source, plus the Running Rules and LCI rules as searchable pages
 - **Stat cards** — a shareable PNG per hound, rendered in the browser
+- **LGRA racing** — standings by breed and all-breed on this season's National points, career points, WAVE and grade, per-hound pages with the last three meets and progress toward GRC and SGRC, from LGRA's grading guide
+- **AOK9 racing** — the same for R.A.C.E.'s all-breed sprint program: breed and mixed divisions, BRC/MRC and the Supreme titles, Turtle points, from the AOK9 sprint grading guide
+- **One search** across all three programs on the hub at `/`
 
-**This is an independent, unofficial project. It is not authorized, approved, or endorsed by ASFA, and it is not an ASFA publication.** Wherever this site and [ASFA's published standings](https://www.asfa.org/20/index.htm) disagree, ASFA's page governs.
+**This is an independent, unofficial project. It is not authorized, approved, or endorsed by ASFA, LGRA or R.A.C.E., and it is not a publication of any of them.** Wherever this site and [ASFA's published standings](https://www.asfa.org/20/index.htm), the [LGRA grading guide](https://lgra.club/grading-guide) or the [AOK9 sprint grading guide](https://aok9racing.com/documents--forms.html) disagree, the body's own publication governs.
 
 ## Layout
 
 ```
-index.html  events.html  browse.html  dog.html  leaders.html  kennels.html
+index.html            The hub: one search across every program, three program cards
+asfa.html  events.html  browse.html  dog.html  leaders.html  kennels.html
 regions.html  lci.html  bowen.html  rulebooks.html  about.html  404.html
+lgra.html  aok9.html  racing-dog.html   The racing sections
 css/input.css         Design tokens (light + dark), fonts, components — the source
 css/app.css           Compiled stylesheet, checked in — what pages load
 tailwind.config.js    Maps the asfa-* color names onto the tokens
 assets/fonts/         Fraunces + IBM Plex Mono, self-hosted woff2
 js/app.js             Data loading, chrome, icons, search, formatting
 js/card.js            Canvas stat-card renderer
-tools/                Python ETL — fetch, parse, clubs, trials, events, build, check
+js/racing.js          The racing pages: program table, WAVE helpers, overview and hound renderers
+tools/                Python ETL — fetch, parse, clubs, trials, events, build, titles, lgra, aok9, check
 tools/build_css.ps1   Rebuilds css/app.css (see tools/build_css.md)
 data/snapshots/       Every published standings page, archived verbatim
 data/trials/raw/      Every monthly trial results page, archived verbatim
@@ -38,6 +44,13 @@ data/season.json      Standings — loaded by every page
 data/trials.json      Trial entries by club and region — loaded by regions.html
 data/events.json      The trial schedule — loaded by events.html
 data/clubs.json       Club directory: name, region, initials, affiliation only
+data/lgra/snapshots/  Each LGRA grading guide, parsed, one file per guide date
+data/aok9/snapshots/  Each AOK9 sprint grading guide, parsed, one file per guide date
+data/lgra/raw/        The workbooks as downloaded — fetched locally, never committed
+data/aok9/raw/
+data/lgra.json        Active LGRA hounds with standings, owners, movement — loaded by lgra.html
+data/aok9.json        The same for AOK9 — loaded by aok9.html
+data/*-registry.json  Every hound ever registered, compact — loaded on demand
 ```
 
 The site is static files with no framework and no runtime dependencies — no CDNs, no font service, no analytics; every page loads with zero third-party requests. The stylesheet is compiled once with the standalone Tailwind CLI and committed, so deploys stay build-free. **If you change any class in HTML/JS or anything in `css/input.css`, rebuild with `tools/build_css.ps1`** — the how and why live in [tools/build_css.md](tools/build_css.md). It follows the device's light or dark preference automatically. Python runs offline to produce the JSON under `data/`.
@@ -46,12 +59,12 @@ The site is static files with no framework and no runtime dependencies — no CD
 
 ```bash
 pip install -r requirements.txt
-python tools/fetch.py && python tools/clubs.py && python tools/parse.py && python tools/trials.py && python tools/events.py && python tools/build.py && python tools/check.py
+python tools/fetch.py && python tools/clubs.py && python tools/parse.py && python tools/trials.py && python tools/events.py && python tools/build.py && python tools/titles.py && python tools/lgra.py && python tools/aok9.py && python tools/check.py
 ```
 
 `fetch.py` archives the live page under `data/snapshots/{date}.html`, named for the coverage date the page states about itself rather than the wall clock. It skips the write when the page is unchanged. Raw snapshots are committed so every figure on the site traces back to the bytes ASFA served on a given date — and so movement between publications can be computed.
 
-`trials.py` does the same for each monthly trial results page, and `clubs.py` for the club listing PDF that supplies club regions. A [weekly workflow](.github/workflows/refresh.yml) runs the whole chain and commits when anything changes.
+`trials.py` does the same for each monthly trial results page, and `clubs.py` for the club listing PDF that supplies club regions. `lgra.py` scrapes lgra.club for the current grading-guide workbook and `aok9.py` exports the AOK9 sprint guide sheet; each archives a parsed snapshot per guide date (the raw workbooks stay out of git: they are large, and their header rows carry the registrars' mailing details) and rebuilds its feed and registry from every snapshot. A [weekly workflow](.github/workflows/refresh.yml) runs the whole chain and commits when anything changes.
 
 ## Serving locally
 
@@ -79,10 +92,20 @@ Then open <http://localhost:8765>. The pages fetch `data/season.json`, so openin
 
 `tools/check.py` re-derives the totals by a different route than `tools/build.py` and fails if the two disagree. It also counts rows straight out of the raw HTML, so a silently dropped row is caught rather than quietly corrupting a leaderboard.
 
+### The racing numbers
+
+- **Standings rank this season's points.** The grading guides' YTD column is National points earned this calendar year, the figure LGRA's own year-end Top 10 lists rank by; the site ranks it within each breed and across breeds (ties share a rank). Career standings rank career National points.
+- **WAVE is recomputed and compared, never replaced.** Rule 4.2.2 in both rule books: `(meet 1 + 0.7 × meet 2 + 0.5 × meet 3) / 2.2` over the last three complete meets. The registrar's published figure is shown; a hound's page says where the arithmetic differs. `check.py` requires the two to agree for 98% of LGRA hounds and 85% of AOK9 dogs, which is what the guides actually show.
+- **Titles are read from the points columns** (12 championship points; every 30 National points a Superior/Supreme level). The registrar's certificate is the record.
+- **Meet codes decode to years, and to dates where the scheme gives one.** LGRA: year letters (A = 1995) plus day of the year from 2012 on, a running count before. AOK9: year plus sequence, undated. A handful of typed codes in each guide cannot be decoded; they are kept as written and `check.py` caps how many.
+- **Breed is the registration prefix** for LGRA (B is Borzoi, BA is Basenji; three young breeds' headers sit in the NAME column) and the section header for AOK9. Both guides re-use a registration number now and then; every row is kept and the second occurrence gets a `-2` suffix.
+- **Active** means a meet in the current or previous calendar year, or points this year; the feeds carry active hounds, the registries everyone.
+- **No personal contact data**, extended: the workbooks' header rows are never copied, and `check.py` greps the feeds, registries and snapshots for emails, phone numbers and street addresses.
+
 ## Reporting an error
 
 Please check against [ASFA's published standings](https://www.asfa.org/20/index.htm) first. If the two disagree, ASFA is right and this site has a bug — please [open an issue](https://github.com/jackrabbit-project/stats/issues/new) or email **info@gazehound.io**. If ASFA's own listing looks wrong, that goes to the ASFA Records Secretary, not here.
 
 ## License
 
-The code is [MIT](LICENSE). The standings data under `data/` is ASFA's and is reproduced with attribution; the Jackrabbit Project icon files are not MIT-licensed. See [LICENSE](LICENSE) for the carve-outs.
+The code is [MIT](LICENSE). The standings data under `data/` is ASFA's, and the grading-guide data is LGRA's and R.A.C.E.'s, all reproduced with attribution; the Jackrabbit Project icon files are not MIT-licensed. See [LICENSE](LICENSE) for the carve-outs.

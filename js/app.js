@@ -52,6 +52,22 @@ function loadEvents() {
   return eventsPromise;
 }
 
+/** The LGRA and AOK9 racing feeds, one promise each, same isolation. */
+const RACING_URLS = { lgra: 'data/lgra.json', aok9: 'data/aok9.json' };
+const racingPromises = {};
+
+function loadRacing(org) {
+  const url = RACING_URLS[org];
+  if (!url) return Promise.reject(new Error(`unknown racing program ${org}`));
+  if (!racingPromises[org]) {
+    racingPromises[org] = loadJson(url).catch((error) => {
+      delete racingPromises[org];
+      throw error;
+    });
+  }
+  return racingPromises[org];
+}
+
 /* ------------------------------------------------------------------- icons */
 
 /* Inline SVG icons, sized to the surrounding text (width/height 1em).
@@ -262,12 +278,23 @@ function searchDogs(query, dogs, limit = 40) {
     if (score) scored.push({ dog, score });
   }
 
-  scored.sort((a, b) => b.score - a.score || a.dog.rank - b.dog.rank);
+  scored.sort((a, b) => b.score - a.score
+    || (a.dog.order ?? a.dog.rank ?? 0) - (b.dog.order ?? b.dog.rank ?? 0));
   return scored.slice(0, limit).map((item) => item.dog);
 }
 
+/** One result row: the ASFA shape by default; the hub supplies its own. */
+function searchRow(dog) {
+  return `
+      <a href="${dogUrl(dog.id)}" class="flex items-baseline gap-3 px-4 py-2.5 hover:bg-asfa-bg2 border-b border-asfa-border last:border-0">
+        <span class="font-semibold text-asfa-green">${esc(dog.call_name)}</span>
+        <span class="text-sm text-asfa-text/70 truncate flex-1">${esc(dog.registered_name)}</span>
+        <span class="text-xs uppercase tracking-wide text-asfa-accent whitespace-nowrap">${esc(dog.breed)} #${dog.rank}</span>
+      </a>`;
+}
+
 /** Wire an input + results container into a live search box. */
-function attachSearch(input, results, dogs, { onEmpty } = {}) {
+function attachSearch(input, results, dogs, { onEmpty, row = searchRow } = {}) {
   const render = () => {
     const matches = searchDogs(input.value, dogs);
     if (!matches.length) {
@@ -279,12 +306,7 @@ function attachSearch(input, results, dogs, { onEmpty } = {}) {
       return;
     }
     results.classList.remove('hidden');
-    results.innerHTML = matches.map((dog) => `
-      <a href="${dogUrl(dog.id)}" class="flex items-baseline gap-3 px-4 py-2.5 hover:bg-asfa-bg2 border-b border-asfa-border last:border-0">
-        <span class="font-semibold text-asfa-green">${esc(dog.call_name)}</span>
-        <span class="text-sm text-asfa-text/70 truncate flex-1">${esc(dog.registered_name)}</span>
-        <span class="text-xs uppercase tracking-wide text-asfa-accent whitespace-nowrap">${esc(dog.breed)} #${dog.rank}</span>
-      </a>`).join('');
+    results.innerHTML = matches.map(row).join('');
   };
 
   input.addEventListener('input', render);
@@ -298,8 +320,8 @@ function attachSearch(input, results, dogs, { onEmpty } = {}) {
 
 /* ------------------------------------------------------------------ chrome */
 
-const NAV = [
-  ['index.html', 'Home'],
+const NAV_ASFA = [
+  ['asfa.html', 'Overview'],
   ['browse.html', 'Browse'],
   ['leaders.html', 'Leaders'],
   ['kennels.html', 'Kennels'],
@@ -311,6 +333,68 @@ const NAV = [
   ['rulebooks.html', 'Rulebooks'],
   ['about.html', 'About'],
 ];
+const NAV_LGRA = [
+  ['lgra.html', 'Overview'],
+  ['lgra.html#standings', 'Standings'],
+  ['lgra.html#browse', 'Browse'],
+  ['lgra.html#about', 'About the numbers'],
+];
+const NAV_AOK9 = [
+  ['aok9.html', 'Overview'],
+  ['aok9.html#standings', 'Standings'],
+  ['aok9.html#browse', 'Browse'],
+  ['aok9.html#about', 'About the numbers'],
+];
+const NAV_HUB = [
+  ['index.html', 'Home'],
+  ['asfa.html', 'ASFA coursing'],
+  ['lgra.html', 'LGRA racing'],
+  ['aok9.html', 'AOK9 racing'],
+];
+
+/* The site is three programs under one roof. Each has its own home, nav
+   and footer source line; the wordmark always leads back to the hub, and
+   the footer's disclaimer link goes to the section's own account. */
+const seasonOf = (feed) => (feed && feed.season) || new Date().getFullYear();
+
+/* The tagline takes the program's colour, the same one its hub card wears:
+   rust for ASFA, slate for LGRA, moss for AOK9. */
+const SECTIONS = {
+  hub: {
+    home: 'index.html', nav: NAV_HUB,
+    tagline: (feed) => `Lure coursing and racing · ${seasonOf(feed)}`,
+    color: 'text-asfa-text',
+    disclaimer: 'about.html#disclaimer',
+  },
+  asfa: {
+    home: 'asfa.html', nav: NAV_ASFA,
+    tagline: (feed) => `ASFA lure coursing · ${seasonOf(feed)}`,
+    color: 'text-asfa-accent',
+    disclaimer: 'about.html#disclaimer',
+  },
+  lgra: {
+    home: 'lgra.html', nav: NAV_LGRA,
+    tagline: (feed) => `LGRA straight racing · ${seasonOf(feed)}`,
+    color: 'text-asfa-slate',
+    disclaimer: 'lgra.html#about',
+  },
+  aok9: {
+    home: 'aok9.html', nav: NAV_AOK9,
+    tagline: (feed) => `AOK9 sprint racing · ${seasonOf(feed)}`,
+    color: 'text-asfa-green',
+    disclaimer: 'aok9.html#about',
+  },
+};
+const PAGE_SECTIONS = { 'index.html': 'hub', 'lgra.html': 'lgra', 'aok9.html': 'aok9' };
+
+function sectionOf(current) {
+  if (current === 'racing-dog.html') {
+    const org = param('org');
+    return org === 'lgra' || org === 'aok9' ? org : 'hub';
+  }
+  return PAGE_SECTIONS[current] || 'asfa';
+}
+
 
 /* The Jackrabbit mark: running rabbit in a broken circle, one path. Drawn
    once here and used in the header lockup and the footer credit. */
@@ -421,41 +505,133 @@ function initThemeToggle(button) {
   paint();
 }
 
-function renderChrome(season, current) {
-  const links = NAV.map(([href, label]) => {
-    const active = href === current;
-    return `<a href="${href}" class="shrink-0 px-2.5 py-2.5 font-mono text-xs uppercase tracking-[0.1em] border-b-2 ${
-      active ? 'text-asfa-text border-asfa-accent' : 'text-asfa-muted border-transparent hover:text-asfa-text'
-    }">${label}</a>`;
-  }).join('');
+/** Is this nav entry the page being shown? Entries may carry a hash
+    (lgra.html#browse); the plain entry is active only while no hashed
+    sibling is. */
+function navActive(href, current, nav) {
+  const [path, hash] = href.split('#');
+  if (path !== current) return false;
+  if (hash) return location.hash === `#${hash}`;
+  return !nav.some(([other]) => {
+    const otherHash = other.split('#')[1];
+    return otherHash && location.hash === `#${otherHash}`;
+  });
+}
+
+function paintNav(navEl, current, nav) {
+  navEl.querySelectorAll('a[href]').forEach((link) => {
+    const active = navActive(link.getAttribute('href'), current, nav);
+    link.className = `shrink-0 px-2.5 py-2.5 font-mono text-xs uppercase tracking-[0.1em] border-b-2 ${
+      active ? 'text-asfa-text border-asfa-accent' : 'text-asfa-muted border-transparent hover:text-asfa-text'}`;
+    if (active) link.setAttribute('aria-current', 'page');
+    else link.removeAttribute('aria-current');
+  });
+}
+
+/* Every body's own channels, shown in the footer of every page. LGRA has no
+   Facebook page of its own; the public results-and-brags group covers LGRA
+   and AOK9 racing both, so it sits under LGRA. */
+const FOOTER_LINKS = [
+  ['ASFA lure coursing', [
+    ['globe', 'asfa.org, the official site', 'https://www.asfa.org'],
+    ['facebook', 'ASFA on Facebook', 'https://www.facebook.com/AmericanSighthoundFieldAssociation'],
+    ['facebook', 'ASFA II group', 'https://www.facebook.com/groups/1046065245418921'],
+  ]],
+  ['LGRA straight racing', [
+    ['globe', 'lgra.club, the official site', 'https://lgra.club'],
+    ['facebook', 'LGRA / AOK9 / OB NOTRA results and brags group', 'https://www.facebook.com/groups/1265142357415139'],
+  ]],
+  ['AOK9 sprint racing', [
+    ['globe', 'aok9racing.com, the official site', 'https://aok9racing.com'],
+    ['facebook', 'R.A.C.E. & AOK9 Racing Program group', 'https://www.facebook.com/groups/772408469471681'],
+  ]],
+];
+
+function footerLinks() {
+  return `
+        <div class="grid sm:grid-cols-3 gap-x-6 gap-y-4">${FOOTER_LINKS.map(([heading, links]) => `
+          <div>
+            <p class="font-mono text-[10px] uppercase tracking-widest text-asfa-wellink/60 mb-1.5">${heading}</p>
+            <ul class="space-y-1">${links.map(([glyph, label, href]) => `
+              <li><a href="${href}" target="_blank" rel="noopener noreferrer" class="underline hover:text-asfa-wellink">${icon(glyph, 'mr-1.5')}${label}</a></li>`).join('')}
+            </ul>
+          </div>`).join('')}
+        </div>`;
+}
+
+/** Where this section's figures come from. The links above and the
+    affiliation line below are the same on every page. */
+function footerSource(sectionKey, feed) {
+  const link = (href, text) =>
+    `<a href="${esc(href)}" target="_blank" rel="noopener noreferrer" class="underline hover:text-asfa-wellink">${text}</a>`;
+  if (sectionKey === 'asfa') {
+    return feed ? `
+        <p>
+          Standings reproduced from the ${link(feed.source_url, 'ASFA Top 20')},
+          covering January 1 through ${formatDate(feed.as_of)}.
+          ASFA's published page is authoritative wherever it disagrees with this one.
+        </p>` : `
+        <p>Standings reproduced from the ASFA Top 20. ASFA's published page is authoritative
+          wherever it disagrees with this one.</p>`;
+  }
+  if (sectionKey === 'lgra' || sectionKey === 'aok9') {
+    const guide = sectionKey === 'lgra' ? 'LGRA grading guide' : 'AOK9 sprint racing grading guide';
+    return feed ? `
+        <p>
+          Figures reproduced from the ${link(feed.source_url, guide)}
+          dated ${formatDate(feed.guide_date)}, published at
+          ${link(feed.source_page, esc(feed.source_page.replace(/^https?:\/\//, '')))}.
+          The published guide is authoritative wherever it disagrees with this page.
+        </p>` : `
+        <p>Figures reproduced from the ${guide}. The published guide is authoritative
+          wherever it disagrees with this page.</p>`;
+  }
+  return `
+        <p>
+          Figures reproduced from ASFA's Top 20 standings, the LGRA grading guide and the
+          AOK9 sprint racing grading guide. Each body's own publication is authoritative
+          wherever it disagrees with this site.
+        </p>`;
+}
+
+function renderChrome(feed, current, sectionKey = sectionOf(current)) {
+  const section = SECTIONS[sectionKey];
+  const links = section.nav.map(([href, label]) =>
+    `<a href="${href}" class="shrink-0 px-2.5 py-2.5 font-mono text-xs uppercase tracking-[0.1em] border-b-2 text-asfa-muted border-transparent hover:text-asfa-text">${label}</a>`
+  ).join('');
 
   const header = document.getElementById('site-header');
   if (header) {
     header.innerHTML = `
       <a href="#main" class="skip-link">Skip to content</a>
-      <div class="bg-asfa-paper border-b border-asfa-border px-4 py-1.5 text-center font-mono text-[11px] uppercase tracking-widest text-asfa-muted">
-        <span class="text-asfa-accent">Unofficial fan site</span> — not an ASFA publication.
-        <a href="about.html#disclaimer" class="underline hover:text-asfa-text whitespace-nowrap">Full disclaimer</a>
-      </div>
       <div class="bg-asfa-paper border-b border-asfa-border">
         <div class="max-w-6xl mx-auto px-4 pt-3 lg:pt-0 lg:py-1.5 flex flex-col lg:flex-row lg:items-center gap-x-8 relative">
-          <a href="index.html" class="flex items-center gap-2.5 shrink-0 pr-10 lg:pr-0">
-            ${jackrabbitMark('shrink-0 text-asfa-accent', 32)}
+          <div class="flex items-center gap-2.5 shrink-0 pr-10 lg:pr-0">
+            <a href="index.html" class="shrink-0" aria-label="Gazehound Stats home">${jackrabbitMark('block text-asfa-accent', 32)}</a>
             <span class="flex flex-col">
-              <span class="font-display font-semibold text-xl leading-tight text-asfa-text whitespace-nowrap">Lure Coursing Stats</span>
-              <span class="font-mono text-[10px] uppercase tracking-widest text-asfa-muted whitespace-nowrap">ASFA standings · ${season ? season.season : ''}</span>
+              <a href="index.html" class="font-display font-semibold text-xl leading-tight text-asfa-text whitespace-nowrap">Gazehound Stats</a>
+              <a href="${section.home}" class="font-mono text-[11px] font-semibold uppercase tracking-widest ${section.color} whitespace-nowrap hover:underline">${section.tagline(feed)}</a>
             </span>
-          </a>
+          </div>
           <nav class="nav-scroll edge-fade flex flex-nowrap lg:flex-wrap overflow-x-auto lg:overflow-visible -mx-4 px-4 lg:mx-0 lg:px-0" aria-label="Site">${links}</nav>
           <button id="theme-toggle" type="button" class="absolute right-3 top-2.5 lg:static lg:order-last lg:ml-auto shrink-0 p-2 text-base text-asfa-muted hover:text-asfa-text"></button>
         </div>
       </div>`;
     initThemeToggle(header.querySelector('#theme-toggle'));
 
+    const nav = header.querySelector('nav');
+    paintNav(nav, current, section.nav);
+    if (!renderChrome.hashBound) {
+      renderChrome.hashBound = true;
+      window.addEventListener('hashchange', () => {
+        const liveNav = document.querySelector('#site-header nav');
+        if (liveNav) paintNav(liveNav, current, section.nav);
+      });
+    }
+
     // On a phone the nav is one scrolling line; start it with the current
     // page's link in view rather than always parked at Home.
-    const nav = header.querySelector('nav');
-    const activeLink = nav && [...nav.children].find((a) => a.getAttribute('href') === current);
+    const activeLink = nav && [...nav.children].find((a) => a.getAttribute('aria-current'));
     if (nav && activeLink && nav.scrollWidth > nav.clientWidth) {
       const offset = activeLink.getBoundingClientRect().left - nav.getBoundingClientRect().left;
       nav.scrollLeft = Math.max(0, offset - (nav.clientWidth - activeLink.offsetWidth) / 2);
@@ -463,32 +639,28 @@ function renderChrome(season, current) {
   }
 
   const footer = document.getElementById('site-footer');
-  if (footer && season) {
-    // ASFA's own channels, plus the page where changes to this site are
-    // announced. Kept above the disclaimer rather than beside the site's own
-    // links, so it reads as "where to find ASFA" and not as this site's own.
-    const community = `
-        <p class="flex flex-wrap gap-x-5 gap-y-1.5">
-          <a href="https://www.facebook.com/AmericanSighthoundFieldAssociation" target="_blank" rel="noopener noreferrer" class="underline hover:text-asfa-wellink">${icon('facebook', 'mr-1.5')}Follow ASFA on Facebook</a>
-          <a href="https://www.asfa.org" target="_blank" rel="noopener noreferrer" class="underline hover:text-asfa-wellink">${icon('globe', 'mr-1.5')}asfa.org, the official site</a>
-          <a href="https://www.facebook.com/groups/1046065245418921" target="_blank" rel="noopener noreferrer" class="underline hover:text-asfa-wellink">${icon('facebook', 'mr-1.5')}Join the ASFA II group</a>
-          <a href="https://www.facebook.com/ASFAlureCoursing" target="_blank" rel="noopener noreferrer" class="underline hover:text-asfa-wellink">${icon('facebook', 'mr-1.5')}ASFA Lure Coursing, where updates to this site are posted</a>
-        </p>`;
-
+  if (footer) {
+    // The racing sections explain themselves on their own About tab;
+    // about.html is the ASFA side's account.
+    const aboutHref = sectionKey === 'lgra' || sectionKey === 'aok9' ? `${sectionKey}.html#about` : 'about.html';
+    // The hub has no About of its own: it points at each section's account.
+    const howBuilt = sectionKey === 'hub'
+      ? `How these numbers are built:
+          <a href="about.html" class="underline hover:text-asfa-wellink">ASFA</a>
+          <a href="lgra.html#about" class="underline hover:text-asfa-wellink">LGRA</a>
+          <a href="aok9.html#about" class="underline hover:text-asfa-wellink">AOK9</a>`
+      : `<a href="${aboutHref}" class="underline hover:text-asfa-wellink">How these numbers are built</a>`;
     footer.innerHTML = `
-      <div class="max-w-4xl mx-auto px-4 text-sm text-asfa-wellink/85 space-y-3">${community}
-        <p>
-          Standings reproduced from the
-          <a href="${esc(season.source_url)}" target="_blank" rel="noopener noreferrer" class="underline hover:text-asfa-wellink">ASFA Top 20</a>,
-          covering January 1 through ${formatDate(season.as_of)}.
-          ASFA's published page is authoritative wherever it disagrees with this one.
-        </p>
+      <div class="max-w-4xl mx-auto px-4 text-sm text-asfa-wellink/85 space-y-4">${footerLinks()}${footerSource(sectionKey, feed)}
         <p class="text-xs text-asfa-wellink/65">
-          Independent fan project. Not affiliated with, endorsed by, or sponsored by the
-          American Sighthound Field Association.
+          <span class="font-semibold text-asfa-wellink/85">Unofficial fan site</span> — not an ASFA, LGRA or AOK9 publication.
+          Not affiliated with, endorsed by, or sponsored by the American Sighthound Field
+          Association, the Large Gazehound Racing Association, or Racing and Coursing
+          Enthusiasts (R.A.C.E.), which runs the AOK9 program.
+          <a href="${section.disclaimer}" class="underline hover:text-asfa-wellink whitespace-nowrap">Full disclaimer</a>
         </p>
         <p class="text-xs text-asfa-wellink/65 flex flex-wrap items-center justify-center gap-x-2 gap-y-1.5 text-center">
-          <a href="about.html" class="underline hover:text-asfa-wellink">How these numbers are built</a>
+          ${howBuilt}
           <span aria-hidden="true">·</span>
           <a href="mailto:info@gazehound.io" class="underline hover:text-asfa-wellink">Report an error</a>
           <span aria-hidden="true">·</span>
@@ -566,4 +738,61 @@ function pageStatic(current, render) {
     (season) => renderChrome(season, current),
     (error) => console.warn(`Season unavailable; header shows no season. ${error.message}`)
   );
+}
+
+/** Bootstrap for lgra.html, aok9.html and racing-dog.html: one racing feed. */
+function pageRacing(current, org, render) {
+  loadRacing(org).then(
+    (feed) => {
+      renderChrome(feed, current, org);
+      try {
+        render(feed);
+      } catch (error) {
+        console.error(error);
+        showFailure(
+          'This page could not be drawn',
+          `The data loaded, but the page script failed: ${error.message}`,
+          'If the site was updated recently your browser may be holding an old copy of a '
+          + 'script. Reload with <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>R</kbd> '
+          + '(<kbd>Cmd</kbd>+<kbd>Shift</kbd>+<kbd>R</kbd> on a Mac).'
+        );
+      }
+    },
+    (error) => {
+      console.error(error);
+      renderChrome(null, current, org);
+      showFailure(
+        'Data unavailable',
+        `Could not load ${RACING_URLS[org] || org}: ${error.message}`,
+        'If you are running this locally, serve the folder over HTTP '
+        + '(<code>python tools/serve.py</code>) rather than opening the file directly.'
+      );
+    }
+  );
+}
+
+/** Bootstrap for the hub: all three feeds, each allowed to fail on its own.
+
+    The chrome paints first so the page is never blank while the feeds load;
+    render() receives whichever feeds arrived and null for the rest. */
+function pageHub(render) {
+  renderChrome(null, 'index.html', 'hub');
+  Promise.allSettled([loadSeason(), loadRacing('lgra'), loadRacing('aok9'), loadTrials()]).then((results) => {
+    const [asfa, lgra, aok9, trials] = results.map((result) => {
+      if (result.status === 'rejected') console.warn(result.reason);
+      return result.status === 'fulfilled' ? result.value : null;
+    });
+    try {
+      render({ asfa, lgra, aok9, trials });
+    } catch (error) {
+      console.error(error);
+      showFailure(
+        'This page could not be drawn',
+        `The page script failed: ${error.message}`,
+        'If the site was updated recently your browser may be holding an old copy of a '
+        + 'script. Reload with <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>R</kbd> '
+        + '(<kbd>Cmd</kbd>+<kbd>Shift</kbd>+<kbd>R</kbd> on a Mac).'
+      );
+    }
+  });
 }
