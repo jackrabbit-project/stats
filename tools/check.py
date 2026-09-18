@@ -297,11 +297,12 @@ def main() -> int:
             f"{owner_key} is split into entities sharing a region: {regions}",
         )
 
-    # 10. Bare-surname merges, re-derived from the raw snapshot where the
-    #     pre-merge keys survive. The recorded merge set must equal a fresh
-    #     computation of the rule — nothing merged that should not be, nothing
-    #     left unmerged that qualifies.
-    merges = season["review"].get("bare_surname_merges", {})
+    # 10. Owner merges (a bare surname into its initialed entity, a single
+    #     initial into its household), re-derived from the raw snapshot where
+    #     the pre-merge keys survive. The recorded merge set must equal a
+    #     fresh computation of the rule — nothing merged that should not be,
+    #     nothing left unmerged that qualifies.
+    merges = season["review"].get("owner_merges", {})
     snap_path = ROOT / "data" / "snapshots" / f"{season['as_of']}.json"
     snapshot = json.loads(snap_path.read_text(encoding="utf-8"))
     raw_keys: set[str] = set()
@@ -314,22 +315,38 @@ def main() -> int:
             if dog.get("region") is not None:
                 first_listed.setdefault(
                     dog["owners"][0]["key"], set()).add(dog["region"])
+    def initials_of(key: str) -> list[str]:
+        return key.split("|", 1)[1].split(".") if "|" in key else []
+
     expected: dict[str, str] = {}
-    for bare in sorted(k for k in raw_keys if "|" not in k):
-        rivals = [k for k in raw_keys
-                  if "|" in k and k.split("|", 1)[0] == bare]
-        if len(rivals) == 1 and first_listed.get(bare, set()) <= \
+    for key in sorted(raw_keys):
+        surname = key.split("|", 1)[0]
+        initials = initials_of(key)
+        if len(initials) > 1:
+            continue
+        if not initials:
+            rivals = [k for k in raw_keys
+                      if "|" in k and k.split("|", 1)[0] == surname]
+        else:
+            rivals = [k for k in raw_keys
+                      if len(initials_of(k)) > 1 and k.split("|", 1)[0] == surname
+                      and initials[0] in initials_of(k)]
+        if len(rivals) == 1 and first_listed.get(key, set()) <= \
                 first_listed.get(rivals[0], set()):
-            expected[bare] = rivals[0]
+            expected[key] = rivals[0]
     check.expect(
         merges == expected,
-        f"bare-surname merges disagree with re-derivation: "
+        f"owner merges disagree with re-derivation: "
         f"recorded {merges}, expected {expected}",
     )
     merged_away = set(merges)
     check.expect(
         not any(m["key"] in merged_away for d in dogs for m in d["owners"]),
-        "a merged bare key survived into season.json",
+        "a merged owner key survived into season.json",
+    )
+    check.expect(
+        all(len({m["key"] for m in d["owners"]}) == len(d["owners"]) for d in dogs),
+        "a hound lists the same owner entity twice",
     )
 
     check_trials(check)
