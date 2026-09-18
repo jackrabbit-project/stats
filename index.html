@@ -92,13 +92,15 @@
           [asfa.stats.hounds_ranked, 'hounds ranked'],
           [asfa.stats.sections_with_hounds, 'breeds &amp; divisions'],
           // Trials come from the monthly results feed, which can lag the
-          // standings by a few weeks; the tile says which date it covers.
+          // standings by a few weeks; the coverage line under the search
+          // box carries the date.
           trials
-            ? [trials.stats.trials, `trials through ${formatDate(trials.as_of).replace(/, \d{4}$/, '')}`]
+            ? [trials.stats.trials, 'trials this year']
             : [asfa.stats.bif, 'Best in Field'],
           [asfa.stats.total_competing.toLocaleString('en-US'), 'hounds competing'],
         ]) + (leader ? `<p class="text-sm text-asfa-text/70 mt-3">Highest standing: <span class="font-semibold text-asfa-green">${esc(leader.call_name)}</span>, ${esc(leader.breed)} #${leader.rank}, ${percentileLabel(leader)}.</p>` : '');
-        coverage.push(`ASFA through ${formatDate(asfa.as_of)}`);
+        coverage.push(`ASFA standings through ${formatDate(asfa.as_of)}${
+          trials ? `, trials through ${formatDate(trials.as_of)}` : ''}`);
         for (const dog of asfa.dogs) {
           entries.push({
             id: dog.id, call_name: dog.call_name, registered_name: dog.registered_name,
