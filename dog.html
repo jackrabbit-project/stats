@@ -57,7 +57,7 @@
       // Titles ride along in the registered name. Only ASFA's own are shown,
       // as badges in the families the titles page uses; other bodies' titles
       // stay in the registered name line and nowhere else.
-      const ASFA_TITLES = new Set(['FCH', 'VFCH', 'LCM', 'VLCM', 'LCX', 'TCP', 'CPX',
+      const ASFA_TITLES = new Set(['FCH', 'VFCH', 'LCM', 'VLCM', 'TCP', 'CPX',
         'LCI', 'LCC', 'VLCC', 'LCA', 'LCE']);
       const isAsfaTitle = (t) => ASFA_TITLES.has(t.replace(/\d+$/, '').toUpperCase());
       const titleFamily = (abbr) => {
