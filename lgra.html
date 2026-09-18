@@ -35,10 +35,6 @@
   <script>
     pageRacing('lgra.html', 'lgra', (feed) => {
       renderRacingOverview('lgra', feed, document.getElementById('main'));
-      if (location.hash) {
-        const target = document.querySelector(location.hash);
-        if (target) target.scrollIntoView();
-      }
     });
   </script>
 </body>

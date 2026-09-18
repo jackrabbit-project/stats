@@ -35,10 +35,6 @@
   <script>
     pageRacing('aok9.html', 'aok9', (feed) => {
       renderRacingOverview('aok9', feed, document.getElementById('main'));
-      if (location.hash) {
-        const target = document.querySelector(location.hash);
-        if (target) target.scrollIntoView();
-      }
     });
   </script>
 </body>

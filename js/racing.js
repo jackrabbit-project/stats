@@ -384,6 +384,7 @@ function renderRacingOverview(org, feed, main) {
       </p>
     </div>
 
+    <section id="overview" class="space-y-8">
     <section id="tiles" class="grid grid-cols-2 md:grid-cols-5 gap-3">
       ${tiles.map(([value, label]) =>
         `<div class="tile"><div class="tile-value">${value}</div><div class="tile-label">${label}</div></div>`).join('')}
@@ -417,8 +418,10 @@ function renderRacingOverview(org, feed, main) {
       ${careerBoards}
       ${titlesBoard}
     </section>
+    </section>
 
-    <section id="browse" class="card scroll-mt-24">
+    <section id="browse" class="space-y-6">
+    <div class="card">
       <h2 class="card-title">Browse by breed</h2>
       <p class="text-xs text-asfa-text/60 mb-3">
         ${nouns.charAt(0).toUpperCase() + nouns.slice(1)} active since ${formatDate(feed.active_since)}; the whole
@@ -431,9 +434,9 @@ function renderRacingOverview(org, feed, main) {
         </label>` : `
         <div id="breed-grid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2"></div>`}
       <div id="table-panel" class="mt-4"></div>
-    </section>
+    </div>
 
-    <section class="card">
+    <div class="card">
       <h2 class="card-title">Owners</h2>
       <label class="block mb-3">
         <span class="sr-only">Search owners by surname</span>
@@ -444,9 +447,24 @@ function renderRacingOverview(org, feed, main) {
         A co-owned ${spec.noun} counts for every owner named on the row. Points are summed across
         breeds; treat the ${nouns} column as the sturdier measure.
       </p>
+    </div>
     </section>
 
-    <section id="about" class="space-y-6 scroll-mt-24">${aboutRacing(org, feed)}</section>`;
+    <section id="about" class="space-y-6">${aboutRacing(org, feed)}</section>`;
+
+  /* The nav's four entries are tabs: one section shows at a time, chosen by
+     the hash, the way the ASFA side splits its pages. */
+  const TABS = ['overview', 'standings', 'browse', 'about'];
+  function showTab() {
+    const wanted = location.hash.slice(1);
+    const tab = TABS.includes(wanted) ? wanted : 'overview';
+    TABS.forEach((id) => document.getElementById(id).classList.toggle('hidden', id !== tab));
+    // After the browser's own jump to the anchor, and without the page's smooth
+    // scrolling, so the page heading stays in view.
+    setTimeout(() => window.scrollTo({ top: 0, behavior: 'instant' }), 0);
+  }
+  showTab();
+  window.addEventListener('hashchange', showTab);
 
   animateTiles(document.getElementById('tiles'));
 
