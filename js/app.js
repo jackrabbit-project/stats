@@ -355,25 +355,33 @@ const NAV_HUB = [
 /* The site is three programs under one roof. Each has its own home, nav
    and footer source line; the wordmark always leads back to the hub, and
    the footer's disclaimer link goes to the section's own account. */
+const seasonOf = (feed) => (feed && feed.season) || new Date().getFullYear();
+
+/* The tagline takes the program's colour, the same one its hub card wears:
+   rust for ASFA, slate for LGRA, moss for AOK9. */
 const SECTIONS = {
   hub: {
     home: 'index.html', nav: NAV_HUB,
-    tagline: () => 'Lure coursing and racing',
+    tagline: (feed) => `Lure coursing and racing · ${seasonOf(feed)}`,
+    color: 'text-asfa-text',
     disclaimer: 'about.html#disclaimer',
   },
   asfa: {
     home: 'asfa.html', nav: NAV_ASFA,
-    tagline: (season) => `ASFA lure coursing${season ? ` · ${season.season}` : ''}`,
+    tagline: (feed) => `ASFA lure coursing · ${seasonOf(feed)}`,
+    color: 'text-asfa-accent',
     disclaimer: 'about.html#disclaimer',
   },
   lgra: {
     home: 'lgra.html', nav: NAV_LGRA,
-    tagline: () => 'LGRA straight racing',
+    tagline: (feed) => `LGRA straight racing · ${seasonOf(feed)}`,
+    color: 'text-asfa-slate',
     disclaimer: 'lgra.html#about',
   },
   aok9: {
     home: 'aok9.html', nav: NAV_AOK9,
-    tagline: () => 'AOK9 sprint racing',
+    tagline: (feed) => `AOK9 sprint racing · ${seasonOf(feed)}`,
+    color: 'text-asfa-green',
     disclaimer: 'aok9.html#about',
   },
 };
@@ -602,7 +610,7 @@ function renderChrome(feed, current, sectionKey = sectionOf(current)) {
             <a href="index.html" class="shrink-0" aria-label="Gazehound Stats home">${jackrabbitMark('block text-asfa-accent', 32)}</a>
             <span class="flex flex-col">
               <a href="index.html" class="font-display font-semibold text-xl leading-tight text-asfa-text whitespace-nowrap">Gazehound Stats</a>
-              <a href="${section.home}" class="font-mono text-[11px] font-medium uppercase tracking-widest text-asfa-text whitespace-nowrap hover:text-asfa-accent">${section.tagline(feed)}</a>
+              <a href="${section.home}" class="font-mono text-[11px] font-semibold uppercase tracking-widest ${section.color} whitespace-nowrap hover:underline">${section.tagline(feed)}</a>
             </span>
           </div>
           <nav class="nav-scroll edge-fade flex flex-nowrap lg:flex-wrap overflow-x-auto lg:overflow-visible -mx-4 px-4 lg:mx-0 lg:px-0" aria-label="Site">${links}</nav>
