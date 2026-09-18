@@ -437,15 +437,16 @@ function renderRacingOverview(org, feed, main) {
     </div>
 
     <div class="card">
-      <h2 class="card-title">Owners</h2>
+      <h2 class="card-title">Kennels</h2>
       <label class="block mb-3">
-        <span class="sr-only">Search owners by surname</span>
-        <input id="owner-search" type="search" autocomplete="off" placeholder="Search ${feed.owners.length} owners of active ${nouns} by surname…" class="w-full field px-3 py-2">
+        <span class="sr-only">Search kennels by owner surname</span>
+        <input id="owner-search" type="search" autocomplete="off" placeholder="Search ${feed.owners.length} kennels of active ${nouns} by surname…" class="w-full field px-3 py-2">
       </label>
       <div id="owner-table"></div>
       <p class="text-xs text-asfa-text/55 mt-3">
-        A co-owned ${spec.noun} counts for every owner named on the row. Points are summed across
-        breeds; treat the ${nouns} column as the sturdier measure.
+        Owner is the only ownership field the guide prints, so these are owning parties rather
+        than kennel prefixes. A co-owned ${spec.noun} counts for every owner named on the row.
+        Points are summed across breeds; treat the ${nouns} column as the sturdier measure.
       </p>
     </div>
     </section>
@@ -621,7 +622,7 @@ function renderRacingOverview(org, feed, main) {
     const shown = found.slice(0, needle ? 200 : 25);
     ownerTable.innerHTML = shown.length ? `
       <div class="tbl-wrap"><table class="tbl">
-        <thead><tr><th scope="col">Owner</th><th scope="col">Breeds</th><th scope="col" class="num">${nouns.charAt(0).toUpperCase() + nouns.slice(1)}</th>
+        <thead><tr><th scope="col">Kennel</th><th scope="col">Breeds</th><th scope="col" class="num">${nouns.charAt(0).toUpperCase() + nouns.slice(1)}</th>
           <th scope="col" class="num">This year</th><th scope="col" class="num">Career</th></tr></thead>
         <tbody>${shown.map((owner) => `
           <tr>
@@ -632,8 +633,8 @@ function renderRacingOverview(org, feed, main) {
             <td class="num">${ptsLabel(owner[sumField])}</td>
           </tr>`).join('')}</tbody>
       </table></div>
-      <p class="text-xs text-asfa-text/55 mt-2">${needle ? `${found.length} matching` : 'Top 25 by points this year'}; owners of active ${nouns} only.</p>`
-      : `<p class="text-sm text-asfa-text/70 py-3">No owner matching “${esc(ownerSearch.value)}”. The guides print a surname, so try that on its own.</p>`;
+      <p class="text-xs text-asfa-text/55 mt-2">${needle ? `${found.length} matching` : 'Top 25 by points this year'}; kennels with active ${nouns} only.</p>`
+      : `<p class="text-sm text-asfa-text/70 py-3">No kennel matching “${esc(ownerSearch.value)}”. The guides print a surname, so try that on its own.</p>`;
     ownerTable.querySelectorAll('a[data-owner]').forEach((link) => {
       link.addEventListener('click', (event) => {
         event.preventDefault();
