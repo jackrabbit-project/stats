@@ -597,6 +597,47 @@ function footerSource(sectionKey, feed) {
         </p>`;
 }
 
+/** The subtitle under the wordmark opens a short menu of the programs.
+
+    One click switches sport from any page. Escape and a click elsewhere
+    close it; arrow keys walk the items; focus returns to the button. */
+function initProgramMenu(header) {
+  const button = header.querySelector('#program-menu-button');
+  const menu = header.querySelector('#program-menu');
+  if (!button || !menu) return;
+  const items = () => [...menu.querySelectorAll('[role="menuitem"]')];
+  const open = (focusIndex = 0) => {
+    menu.classList.remove('hidden');
+    button.setAttribute('aria-expanded', 'true');
+    const list = items();
+    if (list.length) list[Math.max(0, Math.min(focusIndex, list.length - 1))].focus();
+  };
+  const close = (refocus = false) => {
+    menu.classList.add('hidden');
+    button.setAttribute('aria-expanded', 'false');
+    if (refocus) button.focus();
+  };
+  button.addEventListener('click', () => {
+    if (menu.classList.contains('hidden')) open();
+    else close();
+  });
+  button.addEventListener('keydown', (event) => {
+    if (event.key === 'ArrowDown') { event.preventDefault(); open(0); }
+    if (event.key === 'ArrowUp') { event.preventDefault(); open(items().length - 1); }
+  });
+  menu.addEventListener('keydown', (event) => {
+    const list = items();
+    const index = list.indexOf(document.activeElement);
+    if (event.key === 'Escape') { event.preventDefault(); close(true); }
+    else if (event.key === 'ArrowDown') { event.preventDefault(); list[(index + 1) % list.length].focus(); }
+    else if (event.key === 'ArrowUp') { event.preventDefault(); list[(index - 1 + list.length) % list.length].focus(); }
+    else if (event.key === 'Tab') close();
+  });
+  document.addEventListener('click', (event) => {
+    if (!menu.contains(event.target) && !button.contains(event.target)) close();
+  });
+}
+
 function renderChrome(feed, current, sectionKey = sectionOf(current)) {
   const section = SECTIONS[sectionKey];
   const links = section.nav.map(([href, label]) =>
@@ -613,7 +654,17 @@ function renderChrome(feed, current, sectionKey = sectionOf(current)) {
             <a href="index.html" class="shrink-0" aria-label="Gazehound Stats home">${jackrabbitMark('block text-asfa-accent', 32)}</a>
             <span class="flex flex-col">
               <a href="index.html" class="font-display font-semibold text-xl leading-tight text-asfa-text whitespace-nowrap">Gazehound Stats</a>
-              <a href="${section.home}" class="font-mono text-[11px] font-semibold uppercase tracking-widest ${section.color} whitespace-nowrap hover:underline">${section.tagline(feed)}</a>
+              <span class="relative">
+                <button type="button" id="program-menu-button" aria-haspopup="menu" aria-expanded="false" aria-controls="program-menu"
+                        class="font-mono text-[11px] font-semibold uppercase tracking-widest ${section.color} whitespace-nowrap inline-flex items-center gap-1 hover:underline">${section.tagline(feed)}${icon('chevronDown')}</button>
+                <div id="program-menu" role="menu" aria-label="Switch program" class="hidden absolute left-0 top-full mt-1.5 z-30 min-w-[15rem] bg-asfa-surface border border-asfa-border shadow-sm py-1">
+                  ${Object.entries(SECTIONS).map(([key, s]) => `
+                  <a role="menuitem" href="${s.home}" ${key === sectionKey ? 'aria-current="page"' : ''}
+                     class="block px-3 py-1.5 font-mono text-[11px] uppercase tracking-widest ${s.color} hover:bg-asfa-bg2 focus:bg-asfa-bg2 focus:outline-none">${
+                       key === 'hub' ? 'Home · all programs' : s.tagline(null).replace(/ · \d{4}$/, '')}${
+                       key === sectionKey ? ' <span class="text-asfa-muted" aria-hidden="true">✓</span>' : ''}</a>`).join('')}
+                </div>
+              </span>
             </span>
           </div>
           <nav class="nav-scroll edge-fade flex flex-nowrap lg:flex-wrap overflow-x-auto lg:overflow-visible -mx-4 px-4 lg:mx-0 lg:px-0" aria-label="Site">${links}</nav>
@@ -621,6 +672,7 @@ function renderChrome(feed, current, sectionKey = sectionOf(current)) {
         </div>
       </div>`;
     initThemeToggle(header.querySelector('#theme-toggle'));
+    initProgramMenu(header);
 
     const nav = header.querySelector('nav');
     paintNav(nav, current, section.nav);
