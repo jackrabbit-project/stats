@@ -404,13 +404,7 @@ function renderRacingOverview(org, feed, main) {
     <section id="standings" class="space-y-4 scroll-mt-24">
       <div>
         <h2 class="font-display text-2xl text-asfa-text">Standings by breed</h2>
-        <p class="text-sm text-asfa-text/70 mt-1">
-          Ranked by ${spec.seasonLabel}${org === 'lgra'
-            ? ", the figure LGRA's own year-end lists rank by"
-            : ', the YTD column of the grading guide'}.
-          Points come from placings at each meet, scaled to the number of starters, so a
-          breed that races often offers more of them than one that rarely fills a program.
-        </p>
+        <p class="text-sm text-asfa-text/70 mt-1">Ranked by ${spec.seasonLabel}.</p>
       </div>
       ${rankedSections.length
         ? `<div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">${standingsCards}</div>`
