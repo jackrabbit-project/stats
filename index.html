@@ -71,12 +71,12 @@
       const entries = [];
 
       /* ----- program cards, one per feed, each degraded on its own when absent */
-      const card = (href, title, sub, body, cta) => `
-        <a href="${href}" class="card hover:border-asfa-accent block">
+      const card = (href, title, sub, body, cta, program) => `
+        <a href="${href}" class="card program-card program-${program} block">
           <h2 class="font-display text-2xl text-asfa-text">${title}</h2>
           <p class="font-mono text-[10px] uppercase tracking-widest text-asfa-muted mt-0.5">${sub}</p>
           <div class="mt-4">${body}</div>
-          <p class="lnk text-sm mt-4">${cta} →</p>
+          <p class="text-sm mt-4 underline underline-offset-2 text-asfa-text/80">${cta} →</p>
         </a>`;
       const tiles = (pairs) => `
         <div class="grid grid-cols-2 gap-2">${pairs.map(([value, label]) =>
@@ -130,9 +130,9 @@
       const aok9Body = racingCard(aok9, 'aok9', 'AOK9', 'dogs');
 
       programs.innerHTML =
-        card('asfa.html', 'ASFA lure coursing', `Top 20 standings${asfa ? ` · ${asfa.season}` : ''}`, asfaBody, 'Standings, kennels, titles, events')
-        + card('lgra.html', 'LGRA racing', 'Straight racing · 200 yards', lgraBody, 'Standings by breed, WAVE, titles')
-        + card('aok9.html', 'AOK9 racing', 'All-breed sprint racing', aok9Body, 'Standings by breed, WAVE, titles');
+        card('asfa.html', 'ASFA lure coursing', `Top 20 standings${asfa ? ` · ${asfa.season}` : ''}`, asfaBody, 'Standings, kennels, titles, events', 'asfa')
+        + card('lgra.html', 'LGRA racing', 'Straight racing · 200 yards', lgraBody, 'Standings by breed, WAVE, titles', 'lgra')
+        + card('aok9.html', 'AOK9 racing', 'All-breed sprint racing', aok9Body, 'Standings by breed, WAVE, titles', 'aok9');
       animateTiles(programs);
 
       document.getElementById('coverage').textContent = coverage.length
