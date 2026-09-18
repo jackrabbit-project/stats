@@ -348,14 +348,18 @@ function renderRacingOverview(org, feed, main) {
     return `
       <div class="card">
         <h2 class="card-title">${label}</h2>
-        <p class="text-xs text-asfa-text/60 mb-3">Every 30 earn a ${supremeLabel}; active ${nouns} only, ranked against the whole registry.</p>
-        ${top.length ? top.map((dog) => `
-          <a href="${racingDogUrl(org, dog.id)}" class="flex items-baseline gap-2 py-1.5 border-b border-asfa-border last:border-0 hover:bg-asfa-bg2 -mx-1 px-1">
-            <span class="font-display text-xl text-asfa-accent w-12 shrink-0">${ptsLabel(dog[field])}</span>
-            <span class="font-semibold text-asfa-green truncate">${esc(dog.call_name)}</span>
-            <span class="text-xs text-asfa-text/70 ml-auto whitespace-nowrap">${esc(dog.breed)}${
-              dog.titled[supremeKey] ? ` · ${supremeLabel}${dog.titled[supremeKey] > 1 ? dog.titled[supremeKey] : ''}` : ''}</span>
-          </a>`).join('') : `<p class="text-sm text-asfa-text/70">None recorded.</p>`}
+        <p class="text-xs text-asfa-text/60 mb-3">All-time totals. Rank is against every ${spec.noun} ever registered; only ${nouns} still racing are listed, so retired ${nouns} hold the gaps. Thirty points make a ${supremeLabel}, sixty a ${supremeLabel}2, and so on.</p>
+        ${top.length ? `<div class="tbl-wrap"><table class="tbl">
+          <thead><tr><th scope="col" class="num">Rank</th><th scope="col">${spec.noun[0].toUpperCase() + spec.noun.slice(1)}</th><th scope="col">Breed</th><th scope="col" class="num">Points</th><th scope="col">Title</th></tr></thead>
+          <tbody>${top.map((dog) => `
+            <tr>
+              <td class="num font-semibold">${dog[rankKey]}</td>
+              <td><a href="${racingDogUrl(org, dog.id)}" class="lnk font-semibold">${esc(dog.call_name)}</a></td>
+              <td class="text-asfa-text/80">${esc(dog.breed)}</td>
+              <td class="num font-semibold text-asfa-accent">${ptsLabel(dog[field])}</td>
+              <td>${dog.titled[supremeKey] ? `<span class="badge badge-t-lcm">${supremeLabel}${dog.titled[supremeKey] > 1 ? dog.titled[supremeKey] : ''}</span>` : ''}</td>
+            </tr>`).join('')}</tbody>
+        </table></div>` : `<p class="text-sm text-asfa-text/70">None recorded.</p>`}
       </div>`;
   }).join('');
   const waveBoards = spec.waves.map(([field, label, gradeField]) => {
@@ -365,13 +369,17 @@ function renderRacingOverview(org, feed, main) {
     return `
       <div class="card">
         <h2 class="card-title">Highest ${label}</h2>
-        <p class="text-xs text-asfa-text/60 mb-3">Weighted average of the last three meets, out of 22; ${nouns} with points this year.</p>
-        ${top.map((dog) => `
-          <a href="${racingDogUrl(org, dog.id)}" class="flex items-baseline gap-2 py-1.5 border-b border-asfa-border last:border-0 hover:bg-asfa-bg2 -mx-1 px-1">
-            <span class="font-display text-xl text-asfa-accent w-14 shrink-0">${waveLabel(dog[field])}</span>
-            <span class="font-semibold text-asfa-green truncate">${esc(dog.call_name)}</span>
-            <span class="text-xs text-asfa-text/70 ml-auto whitespace-nowrap">${esc(dog.breed)} ${gradeBadge(dog[gradeField])}</span>
-          </a>`).join('') || `<p class="text-sm text-asfa-text/70">None recorded.</p>`}
+        <p class="text-xs text-asfa-text/60 mb-3">Weighted average of the last three meets, out of a possible 22; ${nouns} with points this year.</p>
+        ${top.length ? `<div class="tbl-wrap"><table class="tbl">
+          <thead><tr><th scope="col">${spec.noun[0].toUpperCase() + spec.noun.slice(1)}</th><th scope="col">Breed</th><th scope="col" class="num">${label}</th><th scope="col">Grade</th></tr></thead>
+          <tbody>${top.map((dog) => `
+            <tr>
+              <td><a href="${racingDogUrl(org, dog.id)}" class="lnk font-semibold">${esc(dog.call_name)}</a></td>
+              <td class="text-asfa-text/80">${esc(dog.breed)}</td>
+              <td class="num font-semibold text-asfa-accent">${waveLabel(dog[field])}</td>
+              <td>${gradeBadge(dog[gradeField])}</td>
+            </tr>`).join('')}</tbody>
+        </table></div>` : `<p class="text-sm text-asfa-text/70">None recorded.</p>`}
       </div>`;
   }).join('');
 
