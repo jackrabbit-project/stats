@@ -352,33 +352,28 @@ const NAV_HUB = [
   ['aok9.html', 'AOK9 racing'],
 ];
 
-/* The site is three programs under one roof. Each has its own home, nav,
-   banner and footer; the wordmark always leads back to the hub. */
+/* The site is three programs under one roof. Each has its own home, nav
+   and footer source line; the wordmark always leads back to the hub, and
+   the footer's disclaimer link goes to the section's own account. */
 const SECTIONS = {
   hub: {
     home: 'index.html', nav: NAV_HUB,
     tagline: () => 'Lure coursing and racing',
-    // No banner on the hub either; the footer names all three bodies.
-    banner: null,
     disclaimer: 'about.html#disclaimer',
   },
   asfa: {
     home: 'asfa.html', nav: NAV_ASFA,
     tagline: (season) => `ASFA lure coursing${season ? ` · ${season.season}` : ''}`,
-    banner: 'not an ASFA publication',
     disclaimer: 'about.html#disclaimer',
   },
   lgra: {
     home: 'lgra.html', nav: NAV_LGRA,
     tagline: () => 'LGRA straight racing',
-    // No banner on the racing pages: the footer carries the disclaimer.
-    banner: null,
     disclaimer: 'lgra.html#about',
   },
   aok9: {
     home: 'aok9.html', nav: NAV_AOK9,
     tagline: () => 'AOK9 sprint racing',
-    banner: null,
     disclaimer: 'aok9.html#about',
   },
 };
@@ -601,11 +596,6 @@ function renderChrome(feed, current, sectionKey = sectionOf(current)) {
   if (header) {
     header.innerHTML = `
       <a href="#main" class="skip-link">Skip to content</a>
-      ${section.banner ? `
-      <div class="bg-asfa-paper border-b border-asfa-border px-4 py-1.5 text-center font-mono text-[11px] uppercase tracking-widest text-asfa-muted">
-        <span class="text-asfa-accent">Unofficial fan site</span> — ${section.banner}.
-        <a href="${section.disclaimer}" class="underline hover:text-asfa-text whitespace-nowrap">Full disclaimer</a>
-      </div>` : ''}
       <div class="bg-asfa-paper border-b border-asfa-border">
         <div class="max-w-6xl mx-auto px-4 pt-3 lg:pt-0 lg:py-1.5 flex flex-col lg:flex-row lg:items-center gap-x-8 relative">
           <div class="flex items-center gap-2.5 shrink-0 pr-10 lg:pr-0">
@@ -655,9 +645,11 @@ function renderChrome(feed, current, sectionKey = sectionOf(current)) {
     footer.innerHTML = `
       <div class="max-w-4xl mx-auto px-4 text-sm text-asfa-wellink/85 space-y-4">${footerLinks()}${footerSource(sectionKey, feed)}
         <p class="text-xs text-asfa-wellink/65">
-          Independent fan project. Not affiliated with, endorsed by, or sponsored by the
-          American Sighthound Field Association, the Large Gazehound Racing Association, or
-          Racing and Coursing Enthusiasts (R.A.C.E.), which runs the AOK9 program.
+          <span class="font-semibold text-asfa-wellink/85">Unofficial fan site</span> — not an ASFA, LGRA or AOK9 publication.
+          Not affiliated with, endorsed by, or sponsored by the American Sighthound Field
+          Association, the Large Gazehound Racing Association, or Racing and Coursing
+          Enthusiasts (R.A.C.E.), which runs the AOK9 program.
+          <a href="${section.disclaimer}" class="underline hover:text-asfa-wellink whitespace-nowrap">Full disclaimer</a>
         </p>
         <p class="text-xs text-asfa-wellink/65 flex flex-wrap items-center justify-center gap-x-2 gap-y-1.5 text-center">
           ${howBuilt}
