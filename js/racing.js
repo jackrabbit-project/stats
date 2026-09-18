@@ -35,6 +35,7 @@ const ORGS = {
       ['last_raced', 'Last raced', '', -1],
     ],
     rules: 'LGRA Rule Book 23.2',
+    calendar: 'https://lgra.club/calendar',
   },
   aok9: {
     key: 'aok9',
@@ -85,6 +86,7 @@ const ORGS = {
       ['last_raced', 'Last raced', '', -1],
     ],
     rules: 'AOK9 Sprint Racing Rule Book 3.0',
+    calendar: 'https://aok9racing.com/calendar.html',
   },
 };
 
@@ -403,6 +405,7 @@ function renderRacingOverview(org, feed, main) {
       <p class="text-sm text-asfa-text/70 mt-1">
         ${season} standings from the grading guide dated ${formatDate(feed.guide_date)}, as published by
         <a href="${esc(feed.site_url)}" class="lnk" target="_blank" rel="noopener noreferrer">${esc(feed.site_url.replace(/^https?:\/\//, ''))}</a>.
+        <a href="${spec.calendar}" class="lnk whitespace-nowrap" target="_blank" rel="noopener noreferrer">${spec.name} race calendar →</a>
       </p>
     </div>
 

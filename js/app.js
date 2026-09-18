@@ -534,15 +534,18 @@ function paintNav(navEl, current, nav) {
 const FOOTER_LINKS = [
   ['ASFA lure coursing', [
     ['globe', 'asfa.org, the official site', 'https://www.asfa.org'],
+    ['link', 'Trial calendar (Events page)', 'events.html'],
     ['facebook', 'ASFA on Facebook', 'https://www.facebook.com/AmericanSighthoundFieldAssociation'],
     ['facebook', 'ASFA II group', 'https://www.facebook.com/groups/1046065245418921'],
   ]],
   ['LGRA straight racing', [
     ['globe', 'lgra.club, the official site', 'https://lgra.club'],
+    ['link', 'Race calendar', 'https://lgra.club/calendar'],
     ['facebook', 'LGRA / AOK9 / OB NOTRA results and brags group', 'https://www.facebook.com/groups/1265142357415139'],
   ]],
   ['AOK9 sprint racing', [
     ['globe', 'aok9racing.com, the official site', 'https://aok9racing.com'],
+    ['link', 'Race calendar', 'https://aok9racing.com/calendar.html'],
     ['facebook', 'R.A.C.E. & AOK9 Racing Program group', 'https://www.facebook.com/groups/772408469471681'],
   ]],
 ];
@@ -553,7 +556,7 @@ function footerLinks() {
           <div>
             <p class="font-mono text-[10px] uppercase tracking-widest text-asfa-wellink/60 mb-1.5">${heading}</p>
             <ul class="space-y-1">${links.map(([glyph, label, href]) => `
-              <li><a href="${href}" target="_blank" rel="noopener noreferrer" class="underline hover:text-asfa-wellink">${icon(glyph, 'mr-1.5')}${label}</a></li>`).join('')}
+              <li><a href="${href}"${href.startsWith('http') ? ' target="_blank" rel="noopener noreferrer"' : ''} class="underline hover:text-asfa-wellink">${icon(glyph, 'mr-1.5')}${label}</a></li>`).join('')}
             </ul>
           </div>`).join('')}
         </div>`;
