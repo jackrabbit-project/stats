@@ -11,5 +11,10 @@ data/season.json -diff
 data/trials.json -diff
 data/clubs.json  -diff
 data/snapshots/*.json -diff
+data/lgra.json -diff
+data/aok9.json -diff
+data/*-registry.json -diff
+data/lgra/snapshots/*.json -diff
+data/aok9/snapshots/*.json -diff
 
 * text=auto
