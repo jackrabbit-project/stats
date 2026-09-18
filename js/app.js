@@ -321,7 +321,7 @@ function attachSearch(input, results, dogs, { onEmpty, row = searchRow } = {}) {
 /* ------------------------------------------------------------------ chrome */
 
 const NAV_ASFA = [
-  ['asfa.html', 'Home'],
+  ['asfa.html', 'Overview'],
   ['browse.html', 'Browse'],
   ['leaders.html', 'Leaders'],
   ['kennels.html', 'Kennels'],
