@@ -46,6 +46,19 @@
     </section>
 
     <div class="max-w-6xl mx-auto w-full px-4 py-8 space-y-8">
+      <!-- Racing photo, self-hosted like everything else. The figure stays
+           hidden until the file has actually loaded, so a missing or broken
+           image leaves no gap; drop the JPEG at assets/hero-racing.jpg. -->
+      <figure id="hero-photo" class="hidden">
+        <img src="assets/hero-racing.jpg"
+             alt="Muzzled sighthounds in racing blankets sprinting up a grass straight toward the camera"
+             class="w-full aspect-[3/1] object-cover object-[50%_65%] border border-asfa-border"
+             onload="this.parentElement.classList.remove('hidden')">
+        <figcaption class="text-right font-mono text-[10px] uppercase tracking-widest text-asfa-muted mt-1.5">
+          Photo: Matt Schumitz Photography
+        </figcaption>
+      </figure>
+
       <section id="programs" class="grid md:grid-cols-3 gap-6"></section>
 
       <!-- Share targets are plain links, as on the AOK9 and II guide sites: no
