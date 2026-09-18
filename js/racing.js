@@ -341,6 +341,25 @@ function renderRacingOverview(org, feed, main) {
   const allBreed = dogs.filter((dog) => dog.rank_all)
     .sort((a, b) => a.rank_all - b.rank_all || a.call_name.localeCompare(b.call_name))
     .slice(0, 20);
+
+  // The hound at the top of each breed's standings, one line per breed.
+  const leaders = sections.filter((s) => s.leader)
+    .sort((a, b) => b.leader.ytd - a.leader.ytd || a.breed.localeCompare(b.breed));
+  const leadersBoard = `
+      <div class="card">
+        <h2 class="card-title">Breed leaders</h2>
+        <p class="text-xs text-asfa-text/60 mb-3">The ${spec.noun} at the top of each breed's standings, by ${spec.seasonLabel}.</p>
+        ${leaders.length ? `<div class="tbl-wrap"><table class="tbl">
+          <thead><tr><th scope="col">${spec.noun[0].toUpperCase() + spec.noun.slice(1)}</th><th scope="col">Breed</th><th scope="col" class="num">Points</th></tr></thead>
+          <tbody>${leaders.map((section) => `
+            <tr>
+              <td><a href="${racingDogUrl(org, section.leader.id)}" class="lnk font-semibold">${esc(section.leader.call_name)}</a></td>
+              <td><a href="${racingBreedUrl(org, section.slug)}" class="lnk">${esc(section.breed)}</a></td>
+              <td class="num font-semibold text-asfa-accent">${ptsLabel(section.leader.ytd)}</td>
+            </tr>`).join('')}</tbody>
+        </table></div>` : `<p class="text-sm text-asfa-text/70">No ${nouns} have points yet this year.</p>`}
+      </div>`;
+
   const careerBoards = spec.careers.map(([field, rankKey, label, supremeKey, supremeLabel]) => {
     const top = dogs.filter((dog) => dog[rankKey])
       .sort((a, b) => a[rankKey] - b[rankKey] || a.call_name.localeCompare(b.call_name))
@@ -405,6 +424,7 @@ function renderRacingOverview(org, feed, main) {
             </tr>`).join('')}</tbody>
         </table></div>
       </div>
+      ${leadersBoard}
       ${careerBoards}
       ${titlesBoard}
     </section>
