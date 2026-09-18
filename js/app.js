@@ -358,7 +358,8 @@ const SECTIONS = {
   hub: {
     home: 'index.html', nav: NAV_HUB,
     tagline: () => 'Lure coursing and racing',
-    banner: 'not an ASFA, LGRA or AOK9 publication',
+    // No banner on the hub either; the footer names all three bodies.
+    banner: null,
     disclaimer: 'about.html#disclaimer',
   },
   asfa: {

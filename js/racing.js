@@ -729,21 +729,16 @@ function aboutRacing(org, feed) {
         meets completed) are applied for by owners and are not in the guide.
       </p>`}
     </section>
+    ${org === 'aok9' ? `
     <section class="card">
       <h2 class="card-title">Meet codes</h2>
       <p class="text-sm leading-relaxed">
-        ${org === 'lgra' ? `
-        The guide names a meet by a code such as <span class="font-mono">AF249b</span>: letters
-        for the year (A is 1995, Z is 2020, AA is 2021, AF is 2026), the day of the year, and a
-        letter when several meets ran that day, so AF249b is the second meet of 6 September
-        2026. Before 2012 the number was a running count of meets within the year, so those
-        older meets carry a year here but no date.` : `
         The guide names a meet by a code such as <span class="font-mono">2026-S22</span>: the
         year and the running number of the sanctioned sprint meet, with a letter when one meet
         ran several divisions. The guide gives no date for these; only the oldest rows carry
-        the meet date itself.`}
+        the meet date itself.
       </p>
-    </section>
+    </section>` : ''}
     <section class="card">
       <h2 class="card-title">What the guide cannot tell you</h2>
       <ul class="text-sm space-y-3">
