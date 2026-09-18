@@ -305,7 +305,7 @@ function renderRacingOverview(org, feed, main) {
   const tiles = [
     [stats.hounds_ytd, `${nouns} with points this year`],
     [stats.hounds_active, `${nouns} active since ${feed.active_since.slice(0, 4)}`],
-    [stats.breeds_ytd, 'breeds with points this year'],
+    [stats.breeds_ytd, 'breeds racing this year'],
     [stats.meets_this_year, `meets this year`],
     ...(org === 'lgra'
       ? [[stats.titled_grc.toLocaleString('en-US'), 'GRC titled, all time']]
