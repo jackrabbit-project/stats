@@ -45,7 +45,7 @@ const ORGS = {
     page: 'aok9.html',
     noun: 'dog', nouns: 'dogs',
     waves: [['bwave', 'Breed WAVE', 'bgrade'], ['mwave', 'Mixed WAVE', 'mgrade']],
-    seasonLabel: 'points this year',
+    seasonLabel: 'National points this year',
     careers: [
       ['nbrc', 'rank_career_breed', 'Career National Breed points', 'sbrc', 'SBRC'],
       ['nmrc', 'rank_career_mixed', 'Career National Mixed points', 'smrc', 'SMRC'],
@@ -68,7 +68,7 @@ const ORGS = {
       ['trc', 'strc', 'STRC', 'Supreme Turtle Racing Champion', 30],
     ],
     tiles: (dog) => [
-      [ptsLabel(dog.ytd), 'points this year'],
+      [ptsLabel(dog.ytd), 'National points this year'],
       [`${ptsLabel(dog.brc)} / 12`, 'BRC points'],
       [`${ptsLabel(dog.mrc)} / 12`, 'MRC points'],
       [ptsLabel(dog.nbrc), 'National Breed points'],
