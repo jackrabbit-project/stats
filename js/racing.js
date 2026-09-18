@@ -362,26 +362,6 @@ function renderRacingOverview(org, feed, main) {
         </table></div>` : `<p class="text-sm text-asfa-text/70">None recorded.</p>`}
       </div>`;
   }).join('');
-  const waveBoards = spec.waves.map(([field, label, gradeField]) => {
-    const top = dogs.filter((dog) => dog[field] != null && (dog.ytd || 0) > 0)
-      .sort((a, b) => b[field] - a[field] || a.call_name.localeCompare(b.call_name))
-      .slice(0, 10);
-    return `
-      <div class="card">
-        <h2 class="card-title">Highest ${label}</h2>
-        <p class="text-xs text-asfa-text/60 mb-3">Weighted average of the last three meets, out of a possible 22; ${nouns} with points this year.</p>
-        ${top.length ? `<div class="tbl-wrap"><table class="tbl">
-          <thead><tr><th scope="col">${spec.noun[0].toUpperCase() + spec.noun.slice(1)}</th><th scope="col">Breed</th><th scope="col" class="num">${label}</th><th scope="col">Grade</th></tr></thead>
-          <tbody>${top.map((dog) => `
-            <tr>
-              <td><a href="${racingDogUrl(org, dog.id)}" class="lnk font-semibold">${esc(dog.call_name)}</a></td>
-              <td class="text-asfa-text/80">${esc(dog.breed)}</td>
-              <td class="num font-semibold text-asfa-accent">${waveLabel(dog[field])}</td>
-              <td>${gradeBadge(dog[gradeField])}</td>
-            </tr>`).join('')}</tbody>
-        </table></div>` : `<p class="text-sm text-asfa-text/70">None recorded.</p>`}
-      </div>`;
-  }).join('');
 
   const newTitles = feed.titles_since_previous || [];
   const titlesBoard = hasPrevious ? `
@@ -435,7 +415,6 @@ function renderRacingOverview(org, feed, main) {
         </table></div>
       </div>
       ${careerBoards}
-      ${waveBoards}
       ${titlesBoard}
     </section>
 
