@@ -608,11 +608,11 @@ function renderChrome(feed, current, sectionKey = sectionOf(current)) {
       <div class="bg-asfa-paper border-b border-asfa-border">
         <div class="max-w-6xl mx-auto px-4 pt-3 lg:pt-0 lg:py-1.5 flex flex-col lg:flex-row lg:items-center gap-x-8 relative">
           <div class="flex items-center gap-2.5 shrink-0 pr-10 lg:pr-0">
-            <a href="index.html" class="flex items-center gap-2.5" aria-label="Gazehound Stats home">
-              ${jackrabbitMark('shrink-0 text-asfa-accent', 32)}
-              <span class="font-display font-semibold text-xl leading-tight text-asfa-text whitespace-nowrap">Gazehound Stats</span>
-            </a>
-            <a href="${section.home}" class="font-mono text-[10px] uppercase tracking-widest text-asfa-muted whitespace-nowrap self-end pb-1 hover:text-asfa-text">${section.tagline(feed)}</a>
+            <a href="index.html" class="shrink-0" aria-label="Gazehound Stats home">${jackrabbitMark('block text-asfa-accent', 32)}</a>
+            <span class="flex flex-col">
+              <a href="index.html" class="font-display font-semibold text-xl leading-tight text-asfa-text whitespace-nowrap">Gazehound Stats</a>
+              <a href="${section.home}" class="font-mono text-[11px] font-medium uppercase tracking-widest text-asfa-text whitespace-nowrap hover:text-asfa-accent">${section.tagline(feed)}</a>
+            </span>
           </div>
           <nav class="nav-scroll edge-fade flex flex-nowrap lg:flex-wrap overflow-x-auto lg:overflow-visible -mx-4 px-4 lg:mx-0 lg:px-0" aria-label="Site">${links}</nav>
           <button id="theme-toggle" type="button" class="absolute right-3 top-2.5 lg:static lg:order-last lg:ml-auto shrink-0 p-2 text-base text-asfa-muted hover:text-asfa-text"></button>
