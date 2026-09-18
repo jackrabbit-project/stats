@@ -1,8 +1,9 @@
-name: Refresh standings
+name: Refresh standings and grading guides
 
-# ASFA republishes the Top 20 roughly monthly. Checking weekly catches an
-# update within a few days; fetch.py exits without writing when the page is
-# byte-identical, so a quiet week costs one request.
+# ASFA republishes the Top 20 roughly monthly, and the LGRA and AOK9 grading
+# guides are reissued every week or two in season. Checking weekly catches an
+# update within a few days; each fetcher exits without writing when its source
+# is unchanged, so a quiet week costs a handful of requests.
 on:
   schedule:
     - cron: '17 11 * * 1'
@@ -31,6 +32,16 @@ jobs:
         # Only changes when ASFA republishes the club listing; cheap to check.
         run: python tools/clubs.py
 
+      - name: Refresh the LGRA grading guide
+        # A racing body's outage must never block the ASFA refresh; the feed
+        # on disk is rebuilt from archived snapshots and check.py still runs.
+        continue-on-error: true
+        run: python tools/lgra.py
+
+      - name: Refresh the AOK9 sprint grading guide
+        continue-on-error: true
+        run: python tools/aok9.py
+
       - name: Parse, build and verify
         run: |
           python tools/parse.py
@@ -40,15 +51,27 @@ jobs:
           python tools/titles.py
           python tools/check.py
 
-      - name: Commit if the standings changed
+      - name: Commit if anything changed
         run: |
           git config user.name  'github-actions[bot]'
           git config user.email 'github-actions[bot]@users.noreply.github.com'
           if git diff --quiet -- data/; then
-            echo "No change in the published standings."
+            echo "No change in the published standings or guides."
             exit 0
           fi
-          AS_OF=$(python -c "import json;print(json.load(open('data/season.json'))['as_of'])")
+          CHANGED=$(git diff --name-only -- data/)
+          PARTS=()
+          if echo "$CHANGED" | grep -q '^data/season.json$'; then
+            PARTS+=("ASFA standings through $(python -c "import json;print(json.load(open('data/season.json'))['as_of'])")")
+          fi
+          if echo "$CHANGED" | grep -q '^data/lgra.json$'; then
+            PARTS+=("LGRA guide $(python -c "import json;print(json.load(open('data/lgra.json'))['guide_date'])")")
+          fi
+          if echo "$CHANGED" | grep -q '^data/aok9.json$'; then
+            PARTS+=("AOK9 guide $(python -c "import json;print(json.load(open('data/aok9.json'))['guide_date'])")")
+          fi
+          if [ ${#PARTS[@]} -eq 0 ]; then PARTS+=("Data refresh"); fi
+          MSG=$(IFS=';'; echo "${PARTS[*]}" | sed 's/;/; /g')
           git add data/
-          git commit -m "Standings through ${AS_OF}"
+          git commit -m "$MSG"
           git push

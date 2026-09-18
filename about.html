@@ -5,12 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" media="(prefers-color-scheme: light)" content="#F7F5EF">
   <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#1B1917">
-  <title>How this is built — Lure Coursing Stats</title>
+  <title>How this is built — Gazehound Stats</title>
   <meta name="description" content="Where the ASFA Top 20 data comes from, what each column means, how standing is calculated, and the limits of what these numbers can tell you.">
   <link rel="canonical" href="https://stats.gazehound.io/about.html">
   <meta property="og:type" content="website">
-  <meta property="og:site_name" content="Lure Coursing Stats">
-  <meta property="og:title" content="How this is built — Lure Coursing Stats">
+  <meta property="og:site_name" content="Gazehound Stats">
+  <meta property="og:title" content="How this is built — Gazehound Stats">
   <meta property="og:description" content="Where the ASFA Top 20 data comes from, what each column means, how standing is calculated, and the limits of what these numbers can tell you.">
   <meta property="og:url" content="https://stats.gazehound.io/about.html">
   <meta property="og:image" content="https://stats.gazehound.io/assets/og.png">
@@ -20,7 +20,7 @@
   <link rel="preload" href="assets/fonts/fraunces-latin-var.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/plex-mono-400.woff2" as="font" type="font/woff2" crossorigin>
   <script src="js/theme.js?v=20260823"></script>
-  <link rel="stylesheet" href="css/app.css?v=20260823b">
+  <link rel="stylesheet" href="css/app.css?v=20260917">
   <link rel="icon" href="assets/favicon.ico?v=3" sizes="any">
   <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png?v=3">
   <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png?v=3">
@@ -31,6 +31,7 @@
   <main id="main" class="flex-1 max-w-3xl mx-auto w-full px-4 py-6 space-y-6">
     <div>
       <h1 class="font-display text-3xl text-asfa-text">How this is built</h1>
+      <p class="text-sm text-asfa-text/70 mt-1">The ASFA side first; <a href="#lgra" class="lnk">LGRA</a> and <a href="#aok9" class="lnk">AOK9</a> further down.</p>
       <p class="text-sm text-asfa-text/70 mt-1" id="coverage"></p>
     </div>
 
@@ -140,6 +141,58 @@
       </p>
     </section>
 
+    <section class="card" id="lgra">
+      <h2 class="card-title">LGRA straight racing: where the numbers come from</h2>
+      <p class="text-sm leading-relaxed">
+        The Large Gazehound Racing Association publishes one workbook, the
+        <a href="https://lgra.club/grading-guide" class="lnk" target="_blank" rel="noopener noreferrer">grading guide</a>,
+        that race secretaries use to seed the first program of a meet. Every hound ever registered
+        is on it: its WAVE, its GRC points, its career and current-year National points, and the
+        codes and scores of its last three meets. The <a href="lgra.html" class="lnk">LGRA pages</a>
+        are that workbook made searchable, with the arithmetic in the
+        <a href="https://lgra.club/files/2024-02/rule_book_23.2.pdf" class="lnk" target="_blank" rel="noopener noreferrer">LGRA Rule Book</a>
+        (release 23.2) applied to it.
+      </p>
+      <ul class="text-sm leading-relaxed list-disc pl-5 mt-2 space-y-1">
+        <li><strong>Standings</strong> rank the guide's YTD column, this year's National points, within each breed and across breeds. LGRA's own year-end Top 10 lists rank the same figure.</li>
+        <li><strong>Career standings</strong> rank career National points (the NGRC column) across every hound ever registered.</li>
+        <li><strong>WAVE</strong> is recomputed from the three listed meets per rule 4.2.2 and compared with the registrar's figure; the registrar's figure is the one shown, and a hound's page says where the two differ.</li>
+        <li><strong>Titles</strong> are read from the points columns: 12 GRC points is a GRC, every 30 National points a further SGRC. The registrar's certificate is the record.</li>
+        <li><strong>Meet dates</strong> are decoded from the meet codes (year letters plus day of the year) for meets from 2012 on; earlier codes are a running count within the year and carry no date.</li>
+        <li><strong>Breed</strong> comes from the registration prefix (A-151 is an Afghan Hound, SW-802 a Silken Windhound), checked against the guide's own headers.</li>
+        <li><strong>Active</strong> means a meet listed in the current or previous calendar year, or points this year. The whole registry sits behind the browse table.</li>
+      </ul>
+      <p class="text-sm leading-relaxed mt-3">
+        A parsed copy of each new guide is archived by date so movement between guides can be
+        shown. The workbook's header rows, which carry the registrar's mailing details, are never
+        copied, and the build fails if an email address, phone number or street address turns up
+        anywhere in the published data.
+      </p>
+    </section>
+
+    <section class="card" id="aok9">
+      <h2 class="card-title">AOK9 sprint racing: where the numbers come from</h2>
+      <p class="text-sm leading-relaxed">
+        R.A.C.E.'s AOK9 program opens sprint racing to every breed. Its
+        <a href="https://aok9racing.com/documents--forms.html" class="lnk" target="_blank" rel="noopener noreferrer">sprint racing grading guide</a>
+        is a public spreadsheet of the same shape as LGRA's, with two records per dog: one for
+        breed divisions and one for mixed divisions, each with its own WAVE and championship
+        points, plus National points, Turtle points and this year's points. The
+        <a href="aok9.html" class="lnk">AOK9 pages</a> apply the
+        <a href="https://aok9racing.com/uploads/1/1/1/1/11113828/aok9_sprint_racing_rule_book_v_3.0.docx.pdf" class="lnk" target="_blank" rel="noopener noreferrer">AOK9 Sprint Racing Rule Book</a>
+        (release 3.0) to it in the same way: standings on the YTD column, career standings on
+        National Breed and National Mixed points, WAVE recomputed and compared, titles read from
+        the points columns (BRC and MRC at 12; SBRC, SMRC and STRC at every 30).
+      </p>
+      <p class="text-sm leading-relaxed mt-3">
+        Two things the guide does not show: the rule that at least 2 of an MRC's 12 points come
+        from mixed divisions, and the companion titles NSR, ESR and MSR, which owners apply for.
+        Recent meets are coded by year and sequence (2026-S22) and carry no date; the guide's date
+        is read from the "updated" note beside its link. Only the sprint guide is covered; AOK9's
+        oval, singles and lure coursing records are separate spreadsheets.
+      </p>
+    </section>
+
     <section class="card" id="disclaimer">
       <h2 class="card-title">Disclaimer</h2>
       <p class="text-sm leading-relaxed">
@@ -163,11 +216,38 @@
         list or with the host club before setting out.
       </p>
     </section>
+
+    <section class="card" id="disclaimer-lgra">
+      <h2 class="card-title">Disclaimer: LGRA</h2>
+      <p class="text-sm leading-relaxed">
+        The LGRA pages are an independent, unofficial project. They are <strong>not authorized,
+        approved, or endorsed by the Large Gazehound Racing Association</strong>, and they are not
+        an LGRA publication, service, or software. LGRA's name is used only to identify the source
+        of the grading guide and the rule book cited here. The grading guide is LGRA's work and
+        remains LGRA's property; it is reproduced with attribution and a link to the original.
+        Wherever this site and the published guide disagree, <strong>the guide governs</strong>,
+        and questions about a hound's record go to the LGRA Registrar/Recorder, not here.
+      </p>
+    </section>
+
+    <section class="card" id="disclaimer-aok9">
+      <h2 class="card-title">Disclaimer: AOK9</h2>
+      <p class="text-sm leading-relaxed">
+        The AOK9 pages are an independent, unofficial project. They are <strong>not authorized,
+        approved, or endorsed by Racing and Coursing Enthusiasts (R.A.C.E.)</strong> or its AOK9
+        program, and they are not an AOK9 publication, service, or software. The AOK9 name is
+        used only to identify the source of the grading guide and the rule book cited here. The
+        grading guide is R.A.C.E.'s work and remains its property; it is reproduced with
+        attribution and a link to the original. Wherever this site and the published guide
+        disagree, <strong>the guide governs</strong>, and questions about a dog's record go to
+        the AOK9 National Racing Director, not here.
+      </p>
+    </section>
   </main>
 
   <footer id="site-footer" class="bg-asfa-navy text-white py-8"></footer>
 
-  <script src="js/app.js?v=20260827a"></script>
+  <script src="js/app.js?v=20260917"></script>
   <script>
     page('about.html', (season) => {
       document.getElementById('coverage').textContent =
