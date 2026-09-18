@@ -71,7 +71,26 @@ BREED_MEET_COLUMNS = ((13, 14, 15), (16, 17, 18), (19, 20, 21))
 MIXED_MEET_COLUMNS = ((22, 23, 24), (25, 26, 27), (28, 29, 30))
 
 CHAMPIONSHIP_POINTS = 12
+MRC_MIXED_MINIMUM = 2
 NATIONAL_STEP = 30
+
+
+def brc_earned(dog: dict) -> bool:
+    """Sprint Rule Book 3.0 §5.2: 12 BRC points."""
+    return (dog.get("brc") or 0) >= CHAMPIONSHIP_POINTS
+
+
+def mrc_earned(dog: dict) -> bool:
+    """§5.3: 12 championship points from either column, at least 2 of them MRC."""
+    mixed = dog.get("mrc") or 0
+    return (dog.get("brc") or 0) + mixed >= CHAMPIONSHIP_POINTS and mixed >= MRC_MIXED_MINIMUM
+
+
+def trc_earned(dog: dict) -> bool:
+    """12 Turtle points. §5.7 defines the points and §5.8 the Supreme title at 30;
+    the 12-point TRC is not spelled out in the rule book but is how the guide's
+    registered names record it (every dog at 12+ carries TRC or STRC)."""
+    return (dog.get("trc") or 0) >= CHAMPIONSHIP_POINTS
 
 REGISTRY_COLUMNS = [
     "id", "breed_slug", "call_name", "registered_name", "owner_raw", "bwave",
@@ -242,10 +261,12 @@ def parse_workbook(path: Path, guide_date: date, date_source: str) -> dict:
 
 def titles_of(dog: dict) -> list[str]:
     titles = []
-    if (dog.get("brc") or 0) >= CHAMPIONSHIP_POINTS:
+    if brc_earned(dog):
         titles.append("BRC")
-    if (dog.get("mrc") or 0) >= CHAMPIONSHIP_POINTS:
+    if mrc_earned(dog):
         titles.append("MRC")
+    if trc_earned(dog):
+        titles.append("TRC")
     titles.extend(cumulative_titles("SBRC", super_level(dog.get("nbrc"), NATIONAL_STEP)))
     titles.extend(cumulative_titles("SMRC", super_level(dog.get("nmrc"), NATIONAL_STEP)))
     titles.extend(cumulative_titles("STRC", super_level(dog.get("trc"), NATIONAL_STEP)))
@@ -300,8 +321,9 @@ def derive(snapshot: dict) -> list[dict]:
             dog["bgrade"] = grade(dog["bwave"])
             dog["mgrade"] = grade(dog["mwave"])
             dog["titled"] = {
-                "brc": (dog["brc"] or 0) >= CHAMPIONSHIP_POINTS,
-                "mrc": (dog["mrc"] or 0) >= CHAMPIONSHIP_POINTS,
+                "brc": brc_earned(dog),
+                "mrc": mrc_earned(dog),
+                "trc": trc_earned(dog),
                 "sbrc": super_level(dog["nbrc"], NATIONAL_STEP),
                 "smrc": super_level(dog["nmrc"], NATIONAL_STEP),
                 "strc": super_level(dog["trc"], NATIONAL_STEP),
@@ -391,6 +413,9 @@ def build(snapshots: list[dict]) -> tuple[dict, dict]:
             if any(m["year"] == season for m in dog["meets_breed"] + dog["meets_mixed"])}),
         "titled_brc": sum(dog["titled"]["brc"] for dog in dogs),
         "titled_mrc": sum(dog["titled"]["mrc"] for dog in dogs),
+        "titled_trc": sum(dog["titled"]["trc"] for dog in dogs),
+        # Distinct dogs with a regular championship (BRC or MRC).
+        "titled_champion": sum(dog["titled"]["brc"] or dog["titled"]["mrc"] for dog in dogs),
         "titled_sbrc": sum(dog["titled"]["sbrc"] > 0 for dog in dogs),
         "titled_smrc": sum(dog["titled"]["smrc"] > 0 for dog in dogs),
         "titled_strc": sum(dog["titled"]["strc"] > 0 for dog in dogs),
@@ -456,10 +481,11 @@ def build(snapshots: list[dict]) -> tuple[dict, dict]:
             "Breed WAVE and Mixed WAVE are recomputed from the last three "
             "listed meets of each kind per Sprint Rule Book 3.0 §4.2.2; the "
             "published figure is the one shown where they differ.",
-            "MRC requires at least 2 of its 12 points to be MRC points; the "
-            "guide does not show the split, so MRC here means 12 MRC-column "
-            "points. Companion titles (NSR, ESR, MSR) are applied for by "
-            "owners and are not in the guide.",
+            "MRC follows Sprint Rule Book 3.0 §5.3: 12 championship points from "
+            "the BRC and MRC columns together, at least 2 of them MRC points. "
+            "TRC at 12 Turtle points is not spelled out in the rule book but is "
+            "how the guide's registered names record it. Companion titles "
+            "(NSR, ESR, MSR) are applied for by owners and are not in the guide.",
         ],
     }
 
@@ -526,7 +552,7 @@ def main() -> int:
         f"AOK9 sprint guide {feed['guide_date']}: {stats['hounds_registry']:,} dogs in "
         f"{stats['breeds']} breeds, {stats['hounds_active']:,} active, "
         f"{stats['hounds_ytd']} with points this year, "
-        f"{stats['titled_brc']} BRC, {stats['titled_mrc']} MRC, "
+        f"{stats['titled_brc']} BRC, {stats['titled_mrc']} MRC, {stats['titled_trc']} TRC, "
         f"BWAVE agreement {stats['bwave_agreement']:.1%}, "
         f"MWAVE agreement {stats['mwave_agreement']:.1%}"
     )

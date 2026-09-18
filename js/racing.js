@@ -50,9 +50,17 @@ const ORGS = {
       ['nbrc', 'rank_career_breed', 'Career National Breed points', 'sbrc', 'SBRC'],
       ['nmrc', 'rank_career_mixed', 'Career National Mixed points', 'smrc', 'SMRC'],
     ],
+    // [field, label, name, need, rule?]. MRC (Sprint Rule Book 3.0 §5.3) is
+    // 12 points from both columns with at least 2 of them MRC, so it carries
+    // its own value and done rules; the others are field >= need.
     champion: [
       ['brc', 'BRC', 'Breed Racing Champion', 12],
-      ['mrc', 'MRC', 'Mixed Racing Champion', 12],
+      ['mrc', 'MRC', 'Mixed Racing Champion', 12, {
+        value: (dog) => (dog.brc || 0) + (dog.mrc || 0),
+        done: (dog) => (dog.brc || 0) + (dog.mrc || 0) >= 12 && (dog.mrc || 0) >= 2,
+        note: 'BRC and MRC points together, at least 2 of them MRC',
+      }],
+      ['trc', 'TRC', 'Turtle Racing Champion', 12],
     ],
     supreme: [
       ['nbrc', 'sbrc', 'SBRC', 'Supreme Breed Racing Champion', 30],
@@ -138,8 +146,8 @@ function waveBar(value) {
     </div>`;
 }
 
-function progressBar(value, need, label) {
-  const done = (value || 0) >= need;
+function progressBar(value, need, label, opts = {}) {
+  const done = opts.done !== undefined ? opts.done : (value || 0) >= need;
   const pct = Math.max(0, Math.min(100, ((value || 0) / need) * 100));
   return `
     <div class="mt-3">
@@ -147,6 +155,7 @@ function progressBar(value, need, label) {
         <span class="font-semibold">${label}</span>
         <span class="text-asfa-text/70">${ptsLabel(value || 0)} / ${need}${done ? ' · earned' : ''}</span>
       </div>
+      ${opts.note ? `<p class="text-xs text-asfa-text/60">${opts.note}</p>` : ''}
       <div class="h-2 bg-asfa-bg2 border border-asfa-border mt-1" role="img" aria-label="${label}: ${ptsLabel(value || 0)} of ${need}">
         <div class="h-full ${done ? 'bg-asfa-green' : 'bg-asfa-accent'}" style="width:${pct}%"></div>
       </div>
@@ -223,8 +232,9 @@ function movementCell(dog) {
 function titleBadges(org, dog) {
   const spec = ORGS[org];
   const out = [];
-  for (const [field, label, name] of spec.champion) {
-    if ((dog[field] || 0) >= 12) out.push(`<span class="badge badge-t-fch" title="${name}">${label}</span>`);
+  for (const [field, label, name, need, rule] of spec.champion) {
+    const earned = rule ? rule.done(dog) : (dog[field] || 0) >= need;
+    if (earned) out.push(`<span class="badge badge-t-fch" title="${name}">${label}</span>`);
   }
   for (const [, key, label, name] of spec.supreme) {
     const level = (dog.titled && dog.titled[key]) || 0;
@@ -311,7 +321,7 @@ function renderRacingOverview(org, feed, main) {
     [stats.meets_this_year, `meets this year`],
     ...(org === 'lgra'
       ? [[stats.titled_grc.toLocaleString('en-US'), 'GRC titled, all time']]
-      : [[stats.titled_brc + stats.titled_mrc, 'BRC and MRC titled, all time']]),
+      : [[stats.titled_champion, 'BRC or MRC titled, all time']]),
   ];
 
   const rankedSections = sections.filter((s) => s.ytd > 0)
@@ -764,14 +774,14 @@ function aboutRacing(org, feed) {
       <p class="text-sm leading-relaxed mt-3">
         Dogs race in a <strong>breed division</strong> when enough of their breed enter, and
         otherwise in a <strong>mixed division</strong>, so each dog carries two records.
-        <strong>BRC</strong> (Breed Racing Champion) is 12 points from breed divisions;
-        <strong>MRC</strong> (Mixed Racing Champion) is 12 points of which at least 2 are from
-        mixed divisions, a split the guide does not show. <strong>National points</strong> go to
+        <strong>BRC</strong> (Breed Racing Champion) is 12 BRC points;
+        <strong>MRC</strong> (Mixed Racing Champion) is 12 BRC and MRC points together, at
+        least 2 of them MRC. <strong>National points</strong> go to
         titled and untitled dogs alike and are what the standings here rank; every 30 in breed
         divisions make a <strong>SBRC</strong> (Supreme Breed Racing Champion) and every 30 in
         mixed divisions a <strong>SMRC</strong>, with II, III and so on. <strong>Turtle
-        points</strong> go to the last-place finisher of a division, worth what first place was,
-        and 30 make a <strong>STRC</strong>.
+        points</strong> go to the last-place finisher of a division, worth what first place was;
+        12 make a <strong>TRC</strong> (Turtle Racing Champion) and 30 a <strong>STRC</strong>.
       </p>`}
     </section>
     <section class="card">
@@ -900,7 +910,9 @@ function renderRacingDog(org, feed, main) {
       : esc(dog.owner_raw);
 
     const titleProgress = [
-      ...spec.champion.map(([field, label, name, need]) => progressBar(dog[field], need, `${label} · ${name}`)),
+      ...spec.champion.map(([field, label, name, need, rule]) => progressBar(
+        rule ? rule.value(dog) : dog[field], need, `${label} · ${name}`,
+        rule ? { done: rule.done(dog), note: rule.note } : {})),
       ...spec.supreme.map(([field, key, label, name, step]) => {
         const level = Math.floor((dog[field] || 0) / step);
         const next = `${label}${level + 1 > 1 ? level + 1 : ''}`;

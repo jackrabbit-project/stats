@@ -713,7 +713,7 @@ RACING = {
     "lgra": {
         "waves": ["wave"],
         "meet_streams": ["meets"],
-        "champion": [("grc", "titled_grc", "grc")],
+        "champion": [("titled_grc", "grc", lambda row: (row["grc"] or 0) >= 12)],
         "supreme": [("ngrc", "sgrc")],
         "career_ranks": [("ngrc", "rank_career")],
         "owner_sums": ["ytd", "ngrc"],
@@ -732,7 +732,14 @@ RACING = {
     "aok9": {
         "waves": ["bwave", "mwave"],
         "meet_streams": ["meets_breed", "meets_mixed"],
-        "champion": [("brc", "titled_brc", "brc"), ("mrc", "titled_mrc", "mrc")],
+        # Sprint Rule Book 3.0 §5.2 (BRC), §5.3 (MRC: 12 points from both
+        # columns, at least 2 MRC) and the 12-point TRC the guide's names record.
+        "champion": [
+            ("titled_brc", "brc", lambda row: (row["brc"] or 0) >= 12),
+            ("titled_mrc", "mrc", lambda row: (row["brc"] or 0) + (row["mrc"] or 0) >= 12
+             and (row["mrc"] or 0) >= 2),
+            ("titled_trc", "trc", lambda row: (row["trc"] or 0) >= 12),
+        ],
         "supreme": [("nbrc", "sbrc"), ("nmrc", "smrc"), ("trc", "strc")],
         "career_ranks": [("nbrc", "rank_career_breed"), ("nmrc", "rank_career_mixed")],
         "owner_sums": ["ytd", "nbrc", "nmrc"],
@@ -982,12 +989,19 @@ def check_racing(check: Checker, org: str) -> None:
                  f"{label}: meets this year {len(this_year)} vs stats {stats['meets_this_year']}")
 
     # 6. Titles follow the points columns.
-    for field, stat_key, flag in spec["champion"]:
-        check.expect(stats[stat_key] == sum((row[field] or 0) >= 12 for row in rows),
-                     f"{label}: stats.{stat_key} is not the count of hounds at 12 {field} points")
+    for stat_key, flag, earned in spec["champion"]:
+        check.expect(stats[stat_key] == sum(earned(row) for row in rows),
+                     f"{label}: stats.{stat_key} is not the count of hounds the {flag} rule titles")
         for dog in feed["dogs"]:
-            check.expect(dog["titled"][flag] == ((dog[field] or 0) >= 12),
-                         f"{label}: {dog['id']} titled.{flag} disagrees with {field}")
+            check.expect(dog["titled"][flag] == earned(dog),
+                         f"{label}: {dog['id']} titled.{flag} disagrees with the points columns")
+    if org == "aok9":
+        check.expect(
+            stats["titled_champion"] == sum(
+                (row["brc"] or 0) >= 12
+                or ((row["brc"] or 0) + (row["mrc"] or 0) >= 12 and (row["mrc"] or 0) >= 2)
+                for row in rows),
+            f"{label}: stats.titled_champion is not the count of dogs with a BRC or MRC")
     for field, flag in spec["supreme"]:
         for dog in feed["dogs"]:
             level = int((dog[field] or 0) // 30)
