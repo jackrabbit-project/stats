@@ -412,7 +412,7 @@ function renderRacingOverview(org, feed, main) {
     <section class="grid md:grid-cols-3 gap-6">
       <div class="card md:row-span-2">
         <h2 class="card-title">All-breed standings</h2>
-        <p class="text-xs text-asfa-text/60 mb-3">${spec.seasonLabel}, every breed together.</p>
+        <p class="text-xs text-asfa-text/60 mb-3">${spec.seasonLabel}, all breeds.</p>
         <div class="tbl-wrap"><table class="tbl">
           <thead><tr><th scope="col" class="num">Rank</th><th scope="col">${spec.noun[0].toUpperCase() + spec.noun.slice(1)}</th><th scope="col">Breed</th><th scope="col" class="num">Points</th></tr></thead>
           <tbody>${allBreed.map((dog) => `
