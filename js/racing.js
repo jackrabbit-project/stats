@@ -780,18 +780,6 @@ function aboutRacing(org, feed) {
           three meets and its running totals, nothing older and no times.</li>
         <li><strong>Points do not compare across breeds.</strong> A breed that fills a program
           most weekends offers far more of them than one that rarely races.</li>
-        <li><strong>The registrar's figure governs.</strong> Where a WAVE or a title does not
-          match the arithmetic, the guide is treated as right and this site says where it
-          differs.</li>
-        ${org === 'lgra' ? `
-        <li><strong>Breed comes from the registration prefix</strong> (A-151 is an Afghan
-          Hound, SW-802 a Silken Windhound); the guide's breed headers are checked against
-          it.</li>` : `
-        <li><strong>Breed is whatever the owner registered.</strong> The guide lists 118 breeds
-          and a mixed-breed section; the site keeps the registrar's spelling.</li>`}
-        <li><strong>Active</strong> here means a meet listed in ${feed.season - 1} or ${feed.season},
-          or points this year. Every ${spec.noun} ever registered is in the registry behind
-          the browse table.</li>
       </ul>
     </section>
     <section class="card">
