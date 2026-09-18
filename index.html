@@ -128,7 +128,7 @@
         const leader = feed.dogs.find((dog) => dog.rank_all === 1);
         const titled = org === 'lgra'
           ? [feed.stats.titled_grc.toLocaleString('en-US'), 'GRC titled, all time']
-          : [feed.stats.titled_brc + feed.stats.titled_mrc, 'BRC and MRC titled'];
+          : [feed.stats.titled_brc + feed.stats.titled_mrc, 'BRC and MRC titled, all time'];
         coverage.push(`${name} guide of ${formatDate(feed.guide_date)}`);
         for (const dog of feed.dogs) {
           entries.push({
@@ -139,8 +139,8 @@
           });
         }
         return tiles([
-          [feed.stats.hounds_ytd, `${nouns} with points this year`],
-          [feed.stats.breeds_ytd, 'breeds racing this year'],
+          [feed.stats.hounds_raced, `${nouns} racing this year`],
+          [feed.stats.breeds_raced, 'breeds racing this year'],
           [feed.stats.meets_this_year, 'meets this year'],
           titled,
         ]) + (leader ? `<p class="text-sm text-asfa-text/70 mt-3">Leading all breeds: <span class="font-semibold text-asfa-green">${esc(leader.call_name)}</span>, ${esc(leader.breed)}, ${ptsLabel(leader.ytd)} points.</p>` : '');

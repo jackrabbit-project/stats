@@ -382,6 +382,13 @@ def build(snapshots: list[dict]) -> tuple[dict, dict]:
         "hounds_duplicate_numbers": sum("duplicate_of" in dog for dog in dogs),
         "hounds_active": len(active),
         "hounds_ytd": sum((dog["ytd"] or 0) > 0 for dog in dogs),
+        # Raced this year: a listed meet in the season, points or not.
+        "hounds_raced": sum(
+            any(m["year"] == season for m in dog["meets_breed"] + dog["meets_mixed"])
+            for dog in dogs),
+        "breeds_raced": len({
+            dog["breed"] for dog in dogs
+            if any(m["year"] == season for m in dog["meets_breed"] + dog["meets_mixed"])}),
         "titled_brc": sum(dog["titled"]["brc"] for dog in dogs),
         "titled_mrc": sum(dog["titled"]["mrc"] for dog in dogs),
         "titled_sbrc": sum(dog["titled"]["sbrc"] > 0 for dog in dogs),

@@ -362,6 +362,12 @@ def build(snapshots: list[dict]) -> tuple[dict, dict]:
         "hounds_duplicate_numbers": sum("duplicate_of" in dog for dog in dogs),
         "hounds_active": len(active),
         "hounds_ytd": sum((dog["ytd"] or 0) > 0 for dog in dogs),
+        # Raced this year: a listed meet in the season, points or not. The
+        # guide keeps only the last three meets, so a hound that raced early
+        # in the year and three times since is still counted.
+        "hounds_raced": sum(any(m["year"] == season for m in dog["meets"]) for dog in dogs),
+        "breeds_raced": len({dog["breed"] for dog in dogs
+                             if any(m["year"] == season for m in dog["meets"])}),
         "titled_grc": sum(dog["titled"]["grc"] for dog in dogs),
         "titled_sgrc": sum(dog["titled"]["sgrc"] > 0 for dog in dogs),
         "breeds": len(sections),

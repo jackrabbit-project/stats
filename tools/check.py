@@ -855,6 +855,15 @@ def check_racing(check: Checker, org: str) -> None:
                      f"{label}: {dog['id']} differs between feed and registry")
     check.expect(stats["hounds_ytd"] == sum((row["ytd"] or 0) > 0 for row in rows),
                  f"{label}: stats.hounds_ytd is not the count of hounds with points")
+    raced = [row for row in rows
+             if any(meet[1] == season for stream in spec["meet_streams"] for meet in row[stream])]
+    check.expect(stats["hounds_raced"] == len(raced),
+                 f"{label}: stats.hounds_raced {stats['hounds_raced']} vs {len(raced)} re-counted")
+    check.expect(stats["breeds_raced"] == len({row["breed_slug"] for row in raced}),
+                 f"{label}: stats.breeds_raced disagrees with a re-count")
+    check.expect(stats["hounds_ytd"] <= stats["hounds_raced"] <= stats["hounds_active"],
+                 f"{label}: points {stats['hounds_ytd']} / raced {stats['hounds_raced']} / "
+                 f"active {stats['hounds_active']} are out of order")
     for section in sections:
         members = by_slug.get(section["slug"], [])
         check.expect(section["registry"] == len(members)
