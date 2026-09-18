@@ -54,6 +54,22 @@
         (d) => d.hound_key === dog.hound_key && d.id !== dog.id
       );
 
+      // Titles ride along in the registered name. ASFA's own are shown as
+      // badges in the families the titles page uses; anything else (AKC
+      // coursing, obedience, whatever the owner added) is listed as written.
+      const ASFA_TITLES = new Set(['FCH', 'VFCH', 'LCM', 'VLCM', 'LCX', 'TCP', 'CPX',
+        'LCI', 'LCC', 'VLCC', 'LCA', 'LCE']);
+      const isAsfaTitle = (t) => ASFA_TITLES.has(t.replace(/\d+$/, '').toUpperCase());
+      const titleFamily = (abbr) => {
+        const base = abbr.replace(/\d+$/, '').toUpperCase();
+        if (base === 'TCP' || base === 'CPX') return 'badge-t-tcp';
+        if (base.endsWith('FCH')) return 'badge-t-fch';
+        if (['LCI', 'LCC', 'VLCC', 'LCA', 'LCE'].includes(base)) return 'badge-t-lci';
+        return 'badge-t-lcm';
+      };
+      const asfaTitles = dog.titles.filter(isAsfaTitle);
+      const otherTitles = dog.titles.filter((t) => !isAsfaTitle(t));
+
       const rankedBelow = dog.total_competing ? dog.total_competing - dog.rank : null;
       // Best of Breed and Best in Field cannot be won in the Singles stake or
       // an LCI division, so they are not headlined as this hound's record
@@ -123,6 +139,22 @@
             ${tiles.map(([value, label]) =>
               `<div class="tile"><div class="tile-value">${value}</div><div class="tile-label">${label}</div></div>`).join('')}
           </div>
+        </section>
+
+        <section class="card" id="titles-card">
+          <h2 class="card-title">Titles</h2>
+          ${asfaTitles.length ? `
+            <p class="text-sm">ASFA lure coursing:
+              ${asfaTitles.map((t) => `<span class="badge ${titleFamily(t)}">${esc(t)}</span>`).join(' ')}</p>` : `
+            <p class="text-sm text-asfa-text/70" id="titles-none">No ASFA lure coursing title in the registered name yet.</p>`}
+          ${otherTitles.length ? `
+            <p class="text-sm text-asfa-text/70 mt-2">Other titles as written: ${otherTitles.map(esc).join(', ')}</p>` : ''}
+          <div id="titles-new"></div>
+          <p class="text-xs text-asfa-text/55 mt-3">
+            Read from the registered name as ASFA prints it on the standings. ASFA does not publish
+            a hound's championship-point total, so there is no progress bar here; the
+            <a href="titles.html" class="lnk">titles page</a> lists what was awarded this season.
+          </p>
         </section>
 
         <section class="card">
@@ -218,6 +250,29 @@
 
       const button = document.getElementById('card-btn');
       if (button) button.addEventListener('click', () => openStatCard(dog, season));
+
+      // Titles awarded this season come from ASFA's title listing, a
+      // separate feed; a problem with it must not blank the profile.
+      const profileIds = new Set([dog.id, ...alsoRanked.map((d) => d.id)]);
+      fetch('data/titles.json')
+        .then((response) => {
+          if (!response.ok) throw new Error(`${response.status} loading data/titles.json`);
+          return response.json();
+        })
+        .then((titles) => {
+          const awarded = titles.titles
+            .filter((row) => profileIds.has(row.dog_id))
+            .sort((a, b) => a.date.localeCompare(b.date));
+          if (!awarded.length) return;
+          const none = document.getElementById('titles-none');
+          if (none) none.textContent = 'ASFA has posted a title that the standings row does not carry yet.';
+          document.getElementById('titles-new').innerHTML = `
+            <p class="text-sm mt-2">Awarded this season:
+              ${awarded.map((row) => `<span class="badge ${titleFamily(row.title_abbr)}">${esc(row.title_abbr)}</span>
+                <span class="text-asfa-text/70">${esc(row.title.replace(/\s*\(.*\)$/, ''))}, ${formatDate(row.date)}</span>`).join('; ')}
+            </p>`;
+        })
+        .catch((error) => console.warn(`Titles unavailable on the profile. ${error.message}`));
     });
   </script>
 </body>
