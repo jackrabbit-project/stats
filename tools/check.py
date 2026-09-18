@@ -984,12 +984,13 @@ def check_racing(check: Checker, org: str) -> None:
                      f"{label}: {len(named) - agree} hounds carry GRC in their name "
                      f"without 12 points")
 
-    # 7. Owners re-summed over the active hounds.
+    # 7. Owners re-summed over the active hounds, one row per surname per breed.
     expected_owners: dict[str, dict] = {}
     for dog in feed["dogs"]:
         for party in dog["owners"]:
             entry = expected_owners.setdefault(
-                party["key"], {"hounds": 0, "best": None, **{f: 0.0 for f in spec["owner_sums"]}})
+                f"{party['key']}|{dog['breed_slug']}",
+                {"hounds": 0, "best": None, **{f: 0.0 for f in spec["owner_sums"]}})
             entry["hounds"] += 1
             for f in spec["owner_sums"]:
                 entry[f] += dog.get(f) or 0
@@ -1000,6 +1001,9 @@ def check_racing(check: Checker, org: str) -> None:
                  f"{label}: owner count {len(feed['owners'])} vs {len(expected_owners)}")
     for owner in feed["owners"]:
         expected = expected_owners.get(owner["key"])
+        check.expect(owner["key"] == f"{owner['surname_key']}|{owner['breed_slug']}"
+                     and owner["breeds"] == [owner["breed"]],
+                     f"{label}: owner {owner['key']} is not one surname within one breed")
         check.expect(
             expected is not None and owner["hounds"] == expected["hounds"]
             and all(abs(owner[f] - expected[f]) < 0.001 for f in spec["owner_sums"])

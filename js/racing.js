@@ -478,9 +478,9 @@ function renderRacingOverview(org, feed, main) {
       </label>
       <div id="owner-table"></div>
       <p class="text-xs text-asfa-text/55 mt-3">
-        Owner is the only ownership field the guide prints, so these are owning parties rather
-        than kennel prefixes. A co-owned ${spec.noun} counts for every owner named on the row.
-        Points are summed across breeds; treat the ${nouns} column as the sturdier measure.
+        The guide prints a surname and nothing else, so a kennel here is a surname within a
+        breed: two Joneses racing Pharaoh Hounds share a line, and one owner racing two breeds
+        gets two. A co-owned ${spec.noun} counts for every surname on its row.
       </p>
     </div>
     </section>
@@ -557,8 +557,8 @@ function renderRacingOverview(org, feed, main) {
     const owner = ownerKey && feed.owners.find((o) => o.key === ownerKey);
     if (!section && !owner) { panel.innerHTML = ''; return; }
     const rows = sortRows(rowsFor(currentSlug), spec.browse, sort);
-    const columns = owner ? [['breed', 'Breed', '', 1], ...spec.browse] : spec.browse;
-    const heading = owner ? `Owned by ${esc(owner.name)}` : esc(section.breed);
+    const columns = spec.browse;
+    const heading = owner ? `${esc(owner.name)} · ${esc(owner.breed)}` : esc(section.breed);
     const subtitle = owner
       ? `${rows.length} active ${rows.length === 1 ? spec.noun : nouns}`
       : `${section.ytd} with points this year · ${section.active} active · ${section.registry} all time`;
@@ -656,12 +656,12 @@ function renderRacingOverview(org, feed, main) {
     const shown = found.slice(0, needle ? 200 : 25);
     ownerTable.innerHTML = shown.length ? `
       <div class="tbl-wrap"><table class="tbl">
-        <thead><tr><th scope="col">Kennel</th><th scope="col">Breeds</th><th scope="col" class="num">${nouns.charAt(0).toUpperCase() + nouns.slice(1)}</th>
+        <thead><tr><th scope="col">Kennel</th><th scope="col">Breed</th><th scope="col" class="num">${nouns.charAt(0).toUpperCase() + nouns.slice(1)}</th>
           <th scope="col" class="num">This year</th><th scope="col" class="num">Career</th></tr></thead>
         <tbody>${shown.map((owner) => `
           <tr>
             <td><a href="${racingOwnerUrl(org, owner.key)}" class="lnk font-semibold" data-owner="${esc(owner.key)}">${esc(owner.name)}</a></td>
-            <td class="text-asfa-text/75 text-xs">${owner.breeds.slice(0, 3).map(esc).join(', ')}${owner.breeds.length > 3 ? ` +${owner.breeds.length - 3}` : ''}</td>
+            <td><a href="${racingBreedUrl(org, owner.breed_slug)}" class="lnk">${esc(owner.breed)}</a></td>
             <td class="num">${owner.hounds}</td>
             <td class="num font-semibold">${ptsLabel(owner.ytd)}</td>
             <td class="num">${ptsLabel(owner[sumField])}</td>
@@ -910,7 +910,7 @@ function renderRacingDog(org, feed, main) {
       : `No ${spec.seasonLabel} yet${dog.last_raced || dog.last_year ? `; last listed meet ${dog.last_raced ? formatDateShort(dog.last_raced) : dog.last_year}` : ''}.`;
 
     const ownersLine = dog.owners && dog.owners.length
-      ? dog.owners.map((owner) => `<a href="${racingOwnerUrl(org, owner.key)}" class="lnk">${esc(owner.name)}</a>`).join(', ')
+      ? dog.owners.map((owner) => `<a href="${racingOwnerUrl(org, `${owner.key}|${dog.breed_slug}`)}" class="lnk">${esc(owner.name)}</a>`).join(', ')
       : esc(dog.owner_raw);
 
     const titleProgress = [

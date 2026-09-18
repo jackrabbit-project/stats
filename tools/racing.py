@@ -499,12 +499,21 @@ def build_movement(current: list[dict], previous: list[dict] | None,
 
 def build_owners(dogs: list[dict], sum_fields: list[str],
                  best_field: str) -> list[dict]:
-    """Owner aggregates over the active hounds, one row per owning party."""
+    """Owner aggregates over the active hounds, one row per surname per breed.
+
+    The guides print a bare surname, no initials and no region, so a surname
+    alone cannot tell two households apart; "Jones" covered five breeds and
+    at least three families. Racing households are nearly all one breed, so
+    the surname within a breed is the closest thing to a person the data
+    allows. A genuine multi-breed owner shows as one row per breed.
+    """
     owners: dict[str, dict] = {}
     for dog in dogs:
         for party in dog["owners"]:
-            entry = owners.setdefault(party["key"], {
-                "key": party["key"], "name": party["name"], "hounds": 0,
+            key = f"{party['key']}|{dog['breed_slug']}"
+            entry = owners.setdefault(key, {
+                "key": key, "surname_key": party["key"], "name": party["name"],
+                "breed": dog["breed"], "breed_slug": dog["breed_slug"], "hounds": 0,
                 **{field: 0.0 for field in sum_fields},
                 f"best_{best_field}": None, "breeds": set(), "dog_ids": [],
             })
