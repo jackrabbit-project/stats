@@ -513,7 +513,7 @@ function renderRacingOverview(org, feed, main) {
       const order = (a, b) => (b.ytd > 0) - (a.ytd > 0) || (b.active > 0) - (a.active > 0)
         || a.breed.localeCompare(b.breed);
       breedSelect.innerHTML = `<option value="">Choose a breed…</option>` + [...sections].sort(order)
-        .map((section) => `<option value="${section.slug}" ${section.active === 0 ? 'disabled' : ''} ${
+        .map((section) => `<option value="${section.slug}" ${
           section.slug === activeSlug ? 'selected' : ''}>${esc(section.breed)} · ${countLabel(section)}</option>`)
         .join('');
       breedSelect.value = activeSlug || '';
@@ -521,9 +521,8 @@ function renderRacingOverview(org, feed, main) {
     }
     grid.innerHTML = sections.map((section) => {
       const active = section.slug === activeSlug;
-      const disabled = section.active === 0;
-      return `<button data-slug="${section.slug}" ${disabled ? 'disabled' : ''}
-        class="chip text-sm ${active ? 'chip-selected' : ''}" aria-pressed="${active ? 'true' : 'false'}">
+      return `<button data-slug="${section.slug}"
+        class="chip text-sm ${active ? 'chip-selected' : ''} ${section.active ? '' : 'text-asfa-text/60'}" aria-pressed="${active ? 'true' : 'false'}">
         <span class="block font-semibold leading-tight">${esc(section.breed)}</span>
         <span class="block text-xs text-asfa-muted">${countLabel(section)}</span>
       </button>`;
@@ -538,14 +537,38 @@ function renderRacingOverview(org, feed, main) {
       const owner = feed.owners.find((o) => o.key === ownerKey);
       return owner ? dogs.filter((dog) => owner.dog_ids.includes(dog.id)) : [];
     }
-    const base = showAll && registryDogs ? registryDogs : dogs;
+    const section = sections.find((s) => s.slug === slug);
+    // A breed with nobody active (the four Taigans, last raced 2023) has
+    // nothing in the feed; its registry is the only thing worth showing.
+    const wantAll = showAll || (section && section.active === 0);
+    const base = wantAll && registryDogs ? registryDogs : dogs;
     return base.filter((dog) => dog.breed_slug === slug);
+  }
+
+  function loadRegistryThen(after) {
+    loadRegistry(org).then((all) => {
+      const names = new Map(sections.map((s) => [s.slug, s.breed]));
+      registryDogs = all.map((dog) => ({ ...dog, breed: names.get(dog.breed_slug) || dog.breed_slug }));
+      after();
+    }).catch((error) => {
+      console.error(error);
+      const note = panel.querySelector('#registry-note');
+      if (note) note.textContent = 'The registry could not be loaded.';
+    });
   }
 
   function paintTable() {
     const section = sections.find((s) => s.slug === currentSlug);
     const owner = ownerKey && feed.owners.find((o) => o.key === ownerKey);
     if (!section && !owner) { panel.innerHTML = ''; return; }
+    const registryOnly = !owner && section && section.active === 0;
+    if (registryOnly && !registryDogs) {
+      panel.innerHTML = `
+        <h3 class="font-display text-xl text-asfa-text">${esc(section.breed)}</h3>
+        <p class="text-sm text-asfa-text/70 mt-1" id="registry-note">Loading the registry…</p>`;
+      loadRegistryThen(paintTable);
+      return;
+    }
     const rows = sortRows(rowsFor(currentSlug), spec.browse, sort);
     const columns = spec.browse;
     const heading = owner ? `${esc(owner.name)} · ${esc(owner.breed)}` : esc(section.breed);
@@ -578,7 +601,11 @@ function renderRacingOverview(org, feed, main) {
             ${hasPrevious ? `<td class="num">${movementCell(dog)}</td>` : ''}
           </tr>`).join('')}</tbody>
       </table></div>
-      ${!owner && section ? `
+      ${registryOnly ? `
+        <p class="text-sm mt-3 text-asfa-text/70">
+          No ${esc(section.breed)} has raced since ${feed.active_since.slice(0, 4)}; every
+          ${esc(section.breed)} ever registered is shown.
+        </p>` : !owner && section ? `
         <p class="text-sm mt-3 no-print">
           ${showAll
             ? `Showing every ${esc(section.breed)} ever registered. <button type="button" id="registry-toggle" class="lnk">Active ${nouns} only</button>`
@@ -590,15 +617,7 @@ function renderRacingOverview(org, feed, main) {
       toggle.addEventListener('click', () => {
         if (showAll) { showAll = false; paintTable(); return; }
         toggle.textContent = 'Loading the registry…';
-        loadRegistry(org).then((all) => {
-          const names = new Map(sections.map((s) => [s.slug, s.breed]));
-          registryDogs = all.map((dog) => ({ ...dog, breed: names.get(dog.breed_slug) || dog.breed_slug }));
-          showAll = true;
-          paintTable();
-        }).catch((error) => {
-          console.error(error);
-          toggle.textContent = 'The registry could not be loaded';
-        });
+        loadRegistryThen(() => { showAll = true; paintTable(); });
       });
     }
     const clear = panel.querySelector('#owner-clear');
@@ -630,7 +649,7 @@ function renderRacingOverview(org, feed, main) {
   }
 
   const requested = param('breed');
-  const initial = sections.find((s) => s.slug === requested && s.active)
+  const initial = sections.find((s) => s.slug === requested)
     || sections.find((s) => s.ytd) || sections.find((s) => s.active);
   currentSlug = initial ? initial.slug : null;
   paintGrid(currentSlug);
