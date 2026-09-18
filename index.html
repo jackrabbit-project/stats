@@ -65,7 +65,7 @@
   <script src="js/app.js?v=20260917"></script>
   <script src="js/racing.js?v=20260917"></script>
   <script>
-    pageHub(({ asfa, lgra, aok9 }) => {
+    pageHub(({ asfa, lgra, aok9, trials }) => {
       const programs = document.getElementById('programs');
       const coverage = [];
       const entries = [];
@@ -91,7 +91,11 @@
         asfaBody = tiles([
           [asfa.stats.hounds_ranked, 'hounds ranked'],
           [asfa.stats.sections_with_hounds, 'breeds &amp; divisions'],
-          [asfa.stats.bif, 'Best in Field'],
+          // Trials come from the monthly results feed, which can lag the
+          // standings by a few weeks; the tile says which date it covers.
+          trials
+            ? [trials.stats.trials, `trials through ${formatDate(trials.as_of).replace(/, \d{4}$/, '')}`]
+            : [asfa.stats.bif, 'Best in Field'],
           [asfa.stats.total_competing.toLocaleString('en-US'), 'hounds competing'],
         ]) + (leader ? `<p class="text-sm text-asfa-text/70 mt-3">Highest standing: <span class="font-semibold text-asfa-green">${esc(leader.call_name)}</span>, ${esc(leader.breed)} #${leader.rank}, ${percentileLabel(leader)}.</p>` : '');
         coverage.push(`ASFA through ${formatDate(asfa.as_of)}`);

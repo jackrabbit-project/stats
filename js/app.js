@@ -769,13 +769,13 @@ function pageRacing(current, org, render) {
     render() receives whichever feeds arrived and null for the rest. */
 function pageHub(render) {
   renderChrome(null, 'index.html', 'hub');
-  Promise.allSettled([loadSeason(), loadRacing('lgra'), loadRacing('aok9')]).then((results) => {
-    const [asfa, lgra, aok9] = results.map((result) => {
+  Promise.allSettled([loadSeason(), loadRacing('lgra'), loadRacing('aok9'), loadTrials()]).then((results) => {
+    const [asfa, lgra, aok9, trials] = results.map((result) => {
       if (result.status === 'rejected') console.warn(result.reason);
       return result.status === 'fulfilled' ? result.value : null;
     });
     try {
-      render({ asfa, lgra, aok9 });
+      render({ asfa, lgra, aok9, trials });
     } catch (error) {
       console.error(error);
       showFailure(
