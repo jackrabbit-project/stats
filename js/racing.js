@@ -726,8 +726,7 @@ function aboutRacing(org, feed) {
       <h2 class="card-title">Points and titles</h2>
       <p class="text-sm leading-relaxed">
         At each meet the top four finishers earn championship points scaled to the number of
-        eligible starters (${spec.rules}, chapter V). A ${spec.noun} that does not finish every
-        race, finishes last, or beats nobody earns none.
+        eligible starters.
       </p>
       ${pointsTable()}
       ${org === 'lgra' ? `
@@ -750,20 +749,9 @@ function aboutRacing(org, feed) {
         divisions make a <strong>SBRC</strong> (Supreme Breed Racing Champion) and every 30 in
         mixed divisions a <strong>SMRC</strong>, with II, III and so on. <strong>Turtle
         points</strong> go to the last-place finisher of a division, worth what first place was,
-        and 30 make a <strong>STRC</strong>. The companion titles NSR, ESR and MSR (6, 12 and 30
-        meets completed) are applied for by owners and are not in the guide.
+        and 30 make a <strong>STRC</strong>.
       </p>`}
     </section>
-    ${org === 'aok9' ? `
-    <section class="card">
-      <h2 class="card-title">Meet codes</h2>
-      <p class="text-sm leading-relaxed">
-        The guide names a meet by a code such as <span class="font-mono">2026-S22</span>: the
-        year and the running number of the sanctioned sprint meet, with a letter when one meet
-        ran several divisions. The guide gives no date for these; only the oldest rows carry
-        the meet date itself.
-      </p>
-    </section>` : ''}
     <section class="card">
       <h2 class="card-title">What the guide cannot tell you</h2>
       <ul class="text-sm space-y-3">
