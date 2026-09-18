@@ -6,12 +6,12 @@
   <meta name="theme-color" media="(prefers-color-scheme: light)" content="#F7F5EF">
   <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#1B1917">
   <title>Kennels — Gazehound Stats</title>
-  <meta name="description" content="Which owners are having the strongest 2026 ASFA lure coursing season, by hounds ranked, Bowen points, Best of Breed and Best in Field.">
+  <meta name="description" content="Standings by kennel for the 2026 ASFA lure coursing season: hounds ranked, Bowen points, Best of Breed and Best in Field.">
   <link rel="canonical" href="https://stats.gazehound.io/kennels.html">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Gazehound Stats">
   <meta property="og:title" content="Kennels — Gazehound Stats">
-  <meta property="og:description" content="Which owners are having the strongest 2026 ASFA lure coursing season, by hounds ranked, Bowen points, Best of Breed and Best in Field.">
+  <meta property="og:description" content="Standings by kennel for the 2026 ASFA lure coursing season: hounds ranked, Bowen points, Best of Breed and Best in Field.">
   <meta property="og:url" content="https://stats.gazehound.io/kennels.html">
   <meta property="og:image" content="https://stats.gazehound.io/assets/og.png?v=2">
   <meta property="og:image:width" content="1200">
@@ -54,7 +54,7 @@
             </p>
             ${sharesName.length ? `
               <p class="text-xs text-asfa-text/65 mt-2">
-                Another owner of the same name appears in
+                Another kennel of the same name appears in
                 ${sharesName.map((o) => `<a href="${ownerUrl(o.key)}" class="lnk">${regionLabel(o.region)}</a>`).join(', ')}.
                 ASFA publishes no owner identifier, so hounds are attributed by the region on each
                 standings row. <a href="about.html" class="lnk">How this works</a>.
@@ -85,8 +85,8 @@
                 </tr>`).join('')}</tbody>
             </table></div>
             <p class="text-xs text-asfa-text/55 mt-3">
-              Co-owned hounds are listed under every owner named on the ASFA row, so totals
-              across owners add to more than the season total.
+              Co-owned hounds are listed under every kennel named on the ASFA row, so totals
+              across kennels add to more than the season total.
             </p>
           </section>`;
         return;
@@ -117,7 +117,7 @@
 
         if (!owners.length) {
           return `<p class="text-sm text-asfa-text/70 py-3">
-            No owner matching “${esc(query)}”. ASFA publishes owners as an initial and a surname,
+            No kennel matching “${esc(query)}”. ASFA publishes owners as an initial and a surname,
             so try the surname on its own.
           </p>`;
         }
@@ -125,7 +125,7 @@
         return `
           <div class="tbl-wrap"><table class="tbl">
             <thead><tr>
-              <th scope="col">Owner</th><th scope="col" class="num">Region</th><th scope="col">Breeds</th>
+              <th scope="col">Kennel</th><th scope="col" class="num">Region</th><th scope="col">Breeds</th>
               ${sortable.map(([key, label]) =>
                 `<th scope="col" class="sortable num" ${key === sortKey ? 'aria-sort="descending"' : ''}>
                   <button type="button" class="th-btn" data-key="${key}">${label}${
@@ -150,7 +150,7 @@
         const sorted = esc(sortable.find(([k]) => k === sortKey)[1].toLowerCase());
         if (!query) return `Top 50 by ${sorted}.`;
         const n = season.owners.filter(matches).length;
-        return `${n} owner${n === 1 ? '' : 's'} matching “${esc(query)}”, by ${sorted}.`;
+        return `${n} kennel${n === 1 ? '' : 's'} matching “${esc(query)}”, by ${sorted}.`;
       }
 
       function paint() {
@@ -165,18 +165,18 @@
           </div>
 
           <section class="card">
-            <h2 class="card-title">Owners</h2>
+            <h2 class="card-title">Standings by kennel</h2>
             <label class="block mb-3">
-              <span class="sr-only">Search owners by name</span>
+              <span class="sr-only">Search kennels by surname</span>
               <input id="owner-search" type="search" autocomplete="off"
                      value="${esc(query)}"
-                     placeholder="Search all ${season.owners.length} owners by surname…"
+                     placeholder="Search all ${season.owners.length} kennels by surname…"
                      class="w-full field px-3 py-2">
             </label>
             <div id="owner-table">${ownerTable()}</div>
             <p class="text-xs text-asfa-text/55 mt-3">
               <span id="owner-caption">${caption()}</span>
-              A co-owned hound counts for every owner named on the row. Points are summed across
+              A co-owned hound counts for every kennel named on the row. Points are summed across
               breeds, which mixes scales — treat the hound and BIF columns as the sturdier measures.
             </p>
           </section>
