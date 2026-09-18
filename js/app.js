@@ -525,70 +525,70 @@ function paintNav(navEl, current, nav) {
   });
 }
 
-const OFFICIAL = {
-  asfa: `<a href="https://www.asfa.org" target="_blank" rel="noopener noreferrer" class="underline hover:text-asfa-wellink">${icon('globe', 'mr-1.5')}asfa.org, the official site</a>`,
-  lgra: `<a href="https://lgra.club" target="_blank" rel="noopener noreferrer" class="underline hover:text-asfa-wellink">${icon('globe', 'mr-1.5')}lgra.club, the official site</a>`,
-  aok9: `<a href="https://aok9racing.com" target="_blank" rel="noopener noreferrer" class="underline hover:text-asfa-wellink">${icon('globe', 'mr-1.5')}aok9racing.com, the official site</a>`,
-};
+/* Every body's own channels, shown in the footer of every page. LGRA has no
+   Facebook page of its own; the public results-and-brags group covers LGRA
+   and AOK9 racing both, so it sits under LGRA. */
+const FOOTER_LINKS = [
+  ['ASFA lure coursing', [
+    ['globe', 'asfa.org, the official site', 'https://www.asfa.org'],
+    ['facebook', 'ASFA on Facebook', 'https://www.facebook.com/AmericanSighthoundFieldAssociation'],
+    ['facebook', 'ASFA II group', 'https://www.facebook.com/groups/1046065245418921'],
+    ['facebook', 'ASFA Lure Coursing, where updates to this site are posted', 'https://www.facebook.com/ASFAlureCoursing'],
+  ]],
+  ['LGRA straight racing', [
+    ['globe', 'lgra.club, the official site', 'https://lgra.club'],
+    ['facebook', 'LGRA / AOK9 / OB NOTRA results and brags group', 'https://www.facebook.com/groups/1265142357415139'],
+  ]],
+  ['AOK9 sprint racing', [
+    ['globe', 'aok9racing.com, the official site', 'https://aok9racing.com'],
+    ['facebook', 'R.A.C.E. on Facebook', 'https://www.facebook.com/RacingAndCoursingEnthusiastsrace'],
+  ]],
+];
 
-/** The footer's first paragraphs: where the figures come from and who this
-    site is not. The rest of the footer is the same everywhere. */
+function footerLinks() {
+  return `
+        <div class="grid sm:grid-cols-3 gap-x-6 gap-y-4">${FOOTER_LINKS.map(([heading, links]) => `
+          <div>
+            <p class="font-mono text-[10px] uppercase tracking-widest text-asfa-wellink/60 mb-1.5">${heading}</p>
+            <ul class="space-y-1">${links.map(([glyph, label, href]) => `
+              <li><a href="${href}" target="_blank" rel="noopener noreferrer" class="underline hover:text-asfa-wellink">${icon(glyph, 'mr-1.5')}${label}</a></li>`).join('')}
+            </ul>
+          </div>`).join('')}
+        </div>`;
+}
+
+/** Where this section's figures come from. The links above and the
+    affiliation line below are the same on every page. */
 function footerSource(sectionKey, feed) {
+  const link = (href, text) =>
+    `<a href="${esc(href)}" target="_blank" rel="noopener noreferrer" class="underline hover:text-asfa-wellink">${text}</a>`;
   if (sectionKey === 'asfa') {
-    const community = `
-        <p class="flex flex-wrap gap-x-5 gap-y-1.5">
-          <a href="https://www.facebook.com/AmericanSighthoundFieldAssociation" target="_blank" rel="noopener noreferrer" class="underline hover:text-asfa-wellink">${icon('facebook', 'mr-1.5')}Follow ASFA on Facebook</a>
-          ${OFFICIAL.asfa}
-          <a href="https://www.facebook.com/groups/1046065245418921" target="_blank" rel="noopener noreferrer" class="underline hover:text-asfa-wellink">${icon('facebook', 'mr-1.5')}Join the ASFA II group</a>
-          <a href="https://www.facebook.com/ASFAlureCoursing" target="_blank" rel="noopener noreferrer" class="underline hover:text-asfa-wellink">${icon('facebook', 'mr-1.5')}ASFA Lure Coursing, where updates to this site are posted</a>
-        </p>`;
-    const source = feed ? `
+    return feed ? `
         <p>
-          Standings reproduced from the
-          <a href="${esc(feed.source_url)}" target="_blank" rel="noopener noreferrer" class="underline hover:text-asfa-wellink">ASFA Top 20</a>,
+          Standings reproduced from the ${link(feed.source_url, 'ASFA Top 20')},
           covering January 1 through ${formatDate(feed.as_of)}.
           ASFA's published page is authoritative wherever it disagrees with this one.
         </p>` : `
         <p>Standings reproduced from the ASFA Top 20. ASFA's published page is authoritative
           wherever it disagrees with this one.</p>`;
-    return `${community}${source}
-        <p class="text-xs text-asfa-wellink/65">
-          Independent fan project. Not affiliated with, endorsed by, or sponsored by the
-          American Sighthound Field Association.
-        </p>`;
   }
   if (sectionKey === 'lgra' || sectionKey === 'aok9') {
-    const body = sectionKey === 'lgra'
-      ? 'the Large Gazehound Racing Association'
-      : 'Racing and Coursing Enthusiasts (R.A.C.E.), which runs the AOK9 program';
     const guide = sectionKey === 'lgra' ? 'LGRA grading guide' : 'AOK9 sprint racing grading guide';
-    const source = feed ? `
+    return feed ? `
         <p>
-          Figures reproduced from the
-          <a href="${esc(feed.source_url)}" target="_blank" rel="noopener noreferrer" class="underline hover:text-asfa-wellink">${guide}</a>
+          Figures reproduced from the ${link(feed.source_url, guide)}
           dated ${formatDate(feed.guide_date)}, published at
-          <a href="${esc(feed.source_page)}" target="_blank" rel="noopener noreferrer" class="underline hover:text-asfa-wellink">${esc(feed.source_page.replace(/^https?:\/\//, ''))}</a>.
+          ${link(feed.source_page, esc(feed.source_page.replace(/^https?:\/\//, '')))}.
           The published guide is authoritative wherever it disagrees with this page.
         </p>` : `
         <p>Figures reproduced from the ${guide}. The published guide is authoritative
           wherever it disagrees with this page.</p>`;
-    return `
-        <p class="flex flex-wrap gap-x-5 gap-y-1.5">${OFFICIAL[sectionKey]}</p>${source}
-        <p class="text-xs text-asfa-wellink/65">
-          Independent fan project. Not affiliated with, endorsed by, or sponsored by ${body}.
-        </p>`;
   }
   return `
-        <p class="flex flex-wrap gap-x-5 gap-y-1.5">${OFFICIAL.asfa} ${OFFICIAL.lgra} ${OFFICIAL.aok9}</p>
         <p>
           Figures reproduced from ASFA's Top 20 standings, the LGRA grading guide and the
           AOK9 sprint racing grading guide. Each body's own publication is authoritative
           wherever it disagrees with this site.
-        </p>
-        <p class="text-xs text-asfa-wellink/65">
-          Independent fan project. Not affiliated with, endorsed by, or sponsored by the
-          American Sighthound Field Association, the Large Gazehound Racing Association, or
-          Racing and Coursing Enthusiasts (R.A.C.E.).
         </p>`;
 }
 
@@ -645,7 +645,12 @@ function renderChrome(feed, current, sectionKey = sectionOf(current)) {
   if (footer) {
     const aboutHref = sectionKey === 'lgra' || sectionKey === 'aok9' ? `about.html#${sectionKey}` : 'about.html';
     footer.innerHTML = `
-      <div class="max-w-4xl mx-auto px-4 text-sm text-asfa-wellink/85 space-y-3">${footerSource(sectionKey, feed)}
+      <div class="max-w-4xl mx-auto px-4 text-sm text-asfa-wellink/85 space-y-4">${footerLinks()}${footerSource(sectionKey, feed)}
+        <p class="text-xs text-asfa-wellink/65">
+          Independent fan project. Not affiliated with, endorsed by, or sponsored by the
+          American Sighthound Field Association, the Large Gazehound Racing Association, or
+          Racing and Coursing Enthusiasts (R.A.C.E.), which runs the AOK9 program.
+        </p>
         <p class="text-xs text-asfa-wellink/65 flex flex-wrap items-center justify-center gap-x-2 gap-y-1.5 text-center">
           <a href="${aboutHref}" class="underline hover:text-asfa-wellink">How these numbers are built</a>
           <span aria-hidden="true">·</span>
