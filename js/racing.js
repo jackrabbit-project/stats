@@ -390,16 +390,6 @@ function renderRacingOverview(org, feed, main) {
         `<div class="tile"><div class="tile-value">${value}</div><div class="tile-label">${label}</div></div>`).join('')}
     </section>
 
-    <section id="standings" class="space-y-4 scroll-mt-24">
-      <div>
-        <h2 class="font-display text-2xl text-asfa-text">Standings by breed</h2>
-        <p class="text-sm text-asfa-text/70 mt-1">Ranked by ${spec.seasonLabel}.</p>
-      </div>
-      ${rankedSections.length
-        ? `<div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">${standingsCards}</div>`
-        : `<p class="text-sm text-asfa-text/70">No ${nouns} have points yet this year.</p>`}
-    </section>
-
     <section class="grid md:grid-cols-3 gap-6">
       <div class="card md:row-span-2">
         <h2 class="card-title">All-breed standings</h2>
@@ -418,6 +408,16 @@ function renderRacingOverview(org, feed, main) {
       ${careerBoards}
       ${titlesBoard}
     </section>
+    </section>
+
+    <section id="standings" class="space-y-4">
+      <div>
+        <h2 class="font-display text-2xl text-asfa-text">Standings by breed</h2>
+        <p class="text-sm text-asfa-text/70 mt-1">Ranked by ${spec.seasonLabel}.</p>
+      </div>
+      ${rankedSections.length
+        ? `<div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">${standingsCards}</div>`
+        : `<p class="text-sm text-asfa-text/70">No ${nouns} have points yet this year.</p>`}
     </section>
 
     <section id="browse" class="space-y-6">

@@ -350,7 +350,6 @@ const NAV_HUB = [
   ['asfa.html', 'ASFA coursing'],
   ['lgra.html', 'LGRA racing'],
   ['aok9.html', 'AOK9 racing'],
-  ['about.html', 'About'],
 ];
 
 /* The site is three programs under one roof. Each has its own home, nav,
@@ -645,6 +644,13 @@ function renderChrome(feed, current, sectionKey = sectionOf(current)) {
     // The racing sections explain themselves on their own About tab;
     // about.html is the ASFA side's account.
     const aboutHref = sectionKey === 'lgra' || sectionKey === 'aok9' ? `${sectionKey}.html#about` : 'about.html';
+    // The hub has no About of its own: it points at each section's account.
+    const howBuilt = sectionKey === 'hub'
+      ? `How these numbers are built:
+          <a href="about.html" class="underline hover:text-asfa-wellink">ASFA</a>
+          <a href="lgra.html#about" class="underline hover:text-asfa-wellink">LGRA</a>
+          <a href="aok9.html#about" class="underline hover:text-asfa-wellink">AOK9</a>`
+      : `<a href="${aboutHref}" class="underline hover:text-asfa-wellink">How these numbers are built</a>`;
     footer.innerHTML = `
       <div class="max-w-4xl mx-auto px-4 text-sm text-asfa-wellink/85 space-y-4">${footerLinks()}${footerSource(sectionKey, feed)}
         <p class="text-xs text-asfa-wellink/65">
@@ -653,7 +659,7 @@ function renderChrome(feed, current, sectionKey = sectionOf(current)) {
           Racing and Coursing Enthusiasts (R.A.C.E.), which runs the AOK9 program.
         </p>
         <p class="text-xs text-asfa-wellink/65 flex flex-wrap items-center justify-center gap-x-2 gap-y-1.5 text-center">
-          <a href="${aboutHref}" class="underline hover:text-asfa-wellink">How these numbers are built</a>
+          ${howBuilt}
           <span aria-hidden="true">·</span>
           <a href="mailto:info@gazehound.io" class="underline hover:text-asfa-wellink">Report an error</a>
           <span aria-hidden="true">·</span>
