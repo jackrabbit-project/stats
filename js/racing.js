@@ -799,7 +799,6 @@ function aboutRacing(org, feed) {
         <li><strong>Standings</strong> rank the guide's YTD column, this year's National points, within each breed and across breeds. LGRA's own year-end Top 10 lists rank the same figure.</li>
         <li><strong>Career standings</strong> rank career National points (the NGRC column) across every hound ever registered.</li>
         <li><strong>Titles</strong> are read from the points columns: 12 GRC points is a GRC, every 30 National points a further SGRC. The registrar's certificate is the record.</li>
-        <li><strong>Breed</strong> comes from the registration prefix (A-151 is an Afghan Hound, SW-802 a Silken Windhound), checked against the guide's own headers.</li>
       </ul>` : `
       <p class="text-sm leading-relaxed">
         R.A.C.E.'s AOK9 program opens sprint racing to every breed. Its
