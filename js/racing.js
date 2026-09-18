@@ -303,7 +303,7 @@ function renderRacingOverview(org, feed, main) {
   document.title = `${spec.name} ${spec.program} standings — Gazehound Stats`;
 
   const tiles = [
-    [stats.hounds_ytd, `${nouns} with points this year`],
+    [stats.hounds_ytd, `${nouns} racing this year`],
     [stats.hounds_active, `${nouns} active since ${feed.active_since.slice(0, 4)}`],
     [stats.breeds_ytd, 'breeds racing this year'],
     [stats.meets_this_year, `meets this year`],
