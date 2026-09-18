@@ -360,10 +360,13 @@ function renderRacingOverview(org, feed, main) {
         </table></div>` : `<p class="text-sm text-asfa-text/70">No ${nouns} have points yet this year.</p>`}
       </div>`;
 
+  // With two career streams (AOK9) the boards stack in one column, so each
+  // is shorter; LGRA's single board keeps ten rows.
+  const careerRows = spec.careers.length > 1 ? 5 : 10;
   const careerBoards = spec.careers.map(([field, rankKey, label, supremeKey, supremeLabel]) => {
     const top = dogs.filter((dog) => dog[rankKey])
       .sort((a, b) => a[rankKey] - b[rankKey] || a.call_name.localeCompare(b.call_name))
-      .slice(0, 10);
+      .slice(0, careerRows);
     return `
       <div class="card">
         <h2 class="card-title">${label}</h2>
@@ -426,7 +429,7 @@ function renderRacingOverview(org, feed, main) {
         </table></div>
       </div>
       ${leadersBoard}
-      ${careerBoards}
+      ${spec.careers.length > 1 ? `<div class="space-y-6">${careerBoards}</div>` : careerBoards}
       ${titlesBoard}
     </section>
     </section>
