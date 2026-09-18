@@ -755,8 +755,7 @@ function aboutRacing(org, feed) {
         untitled hounds alike, and are what the standings here rank; 30 of them make a
         <strong>SGRC</strong>, Superior Gazehound Racing Champion, with SGRC II, III and so on at
         each further 30. <strong>JSR</strong> and <strong>SSR</strong> merit titles are earned
-        by legs and are not tracked in the guide; where an owner has added one to a registered
-        name it appears as written.
+        by legs and are not tracked in the guide.
       </p>` : `
       <p class="text-sm leading-relaxed mt-3">
         Dogs race in a <strong>breed division</strong> when enough of their breed enter, and
