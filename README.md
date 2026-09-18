@@ -6,13 +6,14 @@ ASFA publishes the standings as one long page of stacked breed tables, and trial
 
 - **Search** by call name or registered name
 - **Events** — find an upcoming ASFA trial by state, region or month, premium lists linked
-- **Hound profiles** — Bowen points, Best of Breed, Best in Field, and standing within the breed
+- **Hound profiles** — Bowen points, Best of Breed, Best in Field, standing within the breed, and the ASFA titles held and awarded this season
 - **Leaderboards** — most BIF, most BOB, most points, highest breed standing
-- **Kennels** — which owners are having the season
+- **Kennels** — standings by kennel
 - **Regions** — Top 20 standings per region, plus which regions and clubs are drawing the most trial entries
 - **LCI** — Lure Chasing Instinct standings by division, with the program's scoring and titles
 - **Bowen** — how the point system works, with a calculator
-- **Rulebooks** — ASFA's documents linked at source, plus the Running Rules and LCI rules as searchable pages
+- **Titles** — every hound with a new ASFA title this season
+- **Rulebooks** — ASFA's documents linked at source, plus the Running Rules as a searchable page
 - **Stat cards** — a shareable PNG per hound, rendered in the browser
 - **LGRA racing** — standings by breed and all-breed on this season's National points, career points, WAVE and grade, per-hound pages with the last three meets and progress toward GRC and SGRC, from LGRA's grading guide
 - **AOK9 racing** — the same for R.A.C.E.'s all-breed sprint program: breed and mixed divisions, BRC/MRC and the Supreme titles, Turtle points, from the AOK9 sprint grading guide
@@ -24,9 +25,10 @@ ASFA publishes the standings as one long page of stacked breed tables, and trial
 
 ```
 index.html            The hub: one search across every program, three program cards
-asfa.html  events.html  browse.html  dog.html  leaders.html  kennels.html
-regions.html  lci.html  bowen.html  rulebooks.html  about.html  404.html
-lgra.html  aok9.html  racing-dog.html   The racing sections
+asfa.html  events.html  browse.html  dog.html  leaders.html  kennels.html  titles.html
+regions.html  lci.html  bowen.html  rulebooks.html  rulebook.html  about.html  404.html
+lgra.html  aok9.html  racing-dog.html   The racing sections (tabbed pages, one hound page)
+software-list.html    A standalone survey of dog-sport software, deliberately unlinked
 css/input.css         Design tokens (light + dark), fonts, components — the source
 css/app.css           Compiled stylesheet, checked in — what pages load
 tailwind.config.js    Maps the asfa-* color names onto the tokens
@@ -78,14 +80,14 @@ Then open <http://localhost:8765>. The pages fetch `data/season.json`, so openin
 
 ## How the numbers are built
 
-`about.html` is the full account, and it is worth reading before drawing conclusions. The short version:
+`about.html` is the full account of the ASFA side, and each racing page has its own account on its "About the numbers" tab. The short version:
 
 - **Breed standing** is the only derived figure — rank divided by the number of hounds ASFA reports competing in that breed. Ranked 4th of 25 is *top 16%*.
 - **A Top 20 list holds about twenty hounds per breed.** A hound placing 22nd is absent. Totals here cover placings on that list, not a complete competition record.
 - **Points do not compare across breeds.** A breed with 200 hounds competing offers far more of them than one with five. Breed standing and Best in Field are the figures that compare fairly.
 - **The Singles stake overlaps the breed lists.** Hounds that run Singles are also listed under their breed, sometimes with the same BIF and BOB on both rows. Where sections are combined, the site takes the *maximum* of each figure rather than the sum, so a record can never be inflated by double counting.
 - **BOB and BIF are breed-stake awards only.** Hounds run alone in Singles, whose winner is not eligible for Best of Breed or Best in Field (Running Rules Ch. V §5(d), §11), and Best of Breed is contested between breed stakes, which the LCI divisions are not. ASFA still prints those figures on Singles rows — the hound's breed-stake record carried across — so they are reproduced as published but never credited to Singles or LCI in any total or leaderboard.
-- **Identity and owner matching are approximate.** There is no registration number in the published data, and a registered name gains titles mid-season. Titles are stripped to match a hound to itself between updates; owner spellings are merged where the match is mechanical.
+- **Identity and owner matching are approximate.** There is no registration number in the published data, and a registered name gains titles mid-season. Titles are stripped to match a hound to itself between updates; owner spellings are merged where the match is mechanical, and a bare surname or a single initial folds into the one household that fits (E.Kominek and S.Kominek into E.& S.Kominek), each merge listed in `data/review/owner-merges.csv`.
 - **Two people can share a name.** An owner's home region is taken from rows where they are listed *first* — that is whose region the row carries. A name leading in two regions is two people (K.Sanders has six Basenjis in Region 8 and a Silken Windhound in Region 1) unless a co-owner appears in both, which makes it one person whose hounds live in different places. Thin cases are split and listed in `data/review/owner-splits.csv`.
 - **Region means two different things.** In the standings it is the *owner's* region; on trial entries it is the *club's*, from ASFA's club listing. Clubs travel — Borzoi Club of America is a Region 4 club that ran in Nebraska this year — so the two are never combined.
 - **No personal contact data.** ASFA's club listing carries liaison names, home addresses, phone numbers and emails. Only club name, region, initials and affiliation are extracted, and `check.py` fails the build if anything else appears in `data/`.
@@ -99,12 +101,13 @@ Then open <http://localhost:8765>. The pages fetch `data/season.json`, so openin
 - **Titles are read from the points columns** (12 championship points; every 30 National points a Superior/Supreme level). The registrar's certificate is the record.
 - **Meet codes decode to years, and to dates where the scheme gives one.** LGRA: year letters (A = 1995) plus day of the year from 2012 on, a running count before. AOK9: year plus sequence, undated. A handful of typed codes in each guide cannot be decoded; they are kept as written and `check.py` caps how many.
 - **Breed is the registration prefix** for LGRA (B is Borzoi, BA is Basenji; three young breeds' headers sit in the NAME column) and the section header for AOK9. Both guides re-use a registration number now and then; every row is kept and the second occurrence gets a `-2` suffix.
-- **Active** means a meet in the current or previous calendar year, or points this year; the feeds carry active hounds, the registries everyone.
+- **Active** means a meet in the current or previous calendar year, or points this year; the feeds carry active hounds, the registries everyone. "Raced this year" counts a listed meet in the season, points or not, and is a floor: the guide keeps only a hound's last three meets.
+- **Kennels are a surname within a breed.** The guides print a bare surname and nothing else, so "Jones" cannot be told apart across five breeds; one owner racing two breeds shows as two lines, and two Joneses in one breed share one.
 - **No personal contact data**, extended: the workbooks' header rows are never copied, and `check.py` greps the feeds, registries and snapshots for emails, phone numbers and street addresses.
 
 ## Reporting an error
 
-Please check against [ASFA's published standings](https://www.asfa.org/20/index.htm) first. If the two disagree, ASFA is right and this site has a bug — please [open an issue](https://github.com/jackrabbit-project/stats/issues/new) or email **info@gazehound.io**. If ASFA's own listing looks wrong, that goes to the ASFA Records Secretary, not here.
+Please check against the source first: [ASFA's published standings](https://www.asfa.org/20/index.htm), the [LGRA grading guide](https://lgra.club/grading-guide) or the [AOK9 sprint grading guide](https://aok9racing.com/documents--forms.html). If the two disagree, the published page is right and this site has a bug — please [open an issue](https://github.com/jackrabbit-project/stats/issues/new) or email **info@gazehound.io**. If the body's own listing looks wrong, that goes to the ASFA Records Secretary, the LGRA Registrar/Recorder or the AOK9 National Racing Director, not here.
 
 ## License
 
