@@ -764,8 +764,70 @@ function aboutRacing(org, feed) {
           or points this year. Every ${spec.noun} ever registered is in the registry behind
           the browse table.</li>
       </ul>
+    </section>
+    <section class="card">
+      <h2 class="card-title">Where the numbers come from</h2>
+      ${org === 'lgra' ? `
+      <p class="text-sm leading-relaxed">
+        The Large Gazehound Racing Association publishes one workbook, the
+        <a href="https://lgra.club/grading-guide" class="lnk" target="_blank" rel="noopener noreferrer">grading guide</a>,
+        that race secretaries use to seed the first program of a meet. Every hound ever registered
+        is on it: its WAVE, its GRC points, its career and current-year National points, and the
+        codes and scores of its last three meets. These pages are that workbook made searchable,
+        with the arithmetic in the
+        <a href="${esc(feed.rules_url)}" class="lnk" target="_blank" rel="noopener noreferrer">LGRA Rule Book</a>
+        (release 23.2) applied to it.
+      </p>
+      <ul class="text-sm leading-relaxed list-disc pl-5 mt-2 space-y-1">
+        <li><strong>Standings</strong> rank the guide's YTD column, this year's National points, within each breed and across breeds. LGRA's own year-end Top 10 lists rank the same figure.</li>
+        <li><strong>Career standings</strong> rank career National points (the NGRC column) across every hound ever registered.</li>
+        <li><strong>Titles</strong> are read from the points columns: 12 GRC points is a GRC, every 30 National points a further SGRC. The registrar's certificate is the record.</li>
+        <li><strong>Breed</strong> comes from the registration prefix (A-151 is an Afghan Hound, SW-802 a Silken Windhound), checked against the guide's own headers.</li>
+      </ul>` : `
+      <p class="text-sm leading-relaxed">
+        R.A.C.E.'s AOK9 program opens sprint racing to every breed. Its
+        <a href="${esc(feed.source_page)}" class="lnk" target="_blank" rel="noopener noreferrer">sprint racing grading guide</a>
+        is a public spreadsheet with two records per dog, one for breed divisions and one for
+        mixed divisions, each with its own WAVE and championship points, plus National points,
+        Turtle points and this year's points. These pages apply the
+        <a href="${esc(feed.rules_url)}" class="lnk" target="_blank" rel="noopener noreferrer">AOK9 Sprint Racing Rule Book</a>
+        (release 3.0) to it: standings on the YTD column, career standings on National Breed and
+        National Mixed points, WAVE recomputed and compared, titles read from the points columns.
+        The guide's date is read from the "updated" note beside its link. Only the sprint guide is
+        covered; AOK9's oval, singles and lure coursing records are separate spreadsheets.
+      </p>`}
+      <p class="text-sm leading-relaxed mt-3">
+        A parsed copy of each new guide is archived by date so movement between guides can be
+        shown. The workbook's header rows, which carry the registrar's mailing details, are never
+        copied, and the build fails if an email address, phone number or street address turns up
+        anywhere in the published data. The whole method, code included, is on
+        <a href="https://github.com/jackrabbit-project/stats" class="lnk" target="_blank" rel="noopener noreferrer">GitHub</a>.
+      </p>
+    </section>
+    <section class="card" id="disclaimer">
+      <h2 class="card-title">Disclaimer</h2>
+      ${org === 'lgra' ? `
+      <p class="text-sm leading-relaxed">
+        These pages are an independent, unofficial project. They are <strong>not authorized,
+        approved, or endorsed by the Large Gazehound Racing Association</strong>, and they are not
+        an LGRA publication, service, or software. LGRA's name is used only to identify the source
+        of the grading guide and the rule book cited here. The grading guide is LGRA's work and
+        remains LGRA's property; it is reproduced with attribution and a link to the original.
+        Wherever this site and the published guide disagree, <strong>the guide governs</strong>,
+        and questions about a hound's record go to the LGRA Registrar/Recorder, not here.
+      </p>` : `
+      <p class="text-sm leading-relaxed">
+        These pages are an independent, unofficial project. They are <strong>not authorized,
+        approved, or endorsed by Racing and Coursing Enthusiasts (R.A.C.E.)</strong> or its AOK9
+        program, and they are not an AOK9 publication, service, or software. The AOK9 name is
+        used only to identify the source of the grading guide and the rule book cited here. The
+        grading guide is R.A.C.E.'s work and remains its property; it is reproduced with
+        attribution and a link to the original. Wherever this site and the published guide
+        disagree, <strong>the guide governs</strong>, and questions about a dog's record go to
+        the AOK9 National Racing Director, not here.
+      </p>`}
       <p class="text-sm mt-3">
-        <a href="about.html#${org}" class="lnk">How the ${spec.name} data is gathered →</a>
+        Corrections: <a href="mailto:info@gazehound.io" class="lnk">info@gazehound.io</a>
       </p>
     </section>`;
   return common;

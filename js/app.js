@@ -373,13 +373,13 @@ const SECTIONS = {
     tagline: () => 'LGRA straight racing',
     // No banner on the racing pages: the footer carries the disclaimer.
     banner: null,
-    disclaimer: 'about.html#disclaimer-lgra',
+    disclaimer: 'lgra.html#about',
   },
   aok9: {
     home: 'aok9.html', nav: NAV_AOK9,
     tagline: () => 'AOK9 sprint racing',
     banner: null,
-    disclaimer: 'about.html#disclaimer-aok9',
+    disclaimer: 'aok9.html#about',
   },
 };
 const PAGE_SECTIONS = { 'index.html': 'hub', 'lgra.html': 'lgra', 'aok9.html': 'aok9' };
@@ -642,7 +642,9 @@ function renderChrome(feed, current, sectionKey = sectionOf(current)) {
 
   const footer = document.getElementById('site-footer');
   if (footer) {
-    const aboutHref = sectionKey === 'lgra' || sectionKey === 'aok9' ? `about.html#${sectionKey}` : 'about.html';
+    // The racing sections explain themselves on their own About tab;
+    // about.html is the ASFA side's account.
+    const aboutHref = sectionKey === 'lgra' || sectionKey === 'aok9' ? `${sectionKey}.html#about` : 'about.html';
     footer.innerHTML = `
       <div class="max-w-4xl mx-auto px-4 text-sm text-asfa-wellink/85 space-y-4">${footerLinks()}${footerSource(sectionKey, feed)}
         <p class="text-xs text-asfa-wellink/65">
