@@ -2,7 +2,7 @@
   "seasons": [
     2026
   ],
-  "fetched": "2026-09-09",
+  "fetched": "2026-09-18",
   "source_url": "https://www.asfa.org/event/index.htm",
   "calendar_pdf_url": "https://www.asfa.org/event/ASFA%20Calendar%2008-21-2026%20Updates.pdf",
   "region_source": "ASFA Constitution & By-Laws, rev. 08/01/2024, Article V, Section 3",
@@ -125,7 +125,7 @@
   "stats": {
     "events": 118,
     "cancelled": 6,
-    "with_premium": 93
+    "with_premium": 95
   },
   "unmatched_initials": [
     "IWALE"
@@ -1522,7 +1522,7 @@
       "venue": "Kansas City (Lake Jacomo)",
       "state": "MO",
       "region": 5,
-      "premium_url": null,
+      "premium_url": "https://www.asfa.org/event/premiums/HCA.ASFA.2026-10.pdf",
       "premium_inferred": false,
       "club": "Heartland Coursing Association"
     },
@@ -1582,8 +1582,8 @@
       "venue": "Kansas City (Lake Jacomo)",
       "state": "MO",
       "region": 5,
-      "premium_url": null,
-      "premium_inferred": false,
+      "premium_url": "https://www.asfa.org/event/premiums/HCA.ASFA.2026-10.pdf",
+      "premium_inferred": true,
       "club": "Heartland Coursing Association"
     },
     {
