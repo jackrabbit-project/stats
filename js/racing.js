@@ -790,10 +790,9 @@ function aboutRacing(org, feed) {
         <a href="https://lgra.club/grading-guide" class="lnk" target="_blank" rel="noopener noreferrer">grading guide</a>,
         that race secretaries use to seed the first program of a meet. Every hound ever registered
         is on it: its WAVE, its GRC points, its career and current-year National points, and the
-        codes and scores of its last three meets. These pages are that workbook made searchable,
-        with the arithmetic in the
+        codes and scores of its last three meets. The arithmetic follows the
         <a href="${esc(feed.rules_url)}" class="lnk" target="_blank" rel="noopener noreferrer">LGRA Rule Book</a>
-        (release 23.2) applied to it.
+        (release 23.2).
       </p>
       <ul class="text-sm leading-relaxed list-disc pl-5 mt-2 space-y-1">
         <li><strong>Standings</strong> rank the guide's YTD column, this year's National points, within each breed and across breeds. LGRA's own year-end Top 10 lists rank the same figure.</li>
