@@ -35,12 +35,6 @@ const ORGS = {
       ['last_raced', 'Last raced', '', -1],
     ],
     rules: 'LGRA Rule Book 23.2',
-    photo: {
-      src: 'assets/hero-lgra.jpg',
-      alt: 'Three Afghan Hounds in numbered racing blankets and muzzles breaking from the starting boxes',
-      credit: null,
-      position: 'object-[50%_62%]',
-    },
   },
   aok9: {
     key: 'aok9',
@@ -409,13 +403,6 @@ function renderRacingOverview(org, feed, main) {
       </p>
     </div>
 
-    ${spec.photo ? `
-    <figure class="hidden">
-      <img src="${spec.photo.src}" alt="${esc(spec.photo.alt)}"
-           class="w-full aspect-[3/1] object-cover ${spec.photo.position} border border-asfa-border"
-           onload="this.parentElement.classList.remove('hidden')">
-      ${spec.photo.credit ? `<figcaption class="text-right font-mono text-[10px] uppercase tracking-widest text-asfa-muted mt-1.5">${esc(spec.photo.credit)}</figcaption>` : ''}
-    </figure>` : ''}
 
     <section id="overview" class="space-y-8">
     <section id="tiles" class="grid grid-cols-2 md:grid-cols-5 gap-3">
