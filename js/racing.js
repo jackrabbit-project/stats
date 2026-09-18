@@ -774,12 +774,15 @@ function aboutRacing(org, feed) {
       <p class="text-sm leading-relaxed mt-3">
         Dogs race in a <strong>breed division</strong> when enough of their breed enter, and
         otherwise in a <strong>mixed division</strong>, so each dog carries two records.
-        <strong>BRC</strong> (Breed Racing Champion) is 12 BRC points;
+        Championship points come from the table above and only untitled dogs earn them:
+        <strong>BRC</strong> (Breed Racing Champion) is 12 BRC points from breed divisions;
         <strong>MRC</strong> (Mixed Racing Champion) is 12 BRC and MRC points together, at
-        least 2 of them MRC. <strong>National points</strong> go to
-        titled and untitled dogs alike and are what the standings here rank; every 30 in breed
-        divisions make a <strong>SBRC</strong> (Supreme Breed Racing Champion) and every 30 in
-        mixed divisions a <strong>SMRC</strong>, with II, III and so on. <strong>Turtle
+        least 2 of them MRC. <strong>National points</strong> use the same table for the same
+        placings, go to titled and untitled dogs alike, and never stop: National Breed points
+        from breed divisions, National Mixed points from mixed divisions. The two together,
+        earned this season, are the National points the standings here rank. Every 30 National
+        Breed points make a <strong>SBRC</strong> (Supreme Breed Racing Champion) and every 30
+        National Mixed points a <strong>SMRC</strong>, with II, III and so on. <strong>Turtle
         points</strong> go to the last-place finisher of a division, worth what first place was;
         12 make a <strong>TRC</strong> (Turtle Racing Champion) and 30 a <strong>STRC</strong>.
       </p>`}
