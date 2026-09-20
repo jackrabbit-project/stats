@@ -363,25 +363,25 @@ const SECTIONS = {
   hub: {
     home: 'index.html', nav: NAV_HUB,
     tagline: (feed) => `Lure coursing and racing · ${seasonOf(feed)}`,
-    color: 'text-asfa-text',
+    color: 'text-asfa-text', line: 'border-asfa-text',
     disclaimer: 'about.html#disclaimer',
   },
   asfa: {
     home: 'asfa.html', nav: NAV_ASFA,
     tagline: (feed) => `ASFA lure coursing · ${seasonOf(feed)}`,
-    color: 'text-asfa-accent',
+    color: 'text-asfa-accent', line: 'border-asfa-accent',
     disclaimer: 'about.html#disclaimer',
   },
   lgra: {
     home: 'lgra.html', nav: NAV_LGRA,
     tagline: (feed) => `LGRA straight racing · ${seasonOf(feed)}`,
-    color: 'text-asfa-slate',
+    color: 'text-asfa-slate', line: 'border-asfa-slate',
     disclaimer: 'lgra.html#about',
   },
   aok9: {
     home: 'aok9.html', nav: NAV_AOK9,
     tagline: (feed) => `AOK9 sprint racing · ${seasonOf(feed)}`,
-    color: 'text-asfa-green',
+    color: 'text-asfa-green', line: 'border-asfa-green',
     disclaimer: 'aok9.html#about',
   },
 };
@@ -518,11 +518,13 @@ function navActive(href, current, nav) {
   });
 }
 
-function paintNav(navEl, current, nav) {
+/* The active tab's underline takes the section's colour (rust ASFA, slate
+   LGRA, moss AOK9), the same code as the subtitle and the hub cards. */
+function paintNav(navEl, current, nav, line = 'border-asfa-accent') {
   navEl.querySelectorAll('a[href]').forEach((link) => {
     const active = navActive(link.getAttribute('href'), current, nav);
     link.className = `shrink-0 px-2.5 py-2.5 font-mono text-xs uppercase tracking-[0.1em] border-b-2 ${
-      active ? 'text-asfa-text border-asfa-accent' : 'text-asfa-muted border-transparent hover:text-asfa-text'}`;
+      active ? `text-asfa-text ${line}` : 'text-asfa-muted border-transparent hover:text-asfa-text'}`;
     if (active) link.setAttribute('aria-current', 'page');
     else link.removeAttribute('aria-current');
   });
@@ -675,12 +677,12 @@ function renderChrome(feed, current, sectionKey = sectionOf(current)) {
     initProgramMenu(header);
 
     const nav = header.querySelector('nav');
-    paintNav(nav, current, section.nav);
+    paintNav(nav, current, section.nav, section.line);
     if (!renderChrome.hashBound) {
       renderChrome.hashBound = true;
       window.addEventListener('hashchange', () => {
         const liveNav = document.querySelector('#site-header nav');
-        if (liveNav) paintNav(liveNav, current, section.nav);
+        if (liveNav) paintNav(liveNav, current, section.nav, section.line);
       });
     }
 
