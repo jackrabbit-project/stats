@@ -20,7 +20,7 @@
   <link rel="preload" href="assets/fonts/fraunces-latin-var.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/plex-mono-400.woff2" as="font" type="font/woff2" crossorigin>
   <script src="js/theme.js?v=20260823"></script>
-  <link rel="stylesheet" href="css/app.css?v=20260918j">
+  <link rel="stylesheet" href="css/app.css?v=20260920a">
   <link rel="icon" href="assets/favicon.ico?v=3" sizes="any">
   <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png?v=3">
   <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png?v=3">
@@ -29,9 +29,10 @@
   <header id="site-header"></header>
 
   <main id="main" class="flex-1 w-full">
-    <section class="bg-asfa-bg2 border-b border-asfa-border">
+    <section class="bg-asfa-bg2 border-b border-asfa-border border-t-4 border-t-asfa-accent">
       <div class="max-w-3xl mx-auto px-4 py-10 text-center">
-        <h1 class="font-display text-4xl md:text-5xl text-asfa-text tracking-tight">Find your hound.</h1>
+        <p class="text-xs uppercase tracking-wide text-asfa-accent font-semibold mb-2">ASFA lure coursing</p>
+        <h1 class="font-display text-4xl md:text-5xl text-asfa-accent tracking-tight">Find your hound.</h1>
         <p class="mt-2 text-asfa-text/75">See exactly where they stand in the breed this season.</p>
         <p class="mt-1 text-sm text-asfa-text/60">Only hounds ranked in ASFA's Top 20 for their breed are listed; ASFA publishes no more.</p>
 
@@ -113,7 +114,7 @@
 
   <footer id="site-footer" class="bg-asfa-navy text-white py-8"></footer>
 
-  <script src="js/app.js?v=20260918j"></script>
+  <script src="js/app.js?v=20260920a"></script>
   <script>
     page('asfa.html', (season) => {
       const hounds = groupHounds(season.dogs);
