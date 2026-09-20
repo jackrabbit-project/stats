@@ -449,6 +449,15 @@ def load_snapshots(snapshot_dir: Path) -> list[dict]:
 
 # ------------------------------------------------------------------ derived
 
+# Owner cells the guides misspell, exactly as printed -> as the owner spells
+# it. Applied when the feed is built, so the archived snapshot keeps the
+# guide's text and a corrected guide simply stops matching.
+OWNER_CORRECTIONS = {
+    "Brady/Komineck/Komineck": "Brady/Kominek/Kominek",
+    "KominekKominek": "Kominek/Kominek",
+}
+
+
 def derive_identity(dog: dict) -> None:
     """Registered name, titles, owners: the part both bodies share."""
     name, note = strip_note(dog.pop("registered_raw"))
@@ -457,6 +466,8 @@ def derive_identity(dog: dict) -> None:
     dog["core_name"] = core
     dog["titles"] = prefix_titles + suffix_titles
     dog["note"] = note
+    if dog["owner_raw"] in OWNER_CORRECTIONS:
+        dog["owner_raw"] = OWNER_CORRECTIONS[dog["owner_raw"]]
     dog["owners"] = split_owners(dog["owner_raw"])
 
 
