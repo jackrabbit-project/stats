@@ -1,7 +1,7 @@
 {
-  "source_url": "https://www.asfa.org/clubs/2026.04.08 Club Listing.pdf",
-  "source_file": "2026.04.08-Club-Listing.pdf",
-  "generated": "2026-08-27",
+  "source_url": "https://www.asfa.org/docs/2026.08.23 Club updates.pdf",
+  "source_file": "2026.08.23-Club-updates.pdf",
+  "generated": "2026-09-21",
   "note": "Club name, region, initials and affiliation only. The source PDF also lists liaison names, addresses, phone numbers and email addresses; those are deliberately not extracted or stored.",
   "clubs": [
     {
@@ -158,15 +158,6 @@
       "match_key": "england new"
     },
     {
-      "name": "Greater Ocala Gainesville LC Association",
-      "slug": "greater-ocala-gainesville-lc-association",
-      "initials": "GOGLC",
-      "affiliation": "M",
-      "affiliation_label": "Member",
-      "region": 7,
-      "match_key": "gainesville greater lc ocala"
-    },
-    {
       "name": "Greater Twin Cities Whippet Club",
       "slug": "greater-twin-cities-whippet-club",
       "initials": "GTCWC",
@@ -296,8 +287,8 @@
       "name": "Midwest Borzoi Club",
       "slug": "midwest-borzoi-club",
       "initials": "MBC",
-      "affiliation": "A",
-      "affiliation_label": "Affiliate",
+      "affiliation": "M",
+      "affiliation_label": "Member",
       "region": 6,
       "match_key": "borzoi midwest"
     },
@@ -377,8 +368,8 @@
       "name": "Oklahoma Racing and Coursing Association",
       "slug": "oklahoma-racing-and-coursing-association",
       "initials": "ORCA",
-      "affiliation": "FTA",
-      "affiliation_label": "Fast Track Affiliate",
+      "affiliation": "M",
+      "affiliation_label": "Member",
       "region": 4,
       "match_key": "oklahoma racing"
     },

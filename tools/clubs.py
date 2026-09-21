@@ -100,30 +100,41 @@ def match_key(name: str) -> str:
 
 def extract(pdf_path: Path) -> list[dict]:
     clubs: list[dict] = []
+    first: int | None = None   # index of "Club Name" in the current table
     with pdfplumber.open(pdf_path) as pdf:
         for page in pdf.pages:
             table = page.extract_table()
             if not table:
                 continue
             for row in table:
-                if not row or not row[0]:
+                if not row:
                     continue
-                # Header cells arrive as "Club\nInitials"; normalize before compare.
-                if unwrap(row[0]) == "Club Name":
-                    header = [unwrap(cell) for cell in row]
-                    if header[: len(KEEP_COLUMNS)] != list(KEEP_COLUMNS):
+                cells = [unwrap(cell) for cell in row]
+                # The legend line ("A = Affiliate, AP = Applied, ...") is a
+                # table row on every page since the August 2026 listing.
+                if cells[0].startswith("A = Affiliate"):
+                    continue
+                # Header cells arrive as "Club\nInitials"; normalize before
+                # compare. The August 2026 listing put an ID column in front
+                # of Club Name, so the kept columns start wherever it sits.
+                if "Club Name" in cells[:2]:
+                    first = cells.index("Club Name")
+                    if cells[first: first + len(KEEP_COLUMNS)] != list(KEEP_COLUMNS):
                         raise SystemExit(
-                            f"Club listing columns changed: {header[:6]}. Refusing "
+                            f"Club listing columns changed: {cells[:6]}. Refusing "
                             f"to extract, because the column order is what keeps "
                             f"liaison contact data out of this repository."
                         )
                     continue
+                if first is None:
+                    raise SystemExit(
+                        f"Club row before any header: {cells[:3]}. Refusing to "
+                        f"guess which column is which.")
 
                 # Cell text wraps mid-name in the PDF.
-                name = unwrap(row[0])
-                region_raw = unwrap(row[1])
-                initials = unwrap(row[2])
-                affiliation = unwrap(row[3])
+                name, region_raw, initials, affiliation = cells[first: first + 4]
+                if not name:
+                    continue
 
                 if not re.fullmatch(r"\d{1,2}", region_raw):
                     raise SystemExit(f"{name!r}: region is not a number: {region_raw!r}")

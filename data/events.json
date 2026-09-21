@@ -2,7 +2,7 @@
   "seasons": [
     2026
   ],
-  "fetched": "2026-09-18",
+  "fetched": "2026-09-21",
   "source_url": "https://www.asfa.org/event/index.htm",
   "calendar_pdf_url": "https://www.asfa.org/event/ASFA%20Calendar%2008-21-2026%20Updates.pdf",
   "region_source": "ASFA Constitution & By-Laws, rev. 08/01/2024, Article V, Section 3",
@@ -123,9 +123,9 @@
     }
   ],
   "stats": {
-    "events": 118,
+    "events": 119,
     "cancelled": 6,
-    "with_premium": 95
+    "with_premium": 98
   },
   "unmatched_initials": [
     "IWALE"
@@ -1632,6 +1632,21 @@
       "club": "Heartland Coursing Association"
     },
     {
+      "start": "2026-10-24",
+      "end": "2026-10-25",
+      "type": "AB/LCI",
+      "initials": "SHOT",
+      "specialty": false,
+      "national": false,
+      "cancelled": false,
+      "venue": "LaQuest Whippet Haven, Dendron",
+      "state": "VA",
+      "region": 8,
+      "premium_url": "https://www.asfa.org/event/premiums/SHOT%20October%202026.pdf",
+      "premium_inferred": false,
+      "club": "Sight Hound Organization of Tidewater"
+    },
+    {
       "start": "2026-10-31",
       "end": "2026-10-31",
       "type": "AB/LCI",
@@ -1642,7 +1657,7 @@
       "venue": "Storz Rugby Field, Omaha",
       "state": "NE",
       "region": 5,
-      "premium_url": null,
+      "premium_url": "https://www.asfa.org/event/premiums/NCA%20Oct-Nov%20Prem%202026%20(1).pdf",
       "premium_inferred": false,
       "club": "Nebraska Coursing Association"
     },
@@ -1687,7 +1702,7 @@
       "venue": "Storz Rugby Field, Omaha",
       "state": "NE",
       "region": 5,
-      "premium_url": null,
+      "premium_url": "https://www.asfa.org/event/premiums/NCA%20Oct-Nov%20Prem%202026%20(1).pdf",
       "premium_inferred": false,
       "club": "Nebraska Coursing Association"
     },
