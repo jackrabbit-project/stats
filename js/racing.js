@@ -826,6 +826,12 @@ function aboutRacing(org, feed) {
         covered; AOK9's oval, singles and lure coursing records are separate spreadsheets.
       </p>`}
       <p class="text-sm leading-relaxed mt-3">
+        The guide reaches this site the same way it reaches anyone: once a week, a small Python
+        program downloads the published workbook exactly as a browser would, and rebuilds these
+        pages only when the guide has actually changed. Nothing is submitted here and nothing
+        non-public is read.
+      </p>
+      <p class="text-sm leading-relaxed mt-3">
         A parsed copy of each new guide is archived by date so movement between guides can be
         shown. The workbook's header rows, which carry the registrar's mailing details, are never
         copied, and the build fails if an email address, phone number or street address turns up
