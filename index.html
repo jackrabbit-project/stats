@@ -20,7 +20,7 @@
   <link rel="preload" href="assets/fonts/fraunces-latin-var.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/plex-mono-400.woff2" as="font" type="font/woff2" crossorigin>
   <script src="js/theme.js?v=20260823"></script>
-  <link rel="stylesheet" href="css/app.css?v=20260921b">
+  <link rel="stylesheet" href="css/app.css?v=20260921c">
   <link rel="icon" href="assets/favicon.ico?v=3" sizes="any">
   <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png?v=3">
   <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png?v=3">
@@ -62,8 +62,8 @@
 
   <footer id="site-footer" class="bg-asfa-navy text-white py-8"></footer>
 
-  <script src="js/app.js?v=20260921b"></script>
-  <script src="js/racing.js?v=20260921b"></script>
+  <script src="js/app.js?v=20260921c"></script>
+  <script src="js/racing.js?v=20260921c"></script>
   <script>
     pageHub(({ asfa, lgra, aok9, trials }) => {
       const programs = document.getElementById('programs');
@@ -170,9 +170,30 @@
           <span class="text-xs uppercase tracking-wide text-asfa-accent whitespace-nowrap">${esc(dog.meta)}</span>
           <span class="badge badge-flat">${dog.program}</span>
         </a>`;
+      /* No active match: try the racing registries, every dog ever listed in
+         either guide, so a dog registered but with no meets recorded yet is
+         still found. Loaded once, only when needed. */
+      const registryFallback = async (query) => {
+        const found = [];
+        for (const [feed, org, name] of [[lgra, 'lgra', 'LGRA'], [aok9, 'aok9', 'AOK9']]) {
+          if (!feed) continue;
+          const breeds = new Map(feed.sections.map((s) => [s.slug, s.breed]));
+          const rows = await loadRegistry(org);
+          const dormant = rows.filter((dog) => !dog.active).map((dog) => ({
+            id: dog.id, call_name: dog.call_name, registered_name: dog.registered_name,
+            breed: breeds.get(dog.breed_slug) || dog.breed_slug, order: 1e6, program: name,
+            href: racingDogUrl(org, dog.id),
+            meta: `${breeds.get(dog.breed_slug) || dog.breed_slug} · ${dog.last_year ? `last raced ${dog.last_year}` : 'no meets recorded'}`,
+          }));
+          found.push(...searchDogs(query, dormant, 20));
+        }
+        return found.slice(0, 40);
+      };
       attachSearch(document.getElementById('search'), document.getElementById('search-results'), entries, {
         row,
         empty: "No hound matches that name. ASFA lists only each breed's Top 20; LGRA and AOK9 list active dogs.",
+        fallback: registryFallback,
+        fallbackNote: 'Not racing lately, from the all-time LGRA and AOK9 registries:',
       });
 
       /* ----- share links, plain sharer URLs */

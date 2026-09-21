@@ -294,19 +294,41 @@ function searchRow(dog) {
 }
 
 /** Wire an input + results container into a live search box. */
-function attachSearch(input, results, dogs, { onEmpty, row = searchRow, empty = 'No hound matches that name.' } = {}) {
+/* `fallback(query)` may return a promise of further rows: the hub uses it to
+   reach the racing registries, so a dog with nothing recorded yet is still
+   found by name. Its rows are appended under the main matches, with a note,
+   or shown alone when the main list has none. */
+function attachSearch(input, results, dogs, {
+  onEmpty, row = searchRow, empty = 'No hound matches that name.', fallback = null, fallbackNote = '',
+} = {}) {
+  let pending = 0;
   const render = () => {
+    const query = input.value.trim();
     const matches = searchDogs(input.value, dogs);
+    const token = ++pending;
     if (!matches.length) {
-      results.innerHTML = input.value.trim().length >= 2
-        ? `<p class="p-4 text-sm text-asfa-text/60">${esc(empty)}</p>`
+      results.innerHTML = query.length >= 2
+        ? `<p class="p-4 text-sm text-asfa-text/60">${esc(empty)}${fallback ? ' Searching the full registry…' : ''}</p>`
         : '';
-      results.classList.toggle('hidden', !input.value.trim());
+      results.classList.toggle('hidden', !query);
       if (onEmpty) onEmpty();
-      return;
+    } else {
+      results.classList.remove('hidden');
+      results.innerHTML = matches.map(row).join('');
     }
-    results.classList.remove('hidden');
-    results.innerHTML = matches.map(row).join('');
+    if (!fallback || query.length < 2) return;
+    fallback(query).then((extra) => {
+      if (token !== pending || input.value.trim() !== query) return;
+      if (!extra.length) {
+        if (!matches.length) results.innerHTML = `<p class="p-4 text-sm text-asfa-text/60">${esc(empty)} Nothing in the full registry either.</p>`;
+        return;
+      }
+      const block = `<p class="px-4 pt-3 pb-1 text-xs text-asfa-text/60${matches.length ? ' border-t border-asfa-border' : ''}">${esc(fallbackNote)}</p>${extra.map(row).join('')}`;
+      if (matches.length) results.insertAdjacentHTML('beforeend', block);
+      else results.innerHTML = block;
+    }).catch(() => {
+      if (token === pending && !matches.length) results.innerHTML = `<p class="p-4 text-sm text-asfa-text/60">${esc(empty)}</p>`;
+    });
   };
 
   input.addEventListener('input', render);
