@@ -473,7 +473,9 @@ function renderRacingOverview(org, feed, main) {
         <div id="breed-grid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2"></div>`}
       <div id="table-panel" class="mt-4"></div>
     </div>
+    </section>
 
+    <section id="kennels" class="space-y-6">
     <div class="card">
       <h2 class="card-title">Kennels</h2>
       <label class="block mb-3">
@@ -491,9 +493,9 @@ function renderRacingOverview(org, feed, main) {
 
     <section id="about" class="space-y-6">${aboutRacing(org, feed)}</section>`;
 
-  /* The nav's four entries are tabs: one section shows at a time, chosen by
+  /* The nav's five entries are tabs: one section shows at a time, chosen by
      the hash, the way the ASFA side splits its pages. */
-  const TABS = ['overview', 'standings', 'browse', 'about'];
+  const TABS = ['overview', 'standings', 'browse', 'kennels', 'about'];
   function showTab() {
     const wanted = location.hash.slice(1);
     const tab = TABS.includes(wanted) ? wanted : 'overview';
@@ -699,11 +701,12 @@ function renderRacingOverview(org, feed, main) {
         const url = new URL(window.location);
         url.searchParams.set('owner', ownerKey);
         url.searchParams.delete('breed');
-        url.hash = '#browse';
         history.replaceState(null, '', url);
         paintGrid(null);
         paintTable();
-        document.getElementById('browse').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        // A kennel's hounds show in the Browse tab: the hash change switches
+        // the tab and repaints the nav.
+        location.hash = '#browse';
       });
     });
   }

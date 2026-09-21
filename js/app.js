@@ -337,12 +337,14 @@ const NAV_LGRA = [
   ['lgra.html', 'Overview'],
   ['lgra.html#standings', 'Standings'],
   ['lgra.html#browse', 'Browse'],
+  ['lgra.html#kennels', 'Kennels'],
   ['lgra.html#about', 'About the numbers'],
 ];
 const NAV_AOK9 = [
   ['aok9.html', 'Overview'],
   ['aok9.html#standings', 'Standings'],
   ['aok9.html#browse', 'Browse'],
+  ['aok9.html#kennels', 'Kennels'],
   ['aok9.html#about', 'About the numbers'],
 ];
 const NAV_HUB = [
