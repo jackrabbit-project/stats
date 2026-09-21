@@ -109,7 +109,7 @@ function racingBreedUrl(org, slug) {
 }
 
 function racingOwnerUrl(org, key) {
-  return `${org}.html?owner=${encodeURIComponent(key)}#browse`;
+  return `${org}.html?owner=${encodeURIComponent(key)}#kennels`;
 }
 
 /** "12", "12.5", "—": points are halves and quarters, never long decimals. */
@@ -476,7 +476,8 @@ function renderRacingOverview(org, feed, main) {
     </section>
 
     <section id="kennels" class="space-y-6">
-    <div class="card">
+    <div id="kennel-focus" class="hidden space-y-6"></div>
+    <div id="kennel-list" class="card">
       <h2 class="card-title">Kennels</h2>
       <label class="block mb-3">
         <span class="sr-only">Search kennels by owner surname</span>
@@ -549,10 +550,6 @@ function renderRacingOverview(org, feed, main) {
   }
 
   function rowsFor(slug) {
-    if (ownerKey) {
-      const owner = feed.owners.find((o) => o.key === ownerKey);
-      return owner ? dogs.filter((dog) => owner.dog_ids.includes(dog.id)) : [];
-    }
     const section = sections.find((s) => s.slug === slug);
     // A breed with nobody active (the four Taigans, last raced 2023) has
     // nothing in the feed; its registry is the only thing worth showing.
@@ -573,33 +570,9 @@ function renderRacingOverview(org, feed, main) {
     });
   }
 
-  function paintTable() {
-    const section = sections.find((s) => s.slug === currentSlug);
-    const owner = ownerKey && feed.owners.find((o) => o.key === ownerKey);
-    if (!section && !owner) { panel.innerHTML = ''; return; }
-    const registryOnly = !owner && section && section.active === 0;
-    if (registryOnly && !registryDogs) {
-      panel.innerHTML = `
-        <h3 class="font-display text-xl text-asfa-text">${esc(section.breed)}</h3>
-        <p class="text-sm text-asfa-text/70 mt-1" id="registry-note">Loading the registry…</p>`;
-      loadRegistryThen(paintTable);
-      return;
-    }
-    const rows = sortRows(rowsFor(currentSlug), spec.browse, sort);
-    const columns = spec.browse;
-    const heading = owner ? `${esc(owner.name)} · ${esc(owner.breed)}` : esc(section.breed);
-    const subtitle = owner
-      ? `${rows.length} active ${rows.length === 1 ? spec.noun : nouns}`
-      : `${section.ytd} with points this year · ${section.active} active · ${section.registry} all time`;
-    panel.innerHTML = `
-      <div class="flex flex-wrap items-baseline justify-between gap-2">
-        <h3 class="font-display text-xl text-asfa-text">${heading}</h3>
-        <p class="text-sm text-asfa-text/70">${subtitle}</p>
-      </div>
-      ${owner ? `<p class="text-sm mt-1"><a href="${spec.page}#browse" class="lnk" id="owner-clear">Back to breeds →</a></p>` : ''}
-      <div class="tbl-wrap mt-3"><table class="tbl">
-        ${sortableHead(columns, sort, hasPrevious ? '<th scope="col" class="num">Since</th>' : '')}
-        <tbody>${rows.map((dog) => `
+  /* One table row, shared by the breed table and a kennel's hound list. */
+  function browseRow(dog, columns) {
+    return `
           <tr class="${dog.active === false ? 'text-asfa-text/60' : ''}">
             ${columns.map(([key, , cls]) => {
               if (key === 'call_name') return `<td><a href="${racingDogUrl(org, dog.id)}" class="lnk font-semibold">${esc(dog.call_name)}</a>${
@@ -615,18 +588,41 @@ function renderRacingOverview(org, feed, main) {
               return `<td class="num ${key === 'ytd' ? 'font-semibold' : ''}">${ptsLabel(dog[key])}</td>`;
             }).join('')}
             ${hasPrevious ? `<td class="num">${movementCell(dog)}</td>` : ''}
-          </tr>`).join('')}</tbody>
+          </tr>`;
+  }
+
+  function paintTable() {
+    const section = sections.find((s) => s.slug === currentSlug);
+    if (!section) { panel.innerHTML = ''; return; }
+    const registryOnly = section.active === 0;
+    if (registryOnly && !registryDogs) {
+      panel.innerHTML = `
+        <h3 class="font-display text-xl text-asfa-text">${esc(section.breed)}</h3>
+        <p class="text-sm text-asfa-text/70 mt-1" id="registry-note">Loading the registry…</p>`;
+      loadRegistryThen(paintTable);
+      return;
+    }
+    const rows = sortRows(rowsFor(currentSlug), spec.browse, sort);
+    const columns = spec.browse;
+    panel.innerHTML = `
+      <div class="flex flex-wrap items-baseline justify-between gap-2">
+        <h3 class="font-display text-xl text-asfa-text">${esc(section.breed)}</h3>
+        <p class="text-sm text-asfa-text/70">${section.ytd} with points this year · ${section.active} active · ${section.registry} all time</p>
+      </div>
+      <div class="tbl-wrap mt-3"><table class="tbl">
+        ${sortableHead(columns, sort, hasPrevious ? '<th scope="col" class="num">Since</th>' : '')}
+        <tbody>${rows.map((dog) => browseRow(dog, columns)).join('')}</tbody>
       </table></div>
       ${registryOnly ? `
         <p class="text-sm mt-3 text-asfa-text/70">
           No ${esc(section.breed)} has raced since ${feed.active_since.slice(0, 4)}; every
           ${esc(section.breed)} ever registered is shown.
-        </p>` : !owner && section ? `
+        </p>` : `
         <p class="text-sm mt-3 no-print">
           ${showAll
             ? `Showing every ${esc(section.breed)} ever registered. <button type="button" id="registry-toggle" class="lnk">Active ${nouns} only</button>`
             : `<button type="button" id="registry-toggle" class="lnk">Show all ${section.registry} ${esc(section.breed)} ${nouns} ever registered</button>`}
-        </p>` : ''}`;
+        </p>`}`;
     wireSort(panel, columns, sort, paintTable);
     const toggle = panel.querySelector('#registry-toggle');
     if (toggle) {
@@ -636,18 +632,9 @@ function renderRacingOverview(org, feed, main) {
         loadRegistryThen(() => { showAll = true; paintTable(); });
       });
     }
-    const clear = panel.querySelector('#owner-clear');
-    if (clear) {
-      clear.addEventListener('click', (event) => {
-        event.preventDefault();
-        ownerKey = null;
-        select(currentSlug || (sections.find((s) => s.ytd) || sections[0]).slug);
-      });
-    }
   }
 
   function select(slug) {
-    ownerKey = null;
     currentSlug = slug;
     const url = new URL(window.location);
     url.searchParams.set('breed', slug);
@@ -700,19 +687,65 @@ function renderRacingOverview(org, feed, main) {
         ownerKey = link.dataset.owner;
         const url = new URL(window.location);
         url.searchParams.set('owner', ownerKey);
-        url.searchParams.delete('breed');
+        url.hash = '#kennels';
         history.replaceState(null, '', url);
-        paintGrid(null);
-        paintTable();
-        // A kennel's hounds show in the Browse tab: the hash change switches
-        // the tab and repaints the nav.
-        location.hash = '#browse';
+        paintKennel();
+        window.scrollTo({ top: 0, behavior: 'instant' });
       });
+    });
+  }
+
+  /* One kennel, the way the ASFA kennels page shows one: its card, then its
+     hounds as a sortable table, in place of the kennel list. */
+  const kennelFocus = document.getElementById('kennel-focus');
+  const kennelList = document.getElementById('kennel-list');
+  const kennelSort = { key: 'ytd', dir: -1 };
+  const [waveField, waveTitle] = spec.waves[0];
+  const careerLabel = spec.careers[0][2].replace(/^Career /, 'career ');
+  function paintKennel() {
+    const owner = ownerKey && feed.owners.find((o) => o.key === ownerKey);
+    kennelFocus.classList.toggle('hidden', !owner);
+    kennelList.classList.toggle('hidden', !!owner);
+    if (!owner) { kennelFocus.innerHTML = ''; return; }
+    const columns = spec.browse;
+    const rows = sortRows(dogs.filter((dog) => owner.dog_ids.includes(dog.id)), columns, kennelSort);
+    kennelFocus.innerHTML = `
+      <nav class="text-sm text-asfa-text/70"><a href="${spec.page}#kennels" class="lnk" id="kennel-back">Kennels</a> › ${esc(owner.name)}</nav>
+      <section class="card">
+        <h2 class="card-title">${esc(owner.name)}</h2>
+        <p class="text-sm text-asfa-text/70"><a href="${racingBreedUrl(org, owner.breed_slug)}" class="lnk">${esc(owner.breed)}</a></p>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mt-4">
+          <div class="tile"><div class="tile-value">${owner.hounds}</div><div class="tile-label">active ${owner.hounds === 1 ? spec.noun : nouns}</div></div>
+          <div class="tile"><div class="tile-value">${ptsLabel(owner.ytd)}</div><div class="tile-label">${spec.seasonLabel}</div></div>
+          <div class="tile"><div class="tile-value">${ptsLabel(owner[sumField])}</div><div class="tile-label">${careerLabel}</div></div>
+          <div class="tile"><div class="tile-value">${waveLabel(owner[`best_${waveField}`])}</div><div class="tile-label">best ${waveTitle}</div></div>
+        </div>
+      </section>
+      <section class="card">
+        <h2 class="card-title">${nouns.charAt(0).toUpperCase() + nouns.slice(1)}</h2>
+        <div class="tbl-wrap"><table class="tbl">
+          ${sortableHead(columns, kennelSort, hasPrevious ? '<th scope="col" class="num">Since</th>' : '')}
+          <tbody>${rows.map((dog) => browseRow(dog, columns)).join('')}</tbody>
+        </table></div>
+        <p class="text-xs text-asfa-text/55 mt-3">
+          A co-owned ${spec.noun} is listed under every surname on its guide row, so totals
+          across kennels add to more than the breed total.
+        </p>
+      </section>`;
+    wireSort(kennelFocus, columns, kennelSort, paintKennel);
+    kennelFocus.querySelector('#kennel-back').addEventListener('click', (event) => {
+      event.preventDefault();
+      ownerKey = null;
+      const url = new URL(window.location);
+      url.searchParams.delete('owner');
+      url.hash = '#kennels';
+      history.replaceState(null, '', url);
+      paintKennel();
     });
   }
   ownerSearch.addEventListener('input', paintOwners);
   paintOwners();
-  if (ownerKey) { paintGrid(null); paintTable(); }
+  paintKennel();
 }
 
 /* ------------------------------------------------------------- about text */
