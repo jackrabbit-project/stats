@@ -35,7 +35,7 @@
     page('lci.html', (season) => {
       const main = document.getElementById('main');
 
-      // Definitions from the ASFA LCI Rules (rev 08/01/2024), LCI Ch. IV §4.
+      // Definitions from the ASFA LCI Rules (rev 08/01/2026), LCI Ch. IV §4.
       const DIVISIONS = [
         { slug: 'lci-small', name: 'LCI Small',
           rule: '17½ inches or less at the withers, and brachycephalic dogs.',
@@ -54,8 +54,8 @@
         ['LCA',  'Lure Chasing Advanced',            '20 qualifying scores'],
         ['LCC',  'Lure Chasing Champion',            '100 championship points with placements'],
         ['LCE',  'Lure Chasing Excellent',           'LCC, then 4 firsts with competition and 300 more points'],
-        ['VLCC', 'Veteran Lure Chasing Champion',    'Over 7 years: 2 firsts, or 1 first and 2 seconds, plus 100 points'],
-        ['VLCE', 'Veteran Lure Chasing Excellent',   'VLCC, then 3 firsts and 300 more points'],
+        ['VLCC', 'Veteran Lure Chasing Champion',    'Over 7 years: 2 firsts, or 1 first and 2 seconds, plus 75 points'],
+        ['VLCE', 'Veteran Lure Chasing Excellent',   'VLCC, then 4 firsts and 200 more points'],
       ];
 
       const lciDogs = season.dogs.filter((dog) => dog.breed_slug.startsWith('lci-'));
