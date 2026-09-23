@@ -6,12 +6,12 @@
   <meta name="theme-color" media="(prefers-color-scheme: light)" content="#F7F5EF">
   <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#1B1917">
   <title>New ASFA titles — Gazehound Stats</title>
-  <meta name="description" content="Every hound with a new ASFA lure coursing title this season — Field Champions, Lure Courser of Merit and Coursing Proficiency titles, with dates and owners. Unofficial fan site.">
+  <meta name="description" content="Every hound with a new ASFA lure coursing title this season — Field Champion, Lure Courser of Merit, Coursing Proficiency and Lure Chasing Instinct titles, with dates and owners. Unofficial fan site.">
   <link rel="canonical" href="https://stats.gazehound.io/titles.html">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Gazehound Stats">
   <meta property="og:title" content="New ASFA titles — Gazehound Stats">
-  <meta property="og:description" content="Every hound with a new ASFA lure coursing title this season — Field Champions, Lure Courser of Merit and Coursing Proficiency titles, with dates and owners. Unofficial fan site.">
+  <meta property="og:description" content="Every hound with a new ASFA lure coursing title this season — Field Champion, Lure Courser of Merit, Coursing Proficiency and Lure Chasing Instinct titles, with dates and owners. Unofficial fan site.">
   <meta property="og:url" content="https://stats.gazehound.io/titles.html">
   <meta property="og:image" content="https://stats.gazehound.io/assets/og.png?v=2">
   <meta property="og:image:width" content="1200">
@@ -55,16 +55,19 @@
 
       function render(feed) {
         const programs = feed.stats.by_program;
-        const listed = feed.titles.filter((row) => row.program !== 'lci');
+        const listed = feed.titles;
         let sort = { key: 'date', dir: -1 };
 
-        // Color families: Field Champion, Courser of Merit, Coursing
-        // Proficiency. Veteran and numbered tiers stay with their family.
-        const family = (abbr) => {
-          const base = abbr.replace(/\d+$/, '');
-          if (base === 'TCP' || base === 'CPX') return 'badge-t-tcp';
-          if (base.endsWith('FCh')) return 'badge-t-fch';
-          return 'badge-t-lcm';
+        // Colour families: Field Champion and Lure Courser of Merit in the
+        // breed stakes, Coursing Proficiency in the Singles stake, and the Lure
+        // Chasing Instinct ladder. Keyed on the program rather than the
+        // abbreviation because LCC and LCE are LCI titles while LCM is a breed
+        // one. Veteran and numbered tiers stay with their family.
+        const family = (row) => {
+          if (row.program === 'lci') return 'badge-t-lci';
+          if (row.program === 'singles') return 'badge-t-tcp';
+          return row.title_abbr.replace(/\d+$/, '').endsWith('FCh')
+            ? 'badge-t-fch' : 'badge-t-lcm';
         };
 
         const hound = (row) => row.dog_id
@@ -104,15 +107,14 @@
           </section>
 
           <section class="card">
-            <h2 class="card-title">Breed and Singles titles</h2>
+            <h2 class="card-title">Every new title</h2>
             <div id="title-table"></div>
             <p class="text-xs text-asfa-text/65 mt-3">
               <span class="badge badge-t-fch">FCh</span> Field Champion family ·
               <span class="badge badge-t-lcm">LCM</span> Lure Courser of Merit family ·
-              <span class="badge badge-t-tcp">TCP</span> Coursing Proficiency (Singles stake).
-              The Lure Chasing Instinct program's ${programs.lci || 0} titles this season are counted
-              in the totals above but listed with their own program —
-              <a href="lci.html" class="lnk">LCI standings are here</a>.
+              <span class="badge badge-t-tcp">TCP</span> Coursing Proficiency (Singles stake) ·
+              <span class="badge badge-t-lci">LCI</span> Lure Chasing Instinct program
+              (<a href="lci.html" class="lnk">LCI standings</a>).
               A hound's name links to its profile where it also appears in the Top 20 standings;
               titles go to plenty of hounds outside the Top 20, so many rows stand alone.
             </p>
@@ -145,7 +147,7 @@
                 ${sorted.map((row) => `
                   <tr>
                     <td class="num whitespace-nowrap">${formatDate(row.date)}</td>
-                    <td><span class="badge ${family(row.title_abbr)}" title="${esc(row.title)}">${esc(row.title_abbr)}</span></td>
+                    <td><span class="badge ${family(row)}" title="${esc(row.title)}">${esc(row.title_abbr)}</span></td>
                     <td>${hound(row)}</td>
                     <td class="text-asfa-text/80">${esc(row.registered_name)}</td>
                     <td>${esc(row.section)}</td>
