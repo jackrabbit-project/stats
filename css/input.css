@@ -273,6 +273,40 @@
   margin-top: 0.35rem;
 }
 
+/* A tile that filters the table below it. Pressed, it takes the rust rule
+   down the left edge that the callout and the selected breed chip use, so
+   "this one is active" reads the same way everywhere. A button may only hold
+   phrasing content, so the value and label are spans here. */
+.tile-btn {
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  transition: box-shadow 180ms;
+}
+
+.tile-btn .tile-value,
+.tile-btn .tile-label {
+  display: block;
+}
+
+.tile-btn:hover:not([disabled]) {
+  border-color: rgb(var(--line-strong));
+}
+
+.tile-btn[aria-pressed='true'] {
+  box-shadow: inset 3px 0 0 rgb(var(--rust));
+  border-color: rgb(var(--line-strong));
+}
+
+.tile-btn[aria-pressed='true'] .tile-value {
+  color: rgb(var(--rust));
+}
+
+.tile-btn[disabled] {
+  cursor: default;
+  opacity: 0.55;
+}
+
 /* Tables ----------------------------------------------------------------- */
 
 /* border-collapse: separate, because collapsed borders detach from a

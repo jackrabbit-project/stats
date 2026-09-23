@@ -20,7 +20,7 @@
   <link rel="preload" href="assets/fonts/fraunces-latin-var.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/plex-mono-400.woff2" as="font" type="font/woff2" crossorigin>
   <script src="js/theme.js?v=20260823"></script>
-  <link rel="stylesheet" href="css/app.css?v=20260921c">
+  <link rel="stylesheet" href="css/app.css?v=20260922">
   <link rel="icon" href="assets/favicon.ico?v=3" sizes="any">
   <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png?v=3">
   <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png?v=3">
@@ -30,7 +30,7 @@
   <main id="main" class="flex-1 max-w-5xl mx-auto w-full px-4 py-6 space-y-6"></main>
   <footer id="site-footer" class="bg-asfa-navy text-white py-8"></footer>
 
-  <script src="js/app.js?v=20260921c"></script>
+  <script src="js/app.js?v=20260922"></script>
   <script>
     page('titles.html', (season) => {
       const main = document.getElementById('main');
@@ -57,6 +57,20 @@
         const programs = feed.stats.by_program;
         const listed = feed.titles;
         let sort = { key: 'date', dir: -1 };
+
+        // The tiles double as the program filter: key, tile label, count, and
+        // the heading the table takes while that program is showing.
+        const PROGRAMS = [
+          ['all', 'titles awarded', feed.stats.total, 'Every new title'],
+          ['breed', 'breed stakes', programs.breed || 0, 'Breed stake titles'],
+          ['singles', 'Singles stake', programs.singles || 0, 'Singles stake titles'],
+          ['lci', 'LCI program', programs.lci || 0, 'LCI program titles'],
+        ];
+        const programFromHash = () => {
+          const key = location.hash.slice(1);
+          return PROGRAMS.some(([k, , count]) => k === key && k !== 'all' && count) ? key : 'all';
+        };
+        let filter = programFromHash();
 
         // Colour families: Field Champion and Lure Courser of Merit in the
         // breed stakes, Coursing Proficiency in the Singles stake, and the Lure
@@ -99,15 +113,18 @@
             </p>
           </div>
 
-          <section class="grid grid-cols-2 md:grid-cols-4 gap-3">
-            <div class="tile"><div class="tile-value">${feed.stats.total}</div><div class="tile-label">titles awarded</div></div>
-            <div class="tile"><div class="tile-value">${programs.breed || 0}</div><div class="tile-label">breed stakes</div></div>
-            <div class="tile"><div class="tile-value">${programs.singles || 0}</div><div class="tile-label">Singles stake</div></div>
-            <div class="tile"><div class="tile-value">${programs.lci || 0}</div><div class="tile-label">LCI program</div></div>
+          <section id="filters" class="grid grid-cols-2 md:grid-cols-4 gap-3"
+                   role="group" aria-label="Show titles from one program">
+            ${PROGRAMS.map(([key, label, count]) => `
+              <button type="button" class="tile tile-btn" data-program="${key}"
+                      aria-pressed="false"${count ? '' : ' disabled'}>
+                <span class="tile-value">${count}</span>
+                <span class="tile-label">${label}</span>
+              </button>`).join('')}
           </section>
 
           <section class="card">
-            <h2 class="card-title">Every new title</h2>
+            <h2 class="card-title" id="table-title">Every new title</h2>
             <div id="title-table"></div>
             <p class="text-xs text-asfa-text/65 mt-3">
               <span class="badge badge-t-fch">FCh</span> Field Champion family ·
@@ -125,7 +142,14 @@
           </section>`;
 
         function paint() {
-          const sorted = [...listed].sort((a, b) => {
+          const [, , , heading] = PROGRAMS.find(([key]) => key === filter);
+          document.getElementById('table-title').textContent = heading;
+          document.querySelectorAll('#filters button[data-program]').forEach((btn) => {
+            btn.setAttribute('aria-pressed', String(btn.dataset.program === filter));
+          });
+
+          const shown = listed.filter((row) => filter === 'all' || row.program === filter);
+          const sorted = [...shown].sort((a, b) => {
             const av = keyOf[sort.key](a);
             const bv = keyOf[sort.key](b);
             return sort.dir * av.localeCompare(bv)
@@ -167,6 +191,21 @@
             });
           });
         }
+
+        // Filtering is deep-linkable, so the LCI page and a Facebook post can
+        // point straight at one program: titles.html#lci.
+        document.getElementById('filters').addEventListener('click', (event) => {
+          const btn = event.target.closest('button[data-program]');
+          if (!btn || btn.disabled || btn.dataset.program === filter) return;
+          filter = btn.dataset.program;
+          history.replaceState(null, '', filter === 'all' ? location.pathname : `#${filter}`);
+          paint();
+        });
+        window.addEventListener('hashchange', () => {
+          const next = programFromHash();
+          if (next !== filter) { filter = next; paint(); }
+        });
+
         paint();
       }
     });
