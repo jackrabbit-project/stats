@@ -1429,21 +1429,14 @@ function renderSinglesTab(sfeed, container) {
   }
   const stats = sfeed.stats;
   const dogs = sfeed.dogs;
-  const champions = dogs.filter((d) => Object.values(d.titled).some(Boolean))
-    .sort((a, b) => a.breed.localeCompare(b.breed) || a.call_name.localeCompare(b.call_name));
   const onTheWay = dogs.filter((d) => d.active && ((d.sbc || 0) + (d.smc || 0)) > 0 && !(d.titled.sbc && d.titled.smc))
     .sort((a, b) => ((b.sbc || 0) + (b.smc || 0)) - ((a.sbc || 0) + (a.smc || 0))
       || (b.sbc || 0) - (a.sbc || 0) || a.call_name.localeCompare(b.call_name));
   const sections = [...sfeed.sections].sort((a, b) =>
     b.raced - a.raced || b.active - a.active || a.breed.localeCompare(b.breed));
   const countLabel = (s) => s.raced ? `${s.raced} racing this year` : s.active ? `${s.active} active` : `${s.listed} listed`;
-
-  const tiles = [
-    [stats.dogs_raced, 'dogs racing Singles this year'],
-    [stats.breeds_raced, 'breeds racing Singles this year'],
-    [onTheWay.length, 'on their way to a title'],
-    [stats.titled_any, 'Singles champions, all time'],
-  ];
+  const tile = (value, label) =>
+    `<div class="tile"><div class="tile-value">${value}</div><div class="tile-label">${label}</div></div>`;
 
   container.innerHTML = `
     <div>
@@ -1456,42 +1449,13 @@ function renderSinglesTab(sfeed, container) {
       </p>
     </div>
 
-    <section id="singles-tiles" class="grid grid-cols-2 md:grid-cols-4 gap-3">
-      ${tiles.map(([value, label]) =>
-        `<div class="tile"><div class="tile-value">${value}</div><div class="tile-label">${label}</div></div>`).join('')}
-    </section>
-
-    <section class="grid md:grid-cols-2 gap-6">
-      <div class="card">
-        <h2 class="card-title">Singles champions</h2>
-        <p class="text-xs text-asfa-text/60 mb-3">Titles read from the Singles points columns, all time.</p>
-        ${champions.length ? `<div class="tbl-wrap"><table class="tbl">
-          <thead><tr><th scope="col">Dog</th><th scope="col">Breed</th><th scope="col">Titles</th></tr></thead>
-          <tbody>${champions.map((d) => `
-            <tr>
-              <td><a href="${racingDogUrl('aok9', d.id)}${d.sprint_racing ? '#singles' : ''}" class="lnk font-semibold">${esc(d.call_name)}</a></td>
-              <td class="text-asfa-text/80">${esc(d.breed)}</td>
-              <td>${singlesTitleBadges(d)}</td>
-            </tr>`).join('')}</tbody>
-        </table></div>` : '<p class="text-sm text-asfa-text/70">No Singles titles yet.</p>'}
-      </div>
-
-      <div class="card">
-        <h2 class="card-title">On their way to a title</h2>
-        <p class="text-xs text-asfa-text/60 mb-3">Dogs racing lately, by points toward SBC and SMC. Twelve make either title; SMC counts breed and mixed points together, at least 2 of them mixed.</p>
-        ${onTheWay.length ? `<div class="tbl-wrap"><table class="tbl">
-          <thead><tr><th scope="col">Dog</th><th scope="col">Breed</th><th scope="col" class="num">SBC</th><th scope="col" class="num">SMC</th></tr></thead>
-          <tbody>${onTheWay.slice(0, 25).map((d) => `
-            <tr>
-              <td><a href="${racingDogUrl('aok9', d.id)}${d.sprint_racing ? '#singles' : ''}" class="lnk font-semibold">${esc(d.call_name)}</a></td>
-              <td class="text-asfa-text/80">${esc(d.breed)}</td>
-              <td class="num">${d.titled.sbc ? '<span class="badge badge-t-fch">SBC</span>' : `${ptsLabel(d.sbc || 0)} / 12`}</td>
-              <td class="num">${d.titled.smc ? '<span class="badge badge-t-fch">SMC</span>' : `${ptsLabel((d.sbc || 0) + (d.smc || 0))} / 12`}</td>
-            </tr>`).join('')}</tbody>
-        </table></div>
-        ${onTheWay.length > 25 ? `<p class="text-xs text-asfa-text/55 mt-2">The 25 closest of ${onTheWay.length}.</p>` : ''}`
-        : '<p class="text-sm text-asfa-text/70">No dog racing lately has Singles points yet.</p>'}
-      </div>
+    <section id="singles-tiles" class="grid grid-cols-2 md:grid-cols-3 gap-3">
+      ${tile(stats.dogs_raced, 'dogs racing Singles this year')}
+      ${tile(stats.breeds_raced, 'breeds racing Singles this year')}
+      <a href="#singles" id="singles-way-link" class="tile block hover:border-asfa-accent" title="See every dog on its way to a Singles title">
+        <div class="tile-value">${onTheWay.length}</div>
+        <div class="tile-label">on their way to a title →</div>
+      </a>
     </section>
 
     <div class="card">
@@ -1507,6 +1471,12 @@ function renderSinglesTab(sfeed, container) {
         </select>
       </label>
       <div id="singles-panel"></div>
+    </div>
+
+    <div class="card" id="singles-on-the-way" tabindex="-1">
+      <h2 class="card-title">On their way to a title</h2>
+      <p class="text-xs text-asfa-text/60 mb-3">Dogs racing lately, by points toward SBC and SMC. Twelve make either title; SMC counts breed and mixed points together, at least 2 of them mixed.</p>
+      <div id="singles-way-panel"></div>
     </div>
 
     <section class="card">
@@ -1536,6 +1506,45 @@ function renderSinglesTab(sfeed, container) {
     </section>`;
 
   animateTiles(document.getElementById('singles-tiles'));
+
+  /* ----- on their way to a title: the 25 closest, every one on request */
+  const wayPanel = container.querySelector('#singles-way-panel');
+  let wayAll = false;
+  function paintWay() {
+    if (!onTheWay.length) {
+      wayPanel.innerHTML = '<p class="text-sm text-asfa-text/70">No dog racing lately has Singles points yet.</p>';
+      return;
+    }
+    const shown = wayAll ? onTheWay : onTheWay.slice(0, 25);
+    wayPanel.innerHTML = `
+      <div class="tbl-wrap"><table class="tbl">
+        <thead><tr><th scope="col">Dog</th><th scope="col">Breed</th><th scope="col" class="num">SBC</th><th scope="col" class="num">SMC</th></tr></thead>
+        <tbody>${shown.map((d) => `
+          <tr>
+            <td><a href="${racingDogUrl('aok9', d.id)}${d.sprint_racing ? '#singles' : ''}" class="lnk font-semibold">${esc(d.call_name)}</a></td>
+            <td class="text-asfa-text/80">${esc(d.breed)}</td>
+            <td class="num">${d.titled.sbc ? '<span class="badge badge-t-fch">SBC</span>' : `${ptsLabel(d.sbc || 0)} / 12`}</td>
+            <td class="num">${d.titled.smc ? '<span class="badge badge-t-fch">SMC</span>' : `${ptsLabel((d.sbc || 0) + (d.smc || 0))} / 12`}</td>
+          </tr>`).join('')}</tbody>
+      </table></div>
+      ${onTheWay.length > 25 ? `<p class="text-sm mt-3 no-print">${wayAll
+        ? `Showing all ${onTheWay.length}. <button type="button" id="singles-way-toggle" class="lnk">The 25 closest only</button>`
+        : `The 25 closest of ${onTheWay.length}. <button type="button" id="singles-way-toggle" class="lnk">Show all ${onTheWay.length}</button>`}</p>` : ''}`;
+    const toggle = wayPanel.querySelector('#singles-way-toggle');
+    if (toggle) toggle.addEventListener('click', () => { wayAll = !wayAll; paintWay(); });
+  }
+  paintWay();
+
+  // The counter opens the full list and brings it into view. The hash stays
+  // #singles, so the tab does not change under it.
+  container.querySelector('#singles-way-link').addEventListener('click', (event) => {
+    event.preventDefault();
+    wayAll = true;
+    paintWay();
+    const box = container.querySelector('#singles-on-the-way');
+    box.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    box.focus({ preventScroll: true });
+  });
 
   const select = container.querySelector('#singles-breed');
   const panel = container.querySelector('#singles-panel');
