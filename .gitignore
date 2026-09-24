@@ -20,3 +20,6 @@ data/clubs/raw/
 # snapshots under data/lgra/snapshots and data/aok9/snapshots are the archive.
 data/lgra/raw/
 data/aok9/raw/
+# The AOK9 Singles records workbook opens with the registrar's email and
+# street address, for the same reason kept out.
+data/aok9-singles/raw/

@@ -193,6 +193,120 @@ function drawStatCard(canvas, dog, season) {
   );
 }
 
+/* The racing card: the same frame, type and proportions as the ASFA card,
+   laid out from a prepared description (racingCardSpec and singlesCardSpec
+   in racing.js), so it knows nothing about either guide itself. */
+function drawRacingCard(canvas, card) {
+  const ctx = canvas.getContext('2d');
+  canvas.width = CARD_SIZE;
+  canvas.height = CARD_SIZE;
+
+  const pad = 72;
+  const inner = CARD_SIZE - pad * 2;
+
+  ctx.fillStyle = CARD_COLORS.paper;
+  ctx.fillRect(0, 0, CARD_SIZE, CARD_SIZE);
+
+  // Top band: the site's name, then the program and season.
+  ctx.textBaseline = 'middle';
+  ctx.fillStyle = CARD_COLORS.green;
+  ctx.font = cardFont(42, 'display', '600');
+  ctx.fillText('Gazehound Stats', pad, 60);
+  const bandWidth = inner - ctx.measureText('Gazehound Stats').width - 40;
+  ctx.textAlign = 'right';
+  ctx.fillStyle = CARD_COLORS.muted;
+  const bandSize = fitText(ctx, card.band, bandWidth, 26, 'mono', '500');
+  ctx.font = cardFont(bandSize, 'mono', '500');
+  ctx.fillText(card.band, CARD_SIZE - pad, 62);
+  ctx.textAlign = 'left';
+  ctx.fillStyle = CARD_COLORS.ink;
+  ctx.fillRect(0, 114, CARD_SIZE, 2);
+
+  let y = 224;
+
+  ctx.fillStyle = CARD_COLORS.ink;
+  const nameSize = fitText(ctx, card.callName, inner, 110, 'display', '600');
+  ctx.fillText(card.callName, pad, y);
+  y += nameSize * 0.55 + 34;
+
+  ctx.fillStyle = CARD_COLORS.ink;
+  ctx.font = cardFont(34, 'sans');
+  for (const line of wrapText(ctx, card.registeredName, inner).slice(0, 2)) {
+    ctx.fillText(line, pad, y);
+    y += 44;
+  }
+
+  const meta = card.meta.toUpperCase();
+  ctx.fillStyle = CARD_COLORS.accent;
+  const metaSize = fitText(ctx, meta, inner, 28, 'mono', '500');
+  ctx.font = cardFont(metaSize, 'mono', '500');
+  ctx.fillText(meta, pad, y + 12);
+  y += 78;
+
+  // Headline block: one big figure and up to three lines beside it.
+  const head = card.headline;
+  ctx.fillStyle = CARD_COLORS.panel;
+  ctx.fillRect(pad, y, inner, 210);
+  ctx.strokeStyle = CARD_COLORS.line;
+  ctx.lineWidth = 2;
+  ctx.strokeRect(pad, y, inner, 210);
+
+  ctx.fillStyle = CARD_COLORS.accent;
+  fitText(ctx, head.big, inner * 0.44, 150, 'display', '600');
+  ctx.fillText(head.big, pad + 40, y + 100);
+  const textX = pad + 60 + ctx.measureText(head.big).width;
+  const textWidth = pad + inner - 28 - textX;
+  const lines = [
+    [head.line1, CARD_COLORS.ink, 34, 'sans', ''],
+    [head.line2, CARD_COLORS.green, 40, 'display', '500'],
+    [head.line3, CARD_COLORS.muted, 24, 'mono', '500'],
+  ].filter(([text]) => text);
+  const offsets = lines.length === 3 ? [58, 106, 154] : [82, 132];
+  lines.forEach(([text, color, size, family, weight], index) => {
+    ctx.fillStyle = color;
+    const fitted = fitText(ctx, text, textWidth, size, family, weight);
+    ctx.font = cardFont(fitted, family, weight);
+    ctx.fillText(text, textX, y + offsets[index]);
+  });
+  y += 210;
+
+  // Three figures, each fitted to its column.
+  const columnWidth = inner / card.figures.length;
+  const statTop = y + 60;
+  card.figures.forEach(([value, label], index) => {
+    const centre = pad + columnWidth * index + columnWidth / 2;
+    ctx.textAlign = 'center';
+    ctx.fillStyle = CARD_COLORS.green;
+    const valueSize = fitText(ctx, String(value), columnWidth - 24, 96, 'display', '600');
+    ctx.font = cardFont(valueSize, 'display', '600');
+    ctx.fillText(String(value), centre, statTop + 40);
+    ctx.fillStyle = CARD_COLORS.muted;
+    const labelSize = fitText(ctx, label, columnWidth - 16, 23, 'mono', '500');
+    ctx.font = cardFont(labelSize, 'mono', '500');
+    ctx.fillText(label, centre, statTop + 108);
+  });
+  ctx.textAlign = 'left';
+
+  // Owner, labelled, in the same place as on the ASFA card.
+  const ownerY = statTop + 165;
+  ctx.fillStyle = CARD_COLORS.muted;
+  ctx.font = cardFont(23, 'mono', '500');
+  ctx.fillText('OWNER', pad, ownerY);
+  const labelWidth = ctx.measureText('OWNER').width + 16;
+  ctx.fillStyle = CARD_COLORS.ink;
+  const ownerSize = fitText(ctx, card.owner || '—', inner - labelWidth, 30, 'sans');
+  ctx.font = cardFont(ownerSize, 'sans');
+  ctx.fillText(card.owner || '—', pad + labelWidth, ownerY);
+
+  // Footer: where the numbers come from.
+  ctx.fillStyle = CARD_COLORS.line;
+  ctx.fillRect(pad, CARD_SIZE - 128, inner, 2);
+  ctx.fillStyle = CARD_COLORS.muted;
+  const footSize = fitText(ctx, card.footer, inner, 24, 'mono');
+  ctx.font = cardFont(footSize, 'mono');
+  ctx.fillText(card.footer, pad, CARD_SIZE - 84);
+}
+
 function cardFilename(dog, season) {
   const stem = dog.call_name.replace(/[^\w-]+/g, '-').toLowerCase().replace(/^-|-$/g, '');
   return `${stem}-asfa-${season.season}.png`;
@@ -259,11 +373,10 @@ function onCardKeydown(event) {
     a phone the native share sheet does reach both, via navigator.share with the
     file attached, so that is what the Share button uses; it is hidden where the
     browser cannot do it rather than failing on click. */
-function showCardModal(dog, season, blob) {
+function showCardModal(blob, { name, filename, shareTitle, shareText }) {
   closeStatCard();
   cardOpener = document.activeElement;
   const objectUrl = URL.createObjectURL(blob);
-  const filename = cardFilename(dog, season);
   const file = new File([blob], filename, { type: 'image/png' });
   const canShareFile = !!(navigator.canShare && navigator.canShare({ files: [file] }));
   const canCopy = !!(navigator.clipboard && window.ClipboardItem && window.isSecureContext);
@@ -274,15 +387,15 @@ function showCardModal(dog, season, blob) {
   modal.dataset.objectUrl = objectUrl;
   modal.setAttribute('role', 'dialog');
   modal.setAttribute('aria-modal', 'true');
-  modal.setAttribute('aria-label', `Stat card for ${dog.call_name}`);
+  modal.setAttribute('aria-label', `Stat card for ${name}`);
 
   modal.innerHTML = `
     <div class="modal-panel">
       <div class="flex items-baseline justify-between gap-3 px-4 py-3 border-b border-asfa-border">
-        <h2 class="font-display text-xl text-asfa-text">${esc(dog.call_name)} — stat card</h2>
+        <h2 class="font-display text-xl text-asfa-text">${esc(name)} — stat card</h2>
         <button data-act="close" class="text-asfa-text/60 hover:text-asfa-accent text-xl leading-none" aria-label="Close">&times;</button>
       </div>
-      <img src="${objectUrl}" alt="Stat card for ${esc(dog.call_name)}" class="modal-card-img">
+      <img src="${objectUrl}" alt="Stat card for ${esc(name)}" class="modal-card-img">
       <div class="px-4 py-3 border-t border-asfa-border flex flex-wrap gap-2">
         <button data-act="download" class="btn btn-primary">
           ${icon('download', 'mr-1')}Download</button>
@@ -318,11 +431,7 @@ function showCardModal(dog, season, blob) {
       }
     } else if (act === 'share') {
       try {
-        await navigator.share({
-          files: [file],
-          title: `${dog.call_name} — Gazehound Stats`,
-          text: `${dog.call_name}, #${dog.rank} ${rankContext(dog)} in the ${season.season} ASFA standings.`,
-        });
+        await navigator.share({ files: [file], title: shareTitle, text: shareText });
       } catch (error) {
         if (error.name !== 'AbortError') { console.error(error); say('Share failed'); }
       }
@@ -334,21 +443,39 @@ function showCardModal(dog, season, blob) {
   modal.querySelector('[data-act="close"]').focus();
 }
 
-/** Render the card and show it. Waits for the webfont so it isn't drawn in a fallback. */
-function openStatCard(dog, season) {
-  const render = () => {
-    const canvas = document.createElement('canvas');
-    drawStatCard(canvas, dog, season);
-    canvas.toBlob((blob) => showCardModal(dog, season, blob), 'image/png');
-  };
-
+/** Draw once the webfonts are in, so a card is never drawn in a fallback. */
+function whenCardFontsReady(render) {
   if (document.fonts && document.fonts.load) {
     Promise.all([
       document.fonts.load('600 40px Fraunces'),
+      document.fonts.load('500 40px Fraunces'),
       document.fonts.load('500 26px "IBM Plex Mono"'),
       document.fonts.load('400 26px "IBM Plex Mono"'),
     ]).then(render, render);
   } else {
     render();
   }
+}
+
+/** Render an ASFA hound's card and show it. */
+function openStatCard(dog, season) {
+  whenCardFontsReady(() => {
+    const canvas = document.createElement('canvas');
+    drawStatCard(canvas, dog, season);
+    canvas.toBlob((blob) => showCardModal(blob, {
+      name: dog.call_name,
+      filename: cardFilename(dog, season),
+      shareTitle: `${dog.call_name} — Gazehound Stats`,
+      shareText: `${dog.call_name}, #${dog.rank} ${rankContext(dog)} in the ${season.season} ASFA standings.`,
+    }), 'image/png');
+  });
+}
+
+/** Render a racing hound's card, from racingCardSpec or singlesCardSpec. */
+function openRacingCard(card) {
+  whenCardFontsReady(() => {
+    const canvas = document.createElement('canvas');
+    drawRacingCard(canvas, card);
+    canvas.toBlob((blob) => showCardModal(blob, card.share), 'image/png');
+  });
 }

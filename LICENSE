@@ -45,12 +45,13 @@ the following, which are included under separate terms:
    remains the property of LGRA; the guide and the LGRA Registrar's records are
    authoritative wherever the two disagree.
 
-3. AOK9 DATA — "data/aok9.json", "data/aok9-registry.json" and the archived
-   snapshots under "data/aok9/" are derived from the Sprint grading guide
-   published by the AOK9 Racing Program of R.A.C.E. (Racing Amateur Canine
-   Enthusiasts) at aok9racing.com. That material remains the property of
-   R.A.C.E.; the guide and the AOK9 registrar's records are authoritative
-   wherever the two disagree.
+3. AOK9 DATA — "data/aok9.json", "data/aok9-registry.json",
+   "data/aok9-singles.json" and the archived snapshots under "data/aok9/" and
+   "data/aok9-singles/" are derived from the Sprint grading guide and the
+   Singles sprint records published by the AOK9 Racing Program of R.A.C.E.
+   (Racing and Coursing Enthusiasts) at aok9racing.com. That material remains
+   the property of R.A.C.E.; the published records and the AOK9 registrar's
+   records are authoritative wherever the two disagree.
 
    In each case the name and marks of ASFA, LGRA, AOK9 and R.A.C.E. are used
    descriptively to identify the source. This project is independent and is not
