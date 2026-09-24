@@ -1459,7 +1459,7 @@ function renderSinglesTab(sfeed, container) {
     </section>
 
     <div class="card">
-      <h2 class="card-title">Singles dogs by breed</h2>
+      <h2 class="card-title">Browse by breed</h2>
       <p class="text-xs text-asfa-text/60 mb-3">
         Most recent racing first. Singles places dogs against each other only within a meet, on
         that day's track, so this list is not a ranking.
