@@ -1134,8 +1134,8 @@ function renderRacingDog(org, feed, main, singles = null) {
    Rule Book 1.0). Each dog runs alone and is timed, and at each meet it is
    placed against the other dogs of its division; only placings earn points.
    The sheet keeps each dog's last three timed runs and their average, the
-   figure heats are drawn from. Tracks run 150 to 300 yards and times from
-   different tracks do not compare, so nothing here ranks dogs by time. */
+   figure heats are drawn from. Singles places dogs only within a meet, so
+   nothing here ranks dogs by time. */
 
 function timeLabel(value) {
   if (value == null) return '—';
@@ -1286,8 +1286,7 @@ function singlesCards(sdog, sfeed) {
           The registrar's figure is the one shown and the one heats are drawn from.
         </p>` : ''}
       <p class="text-xs text-asfa-text/60 mt-2">
-        The figure race secretaries draw Singles heats from. AOK9 tracks run 150 to 300 yards,
-        so it compares fairly only with times from the same track.
+        The figure race secretaries draw Singles heats from.
       </p>
     </section>`;
 
@@ -1437,8 +1436,8 @@ function renderSinglesTab(sfeed, container) {
     <div class="card">
       <h2 class="card-title">Singles – browse by breed</h2>
       <p class="text-xs text-asfa-text/60 mb-3">
-        Most recent racing first. Singles places dogs against each other only within a meet, on
-        that day's track, so this list is not a ranking.
+        Most recent racing first. Singles places dogs against each other only within a meet,
+        so this list is not a ranking.
       </p>
       <label class="block mb-3">
         <span class="sr-only">Breed</span>
@@ -1464,8 +1463,8 @@ function renderSinglesTab(sfeed, container) {
           table; last place earns Turtle points.</li>
         <li><strong>The average is a seeding figure.</strong> It is the plain mean of the dog's last
           three timed runs, and race secretaries draw heats from it. A meet runs up to three
-          programs, so all three runs often come from one meet. AOK9 tracks run 150 to 300 yards,
-          so averages from different tracks do not compare, and this site ranks no one by time.</li>
+          programs, so all three runs often come from one meet. Singles places dogs against each
+          other only within a meet, so this site ranks no one by time.</li>
         <li><strong>Titles.</strong> SBC, Singles Breed Champion, is 12 points from breed divisions.
           SMC, Singles Mixed Champion, is 12 points with at least 2 from mixed divisions. Supreme
           Singles titles come at every 30 National points, and Singles Turtle titles follow the
