@@ -302,7 +302,7 @@ function wireSort(container, columns, sort, repaint) {
 
 /* ----------------------------------------------------------- overview page */
 
-function renderRacingOverview(org, feed, main) {
+function renderRacingOverview(org, feed, main, singles = null) {
   const spec = ORGS[org];
   const season = feed.season;
   const stats = feed.stats;
@@ -314,11 +314,14 @@ function renderRacingOverview(org, feed, main) {
 
   document.title = `${spec.name} ${spec.program} standings — Gazehound Stats`;
 
+  // Singles runs at the same AOK9 meets, so its dogs and meets count in the
+  // program's totals; the Singles feed carries the combined figures.
+  const combined = singles && singles.combined;
   const tiles = [
-    [stats.hounds_raced, `${nouns} racing this year`],
+    [combined ? combined.dogs_raced : stats.hounds_raced, `${nouns} racing this year`],
     [stats.hounds_ytd, `${nouns} with points this year`],
-    [stats.breeds_raced, 'breeds racing this year'],
-    [stats.meets_this_year, `meets this year`],
+    [combined ? combined.breeds_raced : stats.breeds_raced, 'breeds racing this year'],
+    [combined ? combined.meets_this_year : stats.meets_this_year, `meets this year`],
     ...(org === 'lgra'
       ? [[stats.titled_grc.toLocaleString('en-US'), 'GRC titled, all time']]
       : [[stats.titled_champion, 'BRC or MRC titled, all time']]),
@@ -492,11 +495,14 @@ function renderRacingOverview(org, feed, main) {
     </div>
     </section>
 
-    <section id="about" class="space-y-6">${aboutRacing(org, feed)}</section>`;
+    ${org === 'aok9' ? '<section id="singles" class="space-y-6"></section>' : ''}
 
-  /* The nav's five entries are tabs: one section shows at a time, chosen by
-     the hash, the way the ASFA side splits its pages. */
-  const TABS = ['overview', 'standings', 'browse', 'kennels', 'about'];
+    <section id="about" class="space-y-6">${aboutRacing(org, feed, singles)}</section>`;
+
+  /* The nav's entries are tabs: one section shows at a time, chosen by the
+     hash, the way the ASFA side splits its pages. AOK9 adds Singles. */
+  const TABS = ['overview', 'standings', 'browse', 'kennels',
+    ...(org === 'aok9' ? ['singles'] : []), 'about'];
   function showTab() {
     const wanted = location.hash.slice(1);
     const tab = TABS.includes(wanted) ? wanted : 'overview';
@@ -570,13 +576,18 @@ function renderRacingOverview(org, feed, main) {
     });
   }
 
+  // Sprint dogs that also race Singles lately carry a small badge to their
+  // Singles record; the two tables stay apart.
+  const singlesIds = new Set(singles ? singles.dogs.filter((d) => d.sprint && d.active).map((d) => d.id) : []);
+
   /* One table row, shared by the breed table and a kennel's hound list. */
   function browseRow(dog, columns) {
     return `
           <tr class="${dog.active === false ? 'text-asfa-text/60' : ''}">
             ${columns.map(([key, , cls]) => {
               if (key === 'call_name') return `<td><a href="${racingDogUrl(org, dog.id)}" class="lnk font-semibold">${esc(dog.call_name)}</a>${
-                dog.active === false ? ' <span class="badge badge-flat">inactive</span>' : ''}</td>`;
+                dog.active === false ? ' <span class="badge badge-flat">inactive</span>' : ''}${
+                singlesIds.has(dog.id) ? ` <a href="${racingDogUrl(org, dog.id)}#singles" class="badge badge-flat" title="Also races Singles">Singles</a>` : ''}</td>`;
               if (key === 'breed') return `<td><a href="${racingBreedUrl(org, dog.breed_slug)}" class="lnk">${esc(dog.breed)}</a></td>`;
               if (key === 'registered_name' || key === 'owner_raw') return `<td class="text-asfa-text/80">${esc(dog[key])}</td>`;
               if (key === 'last_raced') return `<td class="whitespace-nowrap">${dog.last_raced ? formatDateShort(dog.last_raced) : (dog.last_year ? dog.last_year : '—')}</td>`;
@@ -746,6 +757,8 @@ function renderRacingOverview(org, feed, main) {
   ownerSearch.addEventListener('input', paintOwners);
   paintOwners();
   paintKennel();
+
+  if (org === 'aok9') renderSinglesTab(singles, document.getElementById('singles'));
 }
 
 /* ------------------------------------------------------------- about text */
@@ -763,7 +776,7 @@ function pointsTable() {
     </table></div>`;
 }
 
-function aboutRacing(org, feed) {
+function aboutRacing(org, feed, singles = null) {
   const spec = ORGS[org];
   const common = `
     <section class="card">
@@ -858,8 +871,15 @@ function aboutRacing(org, feed) {
         <a href="${esc(feed.rules_url)}" class="lnk" target="_blank" rel="noopener noreferrer">AOK9 Sprint Racing Rule Book</a>
         (release 3.0) to it: standings on the YTD column, career standings on National Breed and
         National Mixed points, WAVE recomputed and compared, titles read from the points columns.
-        The guide's date is read from the "updated" note beside its link. Only the sprint guide is
-        covered; AOK9's oval, singles and lure coursing records are separate spreadsheets.
+        The guide's date is read from the "updated" note beside its link.
+      </p>
+      <p class="text-sm leading-relaxed mt-3">
+        The <a href="https://docs.google.com/spreadsheets/d/155bMTO-jx1Az8RrYc05mS-rYTB7CPLOnFoTJzMf-Imw/edit?usp=sharing" class="lnk" target="_blank" rel="noopener noreferrer">Singles sprint records</a>
+        are a separate spreadsheet with their own <a href="aok9.html#singles" class="lnk">Singles</a> tab.
+        Singles runs at the same meets as the regular stakes, so ${singles
+          ? `the dogs, breeds and meets counted this year include it: ${singles.combined.dogs_raced} dogs where the sprint guide alone lists ${feed.stats.hounds_raced}`
+          : 'the dogs, breeds and meets counted this year include it when its records load'}.
+        AOK9's oval and lure coursing records are not covered.
       </p>`}
       <p class="text-sm leading-relaxed mt-3">
         A parsed copy of each new guide is archived by date so movement between guides can be
@@ -900,10 +920,11 @@ function aboutRacing(org, feed) {
 
 /* --------------------------------------------------------------- dog page */
 
-function renderRacingDog(org, feed, main) {
+function renderRacingDog(org, feed, main, singles = null) {
   const spec = ORGS[org];
   const id = param('id');
   const active = feed.dogs.find((dog) => dog.id === id);
+  const sdog = singles ? singles.dogs.find((dog) => dog.id === id) : null;
 
   const draw = (dog, fromRegistry) => {
     if (!dog.breed) {
@@ -1087,17 +1108,33 @@ function renderRacingDog(org, feed, main) {
         </table></div>
       </section>` : ''}
 
+      ${sdog ? `
+      <div id="singles" class="space-y-6 pt-2">
+        <div>
+          <h2 class="font-display text-2xl text-asfa-text">Singles</h2>
+          <p class="text-sm text-asfa-text/70 mt-1">${esc(dog.call_name)} also races Singles: alone on the track, timed, and placed against the other dogs of its division at each meet.</p>
+          ${singlesNumberNote(sdog) ? `<p class="text-xs text-asfa-text/65 mt-1">${singlesNumberNote(sdog)}</p>` : ''}
+        </div>
+        ${singlesSummaryCard(sdog)}
+        ${singlesCards(sdog, singles)}
+      </div>` : ''}
+
       <p class="text-xs text-asfa-text/55">
-        Figures as published in the ${spec.name} grading guide dated ${formatDate(feed.guide_date)}.
+        Figures as published in the ${spec.name} grading guide dated ${formatDate(feed.guide_date)}${
+          sdog ? ` and the Singles sprint records dated ${formatDate(singles.guide_date)}` : ''}.
         <a href="${spec.page}#about" class="lnk">What the columns mean</a>.
       </p>`;
   };
 
   if (active) { draw(active, false); return; }
+  // A Singles dog the sprint guide does not know: its Singles record is its page.
+  if (sdog && !sdog.sprint) { renderSinglesDog(sdog, singles, main); return; }
 
   main.innerHTML = `<div class="card"><p class="text-sm text-asfa-text/70">Looking up ${esc(id || '')} in the ${spec.name} registry…</p></div>`;
   loadRegistry(org).then((all) => {
     const found = all.find((dog) => dog.id === id);
+    // Listed in the sprint guide with nothing raced there: a Singles dog.
+    if (sdog && (!found || !hasSprintRecord(found))) { renderSinglesDog(sdog, singles, main); return; }
     if (!found) {
       main.innerHTML = `<div class="card">
         <h1 class="card-title">${spec.noun.charAt(0).toUpperCase() + spec.noun.slice(1)} not found</h1>
@@ -1113,4 +1150,442 @@ function renderRacingDog(org, feed, main) {
     showFailure('Registry unavailable', `Could not load data/${org}-registry.json: ${error.message}`,
       'Try again in a moment.');
   });
+}
+
+/* ------------------------------------------------------------- AOK9 Singles */
+
+/* Singles is AOK9's stake for dogs that cannot run in company (Singles Racing
+   Rule Book 1.0). Each dog runs alone and is timed, and at each meet it is
+   placed against the other dogs of its division; only placings earn points.
+   The sheet keeps each dog's last three timed runs and their average, the
+   figure heats are drawn from. Tracks run 150 to 300 yards and times from
+   different tracks do not compare, so nothing here ranks dogs by time. */
+
+function timeLabel(value) {
+  if (value == null) return '—';
+  return `${(Math.round(value * 100) / 100).toFixed(2)} s`;
+}
+
+function romanLevel(n) {
+  const numerals = ['', 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X'];
+  return numerals[n] || String(n);
+}
+
+/** Whether the sprint guide holds any racing for this dog at all. */
+function hasSprintRecord(dog) {
+  if ((dog.meets_breed && dog.meets_breed.length) || (dog.meets_mixed && dog.meets_mixed.length)) return true;
+  return ['brc', 'nbrc', 'mrc', 'nmrc', 'trc', 'ytd'].some((field) => (dog[field] || 0) > 0);
+}
+
+/** Newest listed run first: the year, then the sanctioned-meet number, then
+    the date the oldest rows carry instead. */
+function runKey(code, year, date) {
+  const seq = Number((/-S(\d+)/.exec(code || '') || [])[1] || 0);
+  return `${String(year || 0).padStart(4, '0')}-${String(seq).padStart(3, '0')}-${date || ''}`;
+}
+
+function singlesRecencyKey(sdog) {
+  return sdog.meets.reduce((best, [code, year, date]) => {
+    const key = runKey(code, year, date);
+    return key > best ? key : best;
+  }, '');
+}
+
+function byRecency(a, b) {
+  const ka = singlesRecencyKey(a);
+  const kb = singlesRecencyKey(b);
+  return ka < kb ? 1 : ka > kb ? -1 : a.call_name.localeCompare(b.call_name);
+}
+
+function singlesLastRun(sfeed, sdog) {
+  const runs = unpackMeets(sfeed, sdog.meets);
+  if (!runs.length) return '—';
+  const newest = runs.reduce((best, run) =>
+    (runKey(run.code, run.year, run.date) > runKey(best.code, best.year, best.date) ? run : best));
+  return meetLabel(newest, 'aok9');
+}
+
+function pbLabel(sdog) {
+  return sdog.pb != null ? timeLabel(sdog.pb) : esc(sdog.pb_text || '—');
+}
+
+/** Titles the Singles points columns say this dog holds. The rule book names
+    SBC and SMC; the Supreme and Turtle titles have no abbreviation there, so
+    they are written out. */
+function singlesTitleBadges(sdog) {
+  const t = sdog.titled || {};
+  const out = [];
+  if (t.sbc) out.push('<span class="badge badge-t-fch" title="Singles Breed Champion">SBC</span>');
+  if (t.smc) out.push('<span class="badge badge-t-fch" title="Singles Mixed Champion">SMC</span>');
+  if (t.turtle) out.push('<span class="badge badge-t-fch" title="12 Singles Turtle points">Singles Turtle</span>');
+  [['supreme_breed', 'Supreme Singles, breed'], ['supreme_mixed', 'Supreme Singles, mixed'],
+    ['supreme_turtle', 'Supreme Singles Turtle']].forEach(([key, words]) => {
+    if (t[key]) out.push(`<span class="badge badge-t-lcm">${words}${t[key] > 1 ? ` ${romanLevel(t[key])}` : ''}</span>`);
+  });
+  return out.join(' ');
+}
+
+/** Singles Racing Rule Book 1.0 ch. V: SBC at 12 breed points, SMC at 12
+    points with at least 2 mixed, Supreme titles every 30 National points, and
+    Turtle titles as in the regular stakes: 12 points, then every 30. */
+function singlesProgress(sdog) {
+  const sbc = sdog.sbc || 0;
+  const smc = sdog.smc || 0;
+  const bars = [
+    progressBar(sbc, 12, 'SBC · Singles Breed Champion'),
+    progressBar(sbc + smc, 12, 'SMC · Singles Mixed Champion',
+      { done: sdog.titled.smc, note: 'Singles breed and mixed points together, at least 2 of them mixed' }),
+    progressBar(sdog.turtle, 12, 'Singles Turtle · 12 Turtle points'),
+  ];
+  [['nsbc', 'supreme_breed', 'Supreme Singles · National breed points'],
+    ['nsmc', 'supreme_mixed', 'Supreme Singles · National mixed points'],
+    ['turtle', 'supreme_turtle', 'Supreme Singles Turtle · Turtle points']].forEach(([field, key, words]) => {
+    const level = sdog.titled[key] || 0;
+    const earned = level ? ` · ${romanLevel(level)} earned` : '';
+    bars.push(progressBar(sdog[field], (level + 1) * 30, `${words}${earned}`));
+  });
+  return bars.join('');
+}
+
+/** The average spelled out: the plain mean of the runs listed. */
+function singlesArithmetic(runs) {
+  const times = runs.map((run) => run.time).filter((t) => t != null);
+  if (!times.length) return '';
+  if (times.length === 1) return `the one timed run, ${timeLabel(times[0])}`;
+  const mean = times.reduce((sum, t) => sum + t, 0) / times.length;
+  const exact = (t) => String(Math.round(t * 1000) / 1000);
+  return `(${times.map(exact).join(' + ')}) ÷ ${times.length} = ${timeLabel(mean)}`;
+}
+
+function singlesTiles(sdog, { average = true } = {}) {
+  return [
+    [pbLabel(sdog), 'personal best'],
+    ...(average ? [[timeLabel(sdog.average), 'Singles average']] : []),
+    [ptsLabel(sdog.ytd), 'Singles points this year'],
+    [`${ptsLabel(sdog.sbc)} / 12`, 'SBC points'],
+    [`${ptsLabel(sdog.smc)} / 12`, 'SMC points'],
+    [ptsLabel(sdog.turtle), 'Turtle points'],
+  ].map(([value, label]) =>
+    `<div class="tile"><div class="tile-value">${value}</div><div class="tile-label">${label}</div></div>`).join('');
+}
+
+/** When the two sheets number a dog differently, say so; which one is the
+    typo is the registrar's to settle. */
+function singlesNumberNote(sdog) {
+  if (sdog.joined_by === 'name' && sdog.reg !== sdog.id) {
+    return `The Singles records number this dog ${esc(sdog.reg)} and the sprint guide ${esc(sdog.id)}; the name, breed and owner match, so both records are shown here.`;
+  }
+  if (!sdog.sprint && sdog.id !== sdog.reg) {
+    return `The sprint guide gives ${esc(sdog.reg)} to a different dog, so this page is ${esc(sdog.id)}.`;
+  }
+  return '';
+}
+
+function singlesSummaryCard(sdog) {
+  const badges = singlesTitleBadges(sdog);
+  return `
+    <section class="card">
+      <h2 class="card-title">Singles record</h2>
+      ${badges ? `<p class="text-xs text-asfa-text/70 mb-3">Titles by the Singles points columns: ${badges}</p>` : ''}
+      <div class="grid grid-cols-2 md:grid-cols-3 gap-3">${singlesTiles(sdog)}</div>
+    </section>`;
+}
+
+/** The cards every Singles record shows: the average, title progress, the
+    runs behind the average, and the breed's other Singles dogs. */
+function singlesCards(sdog, sfeed) {
+  const runs = unpackMeets(sfeed, sdog.meets);
+  const average = `
+    <section class="card">
+      <div class="flex flex-wrap items-baseline gap-3">
+        <h2 class="card-title mb-0">Singles average</h2>
+        <span class="font-display text-3xl text-asfa-accent">${timeLabel(sdog.average)}</span>
+      </div>
+      ${sdog.average == null ? `<p class="text-sm text-asfa-text/70 mt-2">No average on record${
+        sdog.average_text ? `; the sheet reads ${esc(sdog.average_text)}` : ''}.</p>` : ''}
+      ${runs.some((run) => run.time != null) ? `<p class="text-sm text-asfa-text/80 mt-2">From the last three runs: ${singlesArithmetic(runs)}.</p>` : ''}
+      ${sdog.average != null && sdog.average_computed != null ? `
+        <p class="text-xs text-asfa-text/65 mt-2">
+          The sheet publishes ${timeLabel(sdog.average)}; the runs it lists average ${timeLabel(sdog.average_computed)}.
+          The registrar's figure is the one shown and the one heats are drawn from.
+        </p>` : ''}
+      <p class="text-xs text-asfa-text/60 mt-2">
+        The figure race secretaries draw Singles heats from. AOK9 tracks run 150 to 300 yards,
+        so it compares fairly only with times from the same track.
+      </p>
+    </section>`;
+
+  const progress = `
+    <section class="card">
+      <h2 class="card-title">Progress toward Singles titles</h2>
+      <p class="text-xs text-asfa-text/60">Read from the Singles points columns; the AOK9 registrar's certificate is the record.</p>
+      ${singlesProgress(sdog)}
+    </section>`;
+
+  const times = runs.map((run) => run.time).filter((t) => t != null);
+  const fastest = times.length ? Math.min(...times) : null;
+  const beaten = sdog.pb != null && fastest != null && fastest < sdog.pb - 0.0005;
+  const best = (run) => !beaten && sdog.pb != null && run.time != null && Math.abs(run.time - sdog.pb) < 0.0005;
+  const runsCard = `
+    <section class="card">
+      <h2 class="card-title">Last three Singles runs</h2>
+      ${runs.length ? `
+      <div class="tbl-wrap"><table class="tbl">
+        <thead><tr><th scope="col">Meet</th><th scope="col">Code</th><th scope="col" class="num">Time</th></tr></thead>
+        <tbody>${runs.map((run) => `
+          <tr>
+            <td class="whitespace-nowrap">${meetLabel(run, 'aok9')}</td>
+            <td class="font-mono text-xs">${esc(run.code)}</td>
+            <td class="num font-semibold">${run.time != null ? timeLabel(run.time) : '<span class="text-asfa-text/60">no time</span>'}${
+              best(run) ? ' <span class="badge badge-new">personal best</span>' : ''}</td>
+          </tr>`).join('')}</tbody>
+      </table></div>
+      <p class="text-xs text-asfa-text/60 mt-2">A meet runs up to three programs, so one meet can supply all three runs.</p>
+      ${beaten ? `<p class="text-xs text-asfa-text/65 mt-1">The sheet's personal best, ${timeLabel(sdog.pb)}, is slower than the ${timeLabel(fastest)} run it lists. The registrar's figure is the one shown above.</p>` : ''}`
+      : '<p class="text-sm text-asfa-text/70">No runs listed.</p>'}
+    </section>`;
+
+  const mates = sfeed.dogs
+    .filter((d) => d.breed_slug === sdog.breed_slug && d.active && d.id !== sdog.id)
+    .sort(byRecency).slice(0, 25);
+  const matesCard = mates.length ? `
+    <section class="card">
+      <h2 class="card-title">Other ${esc(sdog.breed)} dogs racing Singles</h2>
+      <p class="text-xs text-asfa-text/60 mb-3">Most recent racing first. Singles places dogs against each other only within a meet, so this is not a ranking.</p>
+      <div class="tbl-wrap"><table class="tbl">
+        <thead><tr><th scope="col">Dog</th><th scope="col">Owner</th><th scope="col" class="num">Average</th>
+          <th scope="col" class="num">Personal best</th><th scope="col">Last run</th></tr></thead>
+        <tbody>${mates.map((d) => `
+          <tr>
+            <td><a href="${racingDogUrl('aok9', d.id)}" class="lnk font-semibold">${esc(d.call_name)}</a></td>
+            <td class="text-asfa-text/80">${esc(d.owner_raw)}</td>
+            <td class="num">${timeLabel(d.average)}</td>
+            <td class="num">${pbLabel(d)}</td>
+            <td class="whitespace-nowrap">${singlesLastRun(sfeed, d)}</td>
+          </tr>`).join('')}</tbody>
+      </table></div>
+    </section>` : '';
+
+  return average + progress + runsCard + matesCard;
+}
+
+/** The page of a dog the sprint guide holds nothing for: its Singles record
+    laid out like any other AOK9 dog's, minus the sprint cards. */
+function renderSinglesDog(sdog, sfeed, main) {
+  document.title = `${sdog.call_name} — ${sdog.breed} — AOK9 Singles — Gazehound Stats`;
+  const badges = singlesTitleBadges(sdog);
+  const numberNote = singlesNumberNote(sdog);
+  main.innerHTML = `
+    <nav class="text-sm text-asfa-text/70">
+      <a href="aok9.html" class="lnk">AOK9</a> ›
+      <a href="aok9.html#singles" class="lnk">Singles</a> ›
+      <a href="aok9.html?singles=${encodeURIComponent(sdog.breed_slug)}#singles" class="lnk">${esc(sdog.breed)}</a>
+    </nav>
+
+    <section class="card">
+      <div class="flex flex-wrap items-start gap-4">
+        <div class="text-center shrink-0 w-28">
+          <div class="rank-pill">${sdog.average != null ? (Math.round(sdog.average * 100) / 100).toFixed(2) : '—'}</div>
+          <div class="text-xs uppercase tracking-widest text-asfa-text/60 mt-1">seconds, Singles average</div>
+        </div>
+        <div class="flex-1 min-w-[16rem]">
+          <h1 class="font-display text-3xl text-asfa-text leading-tight">${esc(sdog.call_name)}</h1>
+          <p class="text-asfa-text/85">${esc(sdog.registered_name)}</p>
+          ${badges ? `<p class="text-xs text-asfa-text/70 mt-1">Titles by the Singles points columns: ${badges}</p>` : ''}
+          <p class="text-sm text-asfa-text/70 mt-1">
+            <a href="aok9.html?singles=${encodeURIComponent(sdog.breed_slug)}#singles" class="lnk">${esc(sdog.breed)}</a>
+            · <span class="font-mono text-xs">${esc(sdog.sprint ? sdog.id : sdog.reg)}</span>
+            · <span class="badge badge-flat">Singles</span>${sdog.active ? '' : ' <span class="badge badge-flat">inactive</span>'}
+          </p>
+          ${numberNote ? `<p class="text-xs text-asfa-text/65 mt-1">${numberNote}</p>` : ''}
+          <p class="text-sm mt-1">Owned by ${esc(sdog.owner_raw)}</p>
+          ${sdog.note ? `<p class="text-xs text-asfa-text/65 mt-1">Registrar's note: ${esc(sdog.note)}</p>` : ''}
+          <p class="text-sm text-asfa-text/70 mt-2">Races Singles: alone on the track, timed, and placed against the other dogs of its division at each meet.</p>
+        </div>
+      </div>
+      <div class="grid grid-cols-2 md:grid-cols-5 gap-3 mt-5">${singlesTiles(sdog, { average: false })}</div>
+    </section>
+
+    ${singlesCards(sdog, sfeed)}
+
+    <p class="text-xs text-asfa-text/55">
+      Figures as published in the AOK9 Singles sprint records dated ${formatDate(sfeed.guide_date)}.
+      <a href="aok9.html#singles" class="lnk">How Singles works</a>.
+    </p>`;
+}
+
+/** The Singles tab of the AOK9 page: what only Singles has. No standings;
+    Singles places dogs only within a meet, so titles, progress toward them,
+    and each breed's dogs by recent racing. */
+function renderSinglesTab(sfeed, container) {
+  if (!container) return;
+  if (!sfeed) {
+    container.innerHTML = `
+      <div class="card">
+        <h2 class="card-title">Singles</h2>
+        <p class="text-sm text-asfa-text/70">The Singles records could not be loaded just now. The rest of the page is unaffected.</p>
+      </div>`;
+    return;
+  }
+  const stats = sfeed.stats;
+  const dogs = sfeed.dogs;
+  const champions = dogs.filter((d) => Object.values(d.titled).some(Boolean))
+    .sort((a, b) => a.breed.localeCompare(b.breed) || a.call_name.localeCompare(b.call_name));
+  const onTheWay = dogs.filter((d) => d.active && ((d.sbc || 0) + (d.smc || 0)) > 0 && !(d.titled.sbc && d.titled.smc))
+    .sort((a, b) => ((b.sbc || 0) + (b.smc || 0)) - ((a.sbc || 0) + (a.smc || 0))
+      || (b.sbc || 0) - (a.sbc || 0) || a.call_name.localeCompare(b.call_name));
+  const sections = [...sfeed.sections].sort((a, b) =>
+    b.raced - a.raced || b.active - a.active || a.breed.localeCompare(b.breed));
+  const countLabel = (s) => s.raced ? `${s.raced} racing this year` : s.active ? `${s.active} active` : `${s.listed} listed`;
+
+  const tiles = [
+    [stats.dogs_raced, 'dogs racing Singles this year'],
+    [stats.breeds_raced, 'breeds racing Singles this year'],
+    [onTheWay.length, 'on their way to a title'],
+    [stats.titled_any, 'Singles champions, all time'],
+  ];
+
+  container.innerHTML = `
+    <div>
+      <h2 class="font-display text-2xl text-asfa-text">Singles</h2>
+      <p class="text-sm text-asfa-text/70 mt-1">
+        For dogs that can't run in company: each runs alone and is timed, and at every meet it is
+        placed against the other dogs of its division. From the
+        <a href="${esc(sfeed.source_url)}" class="lnk" target="_blank" rel="noopener noreferrer">Singles sprint records</a>
+        dated ${formatDate(sfeed.guide_date)}.
+      </p>
+    </div>
+
+    <section id="singles-tiles" class="grid grid-cols-2 md:grid-cols-4 gap-3">
+      ${tiles.map(([value, label]) =>
+        `<div class="tile"><div class="tile-value">${value}</div><div class="tile-label">${label}</div></div>`).join('')}
+    </section>
+
+    <section class="grid md:grid-cols-2 gap-6">
+      <div class="card">
+        <h2 class="card-title">Singles champions</h2>
+        <p class="text-xs text-asfa-text/60 mb-3">Titles read from the Singles points columns, all time.</p>
+        ${champions.length ? `<div class="tbl-wrap"><table class="tbl">
+          <thead><tr><th scope="col">Dog</th><th scope="col">Breed</th><th scope="col">Titles</th></tr></thead>
+          <tbody>${champions.map((d) => `
+            <tr>
+              <td><a href="${racingDogUrl('aok9', d.id)}${d.sprint_racing ? '#singles' : ''}" class="lnk font-semibold">${esc(d.call_name)}</a></td>
+              <td class="text-asfa-text/80">${esc(d.breed)}</td>
+              <td>${singlesTitleBadges(d)}</td>
+            </tr>`).join('')}</tbody>
+        </table></div>` : '<p class="text-sm text-asfa-text/70">No Singles titles yet.</p>'}
+      </div>
+
+      <div class="card">
+        <h2 class="card-title">On their way to a title</h2>
+        <p class="text-xs text-asfa-text/60 mb-3">Dogs racing lately, by points toward SBC and SMC. Twelve make either title; SMC counts breed and mixed points together, at least 2 of them mixed.</p>
+        ${onTheWay.length ? `<div class="tbl-wrap"><table class="tbl">
+          <thead><tr><th scope="col">Dog</th><th scope="col">Breed</th><th scope="col" class="num">SBC</th><th scope="col" class="num">SMC</th></tr></thead>
+          <tbody>${onTheWay.slice(0, 25).map((d) => `
+            <tr>
+              <td><a href="${racingDogUrl('aok9', d.id)}${d.sprint_racing ? '#singles' : ''}" class="lnk font-semibold">${esc(d.call_name)}</a></td>
+              <td class="text-asfa-text/80">${esc(d.breed)}</td>
+              <td class="num">${d.titled.sbc ? '<span class="badge badge-t-fch">SBC</span>' : `${ptsLabel(d.sbc || 0)} / 12`}</td>
+              <td class="num">${d.titled.smc ? '<span class="badge badge-t-fch">SMC</span>' : `${ptsLabel((d.sbc || 0) + (d.smc || 0))} / 12`}</td>
+            </tr>`).join('')}</tbody>
+        </table></div>
+        ${onTheWay.length > 25 ? `<p class="text-xs text-asfa-text/55 mt-2">The 25 closest of ${onTheWay.length}.</p>` : ''}`
+        : '<p class="text-sm text-asfa-text/70">No dog racing lately has Singles points yet.</p>'}
+      </div>
+    </section>
+
+    <div class="card">
+      <h2 class="card-title">Singles dogs by breed</h2>
+      <p class="text-xs text-asfa-text/60 mb-3">
+        Most recent racing first. Singles places dogs against each other only within a meet, on
+        that day's track, so this list is not a ranking.
+      </p>
+      <label class="block mb-3">
+        <span class="sr-only">Breed</span>
+        <select id="singles-breed" class="select w-full sm:w-auto sm:min-w-[20rem] px-3 py-2">
+          ${sections.map((s) => `<option value="${s.slug}">${esc(s.breed)} · ${countLabel(s)}</option>`).join('')}
+        </select>
+      </label>
+      <div id="singles-panel"></div>
+    </div>
+
+    <section class="card">
+      <h2 class="card-title">How Singles works</h2>
+      <ul class="text-sm leading-relaxed list-disc pl-5 space-y-2">
+        <li><strong>Placings, not times, earn points.</strong> At each meet a Singles dog runs up to
+          three programs alone. Its division is placed either by average time or by scoring each
+          program's times like a regular stake. The top four placings earn points on the sprint
+          table; last place earns Turtle points.</li>
+        <li><strong>The average is a seeding figure.</strong> It is the plain mean of the dog's last
+          three timed runs, and race secretaries draw heats from it. A meet runs up to three
+          programs, so all three runs often come from one meet. AOK9 tracks run 150 to 300 yards,
+          so averages from different tracks do not compare, and this site ranks no one by time.</li>
+        <li><strong>Titles.</strong> SBC, Singles Breed Champion, is 12 points from breed divisions.
+          SMC, Singles Mixed Champion, is 12 points with at least 2 from mixed divisions. Supreme
+          Singles titles come at every 30 National points, and Singles Turtle titles follow the
+          regular stakes: 12 Turtle points, then every 30. The rule book gives the Supreme and
+          Turtle titles no abbreviation, so they are written out here. Companion titles earned in
+          Singles carry an "-S" and are not in the records.</li>
+        <li><strong>Where it comes from.</strong> The
+          <a href="${esc(sfeed.source_url)}" class="lnk" target="_blank" rel="noopener noreferrer">Singles sprint records</a>
+          are a public spreadsheet from R.A.C.E.'s AOK9 program, read under the
+          <a href="${esc(sfeed.rules_url)}" class="lnk" target="_blank" rel="noopener noreferrer">Singles Racing Rule Book</a>.
+          A dog that races both Singles and the regular stakes keeps one page with both records.
+          Where this site and the records disagree, the records govern.</li>
+      </ul>
+    </section>`;
+
+  animateTiles(document.getElementById('singles-tiles'));
+
+  const select = container.querySelector('#singles-breed');
+  const panel = container.querySelector('#singles-panel');
+  let showAll = false;
+
+  function paint() {
+    const section = sfeed.sections.find((s) => s.slug === select.value);
+    if (!section) { panel.innerHTML = ''; return; }
+    const members = dogs.filter((d) => d.breed_slug === section.slug);
+    const activeMembers = members.filter((d) => d.active);
+    const everyone = showAll || !activeMembers.length;
+    const rows = (everyone ? members : activeMembers).sort(byRecency);
+    panel.innerHTML = `
+      <div class="flex flex-wrap items-baseline justify-between gap-2">
+        <h3 class="font-display text-xl text-asfa-text">${esc(section.breed)}</h3>
+        <p class="text-sm text-asfa-text/70">${section.raced} racing this year · ${section.active} active · ${section.listed} listed</p>
+      </div>
+      <div class="tbl-wrap mt-3"><table class="tbl">
+        <thead><tr><th scope="col">Dog</th><th scope="col">Registered name</th><th scope="col">Owner</th>
+          <th scope="col" class="num">Average</th><th scope="col" class="num">Personal best</th>
+          <th scope="col">Last run</th><th scope="col">Titles</th></tr></thead>
+        <tbody>${rows.map((d) => `
+          <tr class="${d.active ? '' : 'text-asfa-text/60'}">
+            <td><a href="${racingDogUrl('aok9', d.id)}${d.sprint_racing ? '#singles' : ''}" class="lnk font-semibold">${esc(d.call_name)}</a></td>
+            <td class="text-asfa-text/80">${esc(d.registered_name)}</td>
+            <td class="text-asfa-text/80">${esc(d.owner_raw)}</td>
+            <td class="num">${timeLabel(d.average)}</td>
+            <td class="num">${pbLabel(d)}</td>
+            <td class="whitespace-nowrap">${singlesLastRun(sfeed, d)}</td>
+            <td>${singlesTitleBadges(d)}</td>
+          </tr>`).join('')}</tbody>
+      </table></div>
+      ${activeMembers.length && activeMembers.length < members.length ? `
+        <p class="text-sm mt-3 no-print">${showAll
+          ? `Showing every ${esc(section.breed)} dog the records list. <button type="button" id="singles-toggle" class="lnk">Dogs racing lately only</button>`
+          : `<button type="button" id="singles-toggle" class="lnk">Show all ${section.listed} ${esc(section.breed)} dogs the records list</button>`}</p>`
+        : !activeMembers.length ? `<p class="text-sm mt-3 text-asfa-text/70">No ${esc(section.breed)} has raced Singles since ${sfeed.active_since.slice(0, 4)}; every one the records list is shown.</p>` : ''}`;
+    const toggle = panel.querySelector('#singles-toggle');
+    if (toggle) toggle.addEventListener('click', () => { showAll = !showAll; paint(); });
+  }
+
+  const requested = param('singles');
+  select.value = sfeed.sections.some((s) => s.slug === requested) ? requested : sections[0].slug;
+  select.addEventListener('change', () => {
+    showAll = false;
+    const url = new URL(window.location);
+    url.searchParams.set('singles', select.value);
+    url.hash = '#singles';
+    history.replaceState(null, '', url);
+    paint();
+  });
+  paint();
 }

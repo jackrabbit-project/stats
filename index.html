@@ -20,7 +20,7 @@
   <link rel="preload" href="assets/fonts/fraunces-latin-var.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/plex-mono-400.woff2" as="font" type="font/woff2" crossorigin>
   <script src="js/theme.js?v=20260823"></script>
-  <link rel="stylesheet" href="css/app.css?v=20260922">
+  <link rel="stylesheet" href="css/app.css?v=20260924a">
   <link rel="icon" href="assets/favicon.ico?v=3" sizes="any">
   <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png?v=3">
   <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png?v=3">
@@ -62,10 +62,10 @@
 
   <footer id="site-footer" class="bg-asfa-navy text-white py-8"></footer>
 
-  <script src="js/app.js?v=20260922"></script>
-  <script src="js/racing.js?v=20260922"></script>
+  <script src="js/app.js?v=20260924a"></script>
+  <script src="js/racing.js?v=20260924a"></script>
   <script>
-    pageHub(({ asfa, lgra, aok9, trials }) => {
+    pageHub(({ asfa, lgra, aok9, trials, singles }) => {
       const programs = document.getElementById('programs');
       const coverage = [];
       const entries = [];
@@ -127,7 +127,9 @@
         }
       }
 
-      const racingCard = (feed, org, name, nouns) => {
+      // AOK9's Singles stake runs at the same meets, so its dogs and meets
+      // count in the AOK9 totals when its records loaded.
+      const racingCard = (feed, org, name, nouns, combined = null) => {
         if (!feed) return unavailable(name);
         const leader = feed.dogs.find((dog) => dog.rank_all === 1);
         const titled = org === 'lgra'
@@ -143,14 +145,30 @@
           });
         }
         return tiles([
-          [feed.stats.hounds_raced, `${nouns} racing this year`],
-          [feed.stats.breeds_raced, 'breeds racing this year'],
-          [feed.stats.meets_this_year, 'meets this year'],
+          [combined ? combined.dogs_raced : feed.stats.hounds_raced, `${nouns} racing this year`],
+          [combined ? combined.breeds_raced : feed.stats.breeds_raced, 'breeds racing this year'],
+          [combined ? combined.meets_this_year : feed.stats.meets_this_year, 'meets this year'],
           titled,
         ]) + (leader ? `<p class="text-sm text-asfa-text/70 mt-3">Leading all breeds: <span class="font-semibold text-asfa-green">${esc(leader.call_name)}</span>, ${esc(leader.breed)}, ${ptsLabel(leader.ytd)} points.</p>` : '');
       };
       const lgraBody = racingCard(lgra, 'lgra', 'LGRA', 'hounds');
-      const aok9Body = racingCard(aok9, 'aok9', 'AOK9', 'dogs');
+      const aok9Body = racingCard(aok9, 'aok9', 'AOK9', 'dogs', aok9 && singles ? singles.combined : null);
+
+      /* AOK9 Singles dogs racing lately, when the sprint entries do not
+         already carry them: a dog that races only Singles is found by name
+         and opens its Singles record. */
+      const listed = new Set(entries.map((entry) => `${entry.program}|${entry.id}`));
+      if (singles) {
+        for (const dog of singles.dogs) {
+          if (!dog.active || listed.has(`AOK9|${dog.id}`)) continue;
+          listed.add(`AOK9|${dog.id}`);
+          entries.push({
+            id: dog.id, call_name: dog.call_name, registered_name: dog.registered_name,
+            breed: dog.breed, order: 100001, program: 'AOK9',
+            href: racingDogUrl('aok9', dog.id), meta: `${dog.breed} · Singles`,
+          });
+        }
+      }
 
       programs.innerHTML =
         card('asfa.html', 'ASFA lure coursing', `Top 20 standings${asfa ? ` · ${asfa.season}` : ''}`, asfaBody, 'Standings, kennels, titles, events', 'asfa')
@@ -175,11 +193,23 @@
          still found. Loaded once, only when needed. */
       const registryFallback = async (query) => {
         const found = [];
+        // Singles dogs not racing lately, then the sprint registries. A dog
+        // already in the list above is never offered twice.
+        if (singles) {
+          const quiet = singles.dogs.filter((dog) => !listed.has(`AOK9|${dog.id}`)).map((dog) => ({
+            id: dog.id, call_name: dog.call_name, registered_name: dog.registered_name,
+            breed: dog.breed, order: 1e6, program: 'AOK9', href: racingDogUrl('aok9', dog.id),
+            meta: `${dog.breed} · Singles${dog.last_year ? ` · last raced ${dog.last_year}` : ''}`,
+          }));
+          found.push(...searchDogs(query, quiet, 20));
+        }
+        const offered = new Set(found.map((dog) => `${dog.program}|${dog.id}`));
         for (const [feed, org, name] of [[lgra, 'lgra', 'LGRA'], [aok9, 'aok9', 'AOK9']]) {
           if (!feed) continue;
           const breeds = new Map(feed.sections.map((s) => [s.slug, s.breed]));
           const rows = await loadRegistry(org);
-          const dormant = rows.filter((dog) => !dog.active).map((dog) => ({
+          const dormant = rows.filter((dog) => !dog.active
+            && !listed.has(`${name}|${dog.id}`) && !offered.has(`${name}|${dog.id}`)).map((dog) => ({
             id: dog.id, call_name: dog.call_name, registered_name: dog.registered_name,
             breed: breeds.get(dog.breed_slug) || dog.breed_slug, order: 1e6, program: name,
             href: racingDogUrl(org, dog.id),
@@ -193,7 +223,7 @@
         row,
         empty: "No hound matches that name. ASFA lists only each breed's Top 20; LGRA and AOK9 list active dogs.",
         fallback: registryFallback,
-        fallbackNote: 'Not racing lately, from the all-time LGRA and AOK9 registries:',
+        fallbackNote: 'Not racing lately, from the all-time LGRA and AOK9 records:',
       });
 
       /* ----- share links, plain sharer URLs */

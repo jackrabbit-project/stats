@@ -52,8 +52,11 @@ function loadEvents() {
   return eventsPromise;
 }
 
-/** The LGRA and AOK9 racing feeds, one promise each, same isolation. */
-const RACING_URLS = { lgra: 'data/lgra.json', aok9: 'data/aok9.json' };
+/** The LGRA and AOK9 racing feeds, one promise each, same isolation. AOK9's
+    Singles records are a feed of their own, read beside the sprint one. */
+const RACING_URLS = {
+  lgra: 'data/lgra.json', aok9: 'data/aok9.json', 'aok9-singles': 'data/aok9-singles.json',
+};
 const racingPromises = {};
 
 function loadRacing(org) {
@@ -367,6 +370,7 @@ const NAV_AOK9 = [
   ['aok9.html#standings', 'Standings'],
   ['aok9.html#browse', 'Browse'],
   ['aok9.html#kennels', 'Kennels'],
+  ['aok9.html#singles', 'Singles'],
   ['aok9.html#about', 'About the numbers'],
 ];
 const NAV_HUB = [
@@ -821,14 +825,14 @@ function pageStatic(current, render) {
   );
 }
 
-/** Bootstrap for lgra.html, aok9.html and racing-dog.html: one racing feed. */
+/** Bootstrap for lgra.html, aok9.html and racing-dog.html: one racing feed.
+    render() may return a promise, for a page that waits on a second feed;
+    a failure either way shows the same message. */
 function pageRacing(current, org, render) {
   loadRacing(org).then(
     (feed) => {
       renderChrome(feed, current, org);
-      try {
-        render(feed);
-      } catch (error) {
+      Promise.resolve().then(() => render(feed)).catch((error) => {
         console.error(error);
         showFailure(
           'This page could not be drawn',
@@ -837,7 +841,7 @@ function pageRacing(current, org, render) {
           + 'script. Reload with <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>R</kbd> '
           + '(<kbd>Cmd</kbd>+<kbd>Shift</kbd>+<kbd>R</kbd> on a Mac).'
         );
-      }
+      });
     },
     (error) => {
       console.error(error);
@@ -858,13 +862,15 @@ function pageRacing(current, org, render) {
     render() receives whichever feeds arrived and null for the rest. */
 function pageHub(render) {
   renderChrome(null, 'index.html', 'hub');
-  Promise.allSettled([loadSeason(), loadRacing('lgra'), loadRacing('aok9'), loadTrials()]).then((results) => {
-    const [asfa, lgra, aok9, trials] = results.map((result) => {
+  Promise.allSettled([
+    loadSeason(), loadRacing('lgra'), loadRacing('aok9'), loadTrials(), loadRacing('aok9-singles'),
+  ]).then((results) => {
+    const [asfa, lgra, aok9, trials, singles] = results.map((result) => {
       if (result.status === 'rejected') console.warn(result.reason);
       return result.status === 'fulfilled' ? result.value : null;
     });
     try {
-      render({ asfa, lgra, aok9, trials });
+      render({ asfa, lgra, aok9, trials, singles });
     } catch (error) {
       console.error(error);
       showFailure(

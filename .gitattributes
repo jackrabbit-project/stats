@@ -13,8 +13,10 @@ data/clubs.json  -diff
 data/snapshots/*.json -diff
 data/lgra.json -diff
 data/aok9.json -diff
+data/aok9-singles.json -diff
 data/*-registry.json -diff
 data/lgra/snapshots/*.json -diff
 data/aok9/snapshots/*.json -diff
+data/aok9-singles/snapshots/*.json -diff
 
 * text=auto

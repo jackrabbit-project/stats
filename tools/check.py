@@ -354,6 +354,7 @@ def main() -> int:
     check_titles(check)
     check_racing(check, "lgra")
     check_racing(check, "aok9")
+    check_singles(check)
     return check.report()
 
 
@@ -1075,6 +1076,219 @@ def check_racing(check: Checker, org: str) -> None:
             ("phone number", r"\(\d{3}\)\s*\d{3}-\d{4}"),
             ("street address",
              r"\b\d{2,5}\s+\w+\s+(?:Ave|Avenue|St|Street|Rd|Road|Dr|Drive|Ln|Lane)\b"),
+        ):
+            found = re.findall(pattern, body, re.IGNORECASE)
+            check.expect(not found, f"{label}: {path.name} contains a {name}: {found[:2]}")
+
+
+def _singles_same_dog(singles: dict, sprint: dict) -> bool:
+    """The number matched; the call names or the registered names agree."""
+    norm = lambda text: re.sub(r"[^a-z0-9]", "", (text or "").lower())
+    a, b = norm(singles["call_name"]), norm(sprint["call_name"])
+    if a and b and (a.startswith(b) or b.startswith(a)):
+        return True
+    ra, rb = norm(singles["registered_name"])[:15], norm(sprint["registered_name"])[:15]
+    return bool(ra) and ra == rb
+
+
+def check_singles(check: Checker) -> None:
+    """Re-derive data/aok9-singles.json from its snapshot and the sprint registry."""
+    import datetime as dt
+
+    feed_path = ROOT / "data" / "aok9-singles.json"
+    snapshot_dir = ROOT / "data" / "aok9-singles" / "snapshots"
+    registry_path = ROOT / "data" / "aok9-registry.json"
+    sprint_path = ROOT / "data" / "aok9.json"
+    check.expect(feed_path.exists(), "AOK9 Singles: feed missing; run tools/aok9_singles.py")
+    if not (feed_path.exists() and registry_path.exists() and sprint_path.exists()):
+        return
+    feed = json.loads(feed_path.read_text(encoding="utf-8"))
+    registry = json.loads(registry_path.read_text(encoding="utf-8"))
+    sprint = json.loads(sprint_path.read_text(encoding="utf-8"))
+    rows = [dict(zip(registry["columns"], row)) for row in registry["rows"]]
+    by_id = {row["id"]: row for row in rows}
+    label = feed["name"]
+    season = feed["season"]
+    stats = feed["stats"]
+    dogs = feed["dogs"]
+
+    snapshot_path = snapshot_dir / f"{feed['guide_date']}.json"
+    check.expect(snapshot_path.exists(), f"{label}: snapshot {snapshot_path.name} missing")
+    check.expect(feed["snapshots"] == sorted(p.stem for p in snapshot_dir.glob("*.json")),
+                 f"{label}: feed.snapshots does not list the archived snapshots")
+    snapshot = (json.loads(snapshot_path.read_text(encoding="utf-8"))
+                if snapshot_path.exists() else None)
+
+    # 1. Every snapshot row is one dog in the feed, on a page of its own.
+    if snapshot:
+        snap_dogs = [dog for section in snapshot["sections"] for dog in section["dogs"]]
+        check.expect(len(snap_dogs) == len(dogs) == stats["dogs_listed"],
+                     f"{label}: {len(dogs)} dogs vs {len(snap_dogs)} in the snapshot "
+                     f"vs stats {stats['dogs_listed']}")
+        check.expect(
+            sorted(d["reg"] for d in dogs)
+            == sorted(dog.get("duplicate_of") or dog["id"] for dog in snap_dogs),
+            f"{label}: registration numbers differ from the snapshot")
+        homes: dict[str, set[str]] = {}
+        for section in snapshot["sections"]:
+            for dog in section["dogs"]:
+                homes.setdefault(dog["prefix"], set()).add(section["breed_raw"])
+        check.expect(all(len(v) == 1 for v in homes.values()),
+                     f"{label}: a registration prefix appears under two breeds")
+        check.expect(
+            stats["dogs_duplicate_numbers"] == sum("duplicate_of" in dog for dog in snap_dogs),
+            f"{label}: stats.dogs_duplicate_numbers disagrees with the snapshot")
+    ids = [d["id"] for d in dogs]
+    check.expect(len(set(ids)) == len(ids), f"{label}: two dogs share a page id")
+    check.expect(all(re.match(r"^[A-Z]{1,8}-\d+(-\d+)?(-S\d*)?$", i) for i in ids),
+                 f"{label}: a page id does not look like PREFIX-NUMBER")
+
+    # 2. The join to the sprint registry: a Singles dog takes its sprint twin's
+    #    page, found by number with the names agreeing or, where the two sheets
+    #    number the dog differently, by breed, whole registered name, owner and
+    #    call name together. A number the sprint guide gives another dog is
+    #    never reused.
+    norm = lambda text: re.sub(r"[^a-z0-9]", "", (text or "").lower())
+    same_identity = lambda a, b: (
+        a["breed_slug"] == b["breed_slug"] and norm(a["registered_name"])
+        and norm(a["registered_name"]) == norm(b["registered_name"])
+        and norm(a["owner_raw"]) == norm(b["owner_raw"])
+        and norm(a["call_name"]) and norm(b["call_name"])
+        and (norm(a["call_name"]).startswith(norm(b["call_name"]))
+             or norm(b["call_name"]).startswith(norm(a["call_name"]))))
+    for d in dogs:
+        candidates = [row for row in rows
+                      if row["id"] == d["reg"] or re.fullmatch(re.escape(d["reg"]) + r"-\d+", row["id"])]
+        twins = [row for row in candidates if _singles_same_dog(d, row)]
+        if d["sprint"]:
+            row = by_id.get(d["id"])
+            if d.get("joined_by") == "name":
+                check.expect(row is not None and same_identity(d, row) and not twins,
+                             f"{label}: {d['id']} is joined by name without an exact identity match")
+            else:
+                check.expect(d.get("joined_by") == "number" and row is not None
+                             and any(t["id"] == row["id"] for t in twins),
+                             f"{label}: {d['id']} is joined to a sprint row whose names disagree")
+            if row is not None:
+                racing = bool(row["meets_breed"] or row["meets_mixed"]) or any(
+                    (row[f] or 0) > 0 for f in ("brc", "nbrc", "mrc", "nmrc", "trc", "ytd"))
+                check.expect(d["sprint_racing"] == racing,
+                             f"{label}: {d['id']} sprint_racing is wrong")
+                check.expect(d["breed_slug"] == row["breed_slug"],
+                             f"{label}: {d['id']} breed differs from its sprint row")
+        else:
+            check.expect(not twins and not any(same_identity(d, row) for row in rows),
+                         f"{label}: {d['id']} has a sprint twin it did not take")
+            check.expect(d["id"] not in by_id,
+                         f"{label}: {d['id']} reuses the page of a different sprint dog")
+            check.expect(not d["sprint_racing"], f"{label}: {d['id']} sprint_racing without a twin")
+
+    # 3. The average is the plain mean of the listed runs; titles follow the
+    #    points columns under Singles Racing Rule Book 1.0 ch. V.
+    rated = [d for d in dogs if d["average"] is not None]
+    agree = 0
+    for d in dogs:
+        times = [m[3] for m in d["meets"] if m[3] is not None and m[3] > 0]
+        computed = sum(times) / len(times) if times else None
+        matches = (d["average"] is not None and computed is not None
+                   and abs(computed - d["average"]) <= 0.01)
+        check.expect(d["average_matches"] == matches, f"{label}: {d['id']} average_matches is wrong")
+        agree += matches
+        check.expect(d["average"] is None or d["average"] > 0,
+                     f"{label}: {d['id']} publishes a zero average as a time")
+        sbc, smc = d["sbc"] or 0, d["smc"] or 0
+        expected = {
+            "sbc": sbc >= 12,
+            "smc": sbc + smc >= 12 and smc >= 2,
+            "supreme_breed": int((d["nsbc"] or 0) // 30),
+            "supreme_mixed": int((d["nsmc"] or 0) // 30),
+            "turtle": (d["turtle"] or 0) >= 12,
+            "supreme_turtle": int((d["turtle"] or 0) // 30),
+        }
+        check.expect(d["titled"] == expected, f"{label}: {d['id']} titles disagree with its points")
+    share = agree / max(1, len(rated))
+    check.expect(share >= 0.95, f"{label}: the average matches its runs for only {share:.1%}")
+    check.expect(stats["average_agreement"] == round(share, 4),
+                 f"{label}: stats.average_agreement is {stats['average_agreement']}, re-derived {share:.4f}")
+    for key, flag in (("titled_sbc", "sbc"), ("titled_smc", "smc"), ("titled_turtle", "turtle")):
+        check.expect(stats[key] == sum(bool(d["titled"][flag]) for d in dogs),
+                     f"{label}: stats.{key} is not the count of dogs so titled")
+    check.expect(stats["titled_any"] == sum(any(d["titled"].values()) for d in dogs),
+                 f"{label}: stats.titled_any disagrees")
+
+    # 4. Activity, runs and meets.
+    guide_date = dt.date.fromisoformat(feed["guide_date"])
+    undecoded = 0
+    for d in dogs:
+        years = [m[1] for m in d["meets"] if m[1] is not None]
+        undecoded += sum(m[1] is None for m in d["meets"])
+        check.expect(d["last_year"] == (max(years) if years else None),
+                     f"{label}: {d['id']} last_year is wrong")
+        check.expect(d["raced"] == (season in years), f"{label}: {d['id']} raced flag is wrong")
+        active = (d["ytd"] or 0) > 0 or (d["last_year"] is not None and d["last_year"] >= season - 1)
+        check.expect(d["active"] == active, f"{label}: {d['id']} active flag is wrong")
+        for code, year, when, _time in d["meets"]:
+            if year is None:
+                continue
+            check.expect(1995 <= year <= season, f"{label}: meet {code} year {year} out of range")
+            if when:
+                day = dt.date.fromisoformat(when)
+                check.expect(day.year == year and day <= guide_date,
+                             f"{label}: meet {code} dated {when} out of place")
+    check.expect(stats["meets_listed"] == sum(len(d["meets"]) for d in dogs)
+                 and stats["meets_undecoded"] == undecoded,
+                 f"{label}: meet counts disagree with the stats")
+    check.expect(undecoded <= max(5, 0.01 * stats["meets_listed"]),
+                 f"{label}: {undecoded} undecodable meet codes")
+    raced = [d for d in dogs if d["raced"]]
+    check.expect(stats["dogs_active"] == sum(d["active"] for d in dogs)
+                 and stats["dogs_raced"] == len(raced)
+                 and stats["breeds_raced"] == len({d["breed_slug"] for d in raced})
+                 and stats["dogs_ytd"] == sum((d["ytd"] or 0) > 0 for d in dogs)
+                 and stats["singles_only_active"] == sum(d["active"] and not d["sprint_racing"]
+                                                         for d in dogs),
+                 f"{label}: activity counts disagree with a re-count")
+    for section in feed["sections"]:
+        members = [d for d in dogs if d["breed_slug"] == section["slug"]]
+        check.expect(section["listed"] == len(members)
+                     and section["active"] == sum(d["active"] for d in members)
+                     and section["raced"] == sum(d["raced"] for d in members)
+                     and section["ytd"] == sum((d["ytd"] or 0) > 0 for d in members),
+                     f"{label}: section counts wrong for {section['breed']}")
+    check.expect(sum(s["listed"] for s in feed["sections"]) == len(dogs),
+                 f"{label}: section counts do not sum to the dogs listed")
+
+    # 5. Singles runs at the sprint meets, so it joins the AOK9 totals: the
+    #    union of both sheets' racers, breeds and meets this season. Built
+    #    against the sprint feed on disk, never a stale one.
+    combined = feed["combined"]
+    check.expect(combined["sprint_guide_date"] == sprint["guide_date"],
+                 f"{label}: built against the sprint guide of {combined['sprint_guide_date']}, "
+                 f"the feed on disk is {sprint['guide_date']}; re-run tools/aok9_singles.py")
+    sprint_raced = {row["id"]: row["breed_slug"] for row in rows
+                    if any(m[1] == season for m in row["meets_breed"] + row["meets_mixed"])}
+    racing = {**sprint_raced, **{d["id"]: d["breed_slug"] for d in raced}}
+    meets = ({m[0] for row in rows for m in row["meets_breed"] + row["meets_mixed"] if m[1] == season}
+             | {m[0] for d in dogs for m in d["meets"] if m[1] == season})
+    check.expect(combined["dogs_raced"] == len(racing)
+                 and combined["breeds_raced"] == len(set(racing.values()))
+                 and combined["meets_this_year"] == len(meets),
+                 f"{label}: combined totals disagree with a re-count")
+    check.expect(combined["dogs_raced"] >= sprint["stats"]["hounds_raced"]
+                 and combined["meets_this_year"] >= sprint["stats"]["meets_this_year"],
+                 f"{label}: combining with Singles lowered a sprint total")
+
+    # 6. The sheet's first rows carry the registrar's email and street
+    #    address; none of it may reach the published data.
+    for path in (feed_path, snapshot_path):
+        if not path.exists():
+            continue
+        body = path.read_text(encoding="utf-8")
+        for name, pattern in (
+            ("email address", r"[\w.+-]+@[\w-]+\.[\w.]+"),
+            ("phone number", r"\(\d{3}\)\s*\d{3}-\d{4}"),
+            ("street address",
+             r"\b\d{2,5}\s+\w+\s+(?:Ave|Avenue|St|Street|Rd|Road|Dr|Drive|Ln|Lane|Way|Blvd|Court|Ct)\b"),
         ):
             found = re.findall(pattern, body, re.IGNORECASE)
             check.expect(not found, f"{label}: {path.name} contains a {name}: {found[:2]}")
