@@ -1036,6 +1036,7 @@ function renderRacingDog(org, feed, main, singles = null) {
             ${dog.note ? `<p class="text-xs text-asfa-text/65 mt-1">Registrar's note: ${esc(dog.note)}</p>` : ''}
             ${movementLine ? `<p class="text-sm mt-2">${movementCell(dog)} <span class="text-asfa-text/70">${esc(movementLine)}</span></p>` : ''}
           </div>
+          ${hasCardRecord(org, dog) ? cardButton() : ''}
         </div>
         <div class="grid grid-cols-2 md:grid-cols-${Math.min(4, spec.tiles(dog).length)} gap-3 mt-5">
           ${spec.tiles(dog).map(([value, label]) =>
@@ -1090,6 +1091,8 @@ function renderRacingDog(org, feed, main, singles = null) {
           <h2 class="font-display text-2xl text-asfa-text">Singles</h2>
           <p class="text-sm text-asfa-text/70 mt-1">${esc(dog.call_name)} also races Singles: alone on the track, timed, and placed against the other dogs of its division at each meet.</p>
           ${singlesNumberNote(sdog) ? `<p class="text-xs text-asfa-text/65 mt-1">${singlesNumberNote(sdog)}</p>` : ''}
+          ${typeof openRacingCard === 'function' && (sdog.pb != null || sdog.average != null)
+            ? `<button type="button" id="singles-card-btn" class="btn mt-3 no-print">${icon('share', 'mr-1')}Singles stat card</button>` : ''}
         </div>
         ${singlesSummaryCard(sdog)}
         ${singlesCards(sdog, singles)}
@@ -1100,6 +1103,10 @@ function renderRacingDog(org, feed, main, singles = null) {
           sdog ? ` and the Singles sprint records dated ${formatDate(singles.guide_date)}` : ''}.
         <a href="${spec.page}#about" class="lnk">What the columns mean</a>.
       </p>`;
+    const cardBtn = main.querySelector('#card-btn');
+    if (cardBtn) cardBtn.addEventListener('click', () => openRacingCard(racingCardSpec(org, dog, feed, sdog, singles)));
+    const singlesBtn = main.querySelector('#singles-card-btn');
+    if (singlesBtn) singlesBtn.addEventListener('click', () => openRacingCard(singlesCardSpec(sdog, singles)));
   };
 
   if (active) { draw(active, false); return; }
@@ -1378,6 +1385,7 @@ function renderSinglesDog(sdog, sfeed, main) {
           ${sdog.note ? `<p class="text-xs text-asfa-text/65 mt-1">Registrar's note: ${esc(sdog.note)}</p>` : ''}
           <p class="text-sm text-asfa-text/70 mt-2">Races Singles: alone on the track, timed, and placed against the other dogs of its division at each meet.</p>
         </div>
+        ${sdog.pb != null || sdog.average != null ? cardButton() : ''}
       </div>
       <div class="grid grid-cols-2 md:grid-cols-5 gap-3 mt-5">${singlesTiles(sdog, { average: false })}</div>
     </section>
@@ -1388,6 +1396,8 @@ function renderSinglesDog(sdog, sfeed, main) {
       Figures as published in the AOK9 Singles sprint records dated ${formatDate(sfeed.guide_date)}.
       <a href="aok9.html#singles" class="lnk">How Singles works</a>.
     </p>`;
+  const cardBtn = main.querySelector('#card-btn');
+  if (cardBtn) cardBtn.addEventListener('click', () => openRacingCard(singlesCardSpec(sdog, sfeed)));
 }
 
 /** The Singles tab of the AOK9 page: what only Singles has. No standings;
@@ -1573,4 +1583,136 @@ function renderSinglesTab(sfeed, container) {
     paint();
   });
   paint();
+}
+
+/* ------------------------------------------------------------- stat cards */
+
+/* What a racing hound's stat card says. The card itself is drawn by
+   drawRacingCard in card.js; these decide the words and figures. */
+
+function cardStem(name) {
+  return name.replace(/[^\w-]+/g, '-').toLowerCase().replace(/^-|-$/g, '') || 'hound';
+}
+
+function cardSource(feed) {
+  return (feed.site_url || '').replace(/^https?:\/\//, '').replace(/\/$/, '');
+}
+
+/** The WAVE a card shows: LGRA has one; AOK9 the breed WAVE, else the mixed. */
+function cardWave(org, dog) {
+  const [field, title, gradeField] = org === 'aok9' && dog.bwave == null && dog.mwave != null
+    ? ORGS.aok9.waves[1] : ORGS[org].waves[0];
+  return { value: dog[field], title, grade: dog[gradeField] };
+}
+
+/** Whether a sprint record has anything worth a card. */
+function hasCardRecord(org, dog) {
+  const career = org === 'lgra' ? dog.ngrc : (dog.nbrc || 0) + (dog.nmrc || 0);
+  return Boolean(dog.rank_breed || cardWave(org, dog).value != null || career);
+}
+
+/** An LGRA or AOK9 sprint card. The headline is the breed standing this year,
+    as on the ASFA card; without points this year it is the WAVE. A dog that
+    also races Singles gets its personal best as a third headline line. */
+function racingCardSpec(org, dog, feed, sdog = null, sfeed = null) {
+  const spec = ORGS[org];
+  const wave = cardWave(org, dog);
+  const career = org === 'lgra' ? (dog.ngrc || 0) : (dog.nbrc || 0) + (dog.nmrc || 0);
+  const waveLabelText = wave.value != null && wave.grade ? `${wave.title} · grade ${wave.grade}` : wave.title;
+  // Singles runs at the same meets, so a Singles run counts as racing.
+  const lastRaced = Math.max(Number(dog.last_raced ? dog.last_raced.slice(0, 4) : dog.last_year) || 0,
+    (sdog && sdog.last_year) || 0) || null;
+  let headline;
+  let figures;
+  if (dog.rank_breed) {
+    headline = {
+      big: `#${dog.rank_breed}`,
+      line1: `in ${dog.breed} this year`,
+      line2: `#${dog.rank_all} of ${feed.stats.hounds_ytd} across every breed`,
+    };
+    figures = [
+      [ptsLabel(dog.ytd || 0), 'NATIONAL PTS THIS YEAR'],
+      [waveLabel(wave.value), waveLabelText.toUpperCase()],
+      [ptsLabel(career), 'CAREER NATIONAL PTS'],
+    ];
+  } else {
+    headline = wave.value != null
+      ? { big: waveLabel(wave.value), line1: wave.grade ? `${wave.title}, grade ${wave.grade}` : wave.title,
+          line2: 'no National points yet this year' }
+      : { big: ptsLabel(career), line1: 'career National points', line2: 'no National points yet this year' };
+    const championship = org === 'lgra' ? ['grc', 'GRC PTS'] : ['brc', 'BRC PTS'];
+    figures = [
+      [ptsLabel(career), 'CAREER NATIONAL PTS'],
+      [`${ptsLabel(dog[championship[0]] || 0)} / 12`, championship[1]],
+      [lastRaced || '—', 'LAST RACED'],
+    ];
+  }
+  if (sdog && sdog.pb != null) {
+    headline.line3 = `SINGLES · PERSONAL BEST ${timeLabel(sdog.pb).toUpperCase()}`;
+  }
+  const program = `${spec.name} ${spec.program}`;
+  const sameDay = sdog && sfeed && sfeed.guide_date === feed.guide_date;
+  const footer = sdog && sfeed
+    ? (sameDay
+      ? `Grading guide and Singles records of ${formatDate(feed.guide_date)} · source: ${cardSource(feed)}`
+      : `Grading guide of ${formatDate(feed.guide_date)}, Singles records of ${formatDate(sfeed.guide_date)} · ${cardSource(feed)}`)
+    : `Grading guide of ${formatDate(feed.guide_date)} · source: ${cardSource(feed)}`;
+  return {
+    band: `${program} · ${feed.season}`.toUpperCase(),
+    callName: dog.call_name,
+    registeredName: dog.registered_name,
+    meta: `${dog.breed} · ${dog.duplicate_of || dog.id}`,
+    headline,
+    figures,
+    owner: dog.owner_raw,
+    footer,
+    share: {
+      name: dog.call_name,
+      filename: `${cardStem(dog.call_name)}-${org}-${feed.season}.png`,
+      shareTitle: `${dog.call_name} — Gazehound Stats`,
+      shareText: dog.rank_breed
+        ? `${dog.call_name}, #${dog.rank_breed} in ${dog.breed} this year in ${program}, on ${ptsLabel(dog.ytd)} National points.`
+        : `${dog.call_name}, ${program}: ${headline.line1} ${headline.big}.`,
+    },
+  };
+}
+
+/** A card for a dog whose racing is Singles alone. No standing: Singles
+    places dogs only within a meet, so the headline is the personal best. */
+function singlesCardSpec(sdog, sfeed) {
+  const combined = (sdog.sbc || 0) + (sdog.smc || 0);
+  const headline = sdog.pb != null
+    ? { big: (Math.round(sdog.pb * 100) / 100).toFixed(2), line1: 'seconds, personal best',
+        line2: sdog.average != null ? `Singles average ${timeLabel(sdog.average)}` : 'no Singles average on record' }
+    : { big: sdog.average != null ? (Math.round(sdog.average * 100) / 100).toFixed(2) : '—',
+        line1: 'seconds, Singles average', line2: 'no personal best on record' };
+  return {
+    band: `AOK9 Singles · ${sfeed.season}`.toUpperCase(),
+    callName: sdog.call_name,
+    registeredName: sdog.registered_name,
+    meta: `${sdog.breed} · ${sdog.sprint ? sdog.id : sdog.reg}`,
+    headline,
+    figures: [
+      [ptsLabel(sdog.ytd || 0), 'SINGLES PTS THIS YEAR'],
+      [`${ptsLabel(sdog.sbc || 0)} / 12`, sdog.titled.sbc ? 'SBC · EARNED' : 'TOWARD SBC'],
+      [`${ptsLabel(combined)} / 12`, sdog.titled.smc ? 'SMC · EARNED' : 'TOWARD SMC'],
+    ],
+    owner: sdog.owner_raw,
+    footer: `Singles records of ${formatDate(sfeed.guide_date)} · source: ${cardSource(sfeed)}`,
+    share: {
+      name: sdog.call_name,
+      filename: `${cardStem(sdog.call_name)}-aok9-singles-${sfeed.season}.png`,
+      shareTitle: `${sdog.call_name} — Gazehound Stats`,
+      shareText: sdog.pb != null
+        ? `${sdog.call_name}, AOK9 Singles personal best ${timeLabel(sdog.pb)}.`
+        : `${sdog.call_name}, AOK9 Singles average ${timeLabel(sdog.average)}.`,
+    },
+  };
+}
+
+/** The Stat card button, where card.js is loaded and the record has one. */
+function cardButton() {
+  return typeof openRacingCard === 'function'
+    ? `<div class="flex gap-2 no-print"><button type="button" id="card-btn" class="btn btn-primary">${icon('share', 'mr-1')}Stat card</button></div>`
+    : '';
 }
