@@ -543,9 +543,8 @@ def build(snapshots: list[dict], sprint_feed: dict, sprint_registry: dict) -> di
             "earn championship points (Singles Racing Rule Book 1.0 ch. IV-V).",
             "The average is the plain mean of the dog's last three timed runs, "
             "the figure race secretaries draw heats from; the runs are programs, "
-            "so all three often come from one meet. AOK9 tracks run 150 to 300 "
-            "yards, so times from different meets are not on one scale; the site "
-            "ranks no one by time.",
+            "so all three often come from one meet. Singles places dogs only "
+            "within a meet, so the site ranks no one by time.",
             "SBC is 12 Singles breed points; SMC is 12 points of which at least 2 "
             "are mixed. Supreme Singles titles come at every 30 National points, "
             "Singles Turtle titles as in the regular stakes; the rule book gives "
