@@ -721,30 +721,30 @@ const NAV_HUB = [
    the footer's disclaimer link goes to the section's own account. */
 const seasonOf = (feed) => (feed && feed.season) || new Date().getFullYear();
 
-/* The tagline takes the program's colour, the same one its hub card wears:
-   rust for ASFA, slate for LGRA, moss for AOK9. */
+/* The tagline (program and season) takes the program's colour, the same one
+   its hub card wears: rust for ASFA, slate for LGRA, moss for AOK9. */
 const SECTIONS = {
   hub: {
     home: 'index.html', nav: NAV_HUB,
-    tagline: (feed) => `Lure coursing and racing · ${seasonOf(feed)}`,
+    program: 'Lure coursing and racing',
     color: 'text-asfa-text', line: 'border-asfa-text',
     disclaimer: 'about.html#disclaimer',
   },
   asfa: {
     home: 'asfa.html', nav: NAV_ASFA,
-    tagline: (feed) => `ASFA lure coursing · ${seasonOf(feed)}`,
+    program: 'ASFA lure coursing',
     color: 'text-asfa-accent', line: 'border-asfa-accent',
     disclaimer: 'about.html#disclaimer',
   },
   lgra: {
     home: 'lgra.html', nav: NAV_LGRA,
-    tagline: (feed) => `LGRA straight racing · ${seasonOf(feed)}`,
+    program: 'LGRA straight racing',
     color: 'text-asfa-slate', line: 'border-asfa-slate',
     disclaimer: 'lgra.html#about',
   },
   aok9: {
     home: 'aok9.html', nav: NAV_AOK9,
-    tagline: (feed) => `AOK9 sprint racing · ${seasonOf(feed)}`,
+    program: 'AOK9 sprint racing',
     color: 'text-asfa-green', line: 'border-asfa-green',
     disclaimer: 'aok9.html#about',
   },
@@ -1017,18 +1017,18 @@ function renderChrome(feed, current, sectionKey = sectionOf(current)) {
       <div class="bg-asfa-paper border-b border-asfa-border">
         <div class="max-w-6xl mx-auto px-4">
           <div class="flex items-center gap-2 sm:gap-3 pt-3 pb-1">
-          <div class="flex items-center gap-2.5 shrink-0">
+          <div class="flex items-center gap-2 sm:gap-2.5 min-w-0">
             <a href="index.html" class="shrink-0" aria-label="Gazehound Stats home">${jackrabbitMark('block text-asfa-accent', 32)}</a>
-            <span class="flex flex-col">
+            <span class="flex flex-col min-w-0">
               <a href="index.html" class="font-display font-semibold text-xl leading-tight text-asfa-text whitespace-nowrap">Gazehound Stats</a>
               <span class="relative">
                 <button type="button" id="program-menu-button" aria-haspopup="menu" aria-expanded="false" aria-controls="program-menu"
-                        class="font-mono text-[11px] font-semibold uppercase tracking-widest ${section.color} whitespace-nowrap inline-flex items-center gap-1 hover:underline">${section.tagline(feed)}${icon('chevronDown')}</button>
+                        class="max-w-full font-mono text-[11px] font-semibold uppercase tracking-widest ${section.color} whitespace-nowrap inline-flex items-center gap-1 hover:underline"><span class="truncate">${section.program}<span class="tagline-year tagline-year-${sectionKey}"> · ${seasonOf(feed)}</span></span>${icon('chevronDown')}</button>
                 <div id="program-menu" role="menu" aria-label="Switch program" class="hidden absolute left-0 top-full mt-1.5 z-30 min-w-[15rem] bg-asfa-surface border border-asfa-border shadow-sm py-1">
                   ${Object.entries(SECTIONS).map(([key, s]) => `
                   <a role="menuitem" href="${s.home}" ${key === sectionKey ? 'aria-current="page"' : ''}
                      class="block px-3 py-1.5 font-mono text-[11px] uppercase tracking-widest ${s.color} hover:bg-asfa-bg2 focus:bg-asfa-bg2 focus:outline-none">${
-                       key === 'hub' ? 'Home · all programs' : s.tagline(null).replace(/ · \d{4}$/, '')}${
+                       key === 'hub' ? 'Home · all programs' : s.program}${
                        key === sectionKey ? ' <span class="text-asfa-muted" aria-hidden="true">✓</span>' : ''}</a>`).join('')}
                 </div>
               </span>

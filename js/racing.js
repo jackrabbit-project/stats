@@ -406,7 +406,7 @@ function renderRacingOverview(org, feed, main, singles = null) {
         `<div class="tile"><div class="tile-value">${value}</div><div class="tile-label">${label}</div></div>`).join('')}
     </section>
 
-    <section class="grid md:grid-cols-3 gap-6">
+    <section class="grid grid-cols-1 md:grid-cols-3 gap-6">
       <div class="card md:row-span-2">
         <h2 class="card-title">All-breed standings</h2>
         <p class="text-xs text-asfa-text/60 mb-3">${spec.seasonLabel}, all breeds.</p>

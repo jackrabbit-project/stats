@@ -389,8 +389,11 @@
 }
 
 /* Wide tables scroll inside their own container rather than the page,
-   with edge fades hinting at the overflow. */
+   with edge fades hinting at the overflow. Positioned so the .sr-only
+   labels in the movement badges are clipped with the table instead of
+   stretching the page sideways on a phone. */
 .tbl-wrap {
+  position: relative;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
 }
@@ -552,6 +555,29 @@ ol.rb-l { list-style: decimal; }
   width: 100%;
   height: auto;
   background: #FFFFFF;
+}
+
+/* On a narrow phone the season drops out of the program line under the
+   wordmark rather than push the search and theme buttons off the screen.
+   Each line has its own width; below it the program name stays and the
+   season goes. The line truncates as a last resort. */
+@media (max-width: 401.98px) {
+  .tagline-year-hub {
+    display: none;
+  }
+}
+
+@media (max-width: 371.98px) {
+  .tagline-year-lgra {
+    display: none;
+  }
+}
+
+@media (max-width: 355.98px) {
+  .tagline-year-asfa,
+  .tagline-year-aok9 {
+    display: none;
+  }
 }
 
 /* Site search ------------------------------------------------------------ */
