@@ -343,6 +343,342 @@ function attachSearch(input, results, dogs, {
   });
 }
 
+/* ------------------------------------------------------------ site search */
+
+/* One search over every program, in the header of every page: ASFA's ranked
+   hounds, LGRA and AOK9 dogs racing lately, AOK9 Singles dogs, and, below
+   them, dogs not racing lately from the racing registries. The hub's big
+   search box uses the same index. */
+
+function racingDogUrl(org, id) {
+  return `racing-dog.html?org=${org}&id=${encodeURIComponent(id)}`;
+}
+
+/** Registry rows become objects shaped like feed dogs (minus owners,
+    titles and movement, which only the active feed carries). */
+function inflateRegistry(registry) {
+  const columns = registry.columns;
+  return registry.rows.map((row) => Object.fromEntries(columns.map((col, i) => [col, row[i]])));
+}
+
+const registryPromises = {};
+function loadRegistry(org) {
+  if (!registryPromises[org]) {
+    registryPromises[org] = loadJson(`data/${org}-registry.json`)
+      .then(inflateRegistry)
+      .catch((error) => {
+        delete registryPromises[org];
+        throw error;
+      });
+  }
+  return registryPromises[org];
+}
+
+function searchEntry(dog, program, href, meta, order) {
+  return {
+    id: dog.id, call_name: dog.call_name, registered_name: dog.registered_name,
+    breed: dog.breed, program, href, meta, order,
+  };
+}
+
+/** Every hound racing or ranked lately, as search entries. */
+function buildSearchEntries({ asfa, lgra, aok9, singles }) {
+  const entries = [];
+  if (asfa) {
+    for (const dog of asfa.dogs) {
+      entries.push(searchEntry(dog, 'ASFA', dogUrl(dog.id), `${dog.breed} #${dog.rank}`, dog.rank));
+    }
+  }
+  for (const [feed, org, name] of [[lgra, 'lgra', 'LGRA'], [aok9, 'aok9', 'AOK9']]) {
+    if (!feed) continue;
+    for (const dog of feed.dogs) {
+      entries.push(searchEntry(dog, name, racingDogUrl(org, dog.id),
+        dog.rank_breed ? `${dog.breed} #${dog.rank_breed}` : dog.breed, dog.rank_all ?? 100000));
+    }
+  }
+  // AOK9 Singles dogs racing lately that the sprint list does not carry: a
+  // dog that races only Singles is found by name and opens its Singles record.
+  if (singles) {
+    const listed = new Set(entries.map((entry) => `${entry.program}|${entry.id}`));
+    for (const dog of singles.dogs) {
+      if (!dog.active || listed.has(`AOK9|${dog.id}`)) continue;
+      listed.add(`AOK9|${dog.id}`);
+      entries.push(searchEntry(dog, 'AOK9', racingDogUrl('aok9', dog.id), `${dog.breed} · Singles`, 100001));
+    }
+  }
+  return entries;
+}
+
+/** Dogs not racing lately: AOK9 Singles first, then the LGRA and AOK9
+    registries, never one already in `entries`. The registries load on the
+    first call, so a dog registered with nothing recorded is still found. */
+async function searchDormant(query, { lgra, aok9, singles }, entries, program = '') {
+  const want = (name) => !program || program === name;
+  const listed = new Set(entries.map((entry) => `${entry.program}|${entry.id}`));
+  const found = [];
+  if (singles && want('AOK9')) {
+    const quiet = singles.dogs.filter((dog) => !listed.has(`AOK9|${dog.id}`)).map((dog) =>
+      searchEntry(dog, 'AOK9', racingDogUrl('aok9', dog.id),
+        `${dog.breed} · Singles${dog.last_year ? ` · last raced ${dog.last_year}` : ''}`, 1e6));
+    found.push(...searchDogs(query, quiet, 20));
+  }
+  const offered = new Set(found.map((dog) => `${dog.program}|${dog.id}`));
+  for (const [feed, org, name] of [[lgra, 'lgra', 'LGRA'], [aok9, 'aok9', 'AOK9']]) {
+    if (!feed || !want(name)) continue;
+    const breeds = new Map(feed.sections.map((s) => [s.slug, s.breed]));
+    const rows = await loadRegistry(org);
+    const dormant = rows.filter((dog) => !dog.active
+      && !listed.has(`${name}|${dog.id}`) && !offered.has(`${name}|${dog.id}`)).map((dog) => {
+      const breed = breeds.get(dog.breed_slug) || dog.breed_slug;
+      return searchEntry({ ...dog, breed }, name, racingDogUrl(org, dog.id),
+        `${breed} · ${dog.last_year ? `last raced ${dog.last_year}` : 'no meets recorded'}`, 1e6);
+    });
+    found.push(...searchDogs(query, dormant, 20));
+  }
+  return found.slice(0, 40);
+}
+
+/** Before anything is typed: the season's leaders, a few per program. */
+function searchLeaders({ asfa, lgra, aok9 }, program, count) {
+  const want = (name) => !program || program === name;
+  const points = (value) => (Number.isInteger(value) ? String(value) : String(Math.round(value * 100) / 100));
+  const groups = [];
+  if (asfa && want('ASFA')) {
+    const top = groupHounds(asfa.dogs).filter((dog) => dog.percentile != null && dog.is_breed)
+      .sort((a, b) => a.percentile - b.percentile || b.points - a.points).slice(0, count);
+    if (top.length) {
+      groups.push(['ASFA · highest standing in breed', top.map((dog) =>
+        searchEntry(dog, 'ASFA', dogUrl(dog.id), `${dog.breed} #${dog.rank} · ${percentileLabel(dog)}`, dog.rank))]);
+    }
+  }
+  for (const [feed, org, name] of [[lgra, 'lgra', 'LGRA'], [aok9, 'aok9', 'AOK9']]) {
+    if (!feed || !want(name)) continue;
+    const top = feed.dogs.filter((dog) => dog.rank_all)
+      .sort((a, b) => a.rank_all - b.rank_all || a.call_name.localeCompare(b.call_name)).slice(0, count);
+    if (top.length) {
+      groups.push([`${name} · leading all breeds this year`, top.map((dog) =>
+        searchEntry(dog, name, racingDogUrl(org, dog.id), `${dog.breed} · ${points(dog.ytd)} pts`, dog.rank_all))]);
+    }
+  }
+  return groups;
+}
+
+/** The feeds behind the header search, fetched the first time it opens. A
+    page's own feed is already in hand, so only the others are fetched. */
+function loadSearchFeeds() {
+  if (!loadSearchFeeds.promise) {
+    loadSearchFeeds.promise = Promise.allSettled([
+      loadSeason(), loadRacing('lgra'), loadRacing('aok9'), loadRacing('aok9-singles'),
+    ]).then((results) => {
+      const [asfa, lgra, aok9, singles] = results.map((result) =>
+        (result.status === 'fulfilled' ? result.value : null));
+      const feeds = { asfa, lgra, aok9, singles };
+      return { feeds, entries: buildSearchEntries(feeds) };
+    });
+  }
+  return loadSearchFeeds.promise;
+}
+
+const SEARCH_PROGRAMS = [['', 'All'], ['ASFA', 'ASFA'], ['LGRA', 'LGRA'], ['AOK9', 'AOK9']];
+let siteSearch = null;
+
+/* The panel is built on first open and kept: it floats over the page near
+   the top, the way a command palette does, with the page dimmed behind it. */
+function buildSiteSearch() {
+  const overlay = document.createElement('div');
+  overlay.id = 'site-search';
+  overlay.className = 'search-overlay hidden';
+  overlay.setAttribute('role', 'dialog');
+  overlay.setAttribute('aria-modal', 'true');
+  overlay.setAttribute('aria-label', 'Search hounds');
+  overlay.innerHTML = `
+    <div class="search-panel">
+      <div class="search-field">
+        ${icon('search')}
+        <input id="site-search-input" type="search" autocomplete="off" spellcheck="false" enterkeyhint="go"
+               placeholder="Search hounds by name" aria-label="Search hounds by call name or registered name"
+               role="combobox" aria-expanded="true" aria-controls="site-search-list" aria-autocomplete="list">
+        <button type="button" class="search-close" data-close><span class="kbd" aria-hidden="true">Esc</span><span class="sr-only">Close search</span></button>
+      </div>
+      <div class="search-tabs" role="tablist" aria-label="Program">
+        ${SEARCH_PROGRAMS.map(([value, label], index) => `<button type="button" role="tab" class="tab${index ? '' : ' tab-active'}"
+          aria-selected="${index ? 'false' : 'true'}" data-program="${value}">${label}</button>`).join('')}
+      </div>
+      <div id="site-search-list" class="search-list" role="listbox" aria-label="Hounds"></div>
+      <div class="search-foot" aria-hidden="true">
+        <span><span class="kbd">↑</span> <span class="kbd">↓</span> move</span>
+        <span><span class="kbd">Enter</span> open</span>
+        <span><span class="kbd">Esc</span> close</span>
+      </div>
+    </div>`;
+  document.body.appendChild(overlay);
+
+  const input = overlay.querySelector('#site-search-input');
+  const list = overlay.querySelector('#site-search-list');
+  const state = { overlay, input, list, program: '', data: null, active: -1, token: 0, returnTo: null };
+
+  const option = (dog) => `
+    <a role="option" aria-selected="false" href="${dog.href}" class="search-option">
+      <span class="flex items-center gap-2 min-w-0">
+        <span class="font-semibold text-asfa-green truncate">${esc(dog.call_name)}</span>
+        <span class="badge badge-flat shrink-0">${dog.program}</span>
+      </span>
+      <span class="block text-xs text-asfa-text/65 truncate mt-0.5"><span class="font-mono uppercase tracking-wide text-asfa-accent">${esc(dog.meta)}</span> · ${esc(dog.registered_name)}</span>
+    </a>`;
+  const note = (text) => `<p class="search-note">${text}</p>`;
+
+  function options() {
+    return [...list.querySelectorAll('.search-option')];
+  }
+
+  function highlight(index) {
+    const all = options();
+    state.active = all.length ? Math.max(0, Math.min(index, all.length - 1)) : -1;
+    all.forEach((el, i) => {
+      el.id = `site-search-option-${i}`;
+      el.setAttribute('aria-selected', i === state.active ? 'true' : 'false');
+    });
+    if (state.active >= 0) {
+      input.setAttribute('aria-activedescendant', all[state.active].id);
+      all[state.active].scrollIntoView({ block: 'nearest' });
+    } else {
+      input.removeAttribute('aria-activedescendant');
+    }
+  }
+
+  function render() {
+    const query = input.value.trim();
+    state.token += 1;
+    const token = state.token;
+    const data = state.data;
+    if (!data) { list.innerHTML = note('Loading hounds…'); highlight(-1); return; }
+    const program = state.program;
+    const where = program ? ` in ${program}` : '';
+
+    if (query.length < 2) {
+      const groups = searchLeaders(data.feeds, program, program ? 6 : 2);
+      list.innerHTML = groups.length
+        ? groups.map(([label, dogs]) => `<p class="search-group">${esc(label)}</p>${dogs.map(option).join('')}`).join('')
+          + note('Type a call name or registered name. ASFA lists each breed\'s Top 20; LGRA and AOK9 list every dog.')
+        : note('The standings could not be loaded just now.');
+      highlight(-1);
+      return;
+    }
+
+    const pool = program ? data.entries.filter((entry) => entry.program === program) : data.entries;
+    const matches = searchDogs(query, pool, 30);
+    list.innerHTML = matches.length
+      ? matches.map(option).join('')
+      : note(`Nothing racing or ranked lately matches “${esc(query)}”${where}. Looking further back…`);
+    highlight(matches.length ? 0 : -1);
+
+    searchDormant(query, data.feeds, data.entries, program).then((extra) => {
+      if (token !== state.token) return;
+      if (!extra.length) {
+        if (!matches.length) {
+          list.innerHTML = note(`No hound matches “${esc(query)}”${where}.${
+            !program || program === 'ASFA' ? " ASFA lists only each breed's Top 20." : ''}`);
+        }
+        return;
+      }
+      if (!matches.length) list.innerHTML = '';
+      list.insertAdjacentHTML('beforeend',
+        `<p class="search-group">Not racing lately</p>${extra.map(option).join('')}`);
+      highlight(state.active >= 0 ? state.active : 0);
+    }).catch((error) => console.warn(error));
+  }
+  state.render = render;
+
+  input.addEventListener('input', render);
+  input.addEventListener('keydown', (event) => {
+    if (event.key === 'ArrowDown') { event.preventDefault(); highlight(state.active + 1); }
+    else if (event.key === 'ArrowUp') { event.preventDefault(); highlight(state.active - 1); }
+    else if (event.key === 'Enter') {
+      const chosen = options()[state.active >= 0 ? state.active : 0];
+      if (chosen) { event.preventDefault(); window.location.assign(chosen.href); }
+    }
+  });
+  list.addEventListener('mousemove', (event) => {
+    const hovered = event.target.closest('.search-option');
+    const index = hovered ? options().indexOf(hovered) : -1;
+    if (index >= 0 && index !== state.active) highlight(index);
+  });
+  overlay.querySelectorAll('[data-program]').forEach((tab) => {
+    tab.addEventListener('click', () => {
+      state.program = tab.dataset.program;
+      overlay.querySelectorAll('[data-program]').forEach((other) => {
+        const on = other === tab;
+        other.classList.toggle('tab-active', on);
+        other.setAttribute('aria-selected', on ? 'true' : 'false');
+      });
+      render();
+      input.focus();
+    });
+  });
+  overlay.querySelector('[data-close]').addEventListener('click', closeSiteSearch);
+  // A click on the dimmed page, outside the panel, closes it.
+  overlay.addEventListener('mousedown', (event) => {
+    if (event.target === overlay) closeSiteSearch();
+  });
+  overlay.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') { event.preventDefault(); closeSiteSearch(); return; }
+    if (event.key !== 'Tab') return;
+    // Keep keyboard focus inside the panel while it is open.
+    const focusable = [...overlay.querySelectorAll('input, button, a[href]')]
+      .filter((el) => el.offsetParent !== null);
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
+    else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
+  });
+  return state;
+}
+
+function openSiteSearch(returnTo) {
+  if (!siteSearch) siteSearch = buildSiteSearch();
+  if (!siteSearch.overlay.classList.contains('hidden')) return;
+  siteSearch.returnTo = returnTo || document.activeElement;
+  siteSearch.overlay.classList.remove('hidden');
+  document.documentElement.style.overflow = 'hidden';
+  siteSearch.input.focus();
+  siteSearch.input.select();
+  siteSearch.render();
+  if (!siteSearch.data) {
+    loadSearchFeeds().then((data) => {
+      siteSearch.data = data;
+      siteSearch.render();
+    });
+  }
+}
+
+function closeSiteSearch() {
+  if (!siteSearch || siteSearch.overlay.classList.contains('hidden')) return;
+  siteSearch.overlay.classList.add('hidden');
+  document.documentElement.style.overflow = '';
+  const back = siteSearch.returnTo;
+  if (back && document.contains(back) && typeof back.focus === 'function') back.focus();
+}
+
+/** The header's search box opens the panel; so do "/" and Ctrl+K (Cmd+K on
+    a Mac) from anywhere on the page that is not already a text field. */
+function initSiteSearch(trigger) {
+  if (trigger) trigger.addEventListener('click', () => openSiteSearch(trigger));
+  if (initSiteSearch.keysBound) return;
+  initSiteSearch.keysBound = true;
+  document.addEventListener('keydown', (event) => {
+    if (siteSearch && !siteSearch.overlay.classList.contains('hidden')) return;
+    const target = event.target;
+    const typing = target instanceof HTMLElement
+      && (target.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(target.tagName));
+    const commandK = (event.key === 'k' || event.key === 'K') && (event.ctrlKey || event.metaKey) && !event.altKey;
+    const slash = event.key === '/' && !typing && !event.ctrlKey && !event.metaKey && !event.altKey;
+    if (commandK || slash) {
+      event.preventDefault();
+      openSiteSearch(document.getElementById('site-search-open'));
+    }
+  });
+}
+
 /* ------------------------------------------------------------------ chrome */
 
 const NAV_ASFA = [
@@ -679,8 +1015,9 @@ function renderChrome(feed, current, sectionKey = sectionOf(current)) {
     header.innerHTML = `
       <a href="#main" class="skip-link">Skip to content</a>
       <div class="bg-asfa-paper border-b border-asfa-border">
-        <div class="max-w-6xl mx-auto px-4 pt-3 lg:pt-0 lg:py-1.5 flex flex-col lg:flex-row lg:items-center gap-x-8 relative">
-          <div class="flex items-center gap-2.5 shrink-0 pr-10 lg:pr-0">
+        <div class="max-w-6xl mx-auto px-4">
+          <div class="flex items-center gap-2 sm:gap-3 pt-3 pb-1">
+          <div class="flex items-center gap-2.5 shrink-0">
             <a href="index.html" class="shrink-0" aria-label="Gazehound Stats home">${jackrabbitMark('block text-asfa-accent', 32)}</a>
             <span class="flex flex-col">
               <a href="index.html" class="font-display font-semibold text-xl leading-tight text-asfa-text whitespace-nowrap">Gazehound Stats</a>
@@ -697,12 +1034,20 @@ function renderChrome(feed, current, sectionKey = sectionOf(current)) {
               </span>
             </span>
           </div>
-          <nav class="nav-scroll edge-fade flex flex-nowrap lg:flex-wrap overflow-x-auto lg:overflow-visible -mx-4 px-4 lg:mx-0 lg:px-0" aria-label="Site">${links}</nav>
-          <button id="theme-toggle" type="button" class="absolute right-3 top-2.5 lg:static lg:order-last lg:ml-auto shrink-0 p-2 text-base text-asfa-muted hover:text-asfa-text"></button>
+          <div class="ml-auto flex items-center gap-1 shrink-0">
+            <button type="button" id="site-search-open" class="search-trigger" aria-haspopup="dialog"
+                    aria-keyshortcuts="/ Control+K" aria-label="Search hounds">
+              ${icon('search')}<span class="search-trigger-label">Search hounds</span><span class="kbd search-trigger-kbd" aria-hidden="true">/</span>
+            </button>
+            <button id="theme-toggle" type="button" class="shrink-0 p-1.5 sm:p-2 text-base text-asfa-muted hover:text-asfa-text"></button>
+          </div>
+          </div>
+          <nav class="nav-scroll edge-fade flex flex-nowrap lg:flex-wrap overflow-x-auto lg:overflow-visible -mx-4 px-4 lg:mr-0 lg:-ml-2.5 lg:px-0" aria-label="Site">${links}</nav>
         </div>
       </div>`;
     initThemeToggle(header.querySelector('#theme-toggle'));
     initProgramMenu(header);
+    initSiteSearch(header.querySelector('#site-search-open'));
 
     const nav = header.querySelector('nav');
     paintNav(nav, current, section.nav, section.line);

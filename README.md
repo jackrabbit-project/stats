@@ -18,7 +18,7 @@ ASFA publishes the standings as one long page of stacked breed tables, and trial
 - **LGRA racing** — standings by breed and all-breed on this season's National points, career points, WAVE and grade, per-hound pages with the last three meets and progress toward GRC and SGRC, from LGRA's grading guide
 - **AOK9 racing** — the same for R.A.C.E.'s all-breed sprint program: breed and mixed divisions, BRC, MRC and TRC and the Supreme titles, Turtle points, from the AOK9 sprint grading guide
 - **AOK9 Singles** — a tab of its own for the stake where dogs that can't run in company race alone, timed: Singles titles and progress toward them, each breed's Singles dogs with their average and personal best, and a Singles record on every hound page, from the AOK9 Singles sprint records
-- **One search** across all three programs on the hub at `/`
+- **One search** across all three programs, in the header of every page (press `/` or Ctrl+K) and on the hub at `/`: a floating panel with ASFA, LGRA and AOK9 filters and the season's leaders before you type
 
 **This is an independent, unofficial project. It is not authorized, approved, or endorsed by ASFA, LGRA or R.A.C.E., and it is not a publication of any of them.** Wherever this site and [ASFA's published standings](https://www.asfa.org/20/index.htm), the [LGRA grading guide](https://lgra.club/grading-guide) or the [AOK9 sprint grading guide](https://aok9racing.com/documents--forms.html) disagree, the body's own publication governs.
 

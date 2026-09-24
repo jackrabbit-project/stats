@@ -100,10 +100,6 @@ const ORGS = {
 
 /* ---------------------------------------------------------------- helpers */
 
-function racingDogUrl(org, id) {
-  return `racing-dog.html?org=${org}&id=${encodeURIComponent(id)}`;
-}
-
 function racingBreedUrl(org, slug) {
   return `${org}.html?breed=${encodeURIComponent(slug)}#browse`;
 }
@@ -243,26 +239,6 @@ function titleBadges(org, dog) {
     }
   }
   return out.join(' ');
-}
-
-/** Registry rows become objects shaped like feed dogs (minus owners,
-    titles and movement, which only the active feed carries). */
-function inflateRegistry(registry) {
-  const columns = registry.columns;
-  return registry.rows.map((row) => Object.fromEntries(columns.map((col, i) => [col, row[i]])));
-}
-
-const registryPromises = {};
-function loadRegistry(org) {
-  if (!registryPromises[org]) {
-    registryPromises[org] = loadJson(`data/${org}-registry.json`)
-      .then(inflateRegistry)
-      .catch((error) => {
-        delete registryPromises[org];
-        throw error;
-      });
-  }
-  return registryPromises[org];
 }
 
 /** Sortable table head: the titles.html pattern, once. */
