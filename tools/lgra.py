@@ -96,7 +96,7 @@ GRC_POINTS = 12
 NATIONAL_STEP = 30
 
 REGISTRY_COLUMNS = [
-    "id", "breed_slug", "call_name", "registered_name", "owner_raw", "wave",
+    "id", "breed_slug", "call_name", "registered_name", "note", "owner_raw", "wave",
     "grade", "grc", "ngrc", "ytd", "rank_breed", "rank_all", "rank_career",
     "meets", "dq", "last_raced", "active", "duplicate_of",
 ]
@@ -455,7 +455,7 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__,
                                      formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--force", action="store_true",
-                        help="archive even if the guide is unchanged or the date exists")
+                        help="archive even if the guide is unchanged")
     parser.add_argument("--file", type=Path,
                         help="parse this workbook instead of fetching")
     parser.add_argument("--offline", action="store_true",

@@ -253,9 +253,13 @@ function sortableHead(columns, sort, extra = '') {
 function sortRows(rows, columns, sort) {
   const col = columns.find(([key]) => key === sort.key) || columns[0];
   const key = col[0];
+  // A dog whose newest AOK9 meet is an undated code (2025-S67) has only a
+  // last_year; "2025" sorts among that year, just below its dated meets.
+  const value = (row) => (key === 'last_raced' && row.last_raced == null && row.last_year != null
+    ? String(row.last_year) : row[key]);
   return [...rows].sort((a, b) => {
-    const av = a[key];
-    const bv = b[key];
+    const av = value(a);
+    const bv = value(b);
     if (av == null && bv == null) return 0;
     if (av == null) return 1;
     if (bv == null) return -1;

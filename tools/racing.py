@@ -208,6 +208,21 @@ def decode_or_keep(decoder, code) -> dict:
                 "date": None, "undecoded": True}
 
 
+def last_raced(meets: list[dict]) -> str | None:
+    """The date of the newest listed meet, or None when only its year is known.
+
+    AOK9's recent meets carry sanctioned-meet codes (2025-S67) with no date,
+    older ones a date. The newest *dated* meet is only the last one raced
+    when no undated meet comes from the same year or later; otherwise the
+    pages fall back to last_year.
+    """
+    newest = max((m["date"] for m in meets if m["date"]), default=None)
+    undated = [m["year"] for m in meets if m["year"] and not m["date"]]
+    if newest is None or (undated and max(undated) >= int(newest[:4])):
+        return None
+    return newest
+
+
 # --------------------------------------------------------------- spreadsheets
 
 def cell_str(value) -> str:
@@ -318,6 +333,20 @@ def section_header(row: list, name_cols=(0, 1), empty_cols=(2, 4)) -> dict | Non
 
 NOTE_RE = re.compile(r"\s*\(([^)]*[A-Za-z][^)]*)\)\s*")
 
+# A registrar's note is administrative: it carries a date or names a status
+# or a change ("CAN NOT RUN UNTIL 3-12-24", "Call name formerly Envy",
+# "BANNED FROM RACING", "not one year yet", "Records moved"). Other brackets
+# are part of the name as the guide prints it: "Artemis Roam (If You Want
+# To)", "Oliver Queen (The Green Arrow)", a country of registration, "(GRC)".
+NOTE_WORDS = re.compile(
+    r"\d|can\s*not|can't|\brun\b|\brac(?:e|ing)\b|banned|\bname|\bcall\b|"
+    r"former|chang|\bold\b|record|moved|\byears?\b",
+    re.IGNORECASE)
+
+# Runs of asterisks set a note off ("***(BANNED FROM RACING)***"); they are
+# emphasis, never part of a registered name.
+EMPHASIS_RE = re.compile(r"\*{2,}")
+
 
 def strip_note(registered_raw: str) -> tuple[str, str | None]:
     """Pull a registrar's parenthetical note out of a registered name.
@@ -325,9 +354,17 @@ def strip_note(registered_raw: str) -> tuple[str, str | None]:
     "FC Kominek's Freya FCh MC LCX (DOG CAN NOT RUN UNTIL 3-12-24)" is a name
     and an administrative note; the note is kept, separately.
     """
-    text = collapse(registered_raw)
-    notes = [collapse(match) for match in NOTE_RE.findall(text)]
-    name = collapse(NOTE_RE.sub(" ", text))
+    notes: list[str] = []
+
+    def take(match: re.Match) -> str:
+        inner = collapse(match.group(1))
+        if NOTE_WORDS.search(inner):
+            notes.append(inner)
+            return " "
+        return match.group(0)
+
+    name = NOTE_RE.sub(take, collapse(registered_raw))
+    name = collapse(EMPHASIS_RE.sub(" ", name))
     return name, ("; ".join(notes) or None)
 
 
@@ -410,8 +447,10 @@ def write_snapshot_if_changed(snapshot_dir: Path, snapshot: dict,
                               force: bool = False) -> Path | None:
     """Archive a parsed guide unless it matches the newest one already kept.
 
-    Mirrors fetch.py: an unchanged guide costs nothing; a guide revised in
-    place under the same date is refused unless --force.
+    An unchanged guide costs nothing. A guide revised in place under the same
+    date replaces that date's snapshot: the registrar's correction is the
+    guide now. (LGRA re-uploaded the 9-17-26 guide with changes on September
+    21, 2026, and refusing it left the site on the uncorrected copy.)
     """
     snapshot_dir.mkdir(parents=True, exist_ok=True)
     target = snapshot_dir / f"{snapshot['guide_date']}.json"
@@ -423,13 +462,9 @@ def write_snapshot_if_changed(snapshot_dir: Path, snapshot: dict,
             print(f"Unchanged since {previous.name} - nothing archived.")
             return None
 
-    if target.exists() and not force:
-        print(
-            f"{target.name} already exists but its contents differ from the "
-            f"guide just fetched. The registrar revised a guide in place under "
-            f"the same date. Re-run with --force to overwrite."
-        )
-        return None
+    if target.exists():
+        print(f"{target.name}: the registrar revised this guide in place under "
+              f"the same date - archiving the revision over it.")
 
     target.write_text(dumps_snapshot(snapshot), encoding="utf-8")
     hounds = sum(len(section["dogs"]) for section in snapshot["sections"])

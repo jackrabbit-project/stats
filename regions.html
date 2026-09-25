@@ -20,7 +20,7 @@
   <link rel="preload" href="assets/fonts/fraunces-latin-var.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/plex-mono-400.woff2" as="font" type="font/woff2" crossorigin>
   <script src="js/theme.js?v=20260823"></script>
-  <link rel="stylesheet" href="css/app.css?v=20260924n">
+  <link rel="stylesheet" href="css/app.css?v=20260924o">
   <link rel="icon" href="assets/favicon.ico?v=3" sizes="any">
   <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png?v=3">
   <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png?v=3">
@@ -30,7 +30,7 @@
   <main id="main" class="flex-1 max-w-6xl mx-auto w-full px-4 py-6 space-y-6"></main>
   <footer id="site-footer" class="bg-asfa-navy text-white py-8"></footer>
 
-  <script src="js/app.js?v=20260924n"></script>
+  <script src="js/app.js?v=20260924o"></script>
   <script>
     page('regions.html', (season) => {
       const main = document.getElementById('main');
@@ -181,9 +181,10 @@
             </table></div>
             <p class="text-xs text-asfa-text/55 mt-3">
               ASFA's per-trial entry figure counts every program together, so this split is
-              re-derived from the flight sizes in each trial's posted results. A flight printed
-              "(0)" is a hound entered that never ran; its program can't be known from the
-              published page, so it is shown separately rather than guessed into one.
+              re-derived from the flight sizes and placings in each trial's posted results.${bp.absent ? `
+              An entry that appears in no flight is a hound entered that never ran; its program
+              can't be known from the published page, so it is shown separately rather than
+              guessed into one.` : ''}
             </p>
           </div>
 

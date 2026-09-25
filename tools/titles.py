@@ -72,7 +72,22 @@ TITLE_BLOCKS = {
     "title of coursing proficiency": "TCP",
     "coursing proficiency excellent (cpx)": "CPX",
     "coursing proficiency excellent": "CPX",
+    # The page's own variants: a typo in one LCI Small block, and the Singles
+    # blocks' longer wording for CPX and its tiers.
+    "lure chasing excellence": "LCE",
+    "title of coursing proficiency excellent": "CPX",
+    "title of coursing proficiency excellent (cpx2)": "CPX2",
 }
+
+# Block names the page shows with no titles under them. They are known, so
+# they do not stop the run, but a hound row under one raises: its title
+# cannot be named.
+EMPTY_BLOCKS = {"lure coursing senior"}
+
+# A single-cell row inside a section that reads like a title block name.
+BLOCK_WORDS = re.compile(
+    r"champion|courser|coursing|chasing|proficiency|merit|instinct|"
+    r"advanced|excellen|senior|veteran", re.IGNORECASE)
 
 LCI_ABBRS = {"LCI", "LCC", "VLCC", "LCA", "LCE"}
 SINGLES_ABBRS = {"TCP", "CPX"}
@@ -86,23 +101,32 @@ DATE_WORDY = re.compile(
 )
 # "29-Apr-18"
 DATE_DASHED = re.compile(r"^(\d{1,2})-([A-Za-z]{3,9})-(\d{2})$")
+# "Mar 28 26" (two-digit year) and "Jun 282026" (no space before the year).
+DATE_SHORT_YEAR = re.compile(r"^([A-Za-z]{3,9})\.?\s*(\d{1,2})[,.]?\s+(\d{2})$")
+DATE_GLUED_YEAR = re.compile(r"^([A-Za-z]{3,9})\.?\s*(\d{1,2})(\d{4})$")
 
 # The registered-name cell trails off into registration number, sex and birth
 # date ("..., HP519599/02, D, Jun 24, 2016"). Registry formats vary too much
 # for a prefix list (HP, PAL, RI.H23.018, LG079, PL024-584, V2024 468 ...),
 # so the tail is trimmed comma-part by comma-part from the right: a part that
-# carries a digit, is a bare sex letter, or reads as a date is registration
-# furniture, and the trimming stops at the first part that looks like a name.
+# carries a run of three or more digits, is a bare sex letter, or reads as a
+# date is registration furniture, and the trimming stops at the first part
+# that looks like a name or a title list. Titles carry at most two digits in
+# a row (ACT1, LCX3, PR4TKN), so they stay. A birth date split by a comma
+# ("Jum 15,2024") is rejoined first. The kept parts keep the page's spacing.
 def display_name(registered_raw: str) -> str:
-    parts = [collapse(p) for p in registered_raw.split(",")]
-    while len(parts) > 1:
-        tail = parts[-1]
-        if (not tail or any(ch.isdigit() for ch in tail)
+    parts = registered_raw.split(",")
+    if len(parts) > 2 and re.fullmatch(r"\s*\d{4}\s*", parts[-1]):
+        parts[-2:] = [parts[-2] + "," + parts[-1]]
+    keep = len(parts)
+    while keep > 1:
+        tail = collapse(parts[keep - 1])
+        if (not tail or re.search(r"\d{3}", tail)
                 or re.fullmatch(r"[DBM]", tail) or parse_date(tail)):
-            parts.pop()
+            keep -= 1
         else:
             break
-    return collapse(",".join(parts)).rstrip(",")
+    return collapse(",".join(parts[:keep])).rstrip(",")
 
 # The coverage statement the page makes about itself.
 COVERAGE = re.compile(
@@ -148,6 +172,13 @@ def parse_date(text: str) -> date | None:
         month = MONTHS.get(month_name.lower())
         if month:
             return date(int(year), month, int(day))
+    for pattern, century in ((DATE_SHORT_YEAR, 2000), (DATE_GLUED_YEAR, 0)):
+        match = pattern.match(text)
+        if match:
+            month_name, day, year = match.groups()
+            month = MONTHS.get(month_name[:3].lower())
+            if month:
+                return date(century + int(year), month, int(day))
     return None
 
 
@@ -201,14 +232,30 @@ def parse_rows(html: str) -> list[dict]:
         # A title block header is a single filled cell from the vocabulary.
         if len(filled) == 1:
             base = re.sub(r"\s+\d+$", "", filled[0]).lower()
-            if base in TITLE_BLOCKS:
+            if filled[0].lower() in TITLE_BLOCKS:
+                title_abbr = TITLE_BLOCKS[filled[0].lower()]
+                title_name = filled[0]
+            elif base in TITLE_BLOCKS:
                 tier = re.search(r"(\d+)$", filled[0])
                 title_abbr = TITLE_BLOCKS[base] + (tier.group(1) if tier else "")
                 title_name = filled[0]
+            elif base in EMPTY_BLOCKS:
+                title_abbr, title_name = "", filled[0]
+            elif (section is not None and len(filled[0]) < 80
+                    and BLOCK_WORDS.search(filled[0])):
+                # Rows under an unknown block would otherwise inherit the
+                # previous block's title.
+                raise TitleParseError(
+                    f"unknown title block {filled[0]!r} in {section} - add it "
+                    f"to TITLE_BLOCKS")
             continue
 
         if section is None or title_abbr is None or len(filled) < 3:
             continue
+        if title_abbr == "" and any(parse_date(c) for c in filled[1:]):
+            raise TitleParseError(
+                f"a hound row sits under {title_name!r} in {section}, a block "
+                f"with no title in TITLE_BLOCKS")
 
         # A hound row: call name, registered line, an earned date, owners.
         # One row occasionally carries two records back to back, so every
@@ -290,9 +337,10 @@ def attach_dogs(rows: list[dict]) -> int:
             if dog["breed"].lower() == section:
                 pick = dog
                 break
-        if pick is None and candidates:
+        if pick is None and len(candidates) == 1:
             # Ranked under a different section (a Singles title for a hound
             # listed under its breed, say) — the profile is the same hound.
+            # Two candidates elsewhere would be a guess, so no link.
             pick = candidates[0]
 
         if pick is None:

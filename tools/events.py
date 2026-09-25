@@ -11,9 +11,9 @@ letters rather than numbers.
 
 Months are delimited by header rows reading "January y 2026" (sic — the page
 really does say that). Cancellations appear as "LEGS Cancelled" inside the
-club cell. Some region numbers carry an unexplained asterisk ("6*"); it is
-stripped rather than reproduced, because reprinting a mark ASFA never defines
-would invite wrong guesses.
+club cell. Some region numbers carry an asterisk ("6*"); the page's legend
+reads "* = Priority". The site does not show priority, so the mark is
+stripped from the region number.
 
 Usage:
     python tools/events.py

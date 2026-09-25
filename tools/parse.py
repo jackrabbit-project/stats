@@ -3,7 +3,8 @@
 The page is one long HTML table. Breed sections are delimited by header rows
 carrying class="tableheader", whose third cell holds the breed name and the
 "total competing: N" count. Every row — header and data alike — has exactly
-eight cells:
+eight cells, though ASFA occasionally omits a data row's <tr> tag (see
+parse_html):
 
     Rank | Call Name | Registered Name | Owner | Region | Top 20 Pts | BOB | BIF
 
@@ -98,7 +99,12 @@ def validate_ranks(breed: str, rows: list[dict]) -> None:
 
 
 def parse_html(html: str, as_of: str, season: int, source: str) -> dict:
-    soup = BeautifulSoup(html, "html.parser")
+    # html5lib, not html.parser: in some sections (Magyar Agar, Peruvian Inca
+    # Orchid, Podengo Pequeno and Sloughi in the August 2026 page) the ranked
+    # hound's eight cells follow the header row with no <tr> of their own.
+    # Browsers repair that into a row and show the hound; html.parser leaves
+    # the cells outside any row, and find_all("tr") silently skipped them.
+    soup = BeautifulSoup(html, "html5lib")
 
     first_header = soup.find("tr", class_="tableheader")
     if first_header is None:

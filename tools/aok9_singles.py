@@ -42,7 +42,7 @@ import requests
 from aok9 import EXPORT_USER_AGENT, LINK_PAGE, SITE_URL, UPDATED_RE, find_header_row
 from racing import (
     DATA, RacingParseError, breed_display, cell_num, cell_str, decode_aok9_meet,
-    decode_or_keep, derive_identity, fetch_bytes, fetch_text, load_snapshots,
+    decode_or_keep, derive_identity, fetch_bytes, last_raced, fetch_text, load_snapshots,
     parse_id, section_header, sha256, slug, super_level, today, write_json,
     write_snapshot_if_changed,
 )
@@ -348,7 +348,7 @@ def derive(snapshot: dict, sprint_rows: list[dict], sprint_sections: list[dict])
                               "date": info["date"], "time": time})
             dog["meets"] = meets
             dog["last_year"] = max((m["year"] for m in meets if m["year"]), default=None)
-            dog["last_raced"] = max((m["date"] for m in meets if m["date"]), default=None)
+            dog["last_raced"] = last_raced(meets)
             dog["recent"] = max((meet_order(m) for m in meets), default=None)
 
             computed = mean_time([m["time"] for m in meets])
@@ -559,7 +559,7 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__,
                                      formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--force", action="store_true",
-                        help="archive even if the records are unchanged or the date exists")
+                        help="archive even if the records are unchanged")
     parser.add_argument("--file", type=Path,
                         help="parse this workbook instead of fetching (needs --date)")
     parser.add_argument("--date", type=date.fromisoformat,

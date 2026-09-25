@@ -1,7 +1,7 @@
 {
   "season": 2026,
   "as_of": "2026-08-09",
-  "generated": "2026-08-27",
+  "generated": "2026-09-25",
   "source_url": "https://www.asfa.org/trial/index0111.html",
   "months": [
     "2026-01",
@@ -21,10 +21,10 @@
     "unassigned_trials": 0,
     "unassigned_entries": 0,
     "by_program": {
-      "breed": 1924,
+      "breed": 1925,
       "singles": 488,
       "lci": 536,
-      "absent": 1
+      "absent": 0
     }
   },
   "unmatched_clubs": [],
@@ -667,10 +667,10 @@
       "entries": 31,
       "note": "",
       "by_program": {
-        "breed": 18,
+        "breed": 19,
         "singles": 6,
         "lci": 6,
-        "absent": 1
+        "absent": 0
       },
       "club": "Colorado Lure Coursing Association",
       "club_slug": "colorado-lure-coursing-association",

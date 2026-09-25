@@ -29,7 +29,7 @@ import requests
 from racing import (
     DATA, RacingParseError, breed_display, build_movement, build_owners,
     cell_num, cell_str, compact_registry, cumulative_titles, decode_aok9_meet,
-    decode_or_keep,
+    decode_or_keep, last_raced,
     derive_identity, fetch_bytes, fetch_text, grade, section_header,
     load_snapshots, parse_id, rank_by, read_rows_xlsx, sha256, slug,
     super_level, today, wave, write_json, write_snapshot_if_changed,
@@ -93,7 +93,7 @@ def trc_earned(dog: dict) -> bool:
     return (dog.get("trc") or 0) >= CHAMPIONSHIP_POINTS
 
 REGISTRY_COLUMNS = [
-    "id", "breed_slug", "call_name", "registered_name", "owner_raw", "bwave",
+    "id", "breed_slug", "call_name", "registered_name", "note", "owner_raw", "bwave",
     "mwave", "bgrade", "mgrade", "brc", "nbrc", "mrc", "nmrc", "trc", "ytd",
     "rank_breed", "rank_all", "rank_career_breed", "rank_career_mixed",
     "meets_breed", "meets_mixed", "dq", "last_raced", "last_year", "active",
@@ -299,7 +299,7 @@ def derive(snapshot: dict) -> list[dict]:
             dog["meets_breed"] = decode_meets(dog["meets_breed"])
             dog["meets_mixed"] = decode_meets(dog["meets_mixed"])
             every = dog["meets_breed"] + dog["meets_mixed"]
-            dog["last_raced"] = max((m["date"] for m in every if m["date"]), default=None)
+            dog["last_raced"] = last_raced(every)
             dog["last_year"] = max((m["year"] for m in every if m["year"]), default=None)
 
             dq = []
@@ -512,7 +512,7 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__,
                                      formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--force", action="store_true",
-                        help="archive even if the guide is unchanged or the date exists")
+                        help="archive even if the guide is unchanged")
     parser.add_argument("--file", type=Path,
                         help="parse this workbook instead of fetching (needs --date)")
     parser.add_argument("--date", type=date.fromisoformat,

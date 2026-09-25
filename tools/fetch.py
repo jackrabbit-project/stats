@@ -99,10 +99,15 @@ def fetch(force: bool = False) -> Path | None:
     season, as_of = read_period(raw.decode(PAGE_ENCODING, errors="replace"))
     target = SNAPSHOT_DIR / f"{as_of.isoformat()}.html"
 
-    digest = hashlib.sha256(raw).hexdigest()
+    # Compared with line endings normalised: ASFA serves CRLF, but git stores
+    # the snapshots with LF (`* text=auto` in .gitattributes wins over the
+    # -text lines), so on the Linux runner an unchanged page never matched
+    # byte for byte and every run reported a revision in place.
+    digest = hashlib.sha256(raw.replace(b"\r\n", b"\n")).hexdigest()
     previous = newest_snapshot()
     if previous is not None and not force:
-        if hashlib.sha256(previous.read_bytes()).hexdigest() == digest:
+        stored = previous.read_bytes().replace(b"\r\n", b"\n")
+        if hashlib.sha256(stored).hexdigest() == digest:
             print(f"Unchanged since {previous.name} - nothing archived.")
             return None
 

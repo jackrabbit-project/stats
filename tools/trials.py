@@ -64,8 +64,9 @@ ENTRY_RE = re.compile(r"Entry:\s*(\d+)", re.IGNORECASE)
 # Detail blocks: section headers ("WHIPPET Judge:", "SINGLES Judge:",
 # "LCI LARGE Judge:") followed by flight sizes ("Open Flight A(5, 1 NQ)" is a
 # flight of five). The trial's published Entry figure counts entered hounds;
-# flights count the ones that ran, so a flight printed "(0)" — entered, never
-# ran — is how the two can differ.
+# flights count the ones that ran, so an entered hound missing from every
+# flight is how the two can differ. A flight is never counted smaller than
+# the hounds it places (see parse_program_entries).
 PROGRAM_TOKEN_RE = re.compile(
     r"(LCI (?:LARGE|SMALL|SIGHTHOUND MIX))"
     r"|([A-Z][A-Z &().'-]{2,40}?)\s+Judges?:"
@@ -187,7 +188,8 @@ def parse_program_entries(html: str) -> dict[str, dict]:
             re.sub(r"<[^>]+>", " ", segment).replace("&nbsp;", " "))
         tally = {"breed": 0, "singles": 0, "lci": 0}
         program = "breed"
-        for token in PROGRAM_TOKEN_RE.finditer(flat):
+        tokens = list(PROGRAM_TOKEN_RE.finditer(flat))
+        for k, token in enumerate(tokens):
             lci, header, flight = token.groups()
             if lci:
                 program = "lci"
@@ -202,7 +204,14 @@ def parse_program_entries(html: str) -> dict[str, dict]:
                 else:
                     program = "breed"
             elif flight:
-                tally[program] += int(flight)
+                # A flight ran at least as many hounds as it places. ASFA
+                # printed one flight "(0)" above a hound placed first with
+                # Best of Breed (Azawakh at CLCA, February 22, 2026); the
+                # printed size alone made that hound look entered, never ran.
+                stop = tokens[k + 1].start() if k + 1 < len(tokens) else len(flat)
+                placed = len(re.findall(r"(?:^|\s)\d{1,2}\.\s",
+                                        flat[token.end():stop]))
+                tally[program] += max(int(flight), placed)
         tallies[ref] = tally
     return tallies
 
@@ -318,8 +327,8 @@ def main() -> int:
                 raise TrialParseError(
                     f"{season}-{month:02d}: {row['club_raw']} flights sum to "
                     f"{ran} but Entry says {row['entries']}")
-            # Entered-but-never-ran hounds exist ("Champion Flight A(0)");
-            # their program is unknowable, so they are carried separately
+            # Entered hounds missing from every flight would be entered, never
+            # ran; their program is unknowable, so they are carried separately
             # rather than guessed into one.
             row["by_program"] = {**tally, "absent": row["entries"] - ran}
         trials.extend(month_rows)

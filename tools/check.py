@@ -52,7 +52,12 @@ def count_html_rows(path: Path) -> tuple[int, int]:
     # left without a start tag and goes uncounted.
     marker = html.find('class="tableheader"')
     body = html[html.rfind("<tr", 0, marker):]
-    rows = re.findall(r"<tr\b[^>]*>(.*?)</tr>", body, re.DOTALL | re.IGNORECASE)
+    # Split on every row tag, opening or closing, rather than matching
+    # <tr>...</tr> pairs: ASFA sometimes leaves a hound's eight cells between
+    # a header's </tr> and the next <tr>, with no row tag of their own, and a
+    # browser still shows them as a row. The pair match skipped those rows,
+    # exactly as parse.py did, so the check could not catch it.
+    rows = re.split(r"</?tr\b[^>]*>", body, flags=re.IGNORECASE)
 
     sections = data_rows = 0
     for row in rows:
@@ -428,7 +433,8 @@ def check_trials(check: Checker) -> None:
             if "Judge" not in block:
                 continue
             program = "breed"
-            for token in token_re.finditer(block):
+            tokens = list(token_re.finditer(block))
+            for k, token in enumerate(tokens):
                 lci, header, flight = token.groups()
                 if lci:
                     program = "lci"
@@ -436,7 +442,13 @@ def check_trials(check: Checker) -> None:
                     program = ("singles" if "SINGLE" in header
                                else "lci" if "LCI" in header else "breed")
                 elif flight:
-                    derived[program] += int(flight)
+                    # A flight is never smaller than the placings under it
+                    # (ASFA once printed "(0)" above a first place).
+                    stop = (tokens[k + 1].start() if k + 1 < len(tokens)
+                            else len(block))
+                    placed = len(re.findall(r"(?:^|\s)\d{1,2}\.\s",
+                                            block[token.end():stop]))
+                    derived[program] += max(int(flight), placed)
     for key in ("breed", "singles", "lci"):
         check.expect(
             trials["stats"]["by_program"][key] == derived[key],
@@ -633,6 +645,11 @@ def check_titles(check: Checker) -> None:
     text = re.sub(r"\s+", " ", text)
     counted = len(re.findall(rf"\b{season}\b", text))
     counted += len(re.findall(rf"\b\d{{1,2}}-[A-Za-z]{{3,9}}-{season % 100}\b", text))
+    # "Mar 28 26" (two-digit year) and "Jun 282026" (no space before the
+    # year) both hide the season from the whole-word count above.
+    counted += len(re.findall(
+        rf"\b[A-Za-z]{{3,9}}\.?\s*\d{{1,2}}[,.]?\s+{season % 100}\b", text))
+    counted += len(re.findall(rf"\b[A-Za-z]{{3,9}}\.?\s*\d{{1,2}}{season}\b", text))
     counted -= len(re.findall(rf"{season}\s*ASFA\s*II\b", text))
     counted -= len(re.findall(
         rf"through\s+[A-Za-z]{{3,9}}\.?\s*\d{{1,2}},?\s+{season}", text))
@@ -880,6 +897,19 @@ def check_racing(check: Checker, org: str) -> None:
                      f"{label}: {dog['id']} differs between feed and registry")
     check.expect(stats["hounds_ytd"] == sum((row["ytd"] or 0) > 0 for row in rows),
                  f"{label}: stats.hounds_ytd is not the count of hounds with points")
+    # last_raced is the newest listed meet's date, or None when a meet from
+    # the same year or later carries only an undated code (AOK9's 2025-S67):
+    # the pages then show that year instead of an older date.
+    for row in rows:
+        listed = [meet for stream in spec["meet_streams"] for meet in row[stream]]
+        dated = [meet[2] for meet in listed if meet[2]]
+        undated_years = [meet[1] for meet in listed if meet[1] and not meet[2]]
+        expected = max(dated) if dated else None
+        if expected and undated_years and max(undated_years) >= int(expected[:4]):
+            expected = None
+        check.expect(row["last_raced"] == expected,
+                     f"{label}: {row['id']} last_raced {row['last_raced']} "
+                     f"!= {expected} from its listed meets")
     raced = [row for row in rows
              if any(meet[1] == season for stream in spec["meet_streams"] for meet in row[stream])]
     check.expect(stats["hounds_raced"] == len(raced),
@@ -1224,6 +1254,13 @@ def check_singles(check: Checker) -> None:
         undecoded += sum(m[1] is None for m in d["meets"])
         check.expect(d["last_year"] == (max(years) if years else None),
                      f"{label}: {d['id']} last_year is wrong")
+        dated = [m[2] for m in d["meets"] if m[2]]
+        undated_years = [m[1] for m in d["meets"] if m[1] and not m[2]]
+        expected = max(dated) if dated else None
+        if expected and undated_years and max(undated_years) >= int(expected[:4]):
+            expected = None
+        check.expect(d["last_raced"] == expected,
+                     f"{label}: {d['id']} last_raced {d['last_raced']} != {expected}")
         check.expect(d["raced"] == (season in years), f"{label}: {d['id']} raced flag is wrong")
         active = (d["ytd"] or 0) > 0 or (d["last_year"] is not None and d["last_year"] >= season - 1)
         check.expect(d["active"] == active, f"{label}: {d['id']} active flag is wrong")

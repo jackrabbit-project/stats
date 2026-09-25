@@ -5565,21 +5565,96 @@
       "breed_slug": "magyar-agar",
       "is_breed": true,
       "total_competing": 1,
-      "dogs": []
+      "dogs": [
+        {
+          "rank": 1,
+          "call_name": "Dragoon",
+          "registered_name": "Surrano Archie Provisional TCP",
+          "core_name": "Surrano Archie",
+          "titles_prefix": [],
+          "titles_suffix": [
+            "Provisional",
+            "TCP"
+          ],
+          "owner_raw": "D.Hayman",
+          "owners": [
+            {
+              "key": "hayman|d",
+              "name": "D.Hayman"
+            }
+          ],
+          "region": 3,
+          "points": 3,
+          "bob": 6,
+          "bif": 0,
+          "provisional": false,
+          "id": "surrano-archie--magyar-agar"
+        }
+      ]
     },
     {
       "breed": "Peruvian Inca Orchid",
       "breed_slug": "peruvian-inca-orchid",
       "is_breed": true,
       "total_competing": 1,
-      "dogs": []
+      "dogs": [
+        {
+          "rank": 1,
+          "call_name": "Kip",
+          "registered_name": "Calypso's Cruise",
+          "core_name": "Calypso's Cruise",
+          "titles_prefix": [],
+          "titles_suffix": [],
+          "owner_raw": "C.Dudney",
+          "owners": [
+            {
+              "key": "dudney|c",
+              "name": "C.Dudney"
+            }
+          ],
+          "region": 7,
+          "points": 1,
+          "bob": 1,
+          "bif": 1,
+          "provisional": false,
+          "id": "calypso-s-cruise--peruvian-inca-orchid"
+        }
+      ]
     },
     {
       "breed": "Podengo Pequeno",
       "breed_slug": "podengo-pequeno",
       "is_breed": true,
       "total_competing": 1,
-      "dogs": []
+      "dogs": [
+        {
+          "rank": 1,
+          "call_name": "Bowie",
+          "registered_name": "Ch Kaprikorn Let's Dance",
+          "core_name": "Kaprikorn Let's Dance",
+          "titles_prefix": [
+            "Ch"
+          ],
+          "titles_suffix": [],
+          "owner_raw": "S.Alexander/M.Peck",
+          "owners": [
+            {
+              "key": "alexander|s",
+              "name": "S.Alexander"
+            },
+            {
+              "key": "peck|m",
+              "name": "M.Peck"
+            }
+          ],
+          "region": 7,
+          "points": 2,
+          "bob": 2,
+          "bif": 0,
+          "provisional": false,
+          "id": "kaprikorn-let-s-dance--podengo-pequeno"
+        }
+      ]
     },
     {
       "breed": "Pharaoh Hound",
@@ -8798,7 +8873,29 @@
       "breed_slug": "sloughi",
       "is_breed": true,
       "total_competing": 1,
-      "dogs": []
+      "dogs": [
+        {
+          "rank": 1,
+          "call_name": "Wren",
+          "registered_name": "Ocerico Huma",
+          "core_name": "Ocerico Huma",
+          "titles_prefix": [],
+          "titles_suffix": [],
+          "owner_raw": "E.& M.Allen",
+          "owners": [
+            {
+              "key": "allen|e.m",
+              "name": "E.& M.Allen"
+            }
+          ],
+          "region": 8,
+          "points": 2,
+          "bob": 2,
+          "bif": 0,
+          "provisional": false,
+          "id": "ocerico-huma--sloughi"
+        }
+      ]
     },
     {
       "breed": "Whippet",
