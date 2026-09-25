@@ -86,11 +86,12 @@
             ${credit ? `<figcaption class="absolute bottom-1 right-2 font-mono text-[9px] uppercase tracking-widest text-white/85 drop-shadow">${credit}</figcaption>` : ''}
           </figure>`;
       };
-      const card = (href, title, sub, body, cta, program) => `
+      const card = (href, title, sub, body, cta, program, note = '') => `
         <a href="${href}" class="card program-card program-${program} block">
           ${photo(program)}
           <h2 class="font-display text-2xl text-asfa-text">${title}</h2>
           <p class="font-mono text-[10px] uppercase tracking-widest text-asfa-muted mt-0.5">${sub}</p>
+          ${note}
           <div class="mt-4">${body}</div>
           <p class="text-sm mt-4 underline underline-offset-2 text-asfa-text/80">${cta} →</p>
         </a>`;
@@ -138,10 +139,18 @@
       const lgraBody = racingCard(lgra, 'lgra', 'LGRA', 'hounds');
       const aok9Body = racingCard(aok9, 'aok9', 'AOK9', 'dogs', aok9 && singles ? singles.combined : null);
 
+      // Announces the Singles records, added in September 2026, for the rest
+      // of the season; from 2027 it is old news and the note drops away. It
+      // shows only when the Singles records actually loaded.
+      const SINGLES_NEW_UNTIL = '2027-01-01';
+      const singlesNote = aok9 && singles && new Date().toISOString().slice(0, 10) < SINGLES_NEW_UNTIL
+        ? `<p class="flex items-center gap-2 mt-3 text-sm text-asfa-text/80"><span class="badge badge-new">${icon('star')} New</span>Now includes Singles records</p>`
+        : '';
+
       programs.innerHTML =
         card('asfa.html', 'ASFA lure coursing', `Top 20 standings${asfa ? ` · ${asfa.season}` : ''}`, asfaBody, 'Standings, kennels, titles, events', 'asfa')
         + card('lgra.html', 'LGRA racing', 'Straight racing · 200 yards', lgraBody, 'Standings by breed, WAVE, titles', 'lgra')
-        + card('aok9.html', 'AOK9 racing', 'All-breed sprint racing', aok9Body, 'Standings by breed, WAVE, titles', 'aok9');
+        + card('aok9.html', 'AOK9 racing', 'All-breed sprint racing', aok9Body, 'Standings by breed, WAVE, titles', 'aok9', singlesNote);
       animateTiles(programs);
 
       document.getElementById('coverage').textContent = coverage.length
