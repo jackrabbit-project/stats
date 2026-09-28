@@ -241,13 +241,15 @@ function titleBadges(org, dog) {
   return out.join(' ');
 }
 
-/** Sortable table head: the titles.html pattern, once. */
+/** Sortable table head: the titles.html pattern, once. A column without a
+    key is a plain heading. */
 function sortableHead(columns, sort, extra = '') {
-  return `<thead><tr>${columns.map(([key, label, cls]) =>
+  return `<thead><tr>${columns.map(([key, label, cls]) => (key ?
     `<th scope="col" class="sortable ${cls}" aria-sort="${
       sort.key === key ? (sort.dir === 1 ? 'ascending' : 'descending') : 'none'}">
       <button type="button" class="th-btn" data-key="${key}">${label}${
-        sort.key === key ? icon(sort.dir === 1 ? 'chevronUp' : 'chevronDown') : ''}</button></th>`).join('')}${extra}</tr></thead>`;
+        sort.key === key ? icon(sort.dir === 1 ? 'chevronUp' : 'chevronDown') : ''}</button></th>`
+    : `<th scope="col" class="${cls}">${label}</th>`)).join('')}${extra}</tr></thead>`;
 }
 
 function sortRows(rows, columns, sort) {
@@ -1196,6 +1198,10 @@ function pbLabel(sdog) {
   return sdog.pb != null ? timeLabel(sdog.pb) : esc(sdog.pb_text || '—');
 }
 
+function averageLabel(sdog) {
+  return sdog.average != null ? timeLabel(sdog.average) : esc(sdog.average_text || '—');
+}
+
 /** Titles the Singles points columns say this dog holds. The rule book names
     SBC and SMC; the Supreme and Turtle titles have no abbreviation there, so
     they are written out. */
@@ -1345,7 +1351,7 @@ function singlesCards(sdog, sfeed) {
           <tr>
             <td><a href="${racingDogUrl('aok9', d.id)}" class="lnk font-semibold">${esc(d.call_name)}</a></td>
             <td class="text-asfa-text/80">${esc(d.owner_raw)}</td>
-            <td class="num">${timeLabel(d.average)}</td>
+            <td class="num">${averageLabel(d)}</td>
             <td class="num">${pbLabel(d)}</td>
             <td class="whitespace-nowrap">${singlesLastRun(sfeed, d)}</td>
           </tr>`).join('')}</tbody>
@@ -1450,8 +1456,9 @@ function renderSinglesTab(sfeed, container) {
     <div class="card">
       <h2 class="card-title">Singles – browse by breed</h2>
       <p class="text-xs text-asfa-text/60 mb-3">
-        Most recent racing first. Singles places dogs against each other only within a meet,
-        so this list is not a ranking.
+        Most recent racing first; select a column heading to sort, by average time for one.
+        Singles places dogs only within a meet, so sorting compares times from different
+        meets and is not a ranking.
       </p>
       <label class="block mb-3">
         <span class="sr-only">Breed</span>
@@ -1478,7 +1485,8 @@ function renderSinglesTab(sfeed, container) {
         <li><strong>The average is a seeding figure.</strong> It is the plain mean of the dog's last
           three timed runs, and race secretaries draw heats from it. A meet runs up to three
           programs, so all three runs often come from one meet. Singles places dogs against each
-          other only within a meet, so this site ranks no one by time.</li>
+          other only within a meet, so this site gives no one a rank by time; the breed table
+          can be sorted by time to compare.</li>
         <li><strong>Titles.</strong> SBC, Singles Breed Champion, is 12 points from breed divisions.
           SMC, Singles Mixed Champion, is 12 points with at least 2 from mixed divisions. Supreme
           Singles titles come at every 30 National points, and Singles Turtle titles follow the
@@ -1539,28 +1547,51 @@ function renderSinglesTab(sfeed, container) {
   const panel = container.querySelector('#singles-panel');
   let showAll = false;
 
+  /* The breed table sorts on request, never by default: it opens most recent
+     racing first, and a time sort is a comparison, not a ranking. Each column
+     is [key, label, class, first direction]; times start fastest first. */
+  const columns = [
+    ['call_name', 'Dog', '', 1],
+    [null, 'Registered name', ''],
+    ['owner_raw', 'Owner', '', 1],
+    ['average', 'Average', 'num', 1],
+    ['pb', 'Personal best', 'num', 1],
+    ['recent', 'Last run', '', -1],
+    [null, 'Titles', ''],
+  ];
+  const sort = { key: 'recent', dir: -1 };
+  const valueOf = (d) => (sort.key === 'recent' ? singlesRecencyKey(d) || null : d[sort.key]);
+  // A dog with no value (no time yet, a DNF) stays below the rest either way;
+  // ties fall back to most recent racing.
+  const bySort = (a, b) => {
+    const av = valueOf(a);
+    const bv = valueOf(b);
+    if (av == null || bv == null) return (av == null) - (bv == null) || byRecency(a, b);
+    const order = sort.key === 'recent' ? (av < bv ? -1 : av > bv ? 1 : 0)
+      : typeof av === 'string' ? av.localeCompare(bv) : av - bv;
+    return sort.dir * order || byRecency(a, b);
+  };
+
   function paint() {
     const section = sfeed.sections.find((s) => s.slug === select.value);
     if (!section) { panel.innerHTML = ''; return; }
     const members = dogs.filter((d) => d.breed_slug === section.slug);
     const activeMembers = members.filter((d) => d.active);
     const everyone = showAll || !activeMembers.length;
-    const rows = (everyone ? members : activeMembers).sort(byRecency);
+    const rows = [...(everyone ? members : activeMembers)].sort(bySort);
     panel.innerHTML = `
       <div class="flex flex-wrap items-baseline justify-between gap-2">
         <h3 class="font-display text-xl text-asfa-text">${esc(section.breed)}</h3>
         <p class="text-sm text-asfa-text/70">${section.raced} racing this year · ${section.active} active · ${section.listed} listed</p>
       </div>
       <div class="tbl-wrap mt-3"><table class="tbl">
-        <thead><tr><th scope="col">Dog</th><th scope="col">Registered name</th><th scope="col">Owner</th>
-          <th scope="col" class="num">Average</th><th scope="col" class="num">Personal best</th>
-          <th scope="col">Last run</th><th scope="col">Titles</th></tr></thead>
+        ${sortableHead(columns, sort)}
         <tbody>${rows.map((d) => `
           <tr class="${d.active ? '' : 'text-asfa-text/60'}">
             <td><a href="${racingDogUrl('aok9', d.id)}${d.sprint_racing ? '#singles' : ''}" class="lnk font-semibold">${esc(d.call_name)}</a></td>
             <td class="text-asfa-text/80">${esc(d.registered_name)}</td>
             <td class="text-asfa-text/80">${esc(d.owner_raw)}</td>
-            <td class="num">${timeLabel(d.average)}</td>
+            <td class="num">${averageLabel(d)}</td>
             <td class="num">${pbLabel(d)}</td>
             <td class="whitespace-nowrap">${singlesLastRun(sfeed, d)}</td>
             <td>${singlesTitleBadges(d)}</td>
@@ -1571,6 +1602,11 @@ function renderSinglesTab(sfeed, container) {
           ? `Showing every ${esc(section.breed)} dog the records list. <button type="button" id="singles-toggle" class="lnk">Dogs racing lately only</button>`
           : `<button type="button" id="singles-toggle" class="lnk">Show all ${section.listed} ${esc(section.breed)} dogs the records list</button>`}</p>`
         : !activeMembers.length ? `<p class="text-sm mt-3 text-asfa-text/70">No ${esc(section.breed)} has raced Singles since ${sfeed.active_since.slice(0, 4)}; every one the records list is shown.</p>` : ''}`;
+    // The repaint replaces the heading buttons; keep keyboard focus on the one used.
+    wireSort(panel, columns, sort, () => {
+      paint();
+      panel.querySelector(`button[data-key="${sort.key}"]`)?.focus();
+    });
     const toggle = panel.querySelector('#singles-toggle');
     if (toggle) toggle.addEventListener('click', () => { showAll = !showAll; paint(); });
   }
