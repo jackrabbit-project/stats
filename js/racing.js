@@ -865,9 +865,7 @@ function aboutRacing(org, feed, singles = null) {
       </p>`}
       <p class="text-sm leading-relaxed mt-3">
         A parsed copy of each new guide is archived by date so movement between guides can be
-        shown. The workbook's header rows, which carry the registrar's mailing details, are never
-        copied, and the build fails if an email address, phone number or street address turns up
-        anywhere in the published data. The whole method, code included, is on
+        shown. The whole method, code included, is on
         <a href="https://github.com/jackrabbit-project/stats" class="lnk" target="_blank" rel="noopener noreferrer">GitHub</a>.
       </p>
     </section>

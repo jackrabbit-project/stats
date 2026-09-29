@@ -231,9 +231,13 @@ def main() -> int:
     html = get(SOURCE_URL)
 
     raw = html.encode(PAGE_ENCODING, errors="replace")
-    digest = hashlib.sha256(raw).hexdigest()
+    # Compared with line endings normalised: ASFA serves CRLF but git stores
+    # the archive with LF, so on the Linux runner an unchanged page never
+    # matched and was archived again every week (2026-09-28 duplicated 09-21).
+    digest = hashlib.sha256(raw.replace(b"\r\n", b"\n")).hexdigest()
     existing = sorted(RAW_DIR.glob("*.html"))
-    if not existing or hashlib.sha256(existing[-1].read_bytes()).hexdigest() != digest:
+    stored = existing[-1].read_bytes().replace(b"\r\n", b"\n") if existing else b""
+    if not existing or hashlib.sha256(stored).hexdigest() != digest:
         target = RAW_DIR / f"{datetime.now(timezone.utc).date().isoformat()}.html"
         target.write_bytes(raw)
         print(f"Archived {target.relative_to(ROOT)}")
