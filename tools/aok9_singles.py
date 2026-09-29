@@ -19,7 +19,10 @@ and those three fastest runs, each with its meet, listed newest first under
 come from a single meet. The oval Singles tab is not read.
 
 This builder runs after tools/aok9.py: it matches each Singles dog to its row
-in the sprint registry, so a dog that races both keeps one page.
+in the sprint registry, so a dog that races both keeps one page. Where the
+sprint guide writes titles after the registered name the Singles records give
+the same dog bare, the dog takes the sprint guide's name; see
+sprint_titles_added.
 
 Usage:
     python tools/aok9_singles.py                    # fetch, archive if changed, rebuild
@@ -41,6 +44,7 @@ from pathlib import Path
 import requests
 
 from aok9 import EXPORT_USER_AGENT, LINK_PAGE, SITE_URL, UPDATED_RE, find_header_row
+from names import split_titles
 from racing import (
     DATA, RacingParseError, breed_display, cell_num, cell_str, decode_aok9_meet,
     decode_or_keep, derive_identity, fetch_bytes, last_raced, fetch_text, load_snapshots,
@@ -278,6 +282,25 @@ def _norm(text: str | None) -> str:
     return re.sub(r"[^a-z0-9]", "", (text or "").lower())
 
 
+TITLE_WORD = re.compile(r"[A-Z]{2,6}\d*(?:-S)?")
+
+
+def sprint_titles_added(singles_name: str | None, sprint_name: str | None) -> list[str]:
+    """The titles the sprint guide writes after a registered name the Singles
+    records give bare. AOK9 adds a title to the registered name and the sprint
+    guide carries it where the Singles records may not: Acorn (APBT-29) is
+    "Ice Road's Acorn Currency NSR-S" there, a companion title earned in
+    Singles, and plain "Ice Road's Acorn Currency" here. Any other difference
+    between the two names is left alone."""
+    def tidy(name: str | None) -> str:
+        return re.sub(r"\s+", " ", re.sub(r"[‘’`]", "'", name or "")).strip()
+    bare, full = tidy(singles_name), tidy(sprint_name)
+    if not bare or not full.startswith(bare + " "):
+        return []
+    added = full[len(bare):].split()
+    return added if all(TITLE_WORD.fullmatch(word) for word in added) else []
+
+
 def calls_agree(singles: dict, sprint: dict) -> bool:
     """Call names drift by a suffix between the sheets ("Switch", "Switch-E")."""
     a, b = _norm(singles["call_name"]), _norm(sprint["call_name"])
@@ -424,6 +447,17 @@ def join_sprint(dogs: list[dict], sprint_rows: list[dict]) -> None:
             dog["sprint"] = True
             dog["joined_by"] = how
             dog["sprint_racing"] = sprint_racing(twin)
+            # The same dog (one registration number, the same owner and call
+            # name, and the registered name the same but for the titles)
+            # carries its titles here too; the Singles records' bare name is
+            # kept for the page to mention.
+            if (how == "number" and _norm(dog["owner_raw"]) == _norm(twin["owner_raw"])
+                    and _norm(dog["call_name"]) == _norm(twin["call_name"])
+                    and sprint_titles_added(dog["registered_name"], twin["registered_name"])):
+                dog["singles_name"] = dog["registered_name"]
+                dog["registered_name"] = twin["registered_name"]
+                prefix_titles, dog["core_name"], suffix_titles = split_titles(twin["registered_name"])
+                dog["titles"] = prefix_titles + suffix_titles
         else:
             page_id = dog["reg"]
             suffix = 0
@@ -512,7 +546,7 @@ def build(snapshots: list[dict], sprint_feed: dict, sprint_registry: dict) -> di
 
     def compact(dog: dict) -> dict:
         row = {field: dog.get(field) for field in fields}
-        for extra in ("average_text", "pb_text", "duplicate_of", "joined_by"):
+        for extra in ("average_text", "pb_text", "duplicate_of", "joined_by", "singles_name"):
             if dog.get(extra):
                 row[extra] = dog[extra]
         if not dog["average_matches"] and dog["average_computed"] is not None:
@@ -555,6 +589,11 @@ def build(snapshots: list[dict], sprint_feed: dict, sprint_registry: dict) -> di
             "are mixed. Supreme Singles titles come at every 30 National points, "
             "Singles Turtle titles as in the regular stakes; the rule book gives "
             "those no abbreviation.",
+            "Where the sprint grading guide writes titles after the registered "
+            "name the Singles records give the same dog bare (same registration "
+            "number and owner; Acorn's NSR-S, a companion title earned in "
+            "Singles), the dog carries the sprint guide's name and singles_name "
+            "keeps the Singles records' one.",
         ],
     }
 

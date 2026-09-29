@@ -1401,6 +1401,11 @@ function renderSinglesDog(sdog, sfeed, main) {
   document.title = `${sdog.call_name} — ${sdog.breed} — AOK9 Singles — Gazehound Stats`;
   const badges = singlesTitleBadges(sdog);
   const numberNote = singlesNumberNote(sdog);
+  // singles_name: the Singles records give the name without titles the sprint
+  // guide writes after it, and the name shown is the sprint guide's.
+  const leftOff = sdog.singles_name
+    ? sdog.registered_name.trim().split(/\s+/).slice(sdog.singles_name.trim().split(/\s+/).length).join(' ')
+    : '';
   main.innerHTML = `
     <nav class="text-sm text-asfa-text/70">
       <a href="aok9.html" class="lnk">AOK9</a> ›
@@ -1417,6 +1422,7 @@ function renderSinglesDog(sdog, sfeed, main) {
         <div class="flex-1 min-w-[16rem]">
           <h1 class="font-display text-3xl text-asfa-text leading-tight">${esc(sdog.call_name)}</h1>
           <p class="text-asfa-text/85">${esc(sdog.registered_name)}</p>
+          ${leftOff ? `<p class="text-xs text-asfa-text/65 mt-1">Name as in AOK9's sprint grading guide; the Singles records leave off ${esc(leftOff)}.</p>` : ''}
           ${badges ? `<p class="text-xs text-asfa-text/70 mt-1">Titles by the Singles points columns: ${badges}</p>` : ''}
           <p class="text-sm text-asfa-text/70 mt-1">
             <a href="aok9.html?singles=${encodeURIComponent(sdog.breed_slug)}#singles" class="lnk">${esc(sdog.breed)}</a>

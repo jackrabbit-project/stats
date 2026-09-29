@@ -1213,6 +1213,42 @@ def check_singles(check: Checker) -> None:
                          f"{label}: {d['id']} reuses the page of a different sprint dog")
             check.expect(not d["sprint_racing"], f"{label}: {d['id']} sprint_racing without a twin")
 
+    #    A dog in both sheets carries every title the sprint guide writes after
+    #    its name. Where the Singles records give the name bare, the dog takes
+    #    the sprint guide's name, but only as the same dog: one registration
+    #    number, the same owner and call name, and the Singles name (as the
+    #    snapshot has it) followed by nothing but titles.
+    tidy = lambda name: re.sub(r"\s+", " ", re.sub(r"[‘’`]", "'", name or "")).strip()
+    title_word = lambda word: re.fullmatch(r"[A-Z]{2,6}\d*(-S)?", word) is not None
+    def trailing_titles(name: str | None) -> list[str]:
+        words = tidy(name).split()
+        titles = []
+        while words and title_word(words[-1]):
+            titles.insert(0, words.pop())
+        return titles
+    snap_names = ({dog.get("duplicate_of") or dog["id"]: dog["registered_raw"]
+                   for section in snapshot["sections"] for dog in section["dogs"]}
+                  if snapshot else {})
+    for d in dogs:
+        row = by_id.get(d["id"]) if d["sprint"] else None
+        if row is not None:
+            shown = tidy(d["registered_name"]).split()
+            check.expect(all(t in shown for t in trailing_titles(row["registered_name"])),
+                         f"{label}: {d['id']} leaves off titles its sprint-guide name carries")
+        if d.get("singles_name"):
+            bare = tidy(d["singles_name"])
+            check.expect(row is not None and d.get("joined_by") == "number" and d["reg"] == row["id"]
+                         and norm(d["owner_raw"]) == norm(row["owner_raw"])
+                         and norm(d["call_name"]) == norm(row["call_name"])
+                         and d["registered_name"] == row["registered_name"]
+                         and tidy(row["registered_name"]).startswith(bare + " ")
+                         and all(title_word(w) for w in tidy(row["registered_name"])[len(bare):].split()),
+                         f"{label}: {d['id']} took a sprint-guide name without being the same dog "
+                         f"under the same name plus titles")
+            if snapshot:
+                check.expect(tidy(snap_names.get(d["reg"])).startswith(bare),
+                             f"{label}: {d['id']} singles_name is not the snapshot's name")
+
     # 3. The average is the plain mean of the listed runs; titles follow the
     #    points columns under Singles Racing Rule Book 1.0 ch. V.
     rated = [d for d in dogs if d["average"] is not None]
