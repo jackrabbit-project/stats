@@ -1489,9 +1489,10 @@ function renderSinglesTab(sfeed, container) {
       <h2 class="card-title">How Singles works</h2>
       <ul class="text-sm leading-relaxed list-disc pl-5 space-y-2">
         <li><strong>Placings, not times, earn points.</strong> At each meet a Singles dog runs up to
-          three programs alone. Its division is placed either by average time or by scoring each
-          program's times like a regular stake. The top four placings earn points on the sprint
-          table; last place earns Turtle points.</li>
+          three programs alone. Its division is placed either by average time (a dog may drop its
+          slowest time) or by scoring each program's times like a regular stake. Points go to the
+          top two to four placings, depending on how many dogs are eligible, on the same table as
+          the sprint stakes; last place earns as many Turtle points as the winner.</li>
         <li><strong>The average is a seeding figure.</strong> It is the plain mean of the dog's three
           fastest timed runs, and race secretaries draw heats from it. The records list those three
           runs newest first; a meet runs up to three programs, so all three can come from one
