@@ -1244,11 +1244,16 @@ function singlesTitleBadges(sdog) {
 function singlesProgress(sdog) {
   const sbc = sdog.sbc || 0;
   const smc = sdog.smc || 0;
+  // The SMC bar counts SBC points too, so say what it is made of and what is
+  // still missing; otherwise 5 SBC points read as 5 SMC points.
+  const smcShort = 2 - smc;
+  const smcPending = smcShort <= 0 ? ''
+    : smc ? `needs ${ptsLabel(smcShort)} more SMC point${smcShort === 1 ? '' : 's'}` : 'needs 2 SMC points';
   const bars = [
     progressBar(sbc, 12, 'SBC · Singles Breed Champion'),
     progressBar(sbc + smc, 12, 'SMC · Singles Mixed Champion',
-      { done: sdog.titled.smc, pending: mixedShortfall(sbc, smc, 'mixed'),
-        note: 'Singles breed and mixed points together, at least 2 of them mixed' }),
+      { done: sdog.titled.smc, pending: smcPending,
+        note: `${ptsLabel(sbc)} SBC + ${ptsLabel(smc)} SMC points; the title needs 12, at least 2 of them SMC` }),
     progressBar(sdog.turtle, 12, 'Singles Turtle · 12 Turtle points'),
   ];
   [['nsbc', 'supreme_breed', 'Supreme Singles · National breed points'],
@@ -1277,7 +1282,9 @@ function singlesTiles(sdog, { average = true } = {}) {
     ...(average ? [[timeLabel(sdog.average), 'Singles average']] : []),
     [ptsLabel(sdog.ytd), 'Singles points this year'],
     [`${ptsLabel(sdog.sbc)} / 12`, 'SBC points'],
-    [`${ptsLabel(sdog.smc)} / 12`, 'SMC points'],
+    // As the records list it. SMC points alone never make the title (§5.3
+    // counts SBC points too), so no "/ 12" here; the SMC bar has the total.
+    [ptsLabel(sdog.smc), 'SMC points'],
     [ptsLabel(sdog.turtle), 'Turtle points'],
   ].map(([value, label]) =>
     `<div class="tile"><div class="tile-value">${value}</div><div class="tile-label">${label}</div></div>`).join('');
