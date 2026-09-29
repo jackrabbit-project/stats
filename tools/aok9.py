@@ -312,8 +312,10 @@ def derive(snapshot: dict) -> list[dict]:
             for stream, meets in (("bwave", dog["meets_breed"]), ("mwave", dog["meets_mixed"])):
                 computed = wave([(m["score"], m["complete"]) for m in meets])
                 published = dog[stream]
-                dog[f"{stream}_computed"] = round(computed, 3) if computed is not None else None
-                dog[stream] = round(published, 3) if published is not None else None
+                # Six places, as in lgra.py: three made the pages print some
+                # WAVEs a hundredth above the sheet's two-place figure.
+                dog[f"{stream}_computed"] = round(computed, 6) if computed is not None else None
+                dog[stream] = round(published, 6) if published is not None else None
                 dog[f"{stream}_matches"] = (
                     published is not None and computed is not None
                     and abs(published - computed) <= 0.01

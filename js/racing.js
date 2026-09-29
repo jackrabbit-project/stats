@@ -115,9 +115,12 @@ function ptsLabel(value) {
   return Number.isInteger(value) ? String(value) : String(Math.round(value * 100) / 100);
 }
 
+/** A WAVE to two places, as the guides print it: half up on the decimal
+    value. Rounding value * 100 in binary put 12.765 at 1276.4999... and
+    printed 12.76; shifting the decimal point in the string keeps it exact. */
 function waveLabel(value) {
   if (value == null) return '—';
-  return (Math.round(value * 100) / 100).toFixed(2).replace(/\.?0+$/, '');
+  return Number(`${Math.round(Number(`${value}e2`))}e-2`).toFixed(2).replace(/\.?0+$/, '');
 }
 
 /** Grade bands from rule 4.2.2.5, on the existing badge pairs so dark mode

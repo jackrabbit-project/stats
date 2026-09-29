@@ -280,8 +280,12 @@ def derive(snapshot: dict) -> list[dict]:
             dog["dq"] = dq
 
             computed = wave([(m["score"], m["complete"]) for m in meets])
-            dog["wave_computed"] = round(computed, 3) if computed is not None else None
-            dog["wave"] = round(dog["wave"], 3) if dog["wave"] is not None else None
+            # Six places, not three: the guide prints WAVE to two, and rounding
+            # to three first turned 14.4545 into 14.455 and then 14.46 where
+            # the guide shows 14.45 (213 hounds). Six still settles the
+            # registrar's 10.999999999999998 at 11.
+            dog["wave_computed"] = round(computed, 6) if computed is not None else None
+            dog["wave"] = round(dog["wave"], 6) if dog["wave"] is not None else None
             dog["wave_matches"] = (
                 dog["wave"] is not None and computed is not None
                 and abs(dog["wave"] - computed) <= 0.01
