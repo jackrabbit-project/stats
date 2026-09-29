@@ -58,6 +58,7 @@ const ORGS = {
       ['mrc', 'MRC', 'Mixed Racing Champion', 12, {
         value: (dog) => (dog.brc || 0) + (dog.mrc || 0),
         done: (dog) => (dog.brc || 0) + (dog.mrc || 0) >= 12 && (dog.mrc || 0) >= 2,
+        pending: (dog) => mixedShortfall(dog.brc, dog.mrc, 'MRC'),
         note: 'BRC and MRC points together, at least 2 of them MRC',
       }],
       ['trc', 'TRC', 'Turtle Racing Champion', 12],
@@ -149,13 +150,22 @@ function progressBar(value, need, label, opts = {}) {
     <div class="mt-3">
       <div class="flex justify-between text-sm">
         <span class="font-semibold">${label}</span>
-        <span class="text-asfa-text/70">${ptsLabel(value || 0)} / ${need}${done ? ' · earned' : ''}</span>
+        <span class="text-asfa-text/70">${ptsLabel(value || 0)} / ${need}${done ? ' · earned' : opts.pending ? ` · ${opts.pending}` : ''}</span>
       </div>
       ${opts.note ? `<p class="text-xs text-asfa-text/60">${opts.note}</p>` : ''}
       <div class="h-2 bg-asfa-bg2 border border-asfa-border mt-1" role="img" aria-label="${label}: ${ptsLabel(value || 0)} of ${need}">
         <div class="h-full ${done ? 'bg-asfa-green' : 'bg-asfa-accent'}" style="width:${pct}%"></div>
       </div>
     </div>`;
+}
+
+/** MRC and SMC need 12 points together and at least 2 of them mixed. With the
+    12 there but not the 2, the bar is full yet the title is not earned; say
+    what is missing instead of leaving "12 / 12" to puzzle over. */
+function mixedShortfall(breed, mixed, word) {
+  const short = 2 - (mixed || 0);
+  if ((breed || 0) + (mixed || 0) < 12 || short <= 0) return '';
+  return `${ptsLabel(short)} more ${word} point${short === 1 ? '' : 's'} needed`;
 }
 
 function formatDateShort(iso) {
@@ -952,7 +962,7 @@ function renderRacingDog(org, feed, main, singles = null) {
     const titleProgress = [
       ...spec.champion.map(([field, label, name, need, rule]) => progressBar(
         rule ? rule.value(dog) : dog[field], need, `${label} · ${name}`,
-        rule ? { done: rule.done(dog), note: rule.note } : {})),
+        rule ? { done: rule.done(dog), note: rule.note, pending: rule.pending ? rule.pending(dog) : '' } : {})),
       ...spec.supreme.map(([field, key, label, name, step]) => {
         const level = Math.floor((dog[field] || 0) / step);
         const next = `${label}${level + 1 > 1 ? level + 1 : ''}`;
@@ -1227,7 +1237,8 @@ function singlesProgress(sdog) {
   const bars = [
     progressBar(sbc, 12, 'SBC · Singles Breed Champion'),
     progressBar(sbc + smc, 12, 'SMC · Singles Mixed Champion',
-      { done: sdog.titled.smc, note: 'Singles breed and mixed points together, at least 2 of them mixed' }),
+      { done: sdog.titled.smc, pending: mixedShortfall(sbc, smc, 'mixed'),
+        note: 'Singles breed and mixed points together, at least 2 of them mixed' }),
     progressBar(sdog.turtle, 12, 'Singles Turtle · 12 Turtle points'),
   ];
   [['nsbc', 'supreme_breed', 'Supreme Singles · National breed points'],
@@ -1522,7 +1533,9 @@ function renderSinglesTab(sfeed, container) {
             <td><a href="${racingDogUrl('aok9', d.id)}${d.sprint_racing ? '#singles' : ''}" class="lnk font-semibold">${esc(d.call_name)}</a></td>
             <td class="text-asfa-text/80">${esc(d.breed)}</td>
             <td class="num">${d.titled.sbc ? '<span class="badge badge-t-fch">SBC</span>' : `${ptsLabel(d.sbc || 0)} / 12`}</td>
-            <td class="num">${d.titled.smc ? '<span class="badge badge-t-fch">SMC</span>' : `${ptsLabel((d.sbc || 0) + (d.smc || 0))} / 12`}</td>
+            <td class="num">${d.titled.smc ? '<span class="badge badge-t-fch">SMC</span>'
+              : mixedShortfall(d.sbc, d.smc, 'mixed') ? `${ptsLabel(d.smc || 0)} / 2 mixed`
+              : `${ptsLabel((d.sbc || 0) + (d.smc || 0))} / 12`}</td>
           </tr>`).join('')}</tbody>
       </table></div>
       ${onTheWay.length > 25 ? `<p class="text-sm mt-3 no-print">${wayAll
@@ -1737,7 +1750,10 @@ function singlesCardSpec(sdog, sfeed) {
     figures: [
       [ptsLabel(sdog.ytd || 0), 'SINGLES PTS THIS YEAR'],
       [`${ptsLabel(sdog.sbc || 0)} / 12`, sdog.titled.sbc ? 'SBC · EARNED' : 'TOWARD SBC'],
-      [`${ptsLabel(combined)} / 12`, sdog.titled.smc ? 'SMC · EARNED' : 'TOWARD SMC'],
+      // With 12 points together but under 2 mixed, the mixed points are what is short.
+      mixedShortfall(sdog.sbc, sdog.smc, 'mixed')
+        ? [`${ptsLabel(sdog.smc || 0)} / 2`, 'MIXED PTS FOR SMC']
+        : [`${ptsLabel(combined)} / 12`, sdog.titled.smc ? 'SMC · EARNED' : 'TOWARD SMC'],
     ],
     owner: sdog.owner_raw,
     footer: `Singles records of ${formatDate(sfeed.guide_date)} · source: ${cardSource(sfeed)}`,
