@@ -853,6 +853,10 @@ function aboutRacing(org, feed, singles = null) {
           three meets and its running totals, nothing older and no times.</li>
         <li><strong>Points do not compare across breeds.</strong> A breed that fills a program
           most weekends offers far more of them than one that rarely races.</li>
+        ${org === 'aok9' ? `<li><strong>Companion titles are not tracked here.</strong> NSR, ESR and
+          MSR (Novice, Expert and Master Sprint Racer, with "-S" when earned in Singles) come from
+          the number of meets a dog completes, which the guide does not count, and AOK9 awards
+          them when the owner applies. A dog that holds one shows it in its registered name.</li>` : ''}
       </ul>
     </section>
     <section class="card">
@@ -1533,8 +1537,7 @@ function renderSinglesTab(sfeed, container) {
           SMC, Singles Mixed Champion, is 12 points with at least 2 from mixed divisions. Supreme
           Singles titles come at every 30 National points, and Singles Turtle titles follow the
           regular stakes: 12 Turtle points, then every 30. The rule book gives the Supreme and
-          Turtle titles no abbreviation, so they are written out here. Companion titles earned in
-          Singles carry an "-S" and are not in the records.</li>
+          Turtle titles no abbreviation, so they are written out here.</li>
         <li><strong>Where it comes from.</strong> The
           <a href="${esc(sfeed.source_url)}" class="lnk" target="_blank" rel="noopener noreferrer">Singles sprint records</a>
           are a public spreadsheet from R.A.C.E.'s AOK9 program, read under the
