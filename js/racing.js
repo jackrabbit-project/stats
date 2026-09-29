@@ -1152,7 +1152,7 @@ function renderRacingDog(org, feed, main, singles = null) {
   loadRegistry(org).then((all) => {
     const found = all.find((dog) => dog.id === id);
     // Listed in the sprint guide with nothing raced there: a Singles dog.
-    if (sdog && (!found || !hasSprintRecord(found))) { renderSinglesDog(sdog, singles, main); return; }
+    if (sdog && (!found || !hasSprintRecord(found))) { renderSinglesDog(sdog, singles, main, found); return; }
     if (!found) {
       main.innerHTML = `<div class="card">
         <h1 class="card-title">${spec.noun.charAt(0).toUpperCase() + spec.noun.slice(1)} not found</h1>
@@ -1308,6 +1308,20 @@ function singlesNumberNote(sdog) {
   return '';
 }
 
+/** When the sprint guide's registered name is the Singles one plus titles the
+    Singles records leave off (Acorn's NSR-S, a companion title earned in
+    Singles), say what the sprint guide lists; each sheet's name stays as
+    published. Any other difference in the names is left alone. */
+function sprintNameNote(sdog, sprintDog) {
+  const tidy = (name) => (name || '').replace(/[‘’`]/g, "'").replace(/\s+/g, ' ').trim();
+  const singlesName = tidy(sdog.registered_name);
+  const sprintName = tidy(sprintDog && sprintDog.registered_name);
+  if (!singlesName || !sprintName.startsWith(`${singlesName} `)) return '';
+  const added = sprintName.slice(singlesName.length).trim().split(' ');
+  if (!added.every((word) => /^[A-Z]{2,6}\d*(-S)?$/.test(word))) return '';
+  return `AOK9's sprint grading guide lists this dog as ${esc(sprintName)}.`;
+}
+
 function singlesSummaryCard(sdog) {
   const badges = singlesTitleBadges(sdog);
   return `
@@ -1396,11 +1410,13 @@ function singlesCards(sdog, sfeed) {
 }
 
 /** The page of a dog the sprint guide holds nothing for: its Singles record
-    laid out like any other AOK9 dog's, minus the sprint cards. */
-function renderSinglesDog(sdog, sfeed, main) {
+    laid out like any other AOK9 dog's, minus the sprint cards. sprintDog is
+    its sprint-guide row when it has one, for the name note. */
+function renderSinglesDog(sdog, sfeed, main, sprintDog = null) {
   document.title = `${sdog.call_name} — ${sdog.breed} — AOK9 Singles — Gazehound Stats`;
   const badges = singlesTitleBadges(sdog);
   const numberNote = singlesNumberNote(sdog);
+  const nameNote = sprintNameNote(sdog, sprintDog);
   main.innerHTML = `
     <nav class="text-sm text-asfa-text/70">
       <a href="aok9.html" class="lnk">AOK9</a> ›
@@ -1417,6 +1433,7 @@ function renderSinglesDog(sdog, sfeed, main) {
         <div class="flex-1 min-w-[16rem]">
           <h1 class="font-display text-3xl text-asfa-text leading-tight">${esc(sdog.call_name)}</h1>
           <p class="text-asfa-text/85">${esc(sdog.registered_name)}</p>
+          ${nameNote ? `<p class="text-xs text-asfa-text/65 mt-1">${nameNote}</p>` : ''}
           ${badges ? `<p class="text-xs text-asfa-text/70 mt-1">Titles by the Singles points columns: ${badges}</p>` : ''}
           <p class="text-sm text-asfa-text/70 mt-1">
             <a href="aok9.html?singles=${encodeURIComponent(sdog.breed_slug)}#singles" class="lnk">${esc(sdog.breed)}</a>
