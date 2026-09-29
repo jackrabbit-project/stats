@@ -701,7 +701,7 @@ const NAV_LGRA = [
   ['lgra.html#standings', 'Standings'],
   ['lgra.html#browse', 'Browse'],
   ['lgra.html#kennels', 'Kennels'],
-  ['lgra.html#about', 'About the numbers'],
+  ['lgra.html#about', 'About'],
 ];
 const NAV_AOK9 = [
   ['aok9.html', 'Overview'],
@@ -709,7 +709,7 @@ const NAV_AOK9 = [
   ['aok9.html#browse', 'Browse'],
   ['aok9.html#kennels', 'Kennels'],
   ['aok9.html#singles', 'Singles'],
-  ['aok9.html#about', 'About the numbers'],
+  ['aok9.html#about', 'About'],
 ];
 const NAV_HUB = [
   ['index.html', 'Home'],
