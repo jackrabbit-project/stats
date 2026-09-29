@@ -994,7 +994,10 @@ function renderRacingDog(org, feed, main, singles = null) {
                 <td class="num font-semibold">${ptsLabel(meet.score)}</td>
                 <td>${meet.complete
                   ? (weight ? `× ${weight}` : '—')
-                  : '<span class="badge badge-prov">incomplete</span> <span class="text-xs text-asfa-text/60">excluded, rule 4.2.2</span>'}</td>
+                  // With no complete meet listed, rule 4.2.2 takes the plain mean
+                  // of the incomplete ones, so they count rather than drop out.
+                  : `<span class="badge badge-prov">incomplete</span> <span class="text-xs text-asfa-text/60">${
+                    complete.length || meet.score == null ? 'excluded' : 'in the plain mean'}, rule 4.2.2</span>`}</td>
               </tr>`;
             }).join('')}</tbody>
           </table></div>` : `<p class="text-sm text-asfa-text/70">No meets listed.</p>`}
