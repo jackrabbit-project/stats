@@ -58,8 +58,8 @@ const ORGS = {
       ['mrc', 'MRC', 'Mixed Racing Champion', 12, {
         value: (dog) => (dog.brc || 0) + (dog.mrc || 0),
         done: (dog) => (dog.brc || 0) + (dog.mrc || 0) >= 12 && (dog.mrc || 0) >= 2,
-        pending: (dog) => mixedShortfall(dog.brc, dog.mrc, 'MRC'),
-        note: 'BRC and MRC points together, at least 2 of them MRC',
+        pending: (dog) => mixedNeeded(dog.mrc, 'MRC'),
+        note: (dog) => `${ptsLabel(dog.brc || 0)} BRC + ${ptsLabel(dog.mrc || 0)} MRC points; the title needs 12, at least 2 of them MRC`,
       }],
       ['trc', 'TRC', 'Turtle Racing Champion', 12],
     ],
@@ -71,7 +71,9 @@ const ORGS = {
     tiles: (dog) => [
       [ptsLabel(dog.ytd), 'National points this year'],
       [`${ptsLabel(dog.brc)} / 12`, 'BRC points'],
-      [`${ptsLabel(dog.mrc)} / 12`, 'MRC points'],
+      // As the guide lists it. MRC points alone never make the title (§5.3
+      // counts BRC points too), so no "/ 12" here; the MRC bar has the total.
+      [ptsLabel(dog.mrc), 'MRC points'],
       [ptsLabel(dog.nbrc), 'National Breed points'],
       [ptsLabel(dog.nmrc), 'National Mixed points'],
       [ptsLabel(dog.trc), 'Turtle points'],
@@ -169,6 +171,15 @@ function mixedShortfall(breed, mixed, word) {
   const short = 2 - (mixed || 0);
   if ((breed || 0) + (mixed || 0) < 12 || short <= 0) return '';
   return `${ptsLabel(short)} more ${word} point${short === 1 ? '' : 's'} needed`;
+}
+
+/** What an MRC or SMC bar still lacks: at least 2 of its 12 points must be
+    mixed (§5.3 in both rule books), however many breed points it holds. The
+    bar counts breed points too, so without this 5 BRC points read as 5 MRC. */
+function mixedNeeded(mixed, word) {
+  const short = 2 - (mixed || 0);
+  if (short <= 0) return '';
+  return mixed ? `needs ${ptsLabel(short)} more ${word} point${short === 1 ? '' : 's'}` : `needs 2 ${word} points`;
 }
 
 function formatDateShort(iso) {
@@ -969,7 +980,7 @@ function renderRacingDog(org, feed, main, singles = null) {
     const titleProgress = [
       ...spec.champion.map(([field, label, name, need, rule]) => progressBar(
         rule ? rule.value(dog) : dog[field], need, `${label} · ${name}`,
-        rule ? { done: rule.done(dog), note: rule.note, pending: rule.pending ? rule.pending(dog) : '' } : {})),
+        rule ? { done: rule.done(dog), note: rule.note ? rule.note(dog) : '', pending: rule.pending ? rule.pending(dog) : '' } : {})),
       ...spec.supreme.map(([field, key, label, name, step]) => {
         const level = Math.floor((dog[field] || 0) / step);
         const next = `${label}${level + 1 > 1 ? level + 1 : ''}`;
@@ -1244,15 +1255,10 @@ function singlesTitleBadges(sdog) {
 function singlesProgress(sdog) {
   const sbc = sdog.sbc || 0;
   const smc = sdog.smc || 0;
-  // The SMC bar counts SBC points too, so say what it is made of and what is
-  // still missing; otherwise 5 SBC points read as 5 SMC points.
-  const smcShort = 2 - smc;
-  const smcPending = smcShort <= 0 ? ''
-    : smc ? `needs ${ptsLabel(smcShort)} more SMC point${smcShort === 1 ? '' : 's'}` : 'needs 2 SMC points';
   const bars = [
     progressBar(sbc, 12, 'SBC · Singles Breed Champion'),
     progressBar(sbc + smc, 12, 'SMC · Singles Mixed Champion',
-      { done: sdog.titled.smc, pending: smcPending,
+      { done: sdog.titled.smc, pending: mixedNeeded(smc, 'SMC'),
         note: `${ptsLabel(sbc)} SBC + ${ptsLabel(smc)} SMC points; the title needs 12, at least 2 of them SMC` }),
     progressBar(sdog.turtle, 12, 'Singles Turtle · 12 Turtle points'),
   ];
