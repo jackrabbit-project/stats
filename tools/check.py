@@ -1261,7 +1261,10 @@ def check_singles(check: Checker) -> None:
             expected = None
         check.expect(d["last_raced"] == expected,
                      f"{label}: {d['id']} last_raced {d['last_raced']} != {expected}")
-        check.expect(d["raced"] == (season in years), f"{label}: {d['id']} raced flag is wrong")
+        # The listed runs are the three fastest, so points this year also
+        # count as racing this year.
+        check.expect(d["raced"] == ((season in years) or (d["ytd"] or 0) > 0),
+                     f"{label}: {d['id']} raced flag is wrong")
         active = (d["ytd"] or 0) > 0 or (d["last_year"] is not None and d["last_year"] >= season - 1)
         check.expect(d["active"] == active, f"{label}: {d['id']} active flag is wrong")
         for code, year, when, _time in d["meets"]:

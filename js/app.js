@@ -418,8 +418,10 @@ async function searchDormant(query, { lgra, aok9, singles }, entries, program = 
   const found = [];
   if (singles && want('AOK9')) {
     const quiet = singles.dogs.filter((dog) => !listed.has(`AOK9|${dog.id}`)).map((dog) =>
+      // The Singles sheet lists each dog's three fastest runs, so their year
+      // says when it last set one, not when it last raced.
       searchEntry(dog, 'AOK9', racingDogUrl('aok9', dog.id),
-        `${dog.breed} · Singles${dog.last_year ? ` · last raced ${dog.last_year}` : ''}`, 1e6));
+        `${dog.breed} · Singles${dog.last_year ? ` · fastest runs to ${dog.last_year}` : ''}`, 1e6));
     found.push(...searchDogs(query, quiet, 20));
   }
   const offered = new Set(found.map((dog) => `${dog.program}|${dog.id}`));

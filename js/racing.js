@@ -1144,9 +1144,9 @@ function renderRacingDog(org, feed, main, singles = null) {
 /* Singles is AOK9's stake for dogs that cannot run in company (Singles Racing
    Rule Book 1.0). Each dog runs alone and is timed, and at each meet it is
    placed against the other dogs of its division; only placings earn points.
-   The sheet keeps each dog's last three timed runs and their average, the
-   figure heats are drawn from. Singles places dogs only within a meet, so
-   nothing here ranks dogs by time. */
+   The sheet keeps each dog's three fastest timed runs, newest first, and
+   their average ("FASTEST AVG"), the figure heats are drawn from. Singles
+   places dogs only within a meet, so nothing here ranks dogs by time. */
 
 function timeLabel(value) {
   if (value == null) return '—';
@@ -1184,7 +1184,9 @@ function byRecency(a, b) {
   return ka < kb ? 1 : ka > kb ? -1 : a.call_name.localeCompare(b.call_name);
 }
 
-function singlesLastRun(sfeed, sdog) {
+/** The newest of the dog's three fastest runs (the sheet's "Recent Fastest").
+    Not necessarily its last race: a slower run since is not listed. */
+function singlesRecentFastest(sfeed, sdog) {
   const runs = unpackMeets(sfeed, sdog.meets);
   if (!runs.length) return '—';
   const newest = runs.reduce((best, run) =>
@@ -1294,7 +1296,7 @@ function singlesCards(sdog, sfeed) {
       </div>
       ${sdog.average == null ? `<p class="text-sm text-asfa-text/70 mt-2">No average on record${
         sdog.average_text ? `; the sheet reads ${esc(sdog.average_text)}` : ''}.</p>` : ''}
-      ${runs.some((run) => run.time != null) ? `<p class="text-sm text-asfa-text/80 mt-2">From the last three runs: ${singlesArithmetic(runs)}.</p>` : ''}
+      ${runs.some((run) => run.time != null) ? `<p class="text-sm text-asfa-text/80 mt-2">From its three fastest runs: ${singlesArithmetic(runs)}.</p>` : ''}
       ${sdog.average != null && sdog.average_computed != null ? `
         <p class="text-xs text-asfa-text/65 mt-2">
           The sheet publishes ${timeLabel(sdog.average)}; the runs it lists average ${timeLabel(sdog.average_computed)}.
@@ -1318,7 +1320,7 @@ function singlesCards(sdog, sfeed) {
   const best = (run) => !beaten && sdog.pb != null && run.time != null && Math.abs(run.time - sdog.pb) < 0.0005;
   const runsCard = `
     <section class="card">
-      <h2 class="card-title">Last three Singles runs</h2>
+      <h2 class="card-title">Three fastest Singles runs</h2>
       ${runs.length ? `
       <div class="tbl-wrap"><table class="tbl">
         <thead><tr><th scope="col">Meet</th><th scope="col">Code</th><th scope="col" class="num">Time</th></tr></thead>
@@ -1330,7 +1332,7 @@ function singlesCards(sdog, sfeed) {
               best(run) ? ' <span class="badge badge-new">personal best</span>' : ''}</td>
           </tr>`).join('')}</tbody>
       </table></div>
-      <p class="text-xs text-asfa-text/60 mt-2">A meet runs up to three programs, so one meet can supply all three runs.</p>
+      <p class="text-xs text-asfa-text/60 mt-2">Newest first, as the records list them. A meet runs up to three programs, so one meet can supply all three runs.</p>
       ${beaten ? `<p class="text-xs text-asfa-text/65 mt-1">The sheet's personal best, ${timeLabel(sdog.pb)}, is slower than the ${timeLabel(fastest)} run it lists. The registrar's figure is the one shown above.</p>` : ''}`
       : '<p class="text-sm text-asfa-text/70">No runs listed.</p>'}
     </section>`;
@@ -1341,17 +1343,17 @@ function singlesCards(sdog, sfeed) {
   const matesCard = mates.length ? `
     <section class="card">
       <h2 class="card-title">Other ${esc(sdog.breed)} dogs racing Singles</h2>
-      <p class="text-xs text-asfa-text/60 mb-3">Most recent racing first. Singles places dogs against each other only within a meet, so this is not a ranking.</p>
+      <p class="text-xs text-asfa-text/60 mb-3">Ordered by the newest of each dog's three fastest runs.</p>
       <div class="tbl-wrap"><table class="tbl">
         <thead><tr><th scope="col">Dog</th><th scope="col">Owner</th><th scope="col" class="num">Average</th>
-          <th scope="col" class="num">Personal best</th><th scope="col">Last run</th></tr></thead>
+          <th scope="col" class="num">Personal best</th><th scope="col">Recent fastest</th></tr></thead>
         <tbody>${mates.map((d) => `
           <tr>
             <td><a href="${racingDogUrl('aok9', d.id)}" class="lnk font-semibold">${esc(d.call_name)}</a></td>
             <td class="text-asfa-text/80">${esc(d.owner_raw)}</td>
             <td class="num">${averageLabel(d)}</td>
             <td class="num">${pbLabel(d)}</td>
-            <td class="whitespace-nowrap">${singlesLastRun(sfeed, d)}</td>
+            <td class="whitespace-nowrap">${singlesRecentFastest(sfeed, d)}</td>
           </tr>`).join('')}</tbody>
       </table></div>
     </section>` : '';
@@ -1409,7 +1411,7 @@ function renderSinglesDog(sdog, sfeed, main) {
 
 /** The Singles tab of the AOK9 page: what only Singles has. No standings;
     Singles places dogs only within a meet, so titles, progress toward them,
-    and each breed's dogs by recent racing. */
+    and each breed's dogs, newest fast runs first, sortable. */
 function renderSinglesTab(sfeed, container) {
   if (!container) return;
   if (!sfeed) {
@@ -1454,7 +1456,8 @@ function renderSinglesTab(sfeed, container) {
     <div class="card">
       <h2 class="card-title">Singles – browse by breed</h2>
       <p class="text-xs text-asfa-text/60 mb-3">
-        Most recent racing first. Click a column heading to sort, for example by average time.
+        Ordered by the newest of each dog's three fastest runs. Click a column heading to sort,
+        for example by average time.
       </p>
       <label class="block mb-3">
         <span class="sr-only">Breed</span>
@@ -1478,11 +1481,13 @@ function renderSinglesTab(sfeed, container) {
           three programs alone. Its division is placed either by average time or by scoring each
           program's times like a regular stake. The top four placings earn points on the sprint
           table; last place earns Turtle points.</li>
-        <li><strong>The average is a seeding figure.</strong> It is the plain mean of the dog's last
-          three timed runs, and race secretaries draw heats from it. A meet runs up to three
-          programs, so all three runs often come from one meet. Singles places dogs against each
-          other only within a meet, so this site gives no one a rank by time; the breed table
-          can be sorted by time to compare.</li>
+        <li><strong>The average is a seeding figure.</strong> It is the plain mean of the dog's three
+          fastest timed runs, and race secretaries draw heats from it. The records list those three
+          runs newest first; a meet runs up to three programs, so all three can come from one
+          meet. A slower run since is not listed, so a dog counts as racing this year with a listed
+          run or points from this year. Singles places dogs against each other only within a
+          meet, so this site gives no one a rank by time; the breed table can be sorted by time
+          to compare.</li>
         <li><strong>Titles.</strong> SBC, Singles Breed Champion, is 12 points from breed divisions.
           SMC, Singles Mixed Champion, is 12 points with at least 2 from mixed divisions. Supreme
           Singles titles come at every 30 National points, and Singles Turtle titles follow the
@@ -1543,22 +1548,23 @@ function renderSinglesTab(sfeed, container) {
   const panel = container.querySelector('#singles-panel');
   let showAll = false;
 
-  /* The breed table sorts on request, never by default: it opens most recent
-     racing first, and a time sort is a comparison, not a ranking. Each column
-     is [key, label, class, first direction]; times start fastest first. */
+  /* The breed table sorts on request, never by default: it opens on the
+     newest of each dog's three fastest runs, and a time sort is a comparison,
+     not a ranking. Each column is [key, label, class, first direction]; times
+     start fastest first. */
   const columns = [
     ['call_name', 'Dog', '', 1],
     [null, 'Registered name', ''],
     ['owner_raw', 'Owner', '', 1],
     ['average', 'Average', 'num', 1],
     ['pb', 'Personal best', 'num', 1],
-    ['recent', 'Last run', '', -1],
+    ['recent', 'Recent fastest', '', -1],
     [null, 'Titles', ''],
   ];
   const sort = { key: 'recent', dir: -1 };
   const valueOf = (d) => (sort.key === 'recent' ? singlesRecencyKey(d) || null : d[sort.key]);
   // A dog with no value (no time yet, a DNF) stays below the rest either way;
-  // ties fall back to most recent racing.
+  // ties fall back to the newest fast run.
   const bySort = (a, b) => {
     const av = valueOf(a);
     const bv = valueOf(b);
@@ -1589,7 +1595,7 @@ function renderSinglesTab(sfeed, container) {
             <td class="text-asfa-text/80">${esc(d.owner_raw)}</td>
             <td class="num">${averageLabel(d)}</td>
             <td class="num">${pbLabel(d)}</td>
-            <td class="whitespace-nowrap">${singlesLastRun(sfeed, d)}</td>
+            <td class="whitespace-nowrap">${singlesRecentFastest(sfeed, d)}</td>
             <td>${singlesTitleBadges(d)}</td>
           </tr>`).join('')}</tbody>
       </table></div>
@@ -1654,9 +1660,10 @@ function racingCardSpec(org, dog, feed, sdog = null, sfeed = null) {
   const wave = cardWave(org, dog);
   const career = org === 'lgra' ? (dog.ngrc || 0) : (dog.nbrc || 0) + (dog.nmrc || 0);
   const waveLabelText = wave.value != null && wave.grade ? `${wave.title} · grade ${wave.grade}` : wave.title;
-  // Singles runs at the same meets, so a Singles run counts as racing.
+  // Singles runs at the same meets, so Singles racing counts. Its sheet lists
+  // only the three fastest runs, so points this year show racing this year.
   const lastRaced = Math.max(Number(dog.last_raced ? dog.last_raced.slice(0, 4) : dog.last_year) || 0,
-    (sdog && sdog.last_year) || 0) || null;
+    (sdog && (sdog.raced ? feed.season : sdog.last_year)) || 0) || null;
   let headline;
   let figures;
   if (dog.rank_breed) {

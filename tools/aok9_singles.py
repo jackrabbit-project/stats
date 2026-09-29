@@ -10,12 +10,13 @@ stakes, under the same meet numbers and the same registration numbers.
 R.A.C.E. keeps the records as a public Google Sheet linked from
 https://aok9racing.com/documents--forms.html as "Singles Sprint Racing
 Records", with an "updated M/D/YY" note beside the link. The workbook's sprint
-tab has one row per dog: the average of its last three timed runs (the figure
-race secretaries draw heats from), its personal best, Singles breed and mixed
-championship points and the National points behind the Supreme Singles titles,
-Turtle points, this year's points, and those three runs, each with its meet.
-The runs are programs, so all three often come from a single meet. The oval
-Singles tab is not read.
+tab has one row per dog: the average of its three fastest timed runs (the
+sheet heads it "FASTEST AVG"; race secretaries draw heats from it), its
+personal best, Singles breed and mixed championship points and the National
+points behind the Supreme Singles titles, Turtle points, this year's points,
+and those three fastest runs, each with its meet, listed newest first under
+"Recent / Middle / Oldest Fastest". The runs are programs, so all three can
+come from a single meet. The oval Singles tab is not read.
 
 This builder runs after tools/aok9.py: it matches each Singles dog to its row
 in the sprint registry, so a dog that races both keeps one page.
@@ -70,7 +71,7 @@ HEADERS = {
     5: "SBC", 6: "NSBC", 7: "SMC", 8: "NSMC", 9: "PB", 10: "Turtle", 11: "YTD",
     12: "Fastest", 14: "Time", 15: "Fastest", 17: "Time", 18: "Fastest", 20: "Time",
 }
-# (meet, unused flag column, time) for each of the last three runs, newest
+# (meet, unused flag column, time) for each of the three fastest runs, newest
 # first. A meet has up to three programs, so one meet can fill all three.
 MEET_COLUMNS = ((12, 13, 14), (15, 16, 17), (18, 19, 20))
 WIDTH = 21
@@ -365,7 +366,10 @@ def derive(snapshot: dict, sprint_rows: list[dict], sprint_sections: list[dict])
             dog["titled"] = titled(dog)
             dog["active"] = bool((dog["ytd"] or 0) > 0
                                  or (dog["last_year"] is not None and dog["last_year"] >= season - 1))
-            dog["raced"] = any(m["year"] == season for m in meets)
+            # The sheet lists a dog's three FASTEST runs, so one that raced this
+            # year without beating them shows no run from this year; points
+            # this year still prove it raced.
+            dog["raced"] = any(m["year"] == season for m in meets) or (dog["ytd"] or 0) > 0
             dog["reg"] = dog.get("duplicate_of") or dog["id"]
             dogs.append(dog)
 
@@ -541,10 +545,12 @@ def build(snapshots: list[dict], sprint_feed: dict, sprint_registry: dict) -> di
             "Singles dogs run alone and are timed; at each meet they are placed "
             "against the other dogs in their division, and only the top placings "
             "earn championship points (Singles Racing Rule Book 1.0 ch. IV-V).",
-            "The average is the plain mean of the dog's last three timed runs, "
-            "the figure race secretaries draw heats from; the runs are programs, "
-            "so all three often come from one meet. Singles places dogs only "
-            "within a meet, so the site ranks no one by time.",
+            "The average is the plain mean of the dog's three fastest timed runs "
+            "(the sheet's FASTEST AVG), the figure race secretaries draw heats "
+            "from; the runs are programs, so all three can come from one meet. "
+            "A dog counts as racing this year with a listed run or points from "
+            "this year. Singles places dogs only within a meet, so the site "
+            "ranks no one by time.",
             "SBC is 12 Singles breed points; SMC is 12 points of which at least 2 "
             "are mixed. Supreme Singles titles come at every 30 National points, "
             "Singles Turtle titles as in the regular stakes; the rule book gives "
