@@ -766,7 +766,7 @@ function pointsTable() {
   ];
   return `
     <div class="tbl-wrap mt-2"><table class="tbl">
-      <thead><tr><th scope="col">Eligible entry</th><th scope="col" class="num">High score</th><th scope="col" class="num">Second</th><th scope="col" class="num">Third</th><th scope="col" class="num">Fourth</th></tr></thead>
+      <thead><tr><th scope="col">Entry</th><th scope="col" class="num">High score</th><th scope="col" class="num">Second</th><th scope="col" class="num">Third</th><th scope="col" class="num">Fourth</th></tr></thead>
       <tbody>${rows.map((row) => `<tr>${row.map((cell, i) => `<td class="${i ? 'num' : ''}">${cell || '—'}</td>`).join('')}</tr>`).join('')}</tbody>
     </table></div>`;
 }
@@ -777,8 +777,9 @@ function aboutRacing(org, feed, singles = null) {
     <section class="card">
       <h2 class="card-title">WAVE and grades</h2>
       <p class="text-sm leading-relaxed">
-        WAVE is the weighted average of a ${spec.noun}'s last three completed meets, out of a
-        possible 22 (three programs, up to 7⅓ points each, rounded by the registrar):
+        WAVE is the weighted average of the complete meets among a ${spec.noun}'s last three,
+        out of a possible 22 (winning the high-point race in all three programs pays 8, 6 and 8
+        points; figure 8.2A in the rule book):
       </p>
       <p class="font-mono text-sm mt-2 p-3 bg-asfa-bg2 border border-asfa-border">
         WAVE = (meet 1 + 0.7 × meet 2 + 0.5 × meet 3) ÷ 2.2
@@ -802,14 +803,17 @@ function aboutRacing(org, feed, singles = null) {
     <section class="card">
       <h2 class="card-title">Points and titles</h2>
       <p class="text-sm leading-relaxed">
-        At each meet the top four finishers earn championship points scaled to the number of
-        eligible starters.
+        In each ${org === 'lgra' ? 'breed' : 'division'} at a meet, the top two to four finishers
+        earn points, depending on the entry. Championship points count the eligible entrants
+        (titled ${spec.nouns} placed above the first untitled one are left out); National points
+        count every starter. A ${spec.noun} that does not finish all races, finishes last, or
+        beats no one earns neither.
       </p>
       ${pointsTable()}
       ${org === 'lgra' ? `
       <p class="text-sm leading-relaxed mt-3">
         <strong>GRC</strong>, Gazehound Racing Champion: 12 GRC points, which only untitled
-        hounds can earn. <strong>National points</strong> use the same table, go to titled and
+        hounds can earn. <strong>National points</strong> use the same values, go to titled and
         untitled hounds alike, and are what the standings here rank; 30 of them make a
         <strong>SGRC</strong>, Superior Gazehound Racing Champion, with SGRC II, III and so on at
         each further 30. <strong>JSR</strong> and <strong>SSR</strong> merit titles are earned
@@ -821,7 +825,7 @@ function aboutRacing(org, feed, singles = null) {
         Championship points come from the table above and only untitled dogs earn them:
         <strong>BRC</strong> (Breed Racing Champion) is 12 BRC points from breed divisions;
         <strong>MRC</strong> (Mixed Racing Champion) is 12 BRC and MRC points together, at
-        least 2 of them MRC. <strong>National points</strong> use the same table for the same
+        least 2 of them MRC. <strong>National points</strong> use the same values for the same
         placings, go to titled and untitled dogs alike, and never stop: National Breed points
         from breed divisions, National Mixed points from mixed divisions. The two together,
         earned this season, are the National points the standings here rank. Every 30 National
@@ -853,7 +857,7 @@ function aboutRacing(org, feed, singles = null) {
         (release 23.2).
       </p>
       <ul class="text-sm leading-relaxed list-disc pl-5 mt-2 space-y-1">
-        <li><strong>Standings</strong> rank the guide's YTD column, this year's National points, within each breed and across breeds. LGRA's own year-end Top 10 lists rank the same figure.</li>
+        <li><strong>Standings</strong> rank the guide's YTD column, this year's National points, within each breed and across breeds. LGRA's own year-end lists ("Top LGRA Dogs", by breed and across breeds) rank the same figure.</li>
         <li><strong>Career standings</strong> rank career National points (the NGRC column) across every hound ever registered.</li>
         <li><strong>Titles</strong> are read from the points columns: 12 GRC points is a GRC, every 30 National points a further SGRC. The registrar's certificate is the record.</li>
       </ul>` : `
