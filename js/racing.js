@@ -1454,9 +1454,7 @@ function renderSinglesTab(sfeed, container) {
     <div class="card">
       <h2 class="card-title">Singles – browse by breed</h2>
       <p class="text-xs text-asfa-text/60 mb-3">
-        Most recent racing first; select a column heading to sort, by average time for one.
-        Singles places dogs only within a meet, so sorting compares times from different
-        meets and is not a ranking.
+        Most recent racing first. Click a column heading to sort, for example by average time.
       </p>
       <label class="block mb-3">
         <span class="sr-only">Breed</span>
