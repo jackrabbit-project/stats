@@ -1,8 +1,9 @@
 """ASFA's ten regions, as defined in the Constitution.
 
-Source: ASFA Constitution & By-Laws (rev. 08/01/2024), Article V, Section 3,
-pages 6-7 - "They shall represent the various regions of the country as
-defined below".
+Source: ASFA Constitution & By-Laws (rev. 08/01/2026), Article V, Section 3,
+pages 44-45 of the 2026 ASFA Rulebook - "They shall represent the various
+regions of the country as defined below". The region text is unchanged from
+the 08/01/2024 revision.
 
 Reproduced here so the site can label a region rather than print a bare
 number. Note that Regions 2 and 10 are NOT clean state lists: California and
@@ -64,7 +65,7 @@ REGIONS: dict[int, dict] = {
     },
 }
 
-SOURCE = ("ASFA Constitution & By-Laws, rev. 08/01/2024, Article V, Section 3")
+SOURCE = ("ASFA Constitution & By-Laws, rev. 08/01/2026, Article V, Section 3")
 
 
 def as_list() -> list[dict]:
