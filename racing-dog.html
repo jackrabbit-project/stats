@@ -6,11 +6,11 @@
   <meta name="theme-color" media="(prefers-color-scheme: light)" content="#F7F5EF">
   <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#1B1917">
   <title>Racing record — Gazehound Stats</title>
-  <meta name="description" content="One hound's LGRA or AOK9 racing record from the grading guide: standing in the breed this year, WAVE and grade, points toward each title, the last three meets. Unofficial fan site.">
+  <meta name="description" content="One hound's LGRA, AOK9 or NOTRA racing record from the grading guide: standing in the breed this year, WAVE and grade, points toward each title, the last three meets. Unofficial fan site.">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Gazehound Stats">
   <meta property="og:title" content="Racing record — Gazehound Stats">
-  <meta property="og:description" content="One hound's LGRA or AOK9 racing record from the grading guide: standing in the breed this year, WAVE and grade, points toward each title, the last three meets.">
+  <meta property="og:description" content="One hound's LGRA, AOK9 or NOTRA racing record from the grading guide: standing in the breed this year, WAVE and grade, points toward each title, the last three meets.">
   <meta property="og:image" content="https://stats.gazehound.io/assets/og.png?v=2">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
@@ -18,7 +18,7 @@
   <link rel="preload" href="assets/fonts/fraunces-latin-var.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/plex-mono-400.woff2" as="font" type="font/woff2" crossorigin>
   <script src="js/theme.js?v=20260823"></script>
-  <link rel="stylesheet" href="css/app.css?v=20261002f">
+  <link rel="stylesheet" href="css/app.css?v=20261002g">
   <link rel="icon" href="assets/favicon.ico?v=3" sizes="any">
   <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png?v=3">
   <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png?v=3">
@@ -28,19 +28,20 @@
   <main id="main" class="flex-1 max-w-5xl mx-auto w-full px-4 py-6 space-y-6"></main>
   <footer id="site-footer" class="bg-asfa-navy text-white py-8"></footer>
 
-  <script src="js/app.js?v=20261002f"></script>
+  <script src="js/app.js?v=20261002g"></script>
   <script src="js/card.js?v=20260924k"></script>
-  <script src="js/racing.js?v=20261002f"></script>
+  <script src="js/racing.js?v=20261002g"></script>
   <script>
     (() => {
       const org = param('org');
-      if (org !== 'lgra' && org !== 'aok9') {
+      if (!ORGS[org]) {
         renderChrome(null, 'racing-dog.html', 'hub');
         document.getElementById('main').innerHTML = `<div class="card">
           <h1 class="card-title">Unknown racing program</h1>
-          <p class="text-sm">This page shows one hound's LGRA or AOK9 record; the link is missing which.</p>
+          <p class="text-sm">This page shows one hound's LGRA, AOK9 or NOTRA record; the link is missing which.</p>
           <p class="text-sm mt-2"><a href="lgra.html" class="lnk">LGRA standings →</a> ·
-            <a href="aok9.html" class="lnk">AOK9 standings →</a></p>
+            <a href="aok9.html" class="lnk">AOK9 standings →</a> ·
+            <a href="notra.html" class="lnk">NOTRA standings →</a></p>
         </div>`;
         return;
       }

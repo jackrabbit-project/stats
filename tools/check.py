@@ -359,6 +359,7 @@ def main() -> int:
     check_titles(check)
     check_racing(check, "lgra")
     check_racing(check, "aok9")
+    check_racing(check, "notra")
     check_singles(check)
     return check.report()
 
@@ -768,6 +769,30 @@ RACING = {
         "wave_agreement": 0.85,
         "expected_sections": None,
     },
+    "notra": {
+        # Other Breeds only. NOTRA Rules (Feb 2025) 7.4: ORC at 12 ORC points;
+        # 7.5: SORC at every 30 lifetime National points; 7.3: JOR after four
+        # completed meets, SOR after six legs.
+        "waves": ["wave"],
+        "meet_streams": ["meets"],
+        "champion": [
+            ("titled_orc", "orc", lambda row: (row["orc"] or 0) >= 12),
+            ("titled_jor", "jor", lambda row: (row["jor"] or 0) >= 4),
+            ("titled_sor", "sor", lambda row: (row["sor"] or 0) >= 6),
+        ],
+        "supreme": [("lftm", "sorc")],
+        "career_ranks": [("lftm", "rank_career")],
+        "owner_sums": ["ytd", "lftm"],
+        "owner_best": "wave",
+        # The recorder's published WAVEs follow the rule for most hounds with
+        # meets listed; inactive hounds keep a WAVE after their meets are gone.
+        "wave_agreement": 0.80,
+        "expected_sections": None,
+        # Meets are dates the recorder types; a typo (year 2206) is kept as
+        # text and counts as undated, more often than a coded scheme allows.
+        "undecoded_share": 0.02,
+        "earliest_year": 1992,
+    },
 }
 
 # LGRA year letters, enumerated rather than computed: A..Z then AA..AZ.
@@ -865,7 +890,9 @@ def check_racing(check: Checker, org: str) -> None:
             check.expect(all(len(v) == 1 for v in homes.values()),
                          f"{label}: a registration prefix appears under two breeds")
     check.expect(len(set(by_id)) == len(rows), f"{label}: duplicate ids in the registry")
-    check.expect(all(re.match(r"^[A-Z]{1,8}-\d+(-\d+)?$", row["id"]) for row in rows),
+    # NOTRA re-uses a number with a letter (SW-225A) and lists hounds still
+    # waiting for one as FTE or PEND.
+    check.expect(all(re.match(r"^[A-Z]{1,8}-(\d+[A-Z]?|FTE|PEND)(-\d+)?$", row["id"]) for row in rows),
                  f"{label}: an id does not look like PREFIX-NUMBER")
     duplicates = [row for row in rows if row.get("duplicate_of")]
     check.expect(all(row["id"].startswith(row["duplicate_of"] + "-") for row in duplicates),
@@ -984,12 +1011,13 @@ def check_racing(check: Checker, org: str) -> None:
     this_year: set[str] = set()
     for row in rows:
         for stream in spec["meet_streams"]:
-            for code, year, when, _score, _complete in row[stream]:
+            for code, year, when, _score, _complete in (meet[:5] for meet in row[stream]):
                 listed += 1
                 if year is None:
                     undecoded += 1
                     continue
-                check.expect(1995 <= year <= season, f"{label}: meet {code} year {year} out of range")
+                check.expect(spec.get("earliest_year", 1995) <= year <= season,
+                             f"{label}: meet {code} year {year} out of range")
                 if year == season:
                     this_year.add(code)
                 if org == "lgra":
@@ -1011,7 +1039,7 @@ def check_racing(check: Checker, org: str) -> None:
     check.expect(listed == stats["meets_listed"] and undecoded == stats["meets_undecoded"],
                  f"{label}: meet counts {listed}/{undecoded} vs stats "
                  f"{stats['meets_listed']}/{stats['meets_undecoded']}")
-    check.expect(undecoded <= max(5, listed * 0.002),
+    check.expect(undecoded <= max(5, listed * spec.get("undecoded_share", 0.002)),
                  f"{label}: {undecoded} undecodable meet codes of {listed}")
     if org == "lgra":
         check.expect(weekend / max(1, dated) >= 0.85,

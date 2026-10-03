@@ -5,13 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" media="(prefers-color-scheme: light)" content="#F7F5EF">
   <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#1B1917">
-  <title>Gazehound Stats — ASFA lure coursing, LGRA and AOK9 racing</title>
-  <meta name="description" content="Lure coursing and racing stats for ASFA, LGRA and AOK9: standings by breed, points, titles and records, hound by hound. Unofficial fan site.">
+  <title>Gazehound Stats — ASFA lure coursing, LGRA, AOK9 and NOTRA racing</title>
+  <meta name="description" content="Lure coursing and racing stats for ASFA, LGRA, AOK9 and NOTRA: standings by breed, points, titles and records, hound by hound. Unofficial fan site.">
   <link rel="canonical" href="https://stats.gazehound.io/">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Gazehound Stats">
   <meta property="og:title" content="Gazehound Stats">
-  <meta property="og:description" content="Lure coursing and racing stats for ASFA, LGRA and AOK9. Unofficial fan site.">
+  <meta property="og:description" content="Lure coursing and racing stats for ASFA, LGRA, AOK9 and NOTRA. Unofficial fan site.">
   <meta property="og:url" content="https://stats.gazehound.io/">
   <meta property="og:image" content="https://stats.gazehound.io/assets/og.png?v=2">
   <meta property="og:image:width" content="1200">
@@ -20,7 +20,7 @@
   <link rel="preload" href="assets/fonts/fraunces-latin-var.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/plex-mono-400.woff2" as="font" type="font/woff2" crossorigin>
   <script src="js/theme.js?v=20260823"></script>
-  <link rel="stylesheet" href="css/app.css?v=20261002f">
+  <link rel="stylesheet" href="css/app.css?v=20261002g">
   <link rel="icon" href="assets/favicon.ico?v=3" sizes="any">
   <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png?v=3">
   <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png?v=3">
@@ -32,7 +32,7 @@
     <section class="bg-asfa-bg2 border-b border-asfa-border">
       <div class="max-w-3xl mx-auto px-4 py-10 text-center">
         <h1 class="font-display text-4xl md:text-5xl text-asfa-text tracking-tight">Find your hound.</h1>
-        <p class="mt-2 text-asfa-text/75">Lure coursing and racing standings, points, titles and records from ASFA, LGRA and AOK9.</p>
+        <p class="mt-2 text-asfa-text/75">Lure coursing and racing standings, points, titles and records from ASFA, LGRA, AOK9 and NOTRA.</p>
 
         <div class="relative mt-6 text-left">
           <label for="search" class="sr-only">Search hounds by name across every program</label>
@@ -46,14 +46,14 @@
     </section>
 
     <div class="max-w-6xl mx-auto w-full px-4 py-8 space-y-8">
-      <section id="programs" class="grid md:grid-cols-3 gap-6"></section>
+      <section id="programs" class="grid md:grid-cols-2 gap-6"></section>
 
       <!-- Share targets are plain links, as on the AOK9 and II guide sites: no
            platform scripts, nothing fetched, nobody tracked who never clicks. -->
       <section class="card">
         <h2 class="card-title">Track your hound across programs</h2>
-        <p class="text-sm text-asfa-text/70 mb-3">Look up any hound in ASFA lure coursing, LGRA straight racing or AOK9
-          sprint racing, follow the breed standings, watch titles land, and find where to run next.</p>
+        <p class="text-sm text-asfa-text/70 mb-3">Look up any hound in ASFA lure coursing, LGRA straight racing, AOK9
+          sprint racing or NOTRA oval racing, follow the breed standings, watch titles land, and find where to run next.</p>
         <p class="text-sm text-asfa-text/70 mb-3">Know someone chasing a Top 20 spot, a racing championship, or next weekend's meet? Pass it on.</p>
         <div id="share-links" class="flex flex-wrap gap-2"></div>
       </section>
@@ -62,10 +62,10 @@
 
   <footer id="site-footer" class="bg-asfa-navy text-white py-8"></footer>
 
-  <script src="js/app.js?v=20261002f"></script>
-  <script src="js/racing.js?v=20261002f"></script>
+  <script src="js/app.js?v=20261002g"></script>
+  <script src="js/racing.js?v=20261002g"></script>
   <script>
-    pageHub(({ asfa, lgra, aok9, trials, singles }) => {
+    pageHub(({ asfa, lgra, aok9, trials, singles, notra }) => {
       const programs = document.getElementById('programs');
       const coverage = [];
 
@@ -78,7 +78,21 @@
         lgra: ['assets/card-lgra.jpg', 'Three Afghan Hounds in numbered racing blankets breaking from the starting boxes', ''],
         aok9: ['assets/card-aok9.jpg', 'Three long-haired Dachshunds in muzzles and numbered racing blankets waiting on the line', 'Photo: Susan Wilson'],
       };
+      /* No photograph yet for NOTRA: a drawn oval track holds its place in
+         the card's own colour, at the photographs' 3:1. */
+      const trackFigure = () => `
+          <figure class="-mx-5 -mt-5 mb-4 relative" aria-hidden="true">
+            <svg viewBox="0 0 900 300" class="w-full h-auto block" style="background: rgb(var(--program) / 0.08)">
+              <g fill="none" stroke="rgb(var(--program))" stroke-opacity="0.6" stroke-width="3">
+                <rect x="70" y="36" width="760" height="228" rx="114"/>
+                <rect x="100" y="66" width="700" height="168" rx="84"/>
+                <rect x="130" y="96" width="640" height="108" rx="54"/>
+              </g>
+              <line x1="450" y1="36" x2="450" y2="96" stroke="rgb(var(--program))" stroke-width="5"/>
+            </svg>
+          </figure>`;
       const photo = (program) => {
+        if (!PHOTOS[program]) return trackFigure();
         const [src, alt, credit] = PHOTOS[program];
         return `
           <figure class="-mx-5 -mt-5 mb-4 relative">
@@ -125,9 +139,7 @@
       const racingCard = (feed, org, name, nouns, combined = null) => {
         if (!feed) return unavailable(name);
         const leader = feed.dogs.find((dog) => dog.rank_all === 1);
-        const titled = org === 'lgra'
-          ? [feed.stats.titled_grc.toLocaleString('en-US'), 'GRC titled, all time']
-          : [feed.stats.titled_champion, 'BRC or MRC titled, all time'];
+        const titled = ORGS[org].titledTile(feed.stats);
         coverage.push(`${name} guide ${guideDate(feed, 'of')}`);
         return tiles([
           [combined ? combined.dogs_raced : feed.stats.hounds_raced, `${nouns} racing this year`],
@@ -138,19 +150,23 @@
       };
       const lgraBody = racingCard(lgra, 'lgra', 'LGRA', 'hounds');
       const aok9Body = racingCard(aok9, 'aok9', 'AOK9', 'dogs', aok9 && singles ? singles.combined : null);
+      const notraBody = racingCard(notra, 'notra', 'NOTRA', 'hounds');
 
-      // Announces the Singles records, added in September 2026, for the rest
-      // of the season; from 2027 it is old news and the note drops away. It
-      // shows only when the Singles records actually loaded.
-      const SINGLES_NEW_UNTIL = '2027-01-01';
-      const singlesNote = aok9 && singles && new Date().toISOString().slice(0, 10) < SINGLES_NEW_UNTIL
-        ? `<p class="flex items-center gap-2 mt-3 text-sm text-asfa-text/80"><span class="badge badge-new">${icon('star')} New</span>Now includes Singles records</p>`
-        : '';
+      // Announces the Singles records, added in September 2026, and the NOTRA
+      // section, added in October 2026, for the rest of the season; from 2027
+      // they are old news and the notes drop away. Each shows only when its
+      // records actually loaded.
+      const NEW_UNTIL = '2027-01-01';
+      const isNew = new Date().toISOString().slice(0, 10) < NEW_UNTIL;
+      const newNote = (text) => `<p class="flex items-center gap-2 mt-3 text-sm text-asfa-text/80"><span class="badge badge-new">${icon('star')} New</span>${text}</p>`;
+      const singlesNote = aok9 && singles && isNew ? newNote('Now includes Singles records') : '';
+      const notraNote = notra && isNew ? newNote('Added October 2026') : '';
 
       programs.innerHTML =
         card('asfa.html', 'ASFA lure coursing', `Top 20 standings${asfa ? ` · ${asfa.season}` : ''}`, asfaBody, 'Standings, kennels, titles, events', 'asfa')
         + card('lgra.html', 'LGRA racing', 'Straight racing · 200 yards', lgraBody, 'Standings by breed, WAVE, titles', 'lgra')
-        + card('aok9.html', 'AOK9 racing', 'All-breed sprint racing', aok9Body, 'Standings by breed, WAVE, titles', 'aok9', singlesNote);
+        + card('aok9.html', 'AOK9 racing', 'All-breed sprint racing', aok9Body, 'Standings by breed, WAVE, titles', 'aok9', singlesNote)
+        + card('notra.html', 'NOTRA racing', 'Oval racing · Other Breeds', notraBody, 'Standings by breed, WAVE, titles', 'notra', notraNote);
       animateTiles(programs);
 
       document.getElementById('coverage').textContent = coverage.length
@@ -167,19 +183,19 @@
         </a>`;
       /* The index the header search uses too; dogs not racing lately come
          from the racing registries, loaded on the first search. */
-      const entries = buildSearchEntries({ asfa, lgra, aok9, singles });
-      const registryFallback = (query) => searchDormant(query, { lgra, aok9, singles }, entries);
+      const entries = buildSearchEntries({ asfa, lgra, aok9, singles, notra });
+      const registryFallback = (query) => searchDormant(query, { lgra, aok9, singles, notra }, entries);
       attachSearch(document.getElementById('search'), document.getElementById('search-results'), entries, {
         row,
-        empty: "No hound matches that name. ASFA lists only each breed's Top 20; LGRA and AOK9 list active dogs.",
+        empty: "No hound matches that name. ASFA lists only each breed's Top 20; LGRA, AOK9 and NOTRA list active dogs.",
         fallback: registryFallback,
-        fallbackNote: 'Not racing lately, from the all-time LGRA and AOK9 records:',
+        fallbackNote: 'Not racing lately, from the all-time LGRA, AOK9 and NOTRA records:',
       });
 
       /* ----- share links, plain sharer URLs */
       const shareUrl = window.location.origin + window.location.pathname;
       const shareTitle = 'Gazehound Stats';
-      const shareBlurb = 'ASFA lure coursing, LGRA and AOK9 racing standings, searchable by hound.';
+      const shareBlurb = 'ASFA lure coursing, LGRA, AOK9 and NOTRA racing standings, searchable by hound.';
       const su = encodeURIComponent(shareUrl);
       const st = encodeURIComponent(`${shareTitle} — ${shareBlurb}`);
       const shares = [

@@ -53,19 +53,26 @@ the following, which are included under separate terms:
    the property of R.A.C.E.; the published records and the AOK9 registrar's
    records are authoritative wherever the two disagree.
 
-   In each case the name and marks of ASFA, LGRA, AOK9 and R.A.C.E. are used
-   descriptively to identify the source. This project is independent and is not
-   authorized, approved, or endorsed by any of them. The raw workbooks the
-   guides are distributed as are not stored in this repository.
+4. NOTRA DATA — "data/notra.json", "data/notra-registry.json" and the archived
+   snapshots under "data/notra/" are derived from the Other-Breed grading guide
+   published by the National Oval Track Racing Association (NOTRA) at
+   notra.org. That material remains the property of NOTRA; the guide and the
+   NOTRA Other-Breed Recorder's records are authoritative wherever the two
+   disagree.
 
-4. PHOTOGRAPHS — "assets/card-aok9.jpg" is by Susan Wilson and is reproduced
+   In each case the name and marks of ASFA, LGRA, AOK9, R.A.C.E. and NOTRA are
+   used descriptively to identify the source. This project is independent and
+   is not authorized, approved, or endorsed by any of them. The raw workbooks
+   the guides are distributed as are not stored in this repository.
+
+5. PHOTOGRAPHS — "assets/card-aok9.jpg" is by Susan Wilson and is reproduced
    with credit to the photographer. "assets/card-asfa.jpg" and
    "assets/card-lgra.jpg" are the project maintainer's own. None of the
    photographs is covered by the MIT license above; they are included to
    illustrate this site and may not be reused without the photographer's
    permission.
 
-5. LOGO / ICON FILES — "assets/favicon.ico" (and its root-level copy
+6. LOGO / ICON FILES — "assets/favicon.ico" (and its root-level copy
    "favicon.ico"), "assets/favicon-16x16.png", "assets/favicon-32x32.png",
    "assets/apple-touch-icon.png", "assets/jackrabbit-icon-40.png", the
    Jackrabbit mark within "assets/og.png", and the inline Jackrabbit mark
@@ -74,7 +81,7 @@ the following, which are included under separate terms:
    this project. Nothing in the MIT license above grants rights to use that
    mark for other purposes.
 
-6. WEBFONTS — the files in "assets/fonts/" are the Fraunces typeface
+7. WEBFONTS — the files in "assets/fonts/" are the Fraunces typeface
    (Copyright 2019 The Fraunces Project Authors) and the IBM Plex Mono
    typeface (Copyright 2017 IBM Corp.), each licensed under the SIL Open
    Font License, Version 1.1 (https://openfontlicense.org), not the MIT

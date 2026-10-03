@@ -47,6 +47,10 @@ jobs:
         continue-on-error: true
         run: python tools/aok9_singles.py
 
+      - name: Refresh the NOTRA Other-Breed grading guide
+        continue-on-error: true
+        run: python tools/notra.py
+
       - name: Parse, build and verify
         run: |
           python tools/parse.py
@@ -77,6 +81,9 @@ jobs:
           fi
           if echo "$CHANGED" | grep -q '^data/aok9-singles/snapshots/'; then
             PARTS+=("AOK9 Singles records $(python -c "import json;print(json.load(open('data/aok9-singles.json'))['guide_date'])")")
+          fi
+          if echo "$CHANGED" | grep -q '^data/notra.json$'; then
+            PARTS+=("NOTRA guide $(python -c "import json;print(json.load(open('data/notra.json'))['guide_date'])")")
           fi
           if [ ${#PARTS[@]} -eq 0 ]; then PARTS+=("Data refresh"); fi
           MSG=$(IFS=';'; echo "${PARTS[*]}" | sed 's/;/; /g')

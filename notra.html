@@ -5,14 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" media="(prefers-color-scheme: light)" content="#F7F5EF">
   <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#1B1917">
-  <title>AOK9 sprint racing standings — Gazehound Stats</title>
-  <meta name="description" content="AOK9 all-breed sprint racing standings by breed from the grading guide: National points this year, career National Breed and Mixed points, breed and mixed WAVE and grade for every active dog. Unofficial fan site.">
-  <link rel="canonical" href="https://stats.gazehound.io/aok9.html">
+  <title>NOTRA oval racing standings — Gazehound Stats</title>
+  <meta name="description" content="NOTRA oval racing standings by breed from the Other-Breed grading guide: National points this year, career points, WAVE and grade for every active hound, with an all-time registry lookup. Unofficial fan site.">
+  <link rel="canonical" href="https://stats.gazehound.io/notra.html">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Gazehound Stats">
-  <meta property="og:title" content="AOK9 sprint racing standings — Gazehound Stats">
-  <meta property="og:description" content="AOK9 all-breed sprint racing standings by breed from the grading guide: National points this year, career National points, WAVE and grade for every active dog. Unofficial fan site.">
-  <meta property="og:url" content="https://stats.gazehound.io/aok9.html">
+  <meta property="og:title" content="NOTRA oval racing standings — Gazehound Stats">
+  <meta property="og:description" content="NOTRA oval racing standings by breed from the Other-Breed grading guide: National points this year, career points, WAVE and grade for every active hound. Unofficial fan site.">
+  <meta property="og:url" content="https://stats.gazehound.io/notra.html">
   <meta property="og:image" content="https://stats.gazehound.io/assets/og.png?v=2">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
@@ -33,11 +33,9 @@
   <script src="js/app.js?v=20261002g"></script>
   <script src="js/racing.js?v=20261002g"></script>
   <script>
-    // The Singles records load beside the sprint guide; a failure there only
-    // empties the Singles tab.
-    const singles = loadRacing('aok9-singles').catch((error) => { console.warn(error); return null; });
-    pageRacing('aok9.html', 'aok9', (feed) => singles.then((records) =>
-      renderRacingOverview('aok9', feed, document.getElementById('main'), records)));
+    pageRacing('notra.html', 'notra', (feed) => {
+      renderRacingOverview('notra', feed, document.getElementById('main'));
+    });
   </script>
 </body>
 </html>

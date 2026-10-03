@@ -1,6 +1,6 @@
-/* The LGRA and AOK9 racing pages: what the two programs have in common, the
-   table of where they differ, and the two page renderers (overview, hound).
-   Loaded after app.js; plain globals like the rest of the site. */
+/* The LGRA, AOK9 and NOTRA racing pages: what the programs have in common,
+   the table of where they differ, and the two page renderers (overview,
+   hound). Loaded after app.js; plain globals like the rest of the site. */
 
 /* --------------------------------------------------------------- programs */
 
@@ -36,6 +36,14 @@ const ORGS = {
     ],
     rules: 'LGRA Rule Book 23.2',
     calendar: 'https://lgra.club/calendar',
+    guideName: 'LGRA grading guide',
+    officer: 'registrar',
+    titledTile: (stats) => [stats.titled_grc.toLocaleString('en-US'), 'GRC titled, all time'],
+    titledKeys: ['grc'], titledLabel: 'GRC titled',
+    agreement: (stats) => `${Math.round(stats.wave_agreement * 100)}%`,
+    careerOf: (dog) => dog.ngrc || 0,
+    cardChampion: ['grc', 'GRC PTS'],
+    waveMax: 22,
   },
   aok9: {
     key: 'aok9',
@@ -98,6 +106,65 @@ const ORGS = {
     ],
     rules: 'AOK9 Sprint Racing Rule Book 3.0',
     calendar: 'https://aok9racing.com/calendar.html',
+    guideName: 'AOK9 sprint racing grading guide',
+    officer: 'registrar',
+    titledTile: (stats) => [stats.titled_champion, 'BRC or MRC titled, all time'],
+    titledKeys: ['brc', 'mrc'], titledLabel: 'BRC or MRC titled',
+    agreement: (stats) => `${Math.round(stats.bwave_agreement * 100)}% (breed) and ${Math.round(stats.mwave_agreement * 100)}% (mixed)`,
+    careerOf: (dog) => (dog.nbrc || 0) + (dog.nmrc || 0),
+    cardChampion: ['brc', 'BRC PTS'],
+    waveMax: 22,
+  },
+  notra: {
+    key: 'notra',
+    name: 'NOTRA',
+    fullName: 'National Oval Track Racing Association',
+    program: 'oval racing',
+    page: 'notra.html',
+    noun: 'hound', nouns: 'hounds',
+    waves: [['wave', 'WAVE', 'grade']],
+    seasonLabel: 'National points this year',
+    careers: [['lftm', 'rank_career', 'Career National points', 'sorc', 'SORC']],
+    // NOTRA Rules (Feb 2025) 7.4 and 7.5 for Other Breeds: ORC at 12 ORC
+    // points, SORC at every 30 lifetime National points. The merit titles
+    // (7.3) are earned by legs the guide counts: four completed meets for
+    // Junior Oval Racer, six qualifying legs for Senior.
+    champion: [['orc', 'ORC', 'Oval Racing Champion', 12]],
+    supreme: [['lftm', 'sorc', 'SORC', 'Supreme Oval Racing Champion', 30]],
+    merit: [['jor', 'JOR', 'Junior Oval Racer', 4, 'completed meets'], ['sor', 'SOR', 'Senior Oval Racer', 6, 'legs']],
+    tiles: (dog) => [
+      [ptsLabel(dog.ytd), 'National points this year'],
+      [ptsLabel(dog.lftm), 'career National points'],
+      [`${ptsLabel(dog.orc)} / 12`, 'ORC points'],
+      [ptsLabel(dog.prior), 'National points, prior years'],
+    ],
+    streams: [['meets', 'Last three meets']],
+    browse: [
+      ['rank_breed', 'Rank', 'num', 1],
+      ['call_name', 'Call name', '', 1],
+      ['registered_name', 'Registered name', '', 1],
+      ['owner_raw', 'Owner', '', 1],
+      ['ytd', 'This year', 'num', -1],
+      ['lftm', 'Career', 'num', -1],
+      ['orc', 'ORC pts', 'num', -1],
+      ['wave', 'WAVE', 'num', -1],
+      ['last_raced', 'Last raced', '', -1],
+    ],
+    rules: 'NOTRA Rules, February 2025',
+    calendar: 'https://www.notra.org/RaceDates.html',
+    guideName: 'NOTRA Other-Breed grading guide',
+    officer: 'recorder',
+    titledTile: (stats) => [stats.titled_orc, 'ORC titled, all time'],
+    titledKeys: ['orc'], titledLabel: 'ORC titled',
+    agreement: (stats) => `${Math.round(stats.wave_agreement * 100)}%`,
+    careerOf: (dog) => dog.lftm || 0,
+    cardChampion: ['orc', 'ORC PTS'],
+    waveMax: 22,
+    // The guide counts a hound's disqualifications, off-course runs and
+    // did-not-finishes instead of listing the meets, and gives each listed
+    // meet a status the recorder wrote (n, y, scr2, dnf, oc, dq).
+    faults: true,
+    meetStatus: true,
   },
 };
 
@@ -133,18 +200,20 @@ function gradeBadge(grade) {
   return `<span class="badge ${cls}" title="Grade ${grade}">${grade}</span>`;
 }
 
-/** A 0 to 22 bar with the grade boundaries ticked on it. */
-function waveBar(value) {
+/** A 0 to 22 bar with the grade boundaries ticked on it; a program scored
+    out of 29 (NOTRA's four-program whippet meets) scales the ticks with it. */
+function waveBar(value, max = 22) {
   if (value == null) return '';
-  const pct = (n) => `${Math.max(0, Math.min(100, (n / 22) * 100))}%`;
+  const pct = (n) => `${Math.max(0, Math.min(100, (n / max) * 100))}%`;
+  const at = (n) => Math.round(n * max / 22 * 10) / 10;
   const tick = (n, label) => `
     <span class="absolute top-0 bottom-0 border-l border-asfa-border" style="left:${pct(n)}" aria-hidden="true"></span>
     <span class="absolute -bottom-4 text-[10px] font-mono text-asfa-text/55 -translate-x-1/2" style="left:${pct(n)}" aria-hidden="true">${label}</span>`;
   return `
-    <div class="relative h-3 bg-asfa-bg2 border border-asfa-border mt-3 mb-5" role="img" aria-label="WAVE ${waveLabel(value)} of a possible 22">
+    <div class="relative h-3 bg-asfa-bg2 border border-asfa-border mt-3 mb-5" role="img" aria-label="WAVE ${waveLabel(value)} of a possible ${max}">
       <div class="h-full bg-asfa-accent" style="width:${pct(value)}"></div>
-      ${tick(5.5, 'C')}${tick(8, 'B')}${tick(11, 'A')}
-      <span class="absolute -bottom-4 right-0 text-[10px] font-mono text-asfa-text/55" aria-hidden="true">22</span>
+      ${tick(at(5.5), 'C')}${tick(at(8), 'B')}${tick(at(11), 'A')}
+      <span class="absolute -bottom-4 right-0 text-[10px] font-mono text-asfa-text/55" aria-hidden="true">${max}</span>
     </div>`;
 }
 
@@ -197,6 +266,21 @@ function unpackMeets(feed, rows) {
 
 function unpackDq(feed, rows) {
   return (rows || []).map((row) => Object.fromEntries(feed.dq_columns.map((col, i) => [col, row[i]])));
+}
+
+/** The number the guide prints for a hound: a duplicate's shared number,
+    or an unnumbered hound's label (NOTRA lists a hound as FTE, first time
+    entered, or PEND, registration pending, until it has a race number; the
+    site numbers those -2, -3 to tell them apart). */
+function publishedId(dog) {
+  if (dog.duplicate_of) return dog.duplicate_of;
+  return dog.unnumbered ? dog.id.replace(/-\d+$/, '') : dog.id;
+}
+
+function idNote(dog) {
+  if (dog.duplicate_of) return 'a number the guide lists twice';
+  if (dog.unnumbered) return /FTE/.test(dog.id) ? 'no race number yet: first time entered' : 'no race number yet: registration pending';
+  return '';
 }
 
 /** What to call a meet: its date when the code carries one, otherwise the
@@ -328,9 +412,7 @@ function renderRacingOverview(org, feed, main, singles = null) {
     [stats.hounds_ytd, `${nouns} with points this year`],
     [combined ? combined.breeds_raced : stats.breeds_raced, 'breeds racing this year'],
     [combined ? combined.meets_this_year : stats.meets_this_year, `meets this year`],
-    ...(org === 'lgra'
-      ? [[stats.titled_grc.toLocaleString('en-US'), 'GRC titled, all time']]
-      : [[stats.titled_champion, 'BRC or MRC titled, all time']]),
+    spec.titledTile(stats),
   ];
 
   const rankedSections = sections.filter((s) => s.ytd > 0)
@@ -717,9 +799,8 @@ function renderRacingOverview(org, feed, main, singles = null) {
   const kennelList = document.getElementById('kennel-list');
   const kennelSort = { key: 'ytd', dir: -1 };
   // Championship titles among the kennel's active dogs: the overview tile's
-  // GRC / BRC-or-MRC count, scoped to one kennel.
-  const titledKeys = org === 'lgra' ? ['grc'] : ['brc', 'mrc'];
-  const titledLabel = org === 'lgra' ? 'GRC titled' : 'BRC or MRC titled';
+  // count, scoped to one kennel.
+  const { titledKeys, titledLabel } = spec;
   const careerLabel = spec.careers[0][2].replace(/^Career /, 'career ');
   function paintKennel() {
     const owner = ownerKey && feed.owners.find((o) => o.key === ownerKey);
@@ -771,59 +852,47 @@ function renderRacingOverview(org, feed, main, singles = null) {
 
 /* ------------------------------------------------------------- about text */
 
-function pointsTable() {
-  const rows = [
+/* Points by entry: LGRA (rule book ch. V) and AOK9 (Sprint Rule Book 3.0 ch.
+   V) share one table, by eligible entry with a fourth place from 41 up; NOTRA's
+   Other-Breed table (rules 7.4) runs by starters, three places, to 22 and up. */
+const POINTS_BY_ENTRY = {
+  columns: ['Entry', 'High score', 'Second', 'Third', 'Fourth'],
+  rows: [
     ['2 – 4', '1', '0.5', '', ''], ['5 – 7', '2', '1', '', ''], ['8 – 10', '3', '1.5', '0.5', ''],
     ['11 – 15', '4', '2', '1', ''], ['16 – 21', '5', '3', '1.5', ''], ['22 – 30', '6', '4', '2', ''],
     ['31 – 40', '7', '5', '3', ''], ['41 or more', '8', '6', '4', '2'],
-  ];
+  ],
+};
+const POINTS_BY_STARTERS = {
+  columns: ['Starters', 'High score', 'Second', 'Third'],
+  rows: [
+    ['2', '1', '', ''], ['3 – 4', '1', '0.5', ''], ['5 – 7', '2', '1', ''], ['8 – 10', '3', '1.5', '0.5'],
+    ['11 – 15', '4', '2', '1'], ['16 – 21', '5', '3', '1.5'], ['22 or more', '6', '4', '2'],
+  ],
+};
+
+function pointsTable(table = POINTS_BY_ENTRY) {
   return `
     <div class="tbl-wrap mt-2"><table class="tbl">
-      <thead><tr><th scope="col">Entry</th><th scope="col" class="num">High score</th><th scope="col" class="num">Second</th><th scope="col" class="num">Third</th><th scope="col" class="num">Fourth</th></tr></thead>
-      <tbody>${rows.map((row) => `<tr>${row.map((cell, i) => `<td class="${i ? 'num' : ''}">${cell || '—'}</td>`).join('')}</tr>`).join('')}</tbody>
+      <thead><tr>${table.columns.map((col, i) => `<th scope="col"${i ? ' class="num"' : ''}>${col}</th>`).join('')}</tr></thead>
+      <tbody>${table.rows.map((row) => `<tr>${row.map((cell, i) => `<td class="${i ? 'num' : ''}">${cell || '—'}</td>`).join('')}</tr>`).join('')}</tbody>
     </table></div>`;
 }
 
-function aboutRacing(org, feed, singles = null) {
-  const spec = ORGS[org];
-  const common = `
-    <section class="card">
-      <h2 class="card-title">WAVE and grades</h2>
-      <p class="text-sm leading-relaxed">
-        WAVE is the weighted average of the complete meets among a ${spec.noun}'s last three,
-        out of a possible 22 (winning the high-point race in all three programs pays 8, 6 and 8
-        points; figure 8.2A in the rule book):
-      </p>
-      <p class="font-mono text-sm mt-2 p-3 bg-asfa-bg2 border border-asfa-border">
-        WAVE = (meet 1 + 0.7 × meet 2 + 0.5 × meet 3) ÷ 2.2
-      </p>
-      <p class="text-sm leading-relaxed mt-2">
-        with meet 1 the most recent. Two complete meets divide by 1.7; one is the score
-        itself; a meet marked incomplete is skipped unless every listed meet is (rule 4.2.2).
-        Race secretaries use the WAVE to seed the first program. The grade is a band on it:
-        <strong>A</strong> 11 and up, <strong>B</strong> 8 to 10.999, <strong>C</strong> 5.5
-        to 7.999, <strong>D</strong> below 5.5 (rule 4.2.2.5).
-      </p>
-      <p class="text-sm leading-relaxed mt-2">
-        This site recomputes every WAVE from the three meets the guide lists and shows the
-        registrar's published figure. The two agree for ${
-          org === 'lgra' ? `${Math.round(feed.stats.wave_agreement * 100)}%` :
-          `${Math.round(feed.stats.bwave_agreement * 100)}% (breed) and ${Math.round(feed.stats.mwave_agreement * 100)}% (mixed)`} of
-        ${spec.nouns}; where they differ, a ${spec.noun}'s page says so, and the published
-        figure governs.
-      </p>
-    </section>
-    <section class="card">
-      <h2 class="card-title">Points and titles</h2>
-      <p class="text-sm leading-relaxed">
-        In each ${org === 'lgra' ? 'breed' : 'division'} at a meet, the top two to four finishers
-        earn points, depending on the entry. Championship points count the eligible entrants
-        (titled ${spec.nouns} placed above the first untitled one are left out); National points
-        count every starter. A ${spec.noun} that does not finish all races, finishes last, or
-        beats no one earns neither.
-      </p>
-      ${pointsTable()}
-      ${org === 'lgra' ? `
+/* The About tab's program-specific text. Each rule book has its own
+   numbering and vocabulary, so these are written out per program rather
+   than templated; the shared WAVE arithmetic and the common caveats sit in
+   aboutRacing below. */
+const ABOUT = {
+  lgra: {
+    waveNote: 'winning the high-point race in all three programs pays 8, 6 and 8 points; figure 8.2A in the rule book',
+    gradeRule: 'rule 4.2.2.5',
+    points: POINTS_BY_ENTRY,
+    pointsIntro: `In each breed at a meet, the top two to four finishers earn points, depending on the
+        entry. Championship points count the eligible entrants (titled hounds placed above the
+        first untitled one are left out); National points count every starter. A hound that does
+        not finish all races, finishes last, or beats no one earns neither.`,
+    titles: `
       <p class="text-sm leading-relaxed mt-3">
         <strong>GRC</strong>, Gazehound Racing Champion: 12 GRC points, which only untitled
         hounds can earn. <strong>National points</strong> use the same values, go to titled and
@@ -831,7 +900,43 @@ function aboutRacing(org, feed, singles = null) {
         <strong>SGRC</strong>, Superior Gazehound Racing Champion, with SGRC II, III and so on at
         each further 30. <strong>JSR</strong> and <strong>SSR</strong> merit titles are earned
         by legs and are not tracked in the guide.
-      </p>` : `
+      </p>`,
+    cannot: [],
+    source: (feed) => `
+      <p class="text-sm leading-relaxed">
+        The Large Gazehound Racing Association publishes one workbook, the
+        <a href="https://lgra.club/grading-guide" class="lnk" target="_blank" rel="noopener noreferrer">grading guide</a>,
+        that race secretaries use to seed the first program of a meet. Every hound ever registered
+        is on it: its WAVE, its GRC points, its career and current-year National points, and the
+        codes and scores of its last three meets. The arithmetic follows the
+        <a href="${esc(feed.rules_url)}" class="lnk" target="_blank" rel="noopener noreferrer">LGRA Rule Book</a>
+        (release 23.2).
+      </p>
+      <ul class="text-sm leading-relaxed list-disc pl-5 mt-2 space-y-1">
+        <li><strong>Standings</strong> rank the guide's YTD column, this year's National points, within each breed and across breeds. LGRA's own year-end lists ("Top LGRA Dogs", by breed and across breeds) rank the same figure.</li>
+        <li><strong>Career standings</strong> rank career National points (the NGRC column) across every hound ever registered.</li>
+        <li><strong>Titles</strong> are read from the points columns: 12 GRC points is a GRC, every 30 National points a further SGRC. The registrar's certificate is the record.</li>
+      </ul>`,
+    disclaimer: `
+      <p class="text-sm leading-relaxed">
+        These pages are an independent, unofficial project. They are <strong>not authorized,
+        approved, or endorsed by the Large Gazehound Racing Association</strong>, and they are not
+        an LGRA publication, service, or software. LGRA's name is used only to identify the source
+        of the grading guide and the rule book cited here. The grading guide is LGRA's work and
+        remains LGRA's property; it is reproduced with attribution and a link to the original.
+        Wherever this site and the published guide disagree, <strong>the guide governs</strong>,
+        and questions about a hound's record go to the LGRA Registrar/Recorder, not here.
+      </p>`,
+  },
+  aok9: {
+    waveNote: 'winning the high-point race in all three programs pays 8, 6 and 8 points; figure 8.2A in the rule book',
+    gradeRule: 'rule 4.2.2.5',
+    points: POINTS_BY_ENTRY,
+    pointsIntro: `In each division at a meet, the top two to four finishers earn points, depending on the
+        entry. Championship points count the eligible entrants (titled dogs placed above the first
+        untitled one are left out); National points count every starter. A dog that does not
+        finish all races, finishes last, or beats no one earns neither.`,
+    titles: `
       <p class="text-sm leading-relaxed mt-3">
         Dogs race in a <strong>breed division</strong> when enough of their breed enter, and
         otherwise in a <strong>mixed division</strong>, so each dog carries two records.
@@ -846,38 +951,12 @@ function aboutRacing(org, feed, singles = null) {
         National Mixed points a <strong>SMRC</strong>, with II, III and so on. <strong>Turtle
         points</strong> go to the last-place finisher of a division, worth what first place was;
         12 make a <strong>TRC</strong> (Turtle Racing Champion) and 30 a <strong>STRC</strong>.
-      </p>`}
-    </section>
-    <section class="card">
-      <h2 class="card-title">What the guide cannot tell you</h2>
-      <ul class="text-sm space-y-3">
-        <li><strong>There is no race-by-race record.</strong> The guide keeps a ${spec.noun}'s last
-          three meets and its running totals, nothing older and no times.</li>
-        <li><strong>Points do not compare across breeds.</strong> A breed that fills a program
-          most weekends offers far more of them than one that rarely races.</li>
-        ${org === 'aok9' ? `<li><strong>Companion titles are not tracked here.</strong> NSR, ESR and
+      </p>`,
+    cannot: [`<li><strong>Companion titles are not tracked here.</strong> NSR, ESR and
           MSR (Novice, Expert and Master Sprint Racer, with "-S" when earned in Singles) come from
           the number of meets a dog completes, which the guide does not count, and AOK9 awards
-          them when the owner applies. A dog that holds one shows it in its registered name.</li>` : ''}
-      </ul>
-    </section>
-    <section class="card">
-      <h2 class="card-title">Where the numbers come from</h2>
-      ${org === 'lgra' ? `
-      <p class="text-sm leading-relaxed">
-        The Large Gazehound Racing Association publishes one workbook, the
-        <a href="https://lgra.club/grading-guide" class="lnk" target="_blank" rel="noopener noreferrer">grading guide</a>,
-        that race secretaries use to seed the first program of a meet. Every hound ever registered
-        is on it: its WAVE, its GRC points, its career and current-year National points, and the
-        codes and scores of its last three meets. The arithmetic follows the
-        <a href="${esc(feed.rules_url)}" class="lnk" target="_blank" rel="noopener noreferrer">LGRA Rule Book</a>
-        (release 23.2).
-      </p>
-      <ul class="text-sm leading-relaxed list-disc pl-5 mt-2 space-y-1">
-        <li><strong>Standings</strong> rank the guide's YTD column, this year's National points, within each breed and across breeds. LGRA's own year-end lists ("Top LGRA Dogs", by breed and across breeds) rank the same figure.</li>
-        <li><strong>Career standings</strong> rank career National points (the NGRC column) across every hound ever registered.</li>
-        <li><strong>Titles</strong> are read from the points columns: 12 GRC points is a GRC, every 30 National points a further SGRC. The registrar's certificate is the record.</li>
-      </ul>` : `
+          them when the owner applies. A dog that holds one shows it in its registered name.</li>`],
+    source: (feed, singles) => `
       <p class="text-sm leading-relaxed">
         R.A.C.E.'s AOK9 program opens sprint racing to every breed. Its
         <a href="${esc(feed.source_page)}" class="lnk" target="_blank" rel="noopener noreferrer">sprint racing grading guide</a>
@@ -896,25 +975,8 @@ function aboutRacing(org, feed, singles = null) {
           ? `the dogs, breeds and meets counted this year include it: ${singles.combined.dogs_raced} dogs where the sprint guide alone lists ${feed.stats.hounds_raced}`
           : 'the dogs, breeds and meets counted this year include it when its records load'}.
         AOK9's oval and lure coursing records are not covered.
-      </p>`}
-      <p class="text-sm leading-relaxed mt-3">
-        A parsed copy of each new guide is archived by date so movement between guides can be
-        shown. The whole method, code included, is on
-        <a href="https://github.com/jackrabbit-project/stats" class="lnk" target="_blank" rel="noopener noreferrer">GitHub</a>.
-      </p>
-    </section>
-    <section class="card" id="disclaimer">
-      <h2 class="card-title">Disclaimer</h2>
-      ${org === 'lgra' ? `
-      <p class="text-sm leading-relaxed">
-        These pages are an independent, unofficial project. They are <strong>not authorized,
-        approved, or endorsed by the Large Gazehound Racing Association</strong>, and they are not
-        an LGRA publication, service, or software. LGRA's name is used only to identify the source
-        of the grading guide and the rule book cited here. The grading guide is LGRA's work and
-        remains LGRA's property; it is reproduced with attribution and a link to the original.
-        Wherever this site and the published guide disagree, <strong>the guide governs</strong>,
-        and questions about a hound's record go to the LGRA Registrar/Recorder, not here.
-      </p>` : `
+      </p>`,
+    disclaimer: `
       <p class="text-sm leading-relaxed">
         These pages are an independent, unofficial project. They are <strong>not authorized,
         approved, or endorsed by Racing and Coursing Enthusiasts (R.A.C.E.)</strong> or its AOK9
@@ -924,7 +986,126 @@ function aboutRacing(org, feed, singles = null) {
         attribution and a link to the original. Wherever this site and the published guide
         disagree, <strong>the guide governs</strong>, and questions about a dog's record go to
         the AOK9 National Racing Director, not here.
-      </p>`}
+      </p>`,
+  },
+  notra: {
+    waveNote: 'winning the high-point race in all three programs pays 8, 6 and 8 points; table 4-3 of the rules',
+    gradeRule: 'rule 4.2.2',
+    points: POINTS_BY_STARTERS,
+    pointsIntro: `In each breed at a meet, the top three finishers earn points, depending on the number
+        of starters (rules 7.4 and 7.5). ORC points count toward the title and stop at 12;
+        National (NORC) points go to every hound and never stop. A hound that does not
+        complete every program, finishes last, or beats no one earns neither.`,
+    titles: `
+      <p class="text-sm leading-relaxed mt-3">
+        <strong>ORC</strong>, Oval Racing Champion: 12 ORC points (rule 7.4). <strong>National
+        points</strong> use the same values, go to titled and untitled hounds alike, and are what
+        the standings here rank; every 30 lifetime National points make a <strong>SORC</strong>,
+        Supreme Oval Racing Champion, with SORC II, III and so on (rule 7.5). Two merit titles are
+        earned by legs the guide counts (rule 7.3): <strong>JOR</strong>, Junior Oval Racer, after
+        four meets completed without a disqualification, scratch, off-course run or did-not-finish,
+        and <strong>SOR</strong>, Senior Oval Racer, after six legs, a leg being such a meet
+        finished in the top half of the hounds that ran every heat.
+      </p>`,
+    cannot: [`<li><strong>Whippets are not here yet.</strong> NOTRA keeps a separate Whippet guide
+          with its own layout (a rating as well as a WAVE, meets by code rather than by date,
+          scores out of 29); these pages cover the Other-Breed guide, every sighthound breed but
+          the Whippet.</li>`,
+      `<li><strong>Meets are dated, not numbered.</strong> Two meets on one date count as one
+          here. The recorder types dates month/day/year; a few cells the spreadsheet turned into
+          dates hold the day and month the other way round (12/4/2026 in a guide of June 10,
+          2026), and such a date, falling after the guide itself, is read as April 12 and the
+          hound's page says so. A date the recorder mistyped (a year of 2206) is kept as written
+          and counts as undated.</li>`],
+    source: (feed) => `
+      <p class="text-sm leading-relaxed">
+        The National Oval Track Racing Association's Other-Breed Recorder publishes one workbook,
+        the <a href="${esc(feed.source_page)}" class="lnk" target="_blank" rel="noopener noreferrer">Other-Breed grading guide</a>,
+        updated after each meet, that race secretaries use to seed the first program. Its two
+        sheets list every hound registered, active and inactive, with its WAVE, its ORC points,
+        its National points for this year, prior years and lifetime, its legs toward the Junior
+        and Senior Oval Racer titles, its DQ/OC/DNF counts, and the score, status and date of
+        its last three meets. The arithmetic follows the
+        <a href="${esc(feed.rules_url)}" class="lnk" target="_blank" rel="noopener noreferrer">NOTRA Rules</a>
+        (February 2025). The guide's date is read from the "Current as of" note beside its link.
+      </p>
+      <ul class="text-sm leading-relaxed list-disc pl-5 mt-2 space-y-1">
+        <li><strong>Standings</strong> rank the guide's YTD NORC column, this year's National points, within each breed and across breeds. NOTRA's own Top 10 by breed, kept in the same workbook, ranks the same figure.</li>
+        <li><strong>Career standings</strong> rank lifetime National points (the LFTM NORC column) across every hound registered.</li>
+        <li><strong>Titles</strong> are read from the points and legs columns: 12 ORC points is an ORC, every 30 lifetime National points a further SORC, four completed meets a JOR, six legs a SOR. The recorder's certificate is the record.</li>
+        <li><strong>Hounds without a race number</strong> (FTE, first time entered; PEND, registration pending) are listed as the guide lists them, under those labels.</li>
+      </ul>`,
+    disclaimer: `
+      <p class="text-sm leading-relaxed">
+        These pages are an independent, unofficial project. They are <strong>not authorized,
+        approved, or endorsed by the National Oval Track Racing Association</strong>, and they are
+        not a NOTRA publication, service, or software. NOTRA's name is used only to identify the
+        source of the grading guide and the rules cited here. The grading guide is NOTRA's work
+        and remains NOTRA's property; it is reproduced with attribution and a link to the
+        original. Wherever this site and the published guide disagree, <strong>the guide
+        governs</strong>, and questions about a hound's record go to the NOTRA Other-Breed
+        Recorder, not here.
+      </p>`,
+  },
+};
+
+function aboutRacing(org, feed, singles = null) {
+  const spec = ORGS[org];
+  const about = ABOUT[org];
+  const common = `
+    <section class="card">
+      <h2 class="card-title">WAVE and grades</h2>
+      <p class="text-sm leading-relaxed">
+        WAVE is the weighted average of the complete meets among a ${spec.noun}'s last three,
+        out of a possible ${spec.waveMax} (${about.waveNote}):
+      </p>
+      <p class="font-mono text-sm mt-2 p-3 bg-asfa-bg2 border border-asfa-border">
+        WAVE = (meet 1 + 0.7 × meet 2 + 0.5 × meet 3) ÷ 2.2
+      </p>
+      <p class="text-sm leading-relaxed mt-2">
+        with meet 1 the most recent. Two complete meets divide by 1.7; one is the score
+        itself; a meet marked incomplete is skipped unless every listed meet is (rule 4.2.2).
+        Race secretaries use the WAVE to seed the first program. The grade is a band on it:
+        <strong>A</strong> 11 and up, <strong>B</strong> 8 to 10.999, <strong>C</strong> 5.5
+        to 7.999, <strong>D</strong> below 5.5 (${about.gradeRule}).
+      </p>
+      <p class="text-sm leading-relaxed mt-2">
+        This site recomputes every WAVE from the three meets the guide lists and shows the
+        ${spec.officer}'s published figure. The two agree for ${spec.agreement(feed.stats)} of
+        ${spec.nouns}; where they differ, a ${spec.noun}'s page says so, and the published
+        figure governs.
+      </p>
+    </section>
+    <section class="card">
+      <h2 class="card-title">Points and titles</h2>
+      <p class="text-sm leading-relaxed">
+        ${about.pointsIntro}
+      </p>
+      ${pointsTable(about.points)}
+      ${about.titles}
+    </section>
+    <section class="card">
+      <h2 class="card-title">What the guide cannot tell you</h2>
+      <ul class="text-sm space-y-3">
+        <li><strong>There is no race-by-race record.</strong> The guide keeps a ${spec.noun}'s last
+          three meets and its running totals, nothing older and no times.</li>
+        <li><strong>Points do not compare across breeds.</strong> A breed that fills a program
+          most weekends offers far more of them than one that rarely races.</li>
+        ${about.cannot.join('')}
+      </ul>
+    </section>
+    <section class="card">
+      <h2 class="card-title">Where the numbers come from</h2>
+      ${about.source(feed, singles)}
+      <p class="text-sm leading-relaxed mt-3">
+        A parsed copy of each new guide is archived by date so movement between guides can be
+        shown. The whole method, code included, is on
+        <a href="https://github.com/jackrabbit-project/stats" class="lnk" target="_blank" rel="noopener noreferrer">GitHub</a>.
+      </p>
+    </section>
+    <section class="card" id="disclaimer">
+      <h2 class="card-title">Disclaimer</h2>
+      ${about.disclaimer}
       <p class="text-sm mt-3">
         Corrections: <a href="mailto:info@gazehound.io" class="lnk">info@gazehound.io</a>
       </p>
@@ -946,7 +1127,7 @@ function renderRacingDog(org, feed, main, singles = null) {
       dog.breed = section ? section.breed : dog.breed_slug;
     }
     const meetsByStream = spec.streams.map(([field, label]) => [field, label, unpackMeets(feed, dog[field])]);
-    const dq = unpackDq(feed, dog.dq);
+    const dq = feed.dq_columns ? unpackDq(feed, dog.dq) : [];
     const primary = meetsByStream[0][2];
     const [waveField, waveTitle, gradeField] = spec.waves[0];
 
@@ -993,6 +1174,8 @@ function renderRacingDog(org, feed, main, singles = null) {
         const earned = level ? ` (${label}${level > 1 ? level : ''} earned)` : '';
         return progressBar(dog[field], (level + 1) * step, `${next} · ${name}${earned}`);
       }),
+      ...(spec.merit || []).map(([field, label, name, need, unit]) =>
+        progressBar(dog[field], need, `${label} · ${name}`, { note: `${need} ${unit}, as the guide counts them` })),
     ].join('');
 
     const meetTables = meetsByStream.map(([field, label, meets]) => {
@@ -1004,7 +1187,8 @@ function renderRacingDog(org, feed, main, singles = null) {
           <h2 class="card-title">${label}</h2>
           ${meets.length ? `
           <div class="tbl-wrap"><table class="tbl">
-            <thead><tr><th scope="col">Meet</th><th scope="col">Code</th><th scope="col" class="num">Score</th><th scope="col">Counted</th></tr></thead>
+            <thead><tr><th scope="col">Meet</th><th scope="col">${spec.meetStatus ? 'Date as written' : 'Code'}</th><th scope="col" class="num">Score</th>${
+              spec.meetStatus ? '<th scope="col">Status</th>' : ''}<th scope="col">Counted</th></tr></thead>
             <tbody>${meets.map((meet) => {
               const counted = meet.complete && meet.score != null && (complete.length ? used < 3 : false);
               const weight = counted ? weights[used++] : null;
@@ -1013,6 +1197,7 @@ function renderRacingDog(org, feed, main, singles = null) {
                 <td class="whitespace-nowrap">${meetLabel(meet, org)}</td>
                 <td class="font-mono text-xs">${esc(meet.code)}</td>
                 <td class="num font-semibold">${ptsLabel(meet.score)}</td>
+                ${spec.meetStatus ? `<td class="font-mono text-xs">${esc(meet.status || '')}</td>` : ''}
                 <td>${meet.complete
                   ? (weight ? `× ${weight}` : '—')
                   // With no complete meet listed, rule 4.2.2 takes the plain mean
@@ -1021,7 +1206,10 @@ function renderRacingDog(org, feed, main, singles = null) {
                     complete.length || meet.score == null ? 'excluded' : 'in the plain mean'}, rule 4.2.2</span>`}</td>
               </tr>`;
             }).join('')}</tbody>
-          </table></div>` : `<p class="text-sm text-asfa-text/70">No meets listed.</p>`}
+          </table></div>${meets.some((m) => m.read) ? `
+          <p class="text-xs text-asfa-text/65 mt-2">${meets.filter((m) => m.read).map((m) =>
+            `<span class="font-mono">${esc(m.code)}</span> is read as ${formatDateShort(m.date)}`).join('; ')}:
+            the cell falls after the guide's own date, so its day and month are taken the other way round.</p>` : ''}` : `<p class="text-sm text-asfa-text/70">No meets listed.</p>`}
         </section>`;
     }).join('');
 
@@ -1037,12 +1225,12 @@ function renderRacingDog(org, feed, main, singles = null) {
             <span class="font-display text-3xl text-asfa-accent">${waveLabel(value)}</span>
             ${gradeBadge(dog[gField])}
           </div>
-          ${value == null ? `<p class="text-sm text-asfa-text/70 mt-2">No ${title} on record.</p>` : waveBar(value)}
+          ${value == null ? `<p class="text-sm text-asfa-text/70 mt-2">No ${title} on record.</p>` : waveBar(value, spec.waveMax)}
           ${meets.length ? `<p class="text-sm text-asfa-text/80 mt-2">From the last three meets: ${waveArithmetic(meets)}.</p>` : ''}
           ${value != null && matches === false && computed != null ? `
             <p class="text-xs text-asfa-text/65 mt-2">
               The guide publishes ${waveLabel(value)}; the three meets it lists compute to ${waveLabel(computed)}.
-              The registrar's figure is the one shown and the one that seeds a meet.
+              The ${spec.officer}'s figure is the one shown and the one that seeds a meet.
             </p>` : ''}
         </section>`;
     }).join('');
@@ -1069,8 +1257,8 @@ function renderRacingDog(org, feed, main, singles = null) {
             ${titleBadges(org, dog) ? `<p class="text-xs text-asfa-text/70 mt-1">Titles by the points columns: ${titleBadges(org, dog)}</p>` : ''}
             <p class="text-sm text-asfa-text/70 mt-1">
               <a href="${racingBreedUrl(org, dog.breed_slug)}" class="lnk">${esc(dog.breed)}</a>
-              · <span class="font-mono text-xs">${esc(dog.duplicate_of || dog.id)}</span>${
-                dog.duplicate_of ? ` <span class="text-xs">(a number the guide lists twice)</span>` : ''}
+              · <span class="font-mono text-xs">${esc(publishedId(dog))}</span>${
+                idNote(dog) ? ` <span class="text-xs">(${idNote(dog)})</span>` : ''}
               ${fromRegistry ? ' · <span class="badge badge-flat">inactive</span>' : ''}
             </p>
             <p class="text-sm mt-1">Owned by ${ownersLine}</p>
@@ -1097,16 +1285,22 @@ function renderRacingDog(org, feed, main, singles = null) {
 
       <section class="card">
         <h2 class="card-title">Progress toward titles</h2>
-        <p class="text-xs text-asfa-text/60">Read from the points columns; the ${spec.name} registrar's certificate is the record.</p>
+        <p class="text-xs text-asfa-text/60">Read from the points columns; the ${spec.name} ${spec.officer}'s certificate is the record.</p>
         ${titleProgress}
       </section>
 
       ${meetTables}
 
       <section class="card">
+        ${spec.faults ? `
+        <h2 class="card-title">Faults on record</h2>
+        ${dog.faults ? `<p class="text-sm">${ptsLabel(dog.faults.dq)} disqualification${dog.faults.dq === 1 ? '' : 's'} ·
+          ${ptsLabel(dog.faults.oc)} off course · ${ptsLabel(dog.faults.dnf)} did not finish
+          <span class="text-xs text-asfa-text/60">(the guide's DQ/OC/DNF column)</span></p>`
+          : `<p class="text-sm text-asfa-text/70">None recorded.</p>`}` : `
         <h2 class="card-title">Disqualifications</h2>
         ${dq.length ? `<p class="text-sm">${dq.map((d) => `<span class="font-mono text-xs">${esc(d.code)}</span>${d.date ? ` (${formatDateShort(d.date)})` : ''}`).join(', ')}</p>`
-          : `<p class="text-sm text-asfa-text/70">None recorded.</p>`}
+          : `<p class="text-sm text-asfa-text/70">None recorded.</p>`}`}
       </section>
 
       ${breedMates.length ? `
@@ -1694,10 +1888,9 @@ function cardWave(org, dog) {
   return { value: dog[field], title, grade: dog[gradeField] };
 }
 
-/** Whether a sprint record has anything worth a card. */
+/** Whether a racing record has anything worth a card. */
 function hasCardRecord(org, dog) {
-  const career = org === 'lgra' ? dog.ngrc : (dog.nbrc || 0) + (dog.nmrc || 0);
-  return Boolean(dog.rank_breed || cardWave(org, dog).value != null || career);
+  return Boolean(dog.rank_breed || cardWave(org, dog).value != null || ORGS[org].careerOf(dog));
 }
 
 /** An LGRA or AOK9 sprint card. The headline is the breed standing this year,
@@ -1706,7 +1899,7 @@ function hasCardRecord(org, dog) {
 function racingCardSpec(org, dog, feed, sdog = null, sfeed = null) {
   const spec = ORGS[org];
   const wave = cardWave(org, dog);
-  const career = org === 'lgra' ? (dog.ngrc || 0) : (dog.nbrc || 0) + (dog.nmrc || 0);
+  const career = spec.careerOf(dog);
   const waveLabelText = wave.value != null && wave.grade ? `${wave.title} · grade ${wave.grade}` : wave.title;
   // Singles runs at the same meets, so Singles racing counts. Its sheet lists
   // only the three fastest runs, so points this year show racing this year.
@@ -1730,7 +1923,7 @@ function racingCardSpec(org, dog, feed, sdog = null, sfeed = null) {
       ? { big: waveLabel(wave.value), line1: wave.grade ? `${wave.title}, grade ${wave.grade}` : wave.title,
           line2: 'no National points yet this year' }
       : { big: ptsLabel(career), line1: 'career National points', line2: 'no National points yet this year' };
-    const championship = org === 'lgra' ? ['grc', 'GRC PTS'] : ['brc', 'BRC PTS'];
+    const championship = spec.cardChampion;
     figures = [
       [ptsLabel(career), 'CAREER NATIONAL PTS'],
       [`${ptsLabel(dog[championship[0]] || 0)} / 12`, championship[1]],
@@ -1751,7 +1944,7 @@ function racingCardSpec(org, dog, feed, sdog = null, sfeed = null) {
     band: `${program} · ${feed.season}`.toUpperCase(),
     callName: dog.call_name,
     registeredName: dog.registered_name,
-    meta: `${dog.breed} · ${dog.duplicate_of || dog.id}`,
+    meta: `${dog.breed} · ${publishedId(dog)}`,
     headline,
     figures,
     owner: dog.owner_raw,
