@@ -955,7 +955,7 @@ const FOOTER_LINKS = [
   ['AOK9 sprint racing', [
     ['globe', 'aok9racing.com, the official site', 'https://aok9racing.com'],
     ['link', 'Race calendar', 'https://aok9racing.com/calendar.html'],
-    ['facebook', 'R.A.C.E. & AOK9 Racing Program group', 'https://www.facebook.com/groups/772408469471681'],
+    ['facebook', 'R.A.C.E. & AOK9 Racing group', 'https://www.facebook.com/groups/772408469471681'],
   ]],
   ['NOTRA oval racing', [
     ['globe', 'notra.org, the official site', 'https://www.notra.org'],
