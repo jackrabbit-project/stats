@@ -1009,13 +1009,7 @@ const ABOUT = {
     cannot: [`<li><strong>Whippets are not included.</strong> NOTRA keeps a separate Whippet guide
           with its own layout (a rating as well as a WAVE, meets by code rather than by date,
           scores out of 29); these pages cover the Other-Breed guide, every sighthound breed but
-          the Whippet.</li>`,
-      `<li><strong>Meets are dated, not numbered.</strong> Two meets on one date count as one
-          here. The recorder types dates month/day/year; a few cells the spreadsheet turned into
-          dates hold the day and month the other way round (12/4/2026 in a guide of June 10,
-          2026), and such a date, falling after the guide itself, is read as April 12 and the
-          hound's page says so. A date the recorder mistyped (a year of 2206) is kept as written
-          and counts as undated.</li>`],
+          the Whippet.</li>`],
     source: (feed) => `
       <p class="text-sm leading-relaxed">
         The National Oval Track Racing Association's Other-Breed Recorder publishes one workbook,
