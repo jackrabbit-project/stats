@@ -169,7 +169,7 @@
 
       programs.innerHTML =
         card('asfa.html', 'ASFA lure coursing', `Top 20 standings${asfa ? ` · ${asfa.season}` : ''}`, asfaBody, 'Standings, kennels, titles, events', 'asfa')
-        + racingPair('LGRA / NOTRA racing', 'Straight racing · Oval racing',
+        + racingPair('LGRA / <span class="program-notra program-label">NOTRA</span> racing', 'Straight racing · Oval racing',
           [['lgra', 'LGRA · straight racing · 200 yards', lgraBody],
            ['notra', 'NOTRA · oval racing · OB', notraBody]],
           `Standings by breed, WAVE, titles:
