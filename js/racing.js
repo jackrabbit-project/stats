@@ -716,7 +716,10 @@ function renderRacingOverview(org, feed, main, singles = null) {
   const kennelFocus = document.getElementById('kennel-focus');
   const kennelList = document.getElementById('kennel-list');
   const kennelSort = { key: 'ytd', dir: -1 };
-  const [waveField, waveTitle] = spec.waves[0];
+  // Championship titles among the kennel's active dogs: the overview tile's
+  // GRC / BRC-or-MRC count, scoped to one kennel.
+  const titledKeys = org === 'lgra' ? ['grc'] : ['brc', 'mrc'];
+  const titledLabel = org === 'lgra' ? 'GRC titled' : 'BRC or MRC titled';
   const careerLabel = spec.careers[0][2].replace(/^Career /, 'career ');
   function paintKennel() {
     const owner = ownerKey && feed.owners.find((o) => o.key === ownerKey);
@@ -734,7 +737,7 @@ function renderRacingOverview(org, feed, main, singles = null) {
           <div class="tile"><div class="tile-value">${owner.hounds}</div><div class="tile-label">active ${owner.hounds === 1 ? spec.noun : nouns}</div></div>
           <div class="tile"><div class="tile-value">${ptsLabel(owner.ytd)}</div><div class="tile-label">${spec.seasonLabel}</div></div>
           <div class="tile"><div class="tile-value">${ptsLabel(owner[sumField])}</div><div class="tile-label">${careerLabel}</div></div>
-          <div class="tile"><div class="tile-value">${waveLabel(owner[`best_${waveField}`])}</div><div class="tile-label">best ${waveTitle}</div></div>
+          <div class="tile"><div class="tile-value">${rows.filter((dog) => titledKeys.some((key) => dog.titled[key])).length}</div><div class="tile-label">${titledLabel}</div></div>
         </div>
       </section>
       <section class="card">
