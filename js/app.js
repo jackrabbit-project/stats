@@ -814,6 +814,53 @@ function jackrabbitMark(cls, size) {
   return `<svg class="${cls}" width="${size}" height="${Math.round(size * 438 / 420)}" viewBox="42 185 420 438" aria-hidden="true"><path fill="currentColor" fill-rule="evenodd" d="${JACKRABBIT_PATH}"/></svg>`;
 }
 
+/* ----------------------------------------------------------------- countup */
+
+/* The hub's headline figures roll up to their value as they scroll into
+   view: from halfway, over a second and a half, easing out, so the motion
+   reads as a settle rather than a spin. Only the hub does this; every other
+   page prints its figures as they are. Reduced-motion users get the final
+   value at once. */
+function countUp(el, to, { from = 0.5, duration = 1.5, separator = false } = {}) {
+  const fmt = (n) => {
+    const rounded = Math.round(n);
+    return separator ? rounded.toLocaleString('en-US') : String(rounded);
+  };
+  if (!('IntersectionObserver' in window)
+      || matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    el.textContent = fmt(to);
+    return;
+  }
+  const start = to * from;
+  el.textContent = fmt(start);
+  const observer = new IntersectionObserver(([entry]) => {
+    if (!entry.isIntersecting) return;
+    observer.disconnect();
+    const began = performance.now();
+    const tick = (now) => {
+      const progress = Math.min(1, (now - began) / (duration * 1000));
+      el.textContent = fmt(start + (to - start) * (1 - Math.pow(1 - progress, 3)));
+      if (progress < 1) requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+  });
+  observer.observe(el);
+}
+
+/** Roll up every figure tile in a container, each once. */
+function animateTiles(container) {
+  if (!container) return;
+  container.querySelectorAll('.tile').forEach((tile) => {
+    const valueEl = tile.querySelector('.tile-value');
+    if (!valueEl || valueEl.dataset.counted) return;
+    const raw = valueEl.textContent.trim();
+    const target = Number(raw.replace(/,/g, ''));
+    if (!Number.isFinite(target) || raw === '') return;
+    valueEl.dataset.counted = '1';
+    countUp(valueEl, target, { separator: raw.includes(',') });
+  });
+}
+
 /* ------------------------------------------------------------------- theme */
 
 /* Three states: follow the device (the default, no attribute), dark, light.
