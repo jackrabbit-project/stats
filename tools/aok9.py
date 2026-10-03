@@ -8,9 +8,14 @@ Mixed WAVE, Breed and Mixed Racing Championship points, the National points
 behind the Supreme titles, Turtle points, this year's points, and the last
 three breed-division and mixed-division meets.
 
+AOK9 does not always move the label when it re-issues the sheet; a changed
+sheet under an unmoved label is dated by the day it was first seen (see
+racing.redate_if_label_stale).
+
 Usage:
     python tools/aok9.py                    # fetch, archive if changed, rebuild
     python tools/aok9.py --force            # archive even if unchanged
+    python tools/aok9.py --seen YYYY-MM-DD  # first-seen day for a re-issued sheet
     python tools/aok9.py --file PATH --date YYYY-MM-DD
     python tools/aok9.py --offline          # rebuild from the snapshots alone
 """
@@ -30,9 +35,9 @@ from racing import (
     DATA, RacingParseError, breed_display, build_movement, build_owners,
     cell_num, cell_str, compact_registry, cumulative_titles, decode_aok9_meet,
     decode_or_keep, last_raced,
-    derive_identity, fetch_bytes, fetch_text, grade, section_header,
-    load_snapshots, parse_id, rank_by, read_rows_xlsx, sha256, slug,
-    super_level, today, wave, write_json, write_snapshot_if_changed,
+    derive_identity, fetch_bytes, fetch_text, file_raw, grade, section_header,
+    load_snapshots, parse_id, rank_by, read_rows_xlsx, redate_if_label_stale,
+    sha256, slug, super_level, today, wave, write_json, write_snapshot_if_changed,
 )
 
 ORG = "aok9"
@@ -129,9 +134,11 @@ def fetch() -> tuple[Path, date]:
             "The export did not return a workbook (no zip signature); Google "
             "may have answered with a sign-in page."
         )
-    target = RAW_DIR / f"{guide_date.isoformat()}.xlsx"
+    # Filed under its date once the date is settled (file_raw): the label
+    # alone may belong to an earlier sheet.
+    target = RAW_DIR / "fetched.xlsx"
     target.write_bytes(raw)
-    print(f"Fetched the sprint guide updated {guide_date}  {len(raw):,} bytes")
+    print(f"Fetched the sprint guide labelled updated {guide_date}  {len(raw):,} bytes")
     return target, guide_date
 
 
@@ -521,6 +528,9 @@ def main() -> int:
                         help="the guide's date, when it cannot be read from the link page")
     parser.add_argument("--offline", action="store_true",
                         help="rebuild the feed from archived snapshots without fetching")
+    parser.add_argument("--seen", type=lambda text: date.fromisoformat(text).isoformat(),
+                        help="the day a changed sheet under an unmoved label was first "
+                             "seen (default: today, UTC)")
     args = parser.parse_args()
 
     if not args.offline:
@@ -535,6 +545,10 @@ def main() -> int:
                 if args.date:
                     guide_date, source = args.date, "cli"
             snapshot = parse_workbook(path, guide_date, source)
+            if source == "page":
+                snapshot = redate_if_label_stale(SNAPSHOT_DIR, snapshot, args.seen or today())
+            if not args.file:
+                file_raw(path, snapshot)
             write_snapshot_if_changed(SNAPSHOT_DIR, snapshot, force=args.force)
         except requests.RequestException as error:
             if not list(SNAPSHOT_DIR.glob("*.json")):

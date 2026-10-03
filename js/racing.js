@@ -423,7 +423,7 @@ function renderRacingOverview(org, feed, main, singles = null) {
     <div>
       <h1 class="font-display text-3xl text-asfa-text">${spec.name} ${spec.program}</h1>
       <p class="text-sm text-asfa-text/70 mt-1">
-        ${season} standings from the grading guide dated ${formatDate(feed.guide_date)}, as published by
+        ${season} standings from the grading guide ${guideDate(feed)}, as published by
         <a href="${esc(feed.site_url)}" class="lnk" target="_blank" rel="noopener noreferrer">${esc(feed.site_url.replace(/^https?:\/\//, ''))}</a>.
         <a href="${spec.calendar}" class="lnk whitespace-nowrap" target="_blank" rel="noopener noreferrer">${spec.name} race calendar →</a>
       </p>
@@ -1138,8 +1138,8 @@ function renderRacingDog(org, feed, main, singles = null) {
       </div>` : ''}
 
       <p class="text-xs text-asfa-text/55">
-        Figures as published in the ${spec.name} grading guide dated ${formatDate(feed.guide_date)}${
-          sdog ? ` and the Singles sprint records dated ${formatDate(singles.guide_date)}` : ''}.
+        Figures as published in the ${spec.name} grading guide ${guideDate(feed)}${
+          sdog ? ` and the Singles sprint records ${guideDate(singles)}` : ''}.
         <a href="${spec.page}#about" class="lnk">What the columns mean</a>.
       </p>`;
     const cardBtn = main.querySelector('#card-btn');
@@ -1446,7 +1446,7 @@ function renderSinglesDog(sdog, sfeed, main) {
     ${singlesCards(sdog, sfeed)}
 
     <p class="text-xs text-asfa-text/55">
-      Figures as published in the AOK9 Singles sprint records dated ${formatDate(sfeed.guide_date)}.
+      Figures as published in the AOK9 Singles sprint records ${guideDate(sfeed)}.
       <a href="aok9.html#singles" class="lnk">How Singles works</a>.
     </p>`;
   const cardBtn = main.querySelector('#card-btn');
@@ -1484,7 +1484,7 @@ function renderSinglesTab(sfeed, container) {
         For dogs that can't run in company: each runs alone and is timed, and at every meet it is
         placed against the other dogs of its division. From the
         <a href="${esc(sfeed.source_url)}" class="lnk" target="_blank" rel="noopener noreferrer">Singles sprint records</a>
-        dated ${formatDate(sfeed.guide_date)}.
+        ${guideDate(sfeed)}.
       </p>
     </div>
 
@@ -1742,9 +1742,9 @@ function racingCardSpec(org, dog, feed, sdog = null, sfeed = null) {
   const sameDay = sdog && sfeed && sfeed.guide_date === feed.guide_date;
   const footer = sdog && sfeed
     ? (sameDay
-      ? `Grading guide and Singles records of ${formatDate(feed.guide_date)} · source: ${cardSource(feed)}`
-      : `Grading guide of ${formatDate(feed.guide_date)}, Singles records of ${formatDate(sfeed.guide_date)} · ${cardSource(feed)}`)
-    : `Grading guide of ${formatDate(feed.guide_date)} · source: ${cardSource(feed)}`;
+      ? `Grading guide and Singles records ${guideDate(feed, 'of')} · source: ${cardSource(feed)}`
+      : `Grading guide ${guideDate(feed, 'of')}, Singles records ${guideDate(sfeed, 'of')} · ${cardSource(feed)}`)
+    : `Grading guide ${guideDate(feed, 'of')} · source: ${cardSource(feed)}`;
   return {
     band: `${program} · ${feed.season}`.toUpperCase(),
     callName: dog.call_name,
@@ -1789,7 +1789,7 @@ function singlesCardSpec(sdog, sfeed) {
         : [`${ptsLabel(combined)} / 12`, sdog.titled.smc ? 'SMC · EARNED' : 'TOWARD SMC'],
     ],
     owner: sdog.owner_raw,
-    footer: `Singles records of ${formatDate(sfeed.guide_date)} · source: ${cardSource(sfeed)}`,
+    footer: `Singles records ${guideDate(sfeed, 'of')} · source: ${cardSource(sfeed)}`,
     share: {
       name: sdog.call_name,
       filename: `${cardStem(sdog.call_name)}-aok9-singles-${sfeed.season}.png`,

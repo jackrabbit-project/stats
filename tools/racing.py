@@ -443,6 +443,46 @@ def newest_snapshot(snapshot_dir: Path) -> Path | None:
     return existing[-1] if existing else None
 
 
+def _content(snapshot: dict) -> str:
+    """What a guide says: the snapshot without its date or per-fetch keys."""
+    dated = VOLATILE_KEYS + ("guide_date", "guide_date_source", "season")
+    return json.dumps({k: v for k, v in snapshot.items() if k not in dated},
+                      sort_keys=True, ensure_ascii=False)
+
+
+def redate_if_label_stale(snapshot_dir: Path, snapshot: dict, seen: str) -> dict:
+    """AOK9 dates its sheets only by an "updated M/D/YY" label on its
+    documents page, and revises a sheet without always moving the label:
+    both sheets changed between September 28 and October 2, 2026 while the
+    page still read "updated 9/9/26". A sheet whose label is no newer than
+    the newest snapshot keeps that snapshot's date when it says the same,
+    and otherwise takes the day it was first seen, with guide_date_source
+    "seen": the earlier guide stays on file and the pages say "as of" for
+    it rather than "dated"."""
+    previous = newest_snapshot(snapshot_dir)
+    if previous is None:
+        return snapshot
+    kept = json.loads(previous.read_text(encoding="utf-8"))
+    if snapshot["guide_date"] > kept["guide_date"]:
+        return snapshot
+    if _content(kept) == _content(snapshot):
+        guide_date, source = kept["guide_date"], kept["guide_date_source"]
+    else:
+        guide_date, source = max(seen, kept["guide_date"]), "seen"
+        print(f"The sheet changed but its page label still reads {snapshot['guide_date']}; "
+              f"dating it {guide_date}, the day it was first seen.")
+    return {**snapshot, "guide_date": guide_date, "guide_date_source": source,
+            "season": int(guide_date[:4])}
+
+
+def file_raw(path: Path, snapshot: dict) -> None:
+    """Keep a fetched sheet under the date its snapshot carries, so a
+    re-issued sheet never lands on an earlier guide's file."""
+    target = path.with_name(f"{snapshot['guide_date']}{path.suffix}")
+    path.replace(target)
+    snapshot["source_file"] = target.name
+
+
 def write_snapshot_if_changed(snapshot_dir: Path, snapshot: dict,
                               force: bool = False) -> Path | None:
     """Archive a parsed guide unless it matches the newest one already kept.

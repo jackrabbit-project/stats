@@ -22,11 +22,13 @@ This builder runs after tools/aok9.py: it matches each Singles dog to its row
 in the sprint registry, so a dog that races both keeps one page. Where the
 sprint guide writes titles after the registered name the Singles records give
 the same dog bare, the dog takes the sprint guide's name; see
-sprint_titles_added.
+sprint_titles_added. A changed sheet under an unmoved "updated" label is dated
+by the day it was first seen, as in tools/aok9.py.
 
 Usage:
     python tools/aok9_singles.py                    # fetch, archive if changed, rebuild
     python tools/aok9_singles.py --force            # archive even if unchanged
+    python tools/aok9_singles.py --seen YYYY-MM-DD  # first-seen day for a re-issued sheet
     python tools/aok9_singles.py --file PATH --date YYYY-MM-DD
     python tools/aok9_singles.py --offline          # rebuild from the snapshots alone
 """
@@ -47,9 +49,9 @@ from aok9 import EXPORT_USER_AGENT, LINK_PAGE, SITE_URL, UPDATED_RE, find_header
 from names import split_titles
 from racing import (
     DATA, RacingParseError, breed_display, cell_num, cell_str, decode_aok9_meet,
-    decode_or_keep, derive_identity, fetch_bytes, last_raced, fetch_text, load_snapshots,
-    parse_id, section_header, sha256, slug, super_level, today, write_json,
-    write_snapshot_if_changed,
+    decode_or_keep, derive_identity, fetch_bytes, file_raw, last_raced, fetch_text,
+    load_snapshots, parse_id, redate_if_label_stale, section_header, sha256, slug,
+    super_level, today, write_json, write_snapshot_if_changed,
 )
 
 ORG = "aok9-singles"
@@ -153,9 +155,10 @@ def fetch() -> tuple[Path, date]:
             "The export did not return a workbook (no zip signature); Google "
             "may have answered with a sign-in page."
         )
-    target = RAW_DIR / f"{guide_date.isoformat()}.xlsx"
+    # Filed under its date once the date is settled (file_raw).
+    target = RAW_DIR / "fetched.xlsx"
     target.write_bytes(raw)
-    print(f"Fetched the Singles records updated {guide_date}  {len(raw):,} bytes")
+    print(f"Fetched the Singles records labelled updated {guide_date}  {len(raw):,} bytes")
     return target, guide_date
 
 
@@ -611,6 +614,9 @@ def main() -> int:
                         help="the records' date, when it cannot be read from the link page")
     parser.add_argument("--offline", action="store_true",
                         help="rebuild the feed from archived snapshots without fetching")
+    parser.add_argument("--seen", type=lambda text: date.fromisoformat(text).isoformat(),
+                        help="the day a changed sheet under an unmoved label was first "
+                             "seen (default: today, UTC)")
     args = parser.parse_args()
 
     if not (SPRINT_FEED.exists() and SPRINT_REGISTRY.exists()):
@@ -630,6 +636,10 @@ def main() -> int:
                 if args.date:
                     guide_date, source = args.date, "cli"
             snapshot = parse_workbook(path, guide_date, source)
+            if source == "page":
+                snapshot = redate_if_label_stale(SNAPSHOT_DIR, snapshot, args.seen or today())
+            if not args.file:
+                file_raw(path, snapshot)
             write_snapshot_if_changed(SNAPSHOT_DIR, snapshot, force=args.force)
         except (requests.RequestException, RacingParseError) as error:
             if not list(SNAPSHOT_DIR.glob("*.json")):

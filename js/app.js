@@ -186,6 +186,15 @@ function formatDate(iso) {
   });
 }
 
+/** A racing guide's date as words: "dated September 9, 2026", or with
+    word "of", "of September 9, 2026". AOK9 dates its sheets only by a label
+    on its documents page; a sheet re-issued under an unmoved label carries
+    the day the site first saw it (guide_date_source "seen") and reads
+    "as of October 2, 2026" instead. */
+function guideDate(feed, word = 'dated') {
+  return `${feed.guide_date_source === 'seen' ? 'as of' : word} ${formatDate(feed.guide_date)}`;
+}
+
 /** Rank movement since the previous ASFA publication. */
 function movementBadge(movement) {
   if (!movement) return '';
@@ -950,7 +959,7 @@ function footerSource(sectionKey, feed) {
     return feed ? `
         <p>
           Figures reproduced from the ${link(feed.source_url, guide)}
-          dated ${formatDate(feed.guide_date)}, published at
+          ${guideDate(feed)}, published at
           ${link(feed.source_page, esc(feed.source_page.replace(/^https?:\/\//, '')))}.
           The published guide is authoritative wherever it disagrees with this page.
         </p>` : `
