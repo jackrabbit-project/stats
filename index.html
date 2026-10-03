@@ -20,7 +20,7 @@
   <link rel="preload" href="assets/fonts/fraunces-latin-var.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/plex-mono-400.woff2" as="font" type="font/woff2" crossorigin>
   <script src="js/theme.js?v=20260823"></script>
-  <link rel="stylesheet" href="css/app.css?v=20261003i">
+  <link rel="stylesheet" href="css/app.css?v=20261003j">
   <link rel="icon" href="assets/favicon.ico?v=3" sizes="any">
   <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png?v=3">
   <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png?v=3">
@@ -62,8 +62,8 @@
 
   <footer id="site-footer" class="bg-asfa-navy text-white py-8"></footer>
 
-  <script src="js/app.js?v=20261003i"></script>
-  <script src="js/racing.js?v=20261003i"></script>
+  <script src="js/app.js?v=20261003j"></script>
+  <script src="js/racing.js?v=20261003j"></script>
   <script>
     pageHub(({ asfa, lgra, aok9, trials, singles, notra }) => {
       const programs = document.getElementById('programs');
@@ -100,20 +100,21 @@
          under the photograph of hounds breaking from the boxes: straight
          racing above, oval racing below, each half a link to its own
          section in its own colour (slate, amber). */
-      /* The pair card runs across the full width under the two single cards,
-         its photograph cropped to a band, the two programs side by side on
-         a wide screen and stacked on a phone. Nothing stretches: the two
-         single cards share one row, the pair has a row of its own. */
-      const racingPair = (title, sub, halves, note = '') => `
+      /* The two racing bodies share one card across the full width under
+         the two single cards: one photograph cropped to a band, then LGRA
+         and NOTRA side by side on a wide screen (stacked on a phone), each
+         with its own title in its own colour, figures, leader and link.
+         Nothing stretches: the single cards share one row, this card has
+         a row of its own. */
+      const racingPair = (halves) => `
         <div class="card program-card program-lgra flex flex-col md:col-span-2">
           ${photo('lgra', 'md:max-h-56 md:object-cover')}
-          <h2 class="font-display text-3xl text-asfa-text">${title}</h2>
-          <p class="font-mono text-[10px] uppercase tracking-widest text-asfa-muted mt-0.5">${sub}${note}</p>
-          <div class="md:grid md:grid-cols-2 md:gap-x-8">
-            ${halves.map(([org, label, body, cta]) => `
-            <a href="${org}.html" class="program-${org} flex flex-col mt-4 group">
-              <p class="program-label font-mono text-[10px] uppercase tracking-widest">${label}</p>
-              <div class="mt-2">${body}</div>
+          <div class="grid md:grid-cols-2 gap-y-8 md:gap-x-8">
+            ${halves.map(([org, title, sub, body, cta, note]) => `
+            <a href="${org}.html" class="program-${org} flex flex-col group">
+              <h2 class="font-display text-3xl text-asfa-text">${title}</h2>
+              <p class="font-mono text-[10px] uppercase tracking-widest text-asfa-muted mt-0.5">${sub}${note || ''}</p>
+              <div class="mt-4">${body}</div>
               <p class="text-sm mt-auto pt-4 underline underline-offset-2 text-asfa-text/80 group-hover:text-asfa-text">${cta} →</p>
             </a>`).join('')}
           </div>
@@ -175,9 +176,9 @@
       programs.innerHTML =
         card('asfa.html', 'ASFA lure coursing', `Top 20 standings${asfa ? ` · ${asfa.season}` : ''}`, asfaBody, 'Standings, titles, LCI', 'asfa')
         + card('aok9.html', 'AOK9 racing', 'All-breed sprint racing', aok9Body, 'Standings by breed, WAVE, titles', 'aok9', singlesNote)
-        + racingPair('LGRA / <span class="program-notra program-label">NOTRA</span> racing', 'Straight racing · Oval racing',
-          [['lgra', 'LGRA · straight racing · 200 yards', lgraBody, 'Standings by breed, WAVE, titles'],
-           ['notra', 'NOTRA · oval racing · OB', notraBody, 'Standings by breed, WAVE, titles']], notraNote);
+        + racingPair([
+          ['lgra', 'LGRA racing', 'Straight racing · 200 yards', lgraBody, 'Standings by breed, WAVE, titles', ''],
+          ['notra', 'NOTRA racing', 'Oval racing · OB', notraBody, 'Standings by breed, WAVE, titles', notraNote]]);
       // The one place figures roll up: see countUp in app.js.
       animateTiles(programs);
 
