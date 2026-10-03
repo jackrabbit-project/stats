@@ -26,7 +26,7 @@ ASFA publishes the standings as one long page of stacked breed tables, and trial
 ## Layout
 
 ```
-index.html            The hub: one search across every program, four program cards
+index.html            The hub: one search across every program, three program cards (LGRA and NOTRA share one)
 asfa.html  events.html  browse.html  dog.html  leaders.html  kennels.html  titles.html
 regions.html  lci.html  bowen.html  rulebooks.html  rulebook.html  about.html  404.html
 lgra.html  aok9.html  notra.html  racing-dog.html   The racing sections (tabbed pages, one hound page)

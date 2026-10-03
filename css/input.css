@@ -229,6 +229,8 @@
 .program-lgra { --program: var(--slate); }
 .program-aok9 { --program: var(--green); }
 .program-notra { --program: var(--amber); }
+/* Inside a shared card, each half's label takes that half's own colour. */
+.program-card .program-label { color: rgb(var(--program)); }
 
 .card-title {
   font-family: 'Fraunces', Georgia, serif;

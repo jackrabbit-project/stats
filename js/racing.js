@@ -1007,7 +1007,7 @@ const ABOUT = {
         and <strong>SOR</strong>, Senior Oval Racer, after six legs, a leg being such a meet
         finished in the top half of the hounds that ran every heat.
       </p>`,
-    cannot: [`<li><strong>Whippets are not here yet.</strong> NOTRA keeps a separate Whippet guide
+    cannot: [`<li><strong>Whippets are not included.</strong> NOTRA keeps a separate Whippet guide
           with its own layout (a rating as well as a WAVE, meets by code rather than by date,
           scores out of 29); these pages cover the Other-Breed guide, every sighthound breed but
           the Whippet.</li>`,

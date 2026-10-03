@@ -20,7 +20,7 @@
   <link rel="preload" href="assets/fonts/fraunces-latin-var.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/plex-mono-400.woff2" as="font" type="font/woff2" crossorigin>
   <script src="js/theme.js?v=20260823"></script>
-  <link rel="stylesheet" href="css/app.css?v=20261002g">
+  <link rel="stylesheet" href="css/app.css?v=20261003a">
   <link rel="icon" href="assets/favicon.ico?v=3" sizes="any">
   <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png?v=3">
   <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png?v=3">
@@ -46,7 +46,7 @@
     </section>
 
     <div class="max-w-6xl mx-auto w-full px-4 py-8 space-y-8">
-      <section id="programs" class="grid md:grid-cols-2 gap-6"></section>
+      <section id="programs" class="grid md:grid-cols-3 gap-6"></section>
 
       <!-- Share targets are plain links, as on the AOK9 and II guide sites: no
            platform scripts, nothing fetched, nobody tracked who never clicks. -->
@@ -62,8 +62,8 @@
 
   <footer id="site-footer" class="bg-asfa-navy text-white py-8"></footer>
 
-  <script src="js/app.js?v=20261002g"></script>
-  <script src="js/racing.js?v=20261002g"></script>
+  <script src="js/app.js?v=20261003a"></script>
+  <script src="js/racing.js?v=20261003a"></script>
   <script>
     pageHub(({ asfa, lgra, aok9, trials, singles, notra }) => {
       const programs = document.getElementById('programs');
@@ -78,21 +78,7 @@
         lgra: ['assets/card-lgra.jpg', 'Three Afghan Hounds in numbered racing blankets breaking from the starting boxes', ''],
         aok9: ['assets/card-aok9.jpg', 'Three long-haired Dachshunds in muzzles and numbered racing blankets waiting on the line', 'Photo: Susan Wilson'],
       };
-      /* No photograph yet for NOTRA: a drawn oval track holds its place in
-         the card's own colour, at the photographs' 3:1. */
-      const trackFigure = () => `
-          <figure class="-mx-5 -mt-5 mb-4 relative" aria-hidden="true">
-            <svg viewBox="0 0 900 300" class="w-full h-auto block" style="background: rgb(var(--program) / 0.08)">
-              <g fill="none" stroke="rgb(var(--program))" stroke-opacity="0.6" stroke-width="3">
-                <rect x="70" y="36" width="760" height="228" rx="114"/>
-                <rect x="100" y="66" width="700" height="168" rx="84"/>
-                <rect x="130" y="96" width="640" height="108" rx="54"/>
-              </g>
-              <line x1="450" y1="36" x2="450" y2="96" stroke="rgb(var(--program))" stroke-width="5"/>
-            </svg>
-          </figure>`;
       const photo = (program) => {
-        if (!PHOTOS[program]) return trackFigure();
         const [src, alt, credit] = PHOTOS[program];
         return `
           <figure class="-mx-5 -mt-5 mb-4 relative">
@@ -100,15 +86,34 @@
             ${credit ? `<figcaption class="absolute bottom-1 right-2 font-mono text-[9px] uppercase tracking-widest text-white/85 drop-shadow">${credit}</figcaption>` : ''}
           </figure>`;
       };
+      /* The cards are flex columns so the call to action sits on the bottom
+         edge of each, whatever the body's height. */
       const card = (href, title, sub, body, cta, program, note = '') => `
-        <a href="${href}" class="card program-card program-${program} block">
+        <a href="${href}" class="card program-card program-${program} flex flex-col">
           ${photo(program)}
           <h2 class="font-display text-2xl text-asfa-text">${title}</h2>
           <p class="font-mono text-[10px] uppercase tracking-widest text-asfa-muted mt-0.5">${sub}</p>
           ${note}
           <div class="mt-4">${body}</div>
-          <p class="text-sm mt-4 underline underline-offset-2 text-asfa-text/80">${cta} →</p>
+          <p class="text-sm mt-auto pt-4 underline underline-offset-2 text-asfa-text/80">${cta} →</p>
         </a>`;
+      /* LGRA and NOTRA, the two sighthound racing bodies, share one card
+         under the photograph of hounds breaking from the boxes: straight
+         racing above, oval racing below, each half a link to its own
+         section in its own colour (slate, amber). */
+      const racingPair = (title, sub, halves, cta, note = '') => `
+        <div class="card program-card program-lgra flex flex-col">
+          ${photo('lgra')}
+          <h2 class="font-display text-2xl text-asfa-text">${title}</h2>
+          <p class="font-mono text-[10px] uppercase tracking-widest text-asfa-muted mt-0.5">${sub}</p>
+          ${note}
+          ${halves.map(([org, label, body]) => `
+          <a href="${org}.html" class="program-${org} block mt-4 group">
+            <p class="program-label font-mono text-[10px] uppercase tracking-widest group-hover:underline">${label} →</p>
+            <div class="mt-2">${body}</div>
+          </a>`).join('')}
+          <p class="text-sm mt-auto pt-4 text-asfa-text/80">${cta}</p>
+        </div>`;
       const tiles = (pairs) => `
         <div class="grid grid-cols-2 gap-2">${pairs.map(([value, label]) =>
           `<div class="tile"><div class="tile-value">${value}</div><div class="tile-label">${label}</div></div>`).join('')}</div>`;
@@ -160,13 +165,17 @@
       const isNew = new Date().toISOString().slice(0, 10) < NEW_UNTIL;
       const newNote = (text) => `<p class="flex items-center gap-2 mt-3 text-sm text-asfa-text/80"><span class="badge badge-new">${icon('star')} New</span>${text}</p>`;
       const singlesNote = aok9 && singles && isNew ? newNote('Now includes Singles records') : '';
-      const notraNote = notra && isNew ? newNote('Added October 2026') : '';
+      const notraNote = notra && isNew ? newNote('Now includes NOTRA oval racing') : '';
 
       programs.innerHTML =
         card('asfa.html', 'ASFA lure coursing', `Top 20 standings${asfa ? ` · ${asfa.season}` : ''}`, asfaBody, 'Standings, kennels, titles, events', 'asfa')
-        + card('lgra.html', 'LGRA racing', 'Straight racing · 200 yards', lgraBody, 'Standings by breed, WAVE, titles', 'lgra')
-        + card('aok9.html', 'AOK9 racing', 'All-breed sprint racing', aok9Body, 'Standings by breed, WAVE, titles', 'aok9', singlesNote)
-        + card('notra.html', 'NOTRA racing', 'Oval racing · Other Breeds', notraBody, 'Standings by breed, WAVE, titles', 'notra', notraNote);
+        + racingPair('LGRA / NOTRA racing', 'Straight racing · Oval racing',
+          [['lgra', 'LGRA · straight racing · 200 yards', lgraBody],
+           ['notra', 'NOTRA · oval racing · Other Breeds', notraBody]],
+          `Standings by breed, WAVE, titles:
+            <a href="lgra.html" class="underline underline-offset-2">LGRA →</a> ·
+            <a href="notra.html" class="underline underline-offset-2">NOTRA →</a>`, notraNote)
+        + card('aok9.html', 'AOK9 racing', 'All-breed sprint racing', aok9Body, 'Standings by breed, WAVE, titles', 'aok9', singlesNote);
       animateTiles(programs);
 
       document.getElementById('coverage').textContent = coverage.length

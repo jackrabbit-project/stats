@@ -559,7 +559,7 @@ def build(snapshots: list[dict]) -> tuple[dict, dict]:
         "meet_columns": ["code", "year", "date", "score", "complete", "status", "read"],
         "notes": [
             "Other Breeds only: the Whippet guide has its own layout and is not "
-            "covered yet.",
+            "covered.",
             "Standings rank this season's National points (the guide's YTD NORC "
             "column) within each breed and across breeds; career standings rank "
             "lifetime National points (LFTM NORC).",
