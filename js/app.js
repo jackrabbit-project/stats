@@ -1239,3 +1239,46 @@ function pageHub(render) {
     }
   });
 }
+
+/* Table fit ---------------------------------------------------------- */
+
+/** On a wide screen a table does not scroll inside its card (so its header
+    row can stick to the viewport), which assumes every table fits. One that
+    would not, measured with one-line headers, is marked .tbl-tight and
+    wraps its headers instead of spilling past the card's edge: AOK9's
+    thirteen columns once a "Since" column joins them. Narrower screens
+    scroll the wrapper and are left alone. Runs after any render that adds
+    or reveals a table, and on resize. */
+const WIDE_TABLES = window.matchMedia('(min-width: 1200px)');
+
+function fitTables() {
+  document.querySelectorAll('.tbl-wrap > .tbl').forEach((table) => {
+    const wrap = table.parentElement;
+    table.classList.remove('tbl-tight');
+    if (WIDE_TABLES.matches && wrap.clientWidth > 0 && table.offsetWidth > wrap.clientWidth + 1) {
+      table.classList.add('tbl-tight');
+    }
+  });
+}
+
+let fitTablesPending = false;
+function scheduleFitTables() {
+  if (fitTablesPending) return;
+  fitTablesPending = true;
+  requestAnimationFrame(() => { fitTablesPending = false; fitTables(); });
+}
+
+new MutationObserver((records) => {
+  // The class flips fitTables makes on the tables themselves are not a reason to run again.
+  if (records.every((r) => r.type === 'attributes' && r.target.matches('table.tbl'))) return;
+  scheduleFitTables();
+}).observe(document.documentElement, { childList: true, subtree: true, attributes: true, attributeFilter: ['class', 'hidden'] });
+window.addEventListener('resize', scheduleFitTables);
+WIDE_TABLES.addEventListener('change', scheduleFitTables);
+// A table measured in the fallback font can fit and then widen when the web
+// fonts arrive, with nothing in the DOM to notice; measure again then.
+window.addEventListener('load', scheduleFitTables);
+if (document.fonts) {
+  document.fonts.ready.then(scheduleFitTables);
+  document.fonts.addEventListener('loadingdone', scheduleFitTables);
+}

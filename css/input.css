@@ -412,10 +412,19 @@
 }
 
 /* Wide screens fit every table without wrapper scrolling, which frees the
-   header row to stick to the top of the viewport on long tables. */
+   header row to stick to the top of the viewport on long tables. A table
+   that would not fit with one-line headers (AOK9's thirteen columns once a
+   "Since" column joins them) is marked .tbl-tight by fitTables() in app.js
+   and wraps its headers instead of spilling past the card's edge; every
+   other table keeps them on one line. */
 @media (min-width: 1200px) {
   .tbl-wrap {
     overflow-x: visible;
+  }
+
+  .tbl.tbl-tight th,
+  .tbl.tbl-tight th.num {
+    white-space: normal;
   }
 
   .tbl thead th {
