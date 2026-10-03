@@ -1085,7 +1085,7 @@ function renderRacingDog(org, feed, main, singles = null) {
       <section class="card">
         <h2 class="card-title">Standing</h2>
         <p class="text-sm">${rankLine}</p>
-        ${dog.rank_career || dog.rank_career_breed ? `<p class="text-sm mt-2">Career: ${spec.careers.map(([field, rankKey, label]) =>
+        ${spec.careers.some(([, rankKey]) => dog[rankKey]) ? `<p class="text-sm mt-2">Career: ${spec.careers.map(([field, rankKey, label]) =>
           dog[rankKey] ? `<strong>#${dog[rankKey]}</strong> of every ${spec.noun} ever registered on ${ptsLabel(dog[field])} ${label.replace('Career ', '')}` : null
         ).filter(Boolean).join('; ')}.</p>` : ''}
       </section>
