@@ -601,7 +601,6 @@ function renderRacingOverview(org, feed, main, singles = null) {
   showTab();
   window.addEventListener('hashchange', showTab);
 
-  animateTiles(document.getElementById('tiles'));
 
   /* ----- browse: breed chips + sortable table, with the registry on demand */
   const grid = document.getElementById('breed-grid');
@@ -1743,7 +1742,6 @@ function renderSinglesTab(sfeed, container) {
       </ul>
     </section>`;
 
-  animateTiles(document.getElementById('singles-tiles'));
 
   /* ----- on their way to a title: the 25 closest, every one on request */
   const wayPanel = container.querySelector('#singles-way-panel');
