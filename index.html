@@ -168,7 +168,7 @@
       const notraNote = notra && isNew ? newNote('Now includes NOTRA oval racing') : '';
 
       programs.innerHTML =
-        card('asfa.html', 'ASFA lure coursing', `Top 20 standings${asfa ? ` · ${asfa.season}` : ''}`, asfaBody, 'Standings, kennels, titles, events', 'asfa')
+        card('asfa.html', 'ASFA lure coursing', `Top 20 standings${asfa ? ` · ${asfa.season}` : ''}`, asfaBody, 'Standings, titles, LCI', 'asfa')
         + racingPair('LGRA / <span class="program-notra program-label">NOTRA</span> racing', 'Straight racing · Oval racing',
           [['lgra', 'LGRA · straight racing · 200 yards', lgraBody],
            ['notra', 'NOTRA · oval racing · OB', notraBody]],
