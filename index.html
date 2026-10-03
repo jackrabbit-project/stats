@@ -91,7 +91,7 @@
       const card = (href, title, sub, body, cta, program, note = '') => `
         <a href="${href}" class="card program-card program-${program} flex flex-col">
           ${photo(program)}
-          <h2 class="font-display text-2xl text-asfa-text">${title}</h2>
+          <h2 class="font-display text-3xl text-asfa-text">${title}</h2>
           <p class="font-mono text-[10px] uppercase tracking-widest text-asfa-muted mt-0.5">${sub}${note}</p>
           <div class="mt-4">${body}</div>
           <p class="text-sm mt-auto pt-4 underline underline-offset-2 text-asfa-text/80">${cta} →</p>
@@ -107,7 +107,7 @@
       const racingPair = (title, sub, halves, note = '') => `
         <div class="card program-card program-lgra flex flex-col md:col-span-2">
           ${photo('lgra', 'md:max-h-56 md:object-cover')}
-          <h2 class="font-display text-2xl text-asfa-text">${title}</h2>
+          <h2 class="font-display text-3xl text-asfa-text">${title}</h2>
           <p class="font-mono text-[10px] uppercase tracking-widest text-asfa-muted mt-0.5">${sub}${note}</p>
           <div class="md:grid md:grid-cols-2 md:gap-x-8">
             ${halves.map(([org, label, body, cta]) => `
