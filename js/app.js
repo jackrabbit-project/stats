@@ -960,6 +960,7 @@ const FOOTER_LINKS = [
   ['NOTRA oval racing', [
     ['globe', 'notra.org, the official site', 'https://www.notra.org'],
     ['link', 'Race dates', 'https://www.notra.org/RaceDates.html'],
+    ['facebook', 'NOTRA OB group', 'https://www.facebook.com/groups/notraob'],
   ]],
 ];
 
