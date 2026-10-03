@@ -950,7 +950,7 @@ const FOOTER_LINKS = [
   ['LGRA straight racing', [
     ['globe', 'lgra.club, the official site', 'https://lgra.club'],
     ['link', 'Race calendar', 'https://lgra.club/calendar'],
-    ['facebook', 'LGRA / AOK9 / OB NOTRA results and brags group', 'https://www.facebook.com/groups/1265142357415139'],
+    ['facebook', 'LGRA / AOK9 / OB NOTRA group', 'https://www.facebook.com/groups/1265142357415139'],
   ]],
   ['AOK9 sprint racing', [
     ['globe', 'aok9racing.com, the official site', 'https://aok9racing.com'],
