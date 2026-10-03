@@ -452,8 +452,7 @@ function renderRacingOverview(org, feed, main, singles = null) {
         </table></div>
       </div>
       ${leadersBoard}
-      ${spec.careers.length > 1 ? `<div class="space-y-6">${careerBoards}</div>` : careerBoards}
-      ${titlesBoard}
+      <div class="space-y-6">${careerBoards}${titlesBoard}</div>
     </section>
     </section>
 
