@@ -117,6 +117,7 @@ REGISTRY_COLUMNS = [
     "id", "breed_slug", "call_name", "registered_name", "note", "owner_raw", "wave",
     "grade", "orc", "ytd", "prior", "lftm", "jor", "sor", "faults", "rank_breed",
     "rank_all", "rank_career", "meets", "last_raced", "active", "sheet", "duplicate_of",
+    "unnumbered",
 ]
 
 
