@@ -206,17 +206,20 @@
         <section class="card">
           <div id="events-table"></div>
           <p class="text-xs text-asfa-text/55 mt-3">
-            Trial = the Open, Specials and Veterans stakes; test = the Junior Courser and Qualified Courser
-            tests run with it. Competitors is AKC's lower figure where the two differ. A blank test count
-            means no test was held; a blank row means AKC had not posted that event's results when the
-            workbook was collected. Each event number opens AKC's page for that event.
+            Each event number opens AKC's page for that event. Blank counts: no test held, or results
+            not yet posted by AKC.
           </p>
         </section>
 
         <section class="card" id="about">
           <h2 class="card-title">How to read these figures</h2>
           <ul class="text-sm leading-relaxed list-disc pl-5 space-y-1">
-            ${feed.notes.map((note) => `<li>${esc(note)}</li>`).join('')}
+            <li>Trial entries are the Open, Specials and Veterans stakes, the figure comparable to an ASFA
+              trial entry. Test entries are the Junior Courser and Qualified Courser tests run with the trial.</li>
+            <li>Competitors is AKC's lower figure where it differs from entries.</li>
+            <li>A blank count means no test (or no trial) was held, or that AKC had not yet posted the
+              event's results; unposted events are left out of every total.</li>
+            <li>Coursing Ability Tests and Fast CAT are not included.</li>
           </ul>
           <p class="text-sm leading-relaxed mt-4">
             Source: AKC's ${external(feed.source.url, 'Event Search')}, event type Lure Coursing Tests
