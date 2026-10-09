@@ -324,7 +324,7 @@ def read_rankings(wb) -> dict:
 
 # Notes about the workbook's own mechanics (its formulas, how its tabs
 # re-sort) are for whoever edits the sheet, not for the page.
-WORKBOOK_NOTE_RE = re.compile(r"formulas?|re-sort", re.IGNORECASE)
+WORKBOOK_NOTE_RE = re.compile(r"formula|re-sort", re.IGNORECASE)
 
 
 def read_notes(ws) -> list[str]:
