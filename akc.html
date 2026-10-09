@@ -66,9 +66,8 @@
             <h1 class="font-display text-3xl text-asfa-text">AKC lure coursing entries, events and results, ${feed.season}</h1>
             <p class="text-sm text-asfa-text/70 mt-1">
               Every AKC lure coursing event from ${formatDate(period.start)} through ${formatDate(period.end)}:
-              ${n(stats.events)} events, ${n(stats.with_results)} with results posted, collected
-              <span class="font-semibold text-asfa-akc">${formatDate(feed.collected)}</span> from AKC's ${external(feed.source.url, 'Event Search')}
-              and re-collected now and then. The counts are the entries AKC lists on each event's results page.
+              ${n(stats.events)} events, ${n(stats.with_results)} with results posted, from AKC's
+              ${external(feed.source.url, 'Event Search')}.
             </p>
           </div>
           <a href="regions.html#trials" class="btn shrink-0 whitespace-nowrap text-asfa-accent" title="The ASFA counterpart on the Regions page">ASFA trial entries by region →</a>
