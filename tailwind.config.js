@@ -18,6 +18,7 @@ module.exports = {
           accentHover: 'rgb(var(--rust-hi) / <alpha-value>)',
           slate: 'rgb(var(--slate) / <alpha-value>)',
           amber: 'rgb(var(--amber) / <alpha-value>)',
+          akc: 'rgb(var(--akc) / <alpha-value>)',
           border: 'rgb(var(--line) / <alpha-value>)',
           navy: 'rgb(var(--well) / <alpha-value>)',
           paper: 'rgb(var(--paper) / <alpha-value>)',

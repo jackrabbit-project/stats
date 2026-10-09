@@ -20,7 +20,7 @@
   <link rel="preload" href="assets/fonts/fraunces-latin-var.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/plex-mono-400.woff2" as="font" type="font/woff2" crossorigin>
   <script src="js/theme.js?v=20260823"></script>
-  <link rel="stylesheet" href="css/app.css?v=20261009a">
+  <link rel="stylesheet" href="css/app.css?v=20261009b">
   <link rel="icon" href="assets/favicon.ico?v=3" sizes="any">
   <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png?v=3">
   <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png?v=3">
@@ -30,7 +30,7 @@
   <main id="main" class="flex-1 max-w-6xl mx-auto w-full px-4 py-6 space-y-6"></main>
   <footer id="site-footer" class="bg-asfa-navy text-white py-8"></footer>
 
-  <script src="js/app.js?v=20261009a"></script>
+  <script src="js/app.js?v=20261009b"></script>
   <script>
     /* One page of event-level counts, apart from the programs: every AKC
        lure coursing event this year with the entries it drew, from a
@@ -47,7 +47,7 @@
       const external = (href, text, cls = 'lnk') =>
         `<a href="${esc(href)}" class="${cls}" target="_blank" rel="noopener noreferrer">${text}</a>`;
       const tile = ([value, label]) =>
-        `<div class="tile"><div class="tile-value">${value}</div><div class="tile-label">${label}</div></div>`;
+        `<div class="tile"><div class="tile-value text-asfa-akc">${value}</div><div class="tile-label">${label}</div></div>`;
       const rankCell = (rank) => `<td class="num text-asfa-text/50">${rank == null ? '—' : rank}</td>`;
       const postedBadge = (e) => (e.results_posted
         ? '<span class="badge badge-new">Posted</span>'
@@ -121,7 +121,7 @@
                 ${states.map((s) => `
                   <tr>
                     ${rankCell(s.rank)}<td class="font-semibold">${s.state}</td><td class="num">${s.events}</td>
-                    <td class="num">${s.trials || '—'}</td><td class="num font-semibold text-asfa-accent">${s.trials ? n(s.trial_entries) : '—'}</td>
+                    <td class="num">${s.trials || '—'}</td><td class="num font-semibold text-asfa-akc">${s.trials ? n(s.trial_entries) : '—'}</td>
                     <td class="num">${avg(s.avg_trial_entries)}</td><td class="num">${n(s.largest_trial)}</td>
                     <td class="num">${s.with_results ? n(s.test_entries) : '—'}</td>
                   </tr>`).join('')}
@@ -146,7 +146,7 @@
                 <tr>
                   ${rankCell(c.rank)}<td class="font-semibold">${esc(c.club)}</td>
                   <td class="text-xs text-asfa-text/70">${c.states.join(', ')}</td>
-                  <td class="num">${c.trials || '—'}</td><td class="num font-semibold text-asfa-accent">${c.trials ? n(c.trial_entries) : '—'}</td>
+                  <td class="num">${c.trials || '—'}</td><td class="num font-semibold text-asfa-akc">${c.trials ? n(c.trial_entries) : '—'}</td>
                   <td class="num">${avg(c.avg_trial_entries)}</td><td class="num">${n(c.largest_trial)}</td>
                   <td class="num">${c.trials ? n(c.test_entries) : '—'}</td>
                 </tr>`).join('')}
@@ -252,7 +252,7 @@
                   <td class="font-semibold">${esc(t.club)}${t.scope && t.scope.toLowerCase() !== 'all-breed'
                     ? ` <span class="text-xs text-asfa-text/55 font-normal">${esc(t.scope)}</span>` : ''}</td>
                   <td class="text-xs text-asfa-text/70 whitespace-nowrap">${esc(t.city)}, ${t.state}</td>
-                  <td class="num font-semibold text-asfa-accent">${n(t.trial_entries)}</td>
+                  <td class="num font-semibold text-asfa-akc">${n(t.trial_entries)}</td>
                   <td class="num">${n(t.trial_competitors)}</td><td class="num">${n(t.test_entries)}</td>
                 </tr>`).join('')}
             </tbody>
@@ -356,7 +356,7 @@
                     ? ` <span class="text-xs text-asfa-text/55 font-normal whitespace-nowrap">${esc(e.scope)}</span>` : ''}</td>
                   <td class="text-xs text-asfa-text/70 whitespace-nowrap">${esc(e.city)}, ${e.state}</td>
                   <td class="whitespace-nowrap">${external(e.url, e.event_number, 'lnk font-mono text-xs')}</td>
-                  <td class="num font-semibold${e.results_posted ? ' text-asfa-accent' : ''}">${n(e.trial_entries)}</td>
+                  <td class="num font-semibold${e.results_posted ? ' text-asfa-akc' : ''}">${n(e.trial_entries)}</td>
                   <td class="num">${n(e.trial_competitors)}</td>
                   <td class="num">${n(e.test_entries)}</td>
                   <td class="num">${n(e.test_competitors)}</td>

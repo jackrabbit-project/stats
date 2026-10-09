@@ -792,12 +792,12 @@ const SECTIONS = {
     disclaimer: 'notra.html#about',
   },
   // AKC lure coursing entries: one page of event-level counts, not a
-  // program. It wears the hub's nav and plain ink, sits outside the
+  // program. It wears the hub's nav and AKC's own blue, sits outside the
   // program menu, and is reached from the ASFA Regions page.
   akc: {
     home: 'akc.html', nav: NAV_HUB,
     program: 'AKC lure coursing',
-    color: 'text-asfa-text', line: 'border-asfa-text',
+    color: 'text-asfa-akc', line: 'border-asfa-akc',
     disclaimer: 'akc.html#about', about: 'akc.html#about',
     menu: false,
   },
