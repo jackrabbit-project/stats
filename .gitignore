@@ -26,3 +26,6 @@ data/aok9-singles/raw/
 # NOTRA's Other-Breed grading guide, archived by tools/notra.py, is kept out
 # for the same reasons; data/notra/snapshots is its archive.
 data/notra/raw/
+# The AKC entries workbook under data/akc/raw/ IS committed: it holds club
+# names, cities and entry counts only, and check.py greps it for anything
+# else.

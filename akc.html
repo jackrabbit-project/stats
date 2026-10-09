@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#F7F5EF">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#1B1917">
+  <title>AKC lure coursing entries, 2026 — Gazehound Stats</title>
+  <meta name="description" content="Every AKC lure coursing event in 2026 with its entry counts: by month, and ranked by trial, club and state, compiled from AKC's Event Search. Unofficial; AKC's event pages govern.">
+  <link rel="canonical" href="https://stats.gazehound.io/akc.html">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Gazehound Stats">
+  <meta property="og:title" content="AKC lure coursing entries, 2026 — Gazehound Stats">
+  <meta property="og:description" content="Every AKC lure coursing event in 2026 with its entry counts: by month, and ranked by trial, club and state. Unofficial; AKC's event pages govern.">
+  <meta property="og:url" content="https://stats.gazehound.io/akc.html">
+  <meta property="og:image" content="https://stats.gazehound.io/assets/og.png?v=2">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="preload" href="assets/fonts/fraunces-latin-var.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/plex-mono-400.woff2" as="font" type="font/woff2" crossorigin>
+  <script src="js/theme.js?v=20260823"></script>
+  <link rel="stylesheet" href="css/app.css?v=20261009a">
+  <link rel="icon" href="assets/favicon.ico?v=3" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png?v=3">
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png?v=3">
+</head>
+<body class="min-h-screen flex flex-col">
+  <header id="site-header"></header>
+  <main id="main" class="flex-1 max-w-6xl mx-auto w-full px-4 py-6 space-y-6"></main>
+  <footer id="site-footer" class="bg-asfa-navy text-white py-8"></footer>
+
+  <script src="js/app.js?v=20261009a"></script>
+  <script>
+    /* One page of event-level counts, apart from the programs: every AKC
+       lure coursing event this year with the entries it drew, from a
+       workbook compiled by hand from AKC's Event Search. Rendered from
+       data/akc.json; the AKC event pages are plain links. */
+    pageFeed('akc.html', 'akc', 'data/akc.json', render);
+
+    function render(feed) {
+      const main = document.getElementById('main');
+      const { stats, period, events } = feed;
+      const n = (v) => (v == null ? '—' : Number(v).toLocaleString('en-US'));
+      const avg = (v) => (v == null ? '—' : (Math.round(v * 10) / 10).toLocaleString('en-US'));
+      const shortDate = (iso) => new Date(iso + 'T00:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+      const external = (href, text, cls = 'lnk') =>
+        `<a href="${esc(href)}" class="${cls}" target="_blank" rel="noopener noreferrer">${text}</a>`;
+      const tile = ([value, label]) =>
+        `<div class="tile"><div class="tile-value">${value}</div><div class="tile-label">${label}</div></div>`;
+      const rankCell = (rank) => `<td class="num text-asfa-text/50">${rank == null ? '—' : rank}</td>`;
+      const postedBadge = (e) => (e.results_posted
+        ? '<span class="badge badge-new">Posted</span>'
+        : '<span class="badge badge-flat">Not yet</span>');
+
+      const { trials, clubs, states } = feed.rankings;
+      const unrankedStates = states.filter((s) => s.rank == null);
+      const unrankedClubs = clubs.filter((c) => c.rank == null);
+      const breeds = [...new Set(events.filter((e) => e.specialty).map((e) => e.scope))].sort();
+      const stateList = [...new Set(events.map((e) => e.state))].sort();
+      const clubList = [...new Set(events.map((e) => e.club))].sort((a, b) => a.localeCompare(b));
+
+      main.innerHTML = `
+        <div>
+          <h1 class="font-display text-3xl text-asfa-text">AKC lure coursing entries, ${feed.season}</h1>
+          <p class="text-sm text-asfa-text/70 mt-1 max-w-3xl">
+            Every AKC lure coursing event from ${formatDate(period.start)} through ${formatDate(period.end)}:
+            ${n(stats.events)} events, ${n(stats.with_results)} with results posted, collected
+            ${formatDate(feed.collected)} from AKC's ${external(feed.source.url, 'Event Search')}
+            and re-collected now and then. The counts are the entries AKC lists on each event's results page.
+          </p>
+        </div>
+
+        <section class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3" aria-label="Totals">
+          ${[
+            [n(stats.events), 'events listed'],
+            [n(stats.with_results), 'with results posted'],
+            [n(stats.trial_entries), 'LC trial entries'],
+            [n(stats.test_entries), 'JC/QC test entries'],
+            [n(stats.total_entries), 'entries in all'],
+            [avg(stats.avg_trial_entries), 'entries per trial, average'],
+          ].map(tile).join('')}
+        </section>
+
+        <div class="grid md:grid-cols-2 gap-6">
+          <section class="card">
+            <h2 class="card-title">By month</h2>
+            <p class="text-xs text-asfa-text/55 mb-2">Entries count only events whose results AKC has posted.</p>
+            <div class="tbl-wrap"><table class="tbl">
+              <thead><tr>
+                <th scope="col">Month</th><th scope="col" class="num">Events</th><th scope="col" class="num">Posted</th>
+                <th scope="col" class="num">Trial entries</th><th scope="col" class="num">Test entries</th>
+                <th scope="col" class="num">Total</th><th scope="col" class="num">Avg trial</th>
+              </tr></thead>
+              <tbody>
+                ${feed.by_month.map((m) => `
+                  <tr>
+                    <td>${m.label}</td><td class="num">${m.events}</td><td class="num">${m.with_results}</td>
+                    <td class="num font-semibold">${n(m.trial_entries)}</td><td class="num">${n(m.test_entries)}</td>
+                    <td class="num">${n(m.total_entries)}</td><td class="num">${avg(m.avg_trial_entries)}</td>
+                  </tr>`).join('')}
+                <tr class="bg-asfa-bg2 font-semibold">
+                  <td>Total</td><td class="num">${stats.events}</td><td class="num">${stats.with_results}</td>
+                  <td class="num">${n(stats.trial_entries)}</td><td class="num">${n(stats.test_entries)}</td>
+                  <td class="num">${n(stats.total_entries)}</td><td class="num">${avg(stats.avg_trial_entries)}</td>
+                </tr>
+              </tbody>
+            </table></div>
+          </section>
+
+          <section class="card">
+            <h2 class="card-title">States</h2>
+            <p class="text-xs text-asfa-text/55 mb-2">Ranked on trial entries at events with results posted.</p>
+            <div class="tbl-wrap"><table class="tbl">
+              <thead><tr>
+                <th scope="col" class="num">#</th><th scope="col">State</th><th scope="col" class="num">Events</th>
+                <th scope="col" class="num">Trials</th><th scope="col" class="num">Trial entries</th>
+                <th scope="col" class="num">Avg</th><th scope="col" class="num">Largest</th><th scope="col" class="num">Test entries</th>
+              </tr></thead>
+              <tbody>
+                ${states.map((s) => `
+                  <tr>
+                    ${rankCell(s.rank)}<td class="font-semibold">${s.state}</td><td class="num">${s.events}</td>
+                    <td class="num">${s.trials || '—'}</td><td class="num font-semibold text-asfa-accent">${s.trials ? n(s.trial_entries) : '—'}</td>
+                    <td class="num">${avg(s.avg_trial_entries)}</td><td class="num">${n(s.largest_trial)}</td>
+                    <td class="num">${s.with_results ? n(s.test_entries) : '—'}</td>
+                  </tr>`).join('')}
+              </tbody>
+            </table></div>
+            ${unrankedStates.length ? `<p class="text-xs text-asfa-text/55 mt-3">
+              ${unrankedStates.map((s) => s.state).join(', ')}: events held, no results posted yet, so not ranked.</p>` : ''}
+          </section>
+        </div>
+
+        <section class="card">
+          <h2 class="card-title">Clubs</h2>
+          <p class="text-xs text-asfa-text/55 mb-2">Every club that held an AKC lure coursing event this year, ranked on trial entries at events with results posted.</p>
+          <div class="tbl-wrap"><table class="tbl">
+            <thead><tr>
+              <th scope="col" class="num">#</th><th scope="col">Club</th><th scope="col">Where</th>
+              <th scope="col" class="num">Trials</th><th scope="col" class="num">Trial entries</th>
+              <th scope="col" class="num">Avg</th><th scope="col" class="num">Largest</th><th scope="col" class="num">Test entries</th>
+            </tr></thead>
+            <tbody>
+              ${clubs.map((c) => `
+                <tr>
+                  ${rankCell(c.rank)}<td class="font-semibold">${esc(c.club)}</td>
+                  <td class="text-xs text-asfa-text/70">${c.states.join(', ')}</td>
+                  <td class="num">${c.trials || '—'}</td><td class="num font-semibold text-asfa-accent">${c.trials ? n(c.trial_entries) : '—'}</td>
+                  <td class="num">${avg(c.avg_trial_entries)}</td><td class="num">${n(c.largest_trial)}</td>
+                  <td class="num">${c.trials ? n(c.test_entries) : '—'}</td>
+                </tr>`).join('')}
+            </tbody>
+          </table></div>
+          ${unrankedClubs.length ? `<p class="text-xs text-asfa-text/55 mt-3">
+            Clubs without a rank have events listed but no results posted yet.</p>` : ''}
+        </section>
+
+        <section class="card" id="largest">
+          <h2 class="card-title">Largest trials</h2>
+          <p class="text-xs text-asfa-text/55 mb-2">Trials with results posted, by LC trial entries; tied trials share a rank.</p>
+          <div id="largest-table"></div>
+        </section>
+
+        <section class="card no-print">
+          <h2 class="card-title">All events</h2>
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            <label class="block">
+              <span class="text-xs font-semibold text-asfa-text/60 uppercase tracking-wide">State</span>
+              <select id="f-state" class="mt-1 w-full select">
+                <option value="">All states</option>
+                ${stateList.map((s) => `<option value="${esc(s)}">${esc(s)}</option>`).join('')}
+              </select>
+            </label>
+            <label class="block">
+              <span class="text-xs font-semibold text-asfa-text/60 uppercase tracking-wide">Club</span>
+              <select id="f-club" class="mt-1 w-full select">
+                <option value="">All clubs</option>
+                ${clubList.map((c) => `<option value="${esc(c)}">${esc(c)}</option>`).join('')}
+              </select>
+            </label>
+            <label class="block">
+              <span class="text-xs font-semibold text-asfa-text/60 uppercase tracking-wide">Scope</span>
+              <select id="f-scope" class="mt-1 w-full select">
+                <option value="">All events</option>
+                <option value="all-breed">All-breed only</option>
+                <option value="specialty">Specialties only</option>
+                ${breeds.map((b) => `<option value="${esc(b)}">${esc(b)}</option>`).join('')}
+              </select>
+            </label>
+            <label class="block">
+              <span class="text-xs font-semibold text-asfa-text/60 uppercase tracking-wide">Results</span>
+              <select id="f-results" class="mt-1 w-full select">
+                <option value="">Posted or not</option>
+                <option value="posted">Results posted</option>
+                <option value="pending">Not posted yet</option>
+              </select>
+            </label>
+          </div>
+          <p id="f-count" class="text-xs text-asfa-text/55 mt-3"></p>
+        </section>
+
+        <section class="card">
+          <div id="events-table"></div>
+          <p class="text-xs text-asfa-text/55 mt-3">
+            Trial = the Open, Specials and Veterans stakes; test = the Junior Courser and Qualified Courser
+            tests run with it. Competitors is AKC's lower figure where the two differ. A blank test count
+            means no test was held; a blank row means AKC had not posted that event's results when the
+            workbook was collected. Each event number opens AKC's page for that event.
+          </p>
+        </section>
+
+        <section class="card" id="about">
+          <h2 class="card-title">How to read these figures</h2>
+          <ul class="text-sm leading-relaxed list-disc pl-5 space-y-1">
+            ${feed.notes.map((note) => `<li>${esc(note)}</li>`).join('')}
+          </ul>
+          <p class="text-sm leading-relaxed mt-4">
+            The workbook behind this page is compiled by hand from AKC's
+            ${external(feed.source.url, 'Event Search')}, one row per AKC event number, and shared as a
+            ${external(feed.source.sheet_url, 'Google Sheet')}. This site recomputes every total, the
+            by-month table and the three rankings from the event rows and publishes only when they match the
+            sheet's own formulas; its weekly check repeats the comparison. The ASFA side of the same question,
+            which clubs and regions draw the entries, is on the <a href="regions.html" class="lnk">Regions</a> page.
+          </p>
+          <p class="text-sm leading-relaxed mt-3">
+            This page is an independent, unofficial compilation. It is not an AKC publication and is not
+            affiliated with, endorsed by, or sponsored by the American Kennel Club. "AKC" and "American Kennel
+            Club" are marks of The American Kennel Club, Inc., used here only to identify the source of the
+            listings. AKC's event pages govern wherever they disagree with this one.
+          </p>
+          <p class="text-sm mt-3">
+            Corrections: <a href="mailto:info@gazehound.io" class="lnk">info@gazehound.io</a>
+          </p>
+        </section>`;
+
+      /* ----- largest trials: top 20, the rest on request (and when printing) */
+      let expanded = false;
+      const largestEl = document.getElementById('largest-table');
+      function paintLargest() {
+        const rows = expanded ? trials : trials.slice(0, 20);
+        largestEl.innerHTML = `
+          <div class="tbl-wrap"><table class="tbl">
+            <thead><tr>
+              <th scope="col" class="num">#</th><th scope="col">Date</th><th scope="col">Club</th><th scope="col">Where</th>
+              <th scope="col" class="num">Trial entries</th><th scope="col" class="num">Competitors</th><th scope="col" class="num">Test entries</th>
+            </tr></thead>
+            <tbody>
+              ${rows.map((t) => `
+                <tr>
+                  ${rankCell(t.rank)}<td class="whitespace-nowrap">${shortDate(t.date)}</td>
+                  <td class="font-semibold">${esc(t.club)}${t.scope && t.scope.toLowerCase() !== 'all-breed'
+                    ? ` <span class="text-xs text-asfa-text/55 font-normal">${esc(t.scope)}</span>` : ''}</td>
+                  <td class="text-xs text-asfa-text/70 whitespace-nowrap">${esc(t.city)}, ${t.state}</td>
+                  <td class="num font-semibold text-asfa-accent">${n(t.trial_entries)}</td>
+                  <td class="num">${n(t.trial_competitors)}</td><td class="num">${n(t.test_entries)}</td>
+                </tr>`).join('')}
+            </tbody>
+          </table></div>
+          ${trials.length > 20 ? `<p class="text-sm mt-3 no-print">
+            <button type="button" id="largest-toggle" class="lnk">${expanded ? 'Show the top 20' : `Show all ${trials.length} trials`}</button></p>` : ''}`;
+        const toggle = document.getElementById('largest-toggle');
+        if (toggle) toggle.addEventListener('click', () => { expanded = !expanded; paintLargest(); });
+      }
+      paintLargest();
+      window.addEventListener('beforeprint', () => { if (!expanded) { expanded = true; paintLargest(); } });
+
+      /* ----- every event: filters from the URL, a sortable table */
+      const els = {
+        state: document.getElementById('f-state'),
+        club: document.getElementById('f-club'),
+        scope: document.getElementById('f-scope'),
+        results: document.getElementById('f-results'),
+        count: document.getElementById('f-count'),
+        table: document.getElementById('events-table'),
+      };
+      const initial = {
+        state: param('state') || '', club: param('club') || '',
+        scope: param('scope') || '', results: param('results') || '',
+      };
+      for (const key of ['state', 'club', 'scope', 'results']) {
+        if (initial[key] && [...els[key].options].some((o) => o.value === initial[key])) els[key].value = initial[key];
+      }
+
+      const columns = [
+        ['date', 'Date', '', 1],
+        ['club', 'Club', '', 1],
+        ['where', 'Where', '', 1],
+        ['event_number', 'Event #', '', 1],
+        ['trial_entries', 'Trial entries', 'num', -1],
+        ['trial_competitors', 'Trial competitors', 'num', -1],
+        ['test_entries', 'Test entries', 'num', -1],
+        ['test_competitors', 'Test competitors', 'num', -1],
+        ['total_entries', 'Total', 'num', -1],
+        ['results_posted', 'Results', '', -1],
+      ];
+      const sort = { key: 'date', dir: 1 };
+      const valueOf = (e, key) => {
+        if (key === 'where') return `${e.city}, ${e.state}`;
+        if (key === 'results_posted') return e.results_posted ? 1 : 0;
+        return e[key];
+      };
+      function sorted(rows) {
+        return [...rows].sort((a, b) => {
+          const av = valueOf(a, sort.key);
+          const bv = valueOf(b, sort.key);
+          let order;
+          if (av == null && bv == null) order = 0;
+          else if (av == null) return 1;
+          else if (bv == null) return -1;
+          else if (typeof av === 'string') order = sort.dir * av.localeCompare(bv);
+          else order = sort.dir * (av - bv);
+          return order || a.date.localeCompare(b.date) || a.event_number.localeCompare(b.event_number);
+        });
+      }
+
+      function syncUrl() {
+        const q = new URLSearchParams();
+        for (const key of ['state', 'club', 'scope', 'results']) if (els[key].value) q.set(key, els[key].value);
+        const qs = q.toString();
+        history.replaceState(null, '', qs ? `?${qs}` : location.pathname);
+      }
+
+      function selected() {
+        const f = { state: els.state.value, club: els.club.value, scope: els.scope.value, results: els.results.value };
+        return events.filter((e) =>
+          (!f.state || e.state === f.state)
+          && (!f.club || e.club === f.club)
+          && (!f.scope || (f.scope === 'all-breed' ? !e.specialty && e.scope
+            : f.scope === 'specialty' ? e.specialty : e.scope === f.scope))
+          && (!f.results || (f.results === 'posted') === e.results_posted));
+      }
+
+      function paintEvents() {
+        syncUrl();
+        const rows = sorted(selected());
+        const filtering = ['state', 'club', 'scope', 'results'].some((key) => els[key].value);
+        const shown = rows.filter((e) => e.results_posted);
+        const entries = shown.reduce((sum, e) => sum + (e.trial_entries || 0), 0);
+        els.count.innerHTML = `Showing ${rows.length} of ${events.length} events${
+          filtering ? `, ${shown.length} with results posted and ${n(entries)} trial entries between them` : ''}.${
+          filtering ? ' <button type="button" id="f-clear" class="lnk">Clear filters</button>' : ''}`;
+        const clear = document.getElementById('f-clear');
+        if (clear) clear.addEventListener('click', () => {
+          for (const key of ['state', 'club', 'scope', 'results']) els[key].value = '';
+          paintEvents();
+        });
+        els.table.innerHTML = rows.length ? `
+          <div class="tbl-wrap"><table class="tbl">
+            ${sortableHead(columns, sort)}
+            <tbody>
+              ${rows.map((e) => `
+                <tr>
+                  <td class="whitespace-nowrap">${shortDate(e.date)}<span class="block text-[10px] text-asfa-text/55 uppercase tracking-wide">${e.day}</span></td>
+                  <td class="font-semibold">${esc(e.club)}${e.specialty
+                    ? ` <span class="text-xs text-asfa-text/55 font-normal whitespace-nowrap">${esc(e.scope)}</span>` : ''}</td>
+                  <td class="text-xs text-asfa-text/70 whitespace-nowrap">${esc(e.city)}, ${e.state}</td>
+                  <td class="whitespace-nowrap">${external(e.url, e.event_number, 'lnk font-mono text-xs')}</td>
+                  <td class="num font-semibold${e.results_posted ? ' text-asfa-accent' : ''}">${n(e.trial_entries)}</td>
+                  <td class="num">${n(e.trial_competitors)}</td>
+                  <td class="num">${n(e.test_entries)}</td>
+                  <td class="num">${n(e.test_competitors)}</td>
+                  <td class="num font-semibold">${n(e.total_entries)}</td>
+                  <td>${postedBadge(e)}</td>
+                </tr>`).join('')}
+            </tbody>
+          </table></div>` : `<p class="text-sm text-asfa-text/70">No event matches those filters.</p>`;
+        wireSort(els.table, columns, sort, paintEvents);
+      }
+      for (const key of ['state', 'club', 'scope', 'results']) els[key].addEventListener('change', paintEvents);
+      paintEvents();
+    }
+  </script>
+</body>
+</html>

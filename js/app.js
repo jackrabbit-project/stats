@@ -791,8 +791,18 @@ const SECTIONS = {
     color: 'text-asfa-amber', line: 'border-asfa-amber',
     disclaimer: 'notra.html#about',
   },
+  // AKC lure coursing entries: one page of event-level counts, not a
+  // program. It wears the hub's nav and plain ink, sits outside the
+  // program menu, and is reached from the ASFA Regions page.
+  akc: {
+    home: 'akc.html', nav: NAV_HUB,
+    program: 'AKC lure coursing',
+    color: 'text-asfa-text', line: 'border-asfa-text',
+    disclaimer: 'akc.html#about', about: 'akc.html#about',
+    menu: false,
+  },
 };
-const PAGE_SECTIONS = { 'index.html': 'hub', 'lgra.html': 'lgra', 'aok9.html': 'aok9', 'notra.html': 'notra' };
+const PAGE_SECTIONS = { 'index.html': 'hub', 'lgra.html': 'lgra', 'aok9.html': 'aok9', 'notra.html': 'notra', 'akc.html': 'akc' };
 
 function sectionOf(current) {
   if (current === 'racing-dog.html') {
@@ -858,6 +868,30 @@ function animateTiles(container) {
     if (!Number.isFinite(target) || raw === '') return;
     valueEl.dataset.counted = '1';
     countUp(valueEl, target, { separator: raw.includes(',') });
+  });
+}
+
+/** Sortable table head: the titles.html pattern, once. A column without a
+    key is a plain heading; `columns` rows are [key, label, class, natural
+    direction]. */
+function sortableHead(columns, sort, extra = '') {
+  return `<thead><tr>${columns.map(([key, label, cls]) => (key ?
+    `<th scope="col" class="sortable ${cls}" aria-sort="${
+      sort.key === key ? (sort.dir === 1 ? 'ascending' : 'descending') : 'none'}">
+      <button type="button" class="th-btn" data-key="${key}">${label}${
+        sort.key === key ? icon(sort.dir === 1 ? 'chevronUp' : 'chevronDown') : ''}</button></th>`
+    : `<th scope="col" class="${cls}">${label}</th>`)).join('')}${extra}</tr></thead>`;
+}
+
+function wireSort(container, columns, sort, repaint) {
+  container.querySelectorAll('button[data-key]').forEach((button) => {
+    button.addEventListener('click', () => {
+      const next = button.dataset.key;
+      const natural = (columns.find(([key]) => key === next) || [])[3] || 1;
+      if (sort.key === next) sort.dir = -sort.dir;
+      else { sort.key = next; sort.dir = natural; }
+      repaint();
+    });
   });
 }
 
@@ -991,6 +1025,17 @@ function footerSource(sectionKey, feed) {
         <p>Standings reproduced from the ASFA Top 20. ASFA's published page is authoritative
           wherever it disagrees with this one.</p>`;
   }
+  if (sectionKey === 'akc') {
+    return feed ? `
+        <p>
+          Event entry counts compiled from the American Kennel Club's public
+          ${link(feed.source.url, 'Event Search')}, events from ${formatDate(feed.period.start)}
+          through ${formatDate(feed.period.end)}, collected ${formatDate(feed.collected)}.
+          AKC's event pages are authoritative wherever they disagree with this one.
+        </p>` : `
+        <p>Event entry counts compiled from the American Kennel Club's public Event Search.
+          AKC's event pages are authoritative wherever they disagree with this one.</p>`;
+  }
   const racing = RACING_PROGRAMS.find(([org]) => org === sectionKey);
   if (racing) {
     const guide = racing[2];
@@ -1074,7 +1119,7 @@ function renderChrome(feed, current, sectionKey = sectionOf(current)) {
                 <button type="button" id="program-menu-button" aria-haspopup="menu" aria-expanded="false" aria-controls="program-menu"
                         class="max-w-full font-mono text-[11px] font-semibold uppercase tracking-widest ${section.color} whitespace-nowrap inline-flex items-center gap-1 hover:underline"><span class="truncate">${section.program}<span class="tagline-year tagline-year-${sectionKey}"> · ${seasonOf(feed)}</span></span>${icon('chevronDown')}</button>
                 <div id="program-menu" role="menu" aria-label="Switch program" class="hidden absolute left-0 top-full mt-1.5 z-30 min-w-[15rem] bg-asfa-surface border border-asfa-border shadow-sm py-1">
-                  ${Object.entries(SECTIONS).map(([key, s]) => `
+                  ${Object.entries(SECTIONS).filter(([, s]) => s.menu !== false).map(([key, s]) => `
                   <a role="menuitem" href="${s.home}" ${key === sectionKey ? 'aria-current="page"' : ''}
                      class="block px-3 py-1.5 font-mono text-[11px] uppercase tracking-widest ${s.color} hover:bg-asfa-bg2 focus:bg-asfa-bg2 focus:outline-none">${
                        key === 'hub' ? 'Home · all programs' : s.program}${
@@ -1121,7 +1166,7 @@ function renderChrome(feed, current, sectionKey = sectionOf(current)) {
   if (footer) {
     // The racing sections explain themselves on their own About tab;
     // about.html is the ASFA side's account.
-    const aboutHref = isRacingSection(sectionKey) ? `${sectionKey}.html#about` : 'about.html';
+    const aboutHref = section.about || (isRacingSection(sectionKey) ? `${sectionKey}.html#about` : 'about.html');
     // The hub has no About of its own: it points at each section's account.
     const howBuilt = sectionKey === 'hub'
       ? `How these numbers are built:
@@ -1132,11 +1177,12 @@ function renderChrome(feed, current, sectionKey = sectionOf(current)) {
     footer.innerHTML = `
       <div class="max-w-4xl mx-auto px-4 text-sm text-asfa-wellink/85 space-y-4">${footerLinks()}${footerSource(sectionKey, feed)}
         <p class="text-xs text-asfa-wellink/65">
-          <span class="font-semibold text-asfa-wellink/85">Unofficial fan site</span> — not an ASFA, LGRA, AOK9 or NOTRA publication.
+          <span class="font-semibold text-asfa-wellink/85">Unofficial fan site</span> — not an ASFA, LGRA, AOK9${
+            sectionKey === 'akc' ? ', NOTRA or AKC' : ' or NOTRA'} publication.
           Not affiliated with, endorsed by, or sponsored by the American Sighthound Field
           Association, the Large Gazehound Racing Association, Racing and Coursing
-          Enthusiasts (R.A.C.E.), which runs the AOK9 program, or the National Oval Track
-          Racing Association.
+          Enthusiasts (R.A.C.E.), which runs the AOK9 program, ${sectionKey === 'akc' ? 'the National Oval Track Racing Association, or the American Kennel Club. "AKC" and "American Kennel Club" are marks of the American Kennel Club, used here only to identify the source of the event listings.' : `or the National Oval Track
+          Racing Association.`}
           ${sectionKey === 'hub' ? '' : `<a href="${section.disclaimer}" class="underline hover:text-asfa-wellink whitespace-nowrap">Full disclaimer</a>`}
         </p>
         <p class="text-xs text-asfa-wellink/65 flex flex-wrap items-center justify-center gap-x-2 gap-y-1.5 text-center">
@@ -1220,14 +1266,14 @@ function pageStatic(current, render) {
   );
 }
 
-/** Bootstrap for lgra.html, aok9.html, notra.html and racing-dog.html: one
-    racing feed.
-    render() may return a promise, for a page that waits on a second feed;
-    a failure either way shows the same message. */
-function pageRacing(current, org, render) {
-  loadRacing(org).then(
+/** Bootstrap for a page drawn from one feed: the racing sections and the
+    AKC entries page. `load` is the feed's promise, `url` names it in the
+    failure message. render() may return a promise, for a page that waits
+    on a second feed; a failure either way shows the same message. */
+function pageFeed(current, sectionKey, url, render, load = loadJson(url)) {
+  load.then(
     (feed) => {
-      renderChrome(feed, current, org);
+      renderChrome(feed, current, sectionKey);
       Promise.resolve().then(() => render(feed)).catch((error) => {
         console.error(error);
         showFailure(
@@ -1241,15 +1287,21 @@ function pageRacing(current, org, render) {
     },
     (error) => {
       console.error(error);
-      renderChrome(null, current, org);
+      renderChrome(null, current, sectionKey);
       showFailure(
         'Data unavailable',
-        `Could not load ${RACING_URLS[org] || org}: ${error.message}`,
+        `Could not load ${url}: ${error.message}`,
         'If you are running this locally, serve the folder over HTTP '
         + '(<code>python tools/serve.py</code>) rather than opening the file directly.'
       );
     }
   );
+}
+
+/** Bootstrap for lgra.html, aok9.html, notra.html and racing-dog.html: one
+    racing feed, through the memoised loader the search shares. */
+function pageRacing(current, org, render) {
+  pageFeed(current, org, RACING_URLS[org] || org, render, loadRacing(org));
 }
 
 /** Bootstrap for the hub: every feed, each allowed to fail on its own.

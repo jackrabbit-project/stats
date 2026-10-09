@@ -592,7 +592,8 @@ ol.rb-l { list-style: decimal; }
 @media (max-width: 355.98px) {
   .tagline-year-asfa,
   .tagline-year-aok9,
-  .tagline-year-notra {
+  .tagline-year-notra,
+  .tagline-year-akc {
     display: none;
   }
 }

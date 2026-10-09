@@ -51,6 +51,12 @@ jobs:
         continue-on-error: true
         run: python tools/notra.py
 
+      - name: Refresh the AKC lure coursing entries
+        # A shared Google Sheet compiled by hand; when it cannot be fetched
+        # the feed is rebuilt from the committed workbook.
+        continue-on-error: true
+        run: python tools/akc.py
+
       - name: Parse, build and verify
         run: |
           python tools/parse.py
@@ -84,6 +90,9 @@ jobs:
           fi
           if echo "$CHANGED" | grep -q '^data/notra.json$'; then
             PARTS+=("NOTRA guide $(python -c "import json;print(json.load(open('data/notra.json'))['guide_date'])")")
+          fi
+          if echo "$CHANGED" | grep -q '^data/akc.json$'; then
+            PARTS+=("AKC entries collected $(python -c "import json;print(json.load(open('data/akc.json'))['collected'])")")
           fi
           if [ ${#PARTS[@]} -eq 0 ]; then PARTS+=("Data refresh"); fi
           MSG=$(IFS=';'; echo "${PARTS[*]}" | sed 's/;/; /g')

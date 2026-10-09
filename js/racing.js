@@ -349,17 +349,8 @@ function titleBadges(org, dog) {
   return out.join(' ');
 }
 
-/** Sortable table head: the titles.html pattern, once. A column without a
-    key is a plain heading. */
-function sortableHead(columns, sort, extra = '') {
-  return `<thead><tr>${columns.map(([key, label, cls]) => (key ?
-    `<th scope="col" class="sortable ${cls}" aria-sort="${
-      sort.key === key ? (sort.dir === 1 ? 'ascending' : 'descending') : 'none'}">
-      <button type="button" class="th-btn" data-key="${key}">${label}${
-        sort.key === key ? icon(sort.dir === 1 ? 'chevronUp' : 'chevronDown') : ''}</button></th>`
-    : `<th scope="col" class="${cls}">${label}</th>`)).join('')}${extra}</tr></thead>`;
-}
-
+/* sortableHead and wireSort live in app.js; sortRows stays here for its
+   racing-specific tiebreaks. */
 function sortRows(rows, columns, sort) {
   const col = columns.find(([key]) => key === sort.key) || columns[0];
   const key = col[0];
@@ -375,18 +366,6 @@ function sortRows(rows, columns, sort) {
     if (bv == null) return -1;
     if (typeof av === 'string') return sort.dir * av.localeCompare(bv);
     return sort.dir * (av - bv) || (a.rank_breed ?? 1e9) - (b.rank_breed ?? 1e9);
-  });
-}
-
-function wireSort(container, columns, sort, repaint) {
-  container.querySelectorAll('button[data-key]').forEach((button) => {
-    button.addEventListener('click', () => {
-      const next = button.dataset.key;
-      const natural = (columns.find(([key]) => key === next) || [])[3] || 1;
-      if (sort.key === next) sort.dir = -sort.dir;
-      else { sort.key = next; sort.dir = natural; }
-      repaint();
-    });
   });
 }
 
