@@ -750,9 +750,10 @@ const NAV_HUB = [
   ['lgra.html', 'LGRA racing'],
   ['aok9.html', 'AOK9 racing'],
   ['notra.html', 'NOTRA racing'],
+  ['akc.html', 'AKC stats'],
 ];
 
-/* The site is four programs under one roof. Each has its own home, nav
+/* The site is four programs under one roof, plus the AKC entries page. Each has its own home, nav
    and footer source line; the wordmark always leads back to the hub, and
    the footer's disclaimer link goes to the section's own account. */
 const seasonOf = (feed) => (feed && feed.season) || new Date().getFullYear();
