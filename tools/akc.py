@@ -322,12 +322,17 @@ def read_rankings(wb) -> dict:
     return {"trials": trials, "clubs": clubs, "states": states}
 
 
+# Notes about the workbook's own mechanics (its formulas, how its tabs
+# re-sort) are for whoever edits the sheet, not for the page.
+WORKBOOK_NOTE_RE = re.compile(r"formulas?|re-sort", re.IGNORECASE)
+
+
 def read_notes(ws) -> list[str]:
     notes = [cell_str(ws.cell(row, 1).value) for row in range(1, ws.max_row + 1)]
     notes = [n for n in notes if n]
     if notes and notes[0].lower().startswith("how to read"):
         notes = notes[1:]
-    return notes
+    return [n for n in notes if not WORKBOOK_NOTE_RE.search(n)]
 
 
 def assert_no_personal_data(wb) -> None:
