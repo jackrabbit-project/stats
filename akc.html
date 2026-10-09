@@ -219,6 +219,11 @@
             ${feed.notes.map((note) => `<li>${esc(note)}</li>`).join('')}
           </ul>
           <p class="text-sm leading-relaxed mt-4">
+            Source: AKC's ${external(feed.source.url, 'Event Search')}, event type Lure Coursing Tests
+            &amp; Trials, all states, one row per AKC event number, with the counts from each event's
+            results page.
+          </p>
+          <p class="text-sm leading-relaxed mt-3">
             This page is an independent, unofficial compilation. It is not an AKC publication and is not
             affiliated with, endorsed by, or sponsored by the American Kennel Club. "AKC" and "American Kennel
             Club" are marks of The American Kennel Club, Inc., used here only to identify the source of the
