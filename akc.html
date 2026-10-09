@@ -219,15 +219,6 @@
             ${feed.notes.map((note) => `<li>${esc(note)}</li>`).join('')}
           </ul>
           <p class="text-sm leading-relaxed mt-4">
-            The workbook behind this page is compiled by hand from AKC's
-            ${external(feed.source.url, 'Event Search')}, one row per AKC event number, and shared as a
-            ${external(feed.source.sheet_url, 'Google Sheet')}. This site recomputes every total, the
-            by-month table and the three rankings from the event rows and publishes only when they match the
-            sheet's own formulas; its weekly check repeats the comparison. The ASFA side of the same question,
-            which clubs and regions draw the entries, is <a href="regions.html#trials" class="lnk">Trial entries by region</a>
-            on the Regions page.
-          </p>
-          <p class="text-sm leading-relaxed mt-3">
             This page is an independent, unofficial compilation. It is not an AKC publication and is not
             affiliated with, endorsed by, or sponsored by the American Kennel Club. "AKC" and "American Kennel
             Club" are marks of The American Kennel Club, Inc., used here only to identify the source of the
