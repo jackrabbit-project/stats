@@ -235,6 +235,10 @@
               entries each drew, is on <a href="akc.html" class="lnk">AKC lure coursing entries, events and results, 2026</a>.
             </p>
           </div>`;
+        // A link straight to #trials (the AKC page has one) lands before the
+        // standings above have been drawn, so the browser's own jump stops
+        // short; finish it once the section has its content.
+        if (location.hash === '#trials') document.getElementById('trials').scrollIntoView({ block: 'start' });
       }).catch((error) => {
         document.getElementById('trials').innerHTML = `
           <div class="card">
