@@ -60,8 +60,8 @@ the following, which are included under separate terms:
    NOTRA Other-Breed Recorder's records are authoritative wherever the two
    disagree.
 
-5. AKC DATA — "data/akc.json" and the workbooks under "data/akc/raw/" are
-   event entry counts compiled by hand from the public Event Search of The
+5. AKC DATA — "data/akc.json" and the files under "data/akc/raw/" are
+   event entry counts collected from the public Event Search of The
    American Kennel Club, Inc. (AKC) at akc.org. The listings remain AKC's;
    AKC's event pages are authoritative wherever the two disagree.
 
