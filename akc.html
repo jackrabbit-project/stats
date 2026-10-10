@@ -66,7 +66,8 @@
           <div class="max-w-3xl">
             <h1 class="font-display text-3xl text-asfa-text">AKC lure coursing entries, events and results, ${feed.season}</h1>
             <p class="text-sm text-asfa-text/70 mt-1">
-              Every AKC lure coursing event from ${formatDate(period.start)} through ${formatDate(period.end)}:
+              Every AKC lure coursing event from ${formatDate(period.start)} through
+              <span class="font-semibold text-asfa-akc">${formatDate(period.end)}</span>:
               ${n(stats.events)} events, ${n(stats.with_results)} with results posted, from AKC's
               ${external(feed.source.url, 'Event Search')}.
             </p>
