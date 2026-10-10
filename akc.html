@@ -112,27 +112,10 @@
             </table></div>
           </section>
 
-          <section class="card">
+          <section class="card" id="states">
             <h2 class="card-title">States</h2>
             <p class="text-xs text-asfa-text/55 mb-2">Ranked on trial entries at events with results posted.</p>
-            <div class="tbl-wrap"><table class="tbl">
-              <thead><tr>
-                <th scope="col" class="num">#</th><th scope="col">State</th><th scope="col" class="num">Events</th>
-                <th scope="col" class="num">Trials</th><th scope="col" class="num">Trial entries</th>
-                <th scope="col" class="num">Avg</th><th scope="col" class="num">Largest</th><th scope="col" class="num">Test entries</th>
-              </tr></thead>
-              <tbody>
-                ${states.map((s) => `
-                  <tr>
-                    ${rankCell(s.rank)}<td class="font-semibold">${s.state}</td><td class="num">${s.events}</td>
-                    <td class="num">${s.trials || '—'}</td><td class="num font-semibold text-asfa-akc">${s.trials ? n(s.trial_entries) : '—'}</td>
-                    <td class="num">${avg(s.avg_trial_entries)}</td><td class="num">${n(s.largest_trial)}</td>
-                    <td class="num">${s.with_results ? n(s.test_entries) : '—'}</td>
-                  </tr>`).join('')}
-              </tbody>
-            </table></div>
-            ${unrankedStates.length ? `<p class="text-xs text-asfa-text/55 mt-3">
-              ${unrankedStates.map((s) => s.state).join(', ')}: events held, no results posted yet, so not ranked.</p>` : ''}
+            <div id="states-table"></div>
           </section>
         </div>
 
@@ -237,6 +220,39 @@
             Corrections: <a href="mailto:info@gazehound.io" class="lnk">info@gazehound.io</a>
           </p>
         </section>`;
+
+      /* ----- states: the top dozen beside the by-month table, the rest on request */
+      const STATES_SHOWN = 12;
+      let statesExpanded = states.length <= STATES_SHOWN;
+      const statesEl = document.getElementById('states-table');
+      function paintStates() {
+        const rows = statesExpanded ? states : states.slice(0, STATES_SHOWN);
+        statesEl.innerHTML = `
+          <div class="tbl-wrap"><table class="tbl">
+            <thead><tr>
+              <th scope="col" class="num">#</th><th scope="col">State</th><th scope="col" class="num">Events</th>
+              <th scope="col" class="num">Trials</th><th scope="col" class="num">Trial entries</th>
+              <th scope="col" class="num">Avg</th><th scope="col" class="num">Largest</th><th scope="col" class="num">Test entries</th>
+            </tr></thead>
+            <tbody>
+              ${rows.map((s) => `
+                <tr>
+                  ${rankCell(s.rank)}<td class="font-semibold">${s.state}</td><td class="num">${s.events}</td>
+                  <td class="num">${s.trials || '—'}</td><td class="num font-semibold text-asfa-akc">${s.trials ? n(s.trial_entries) : '—'}</td>
+                  <td class="num">${avg(s.avg_trial_entries)}</td><td class="num">${n(s.largest_trial)}</td>
+                  <td class="num">${s.with_results ? n(s.test_entries) : '—'}</td>
+                </tr>`).join('')}
+            </tbody>
+          </table></div>
+          ${states.length > STATES_SHOWN ? `<p class="text-sm mt-3 no-print">
+            <button type="button" id="states-toggle" class="lnk">${statesExpanded ? `Show the top ${STATES_SHOWN}` : `Show all ${states.length} states`}</button></p>` : ''}
+          ${statesExpanded && unrankedStates.length ? `<p class="text-xs text-asfa-text/55 mt-3">
+            ${unrankedStates.map((s) => s.state).join(', ')}: events held, no results posted yet, so not ranked.</p>` : ''}`;
+        const toggle = document.getElementById('states-toggle');
+        if (toggle) toggle.addEventListener('click', () => { statesExpanded = !statesExpanded; paintStates(); });
+      }
+      paintStates();
+      window.addEventListener('beforeprint', () => { if (!statesExpanded) { statesExpanded = true; paintStates(); } });
 
       /* ----- largest trials: top 20, the rest on request (and when printing) */
       let expanded = false;
