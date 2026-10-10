@@ -20,7 +20,7 @@
   <link rel="preload" href="assets/fonts/fraunces-latin-var.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/plex-mono-400.woff2" as="font" type="font/woff2" crossorigin>
   <script src="js/theme.js?v=20260823"></script>
-  <link rel="stylesheet" href="css/app.css?v=20261009c">
+  <link rel="stylesheet" href="css/app.css?v=20261009d">
   <link rel="icon" href="assets/favicon.ico?v=3" sizes="any">
   <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png?v=3">
   <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png?v=3">
@@ -30,7 +30,7 @@
   <main id="main" class="flex-1 max-w-6xl mx-auto w-full px-4 py-6 space-y-6"></main>
   <footer id="site-footer" class="bg-asfa-navy text-white py-8"></footer>
 
-  <script src="js/app.js?v=20261009c"></script>
+  <script src="js/app.js?v=20261009d"></script>
   <script>
     page('regions.html', (season) => {
       const main = document.getElementById('main');
@@ -109,15 +109,16 @@
 
         // The season in six figures, the way the AKC entries page opens.
         const largest = trials.trials.reduce((best, t) => (t.entries > (best.entries || 0) ? t : best), {});
-        const tile = ([value, label, title]) =>
-          `<div class="tile"${title ? ` title="${esc(title)}"` : ''}><div class="tile-value text-asfa-accent">${value}</div><div class="tile-label">${label}</div></div>`;
+        const tile = ([value, label, title, detail]) =>
+          `<div class="tile"${title ? ` title="${esc(title)}"` : ''}><div class="tile-value text-asfa-accent">${value}</div><div class="tile-label">${label}</div>${
+            detail ? `<div class="tile-label mt-0.5 text-asfa-text/60">${detail}</div>` : ''}</div>`;
         const tiles = [
           [trials.stats.trials, 'trials held'],
-          [trials.stats.entries.toLocaleString(), 'entries in all'],
+          [trials.stats.entries.toLocaleString(), 'entries in all', '',
+            `${bp.breed.toLocaleString()} breed + ${bp.singles.toLocaleString()} Singles + ${bp.lci.toLocaleString()} LCI`],
           [(trials.stats.entries / trials.stats.trials).toFixed(1), 'entries per trial, average'],
           [largest.entries, 'largest trial', largest.club ? `${largest.club}, ${formatDate(largest.date)}` : ''],
           [trials.stats.clubs, 'clubs holding trials'],
-          [assigned.filter((r) => r.trials > 0).length, 'regions with trials'],
         ];
 
         document.getElementById('trials').innerHTML = `
@@ -127,7 +128,7 @@
               Results posted through <span class="font-semibold text-asfa-accent">${formatDate(trials.as_of)}</span>. Entries count every hound entered,
               in the breed stakes, Singles and LCI alike.
             </p>
-            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3 mb-4">${tiles.map(tile).join('')}</div>
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 mb-4">${tiles.map(tile).join('')}</div>
             <div class="tbl-wrap"><table class="tbl">
               <thead><tr>
                 <th scope="col" class="num">Region</th><th scope="col">States</th><th scope="col" class="num">Clubs</th>

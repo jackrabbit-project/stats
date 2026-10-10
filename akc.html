@@ -20,7 +20,7 @@
   <link rel="preload" href="assets/fonts/fraunces-latin-var.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/plex-mono-400.woff2" as="font" type="font/woff2" crossorigin>
   <script src="js/theme.js?v=20260823"></script>
-  <link rel="stylesheet" href="css/app.css?v=20261009c">
+  <link rel="stylesheet" href="css/app.css?v=20261009d">
   <link rel="icon" href="assets/favicon.ico?v=3" sizes="any">
   <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png?v=3">
   <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png?v=3">
@@ -30,7 +30,7 @@
   <main id="main" class="flex-1 max-w-6xl mx-auto w-full px-4 py-6 space-y-6"></main>
   <footer id="site-footer" class="bg-asfa-navy text-white py-8"></footer>
 
-  <script src="js/app.js?v=20261009c"></script>
+  <script src="js/app.js?v=20261009d"></script>
   <script>
     /* One page of event-level counts, apart from the programs: every AKC
        lure coursing event this year with the entries it drew, from a
@@ -46,8 +46,9 @@
       const shortDate = (iso) => new Date(iso + 'T00:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
       const external = (href, text, cls = 'lnk') =>
         `<a href="${esc(href)}" class="${cls}" target="_blank" rel="noopener noreferrer">${text}</a>`;
-      const tile = ([value, label]) =>
-        `<div class="tile"><div class="tile-value text-asfa-akc">${value}</div><div class="tile-label">${label}</div></div>`;
+      const tile = ([value, label, detail, title]) =>
+        `<div class="tile"${title ? ` title="${esc(title)}"` : ''}><div class="tile-value text-asfa-akc">${value}</div><div class="tile-label">${label}</div>${
+          detail ? `<div class="tile-label mt-0.5 text-asfa-text/60">${detail}</div>` : ''}</div>`;
       const rankCell = (rank) => `<td class="num text-asfa-text/50">${rank == null ? '—' : rank}</td>`;
       const postedBadge = (e) => (e.results_posted
         ? '<span class="badge badge-new">Posted</span>'
@@ -73,14 +74,13 @@
           <a href="regions.html#trials" class="btn shrink-0 whitespace-nowrap text-asfa-accent" title="The ASFA counterpart on the Regions page">ASFA trial entries by region →</a>
         </div>
 
-        <section class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3" aria-label="Totals">
+        <section class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3" aria-label="Totals">
           ${[
-            [n(stats.events), 'events listed'],
-            [n(stats.with_results), 'with results posted'],
-            [n(stats.trial_entries), 'LC trial entries'],
-            [n(stats.test_entries), 'JC/QC test entries'],
-            [n(stats.total_entries), 'entries in all'],
-            [avg(stats.avg_trial_entries), 'entries per trial, average'],
+            [n(stats.events), 'events held'],
+            [n(stats.total_entries), 'entries in all', `${n(stats.trial_entries)} trial + ${n(stats.test_entries)} test`],
+            [avg(stats.avg_trial_entries), 'trial entries per trial, average'],
+            [n(stats.largest_trial), 'largest trial', '', trials[0] ? `${trials[0].club}, ${formatDate(trials[0].date)}` : ''],
+            [n(stats.clubs), 'clubs holding events'],
           ].map(tile).join('')}
         </section>
 
