@@ -632,14 +632,11 @@ def _akc_rank(rows: list[dict], field: str) -> None:
 
 
 def check_akc(check: Checker) -> None:
-    """Verify data/akc.json against the committed AKC entries workbook: every
-    figure re-derived from the Trials tab, compared with the feed and with the
-    workbook's own Summary and ranking tabs."""
+    """Verify data/akc.json against the committed AKC collection it names:
+    every row compared field by field, every figure re-derived from the
+    rows, and both files grepped for anything personal."""
     import hashlib
-    import zipfile
     from datetime import date as _date
-
-    import openpyxl
 
     from events import US_STATES
 
@@ -649,56 +646,37 @@ def check_akc(check: Checker) -> None:
         return
     feed = json.loads(path.read_text(encoding="utf-8"))
     raw = ROOT / "data" / "akc" / "raw" / feed["source"]["file"]
-    check.expect(raw.exists(), f"akc: {feed['source']['file']} is not under data/akc/raw")
-    if not raw.exists():
+    check.expect(raw.exists() and raw.suffix == ".json", f"akc: {feed['source']['file']} is not a collection under data/akc/raw")
+    if not raw.exists() or raw.suffix != ".json":
         return
     check.expect(
         hashlib.sha256(raw.read_bytes()).hexdigest() == feed["source"]["sha256"],
-        "akc: the feed's sha256 is not the committed workbook's",
+        "akc: the feed's sha256 is not the committed collection's",
     )
-
-    def text(value) -> str:
-        if value is None:
-            return ""
-        if isinstance(value, float) and value.is_integer():
-            return str(int(value))
-        return re.sub(r"\s+", " ", str(value)).strip()
-
-    def num(value):
-        if value is None or value == "":
-            return None
-        try:
-            return float(value)
-        except (TypeError, ValueError):
-            return None
-
-    wb = openpyxl.load_workbook(raw, data_only=True)
-    ws = wb["Trials"]
-    rows = []
-    for cells in ws.iter_rows(min_row=2):
-        if cells[0].value is None or text(cells[0].value) == "":
-            break
-        v = [c.value for c in cells[:14]]
-        rows.append({
-            "date": v[0].date().isoformat() if hasattr(v[0], "date") else text(v[0]),
-            "day": text(v[1]), "club": text(v[2]), "city": text(v[3]), "state": text(v[4]),
-            "number": text(v[5]), "scope": text(v[6]) or None,
-            "trial": num(v[7]), "trial_c": num(v[8]), "test": num(v[9]), "test_c": num(v[10]),
-            "total": num(v[11]), "posted": text(v[12]).lower() == "yes",
-            "link": cells[13].hyperlink.target if cells[13].hyperlink else None,
-        })
+    collection = json.loads(raw.read_text(encoding="utf-8"))
+    rows = [{
+        "date": r["date"], "day": r["day"], "club": r["club"], "city": r["city"], "state": r["state"],
+        "number": r["event_number"], "scope": r["scope"],
+        "trial": r["trial_entries"], "trial_c": r["trial_competitors"], "test": r["test_entries"],
+        "test_c": r["test_competitors"], "total": r["total_entries"], "posted": r["results_posted"],
+        "link": r["url"],
+    } for r in collection["events"]]
     events = feed["events"]
     stats = feed["stats"]
     check.expect(
         len(rows) == len(events) == stats["events"],
-        f"akc: workbook has {len(rows)} rows, feed {len(events)} events, stats.events {stats['events']}",
+        f"akc: collection has {len(rows)} rows, feed {len(events)} events, stats.events {stats['events']}",
+    )
+    check.expect(
+        feed["collected"] == collection["collected"] and feed["period"] == collection["period"],
+        "akc: the feed's period or collected date is not the collection's",
     )
     by_number = {e["event_number"]: e for e in events}
     check.expect(len(by_number) == len(events), "akc: duplicate event numbers in the feed")
     period = feed["period"]
     check.expect(
-        period["end"] <= feed["collected"] <= feed["generated"],
-        f"akc: period end {period['end']}, collected {feed['collected']}, generated {feed['generated']} out of order",
+        period["start"] <= period["end"] <= feed["collected"] <= feed["generated"],
+        f"akc: period {period['start']}..{period['end']}, collected {feed['collected']}, generated {feed['generated']} out of order",
     )
     check.expect(
         [e["event_number"] for e in events]
@@ -707,19 +685,18 @@ def check_akc(check: Checker) -> None:
     )
     for row in rows:
         e = by_number.get(row["number"])
-        check.expect(e is not None, f"akc: workbook event {row['number']} missing from the feed")
+        check.expect(e is not None, f"akc: collected event {row['number']} missing from the feed")
         if e is None:
             continue
         check.expect(
-            (e["date"], e["day"], e["club"], e["city"], e["state"], e["scope"], e["results_posted"])
-            == (row["date"], row["day"], row["club"], row["city"], row["state"], row["scope"], row["posted"]),
-            f"akc {row['number']}: identity fields differ from the workbook",
+            (e["date"], e["day"], e["club"], e["city"], e["state"], e["scope"], e["results_posted"], e["url"])
+            == (row["date"], row["day"], row["club"], row["city"], row["state"], row["scope"], row["posted"], row["link"]),
+            f"akc {row['number']}: identity fields differ from the collection",
         )
         for key, field in (("trial_entries", "trial"), ("trial_competitors", "trial_c"),
                            ("test_entries", "test"), ("test_competitors", "test_c"),
                            ("total_entries", "total")):
-            want = None if row[field] is None else int(row[field])
-            check.expect(e[key] == want, f"akc {row['number']} {key}: feed {e[key]}, workbook {want}")
+            check.expect(e[key] == row[field], f"akc {row['number']} {key}: feed {e[key]}, collection {row[field]}")
         check.expect(period["start"] <= e["date"] <= period["end"], f"akc {row['number']}: {e['date']} outside the period")
         check.expect(_date.fromisoformat(e["date"]).strftime("%a") == e["day"], f"akc {row['number']}: day {e['day']} is not the date's weekday")
         check.expect(e["state"] in US_STATES, f"akc {row['number']}: state {e['state']}")
@@ -729,79 +706,66 @@ def check_akc(check: Checker) -> None:
             check.expect(all(e[k] is None for k in ("trial_entries", "trial_competitors", "test_entries", "test_competitors", "total_entries")),
                          f"akc {row['number']}: counts on an unposted event")
         else:
+            check.expect(any(e[k] is not None for k in ("trial_entries", "test_entries")), f"akc {row['number']}: posted but no counts")
             check.expect((e["total_entries"] or 0) == (e["trial_entries"] or 0) + (e["test_entries"] or 0), f"akc {row['number']}: total is not trial + test")
             check.expect((e["trial_competitors"] or 0) <= (e["trial_entries"] or 0) and (e["test_competitors"] or 0) <= (e["test_entries"] or 0),
                          f"akc {row['number']}: more competitors than entries")
         host = re.match(r"https://([^/]+)/", e["url"])
         check.expect(host is not None and (host.group(1) == "akc.org" or host.group(1).endswith(".akc.org")) and e["event_number"] in e["url"],
                      f"akc {row['number']}: event link {e['url']}")
-        check.expect(row["link"] is None or row["link"] == e["url"], f"akc {row['number']}: the feed's link is not the workbook's")
 
-    # Totals, re-derived from the workbook rows alone.
+    # Totals, re-derived from the collected rows alone.
     posted = [r for r in rows if r["posted"]]
     held = [r for r in posted if r["trial"] is not None]
     want = {
         "events": len(rows), "with_results": len(posted), "without_results": len(rows) - len(posted),
         "events_with_trial": len(held),
-        "trial_entries": int(sum(r["trial"] for r in held)),
-        "trial_competitors": int(sum(r["trial_c"] or 0 for r in posted)),
-        "test_entries": int(sum(r["test"] or 0 for r in posted)),
-        "test_competitors": int(sum(r["test_c"] or 0 for r in posted)),
-        "total_entries": int(sum(r["total"] or 0 for r in posted)),
-        "largest_trial": int(max(r["trial"] for r in held)) if held else None,
-        "smallest_trial": int(min(r["trial"] for r in held)) if held else None,
+        "trial_entries": sum(r["trial"] for r in held),
+        "trial_competitors": sum(r["trial_c"] or 0 for r in posted),
+        "test_entries": sum(r["test"] or 0 for r in posted),
+        "test_competitors": sum(r["test_c"] or 0 for r in posted),
+        "total_entries": sum(r["total"] or 0 for r in posted),
+        "largest_trial": max(r["trial"] for r in held) if held else None,
+        "smallest_trial": min(r["trial"] for r in held) if held else None,
         "clubs": len({r["club"] for r in rows}), "states": len({r["state"] for r in rows}),
         "specialties": sum(1 for r in rows if r["scope"] and r["scope"].lower() != "all-breed"),
     }
     for key, value in want.items():
         check.expect(stats.get(key) == value, f"akc stats.{key}: feed {stats.get(key)}, re-derived {value}")
     avg = sum(r["trial"] for r in held) / len(held) if held else None
-    check.expect(avg is not None and abs(stats["avg_trial_entries"] - avg) < 0.001, f"akc stats.avg_trial_entries: feed {stats['avg_trial_entries']}, re-derived {avg}")
+    check.expect((avg is None and stats["avg_trial_entries"] is None) or (avg is not None and stats["avg_trial_entries"] is not None and abs(stats["avg_trial_entries"] - avg) < 0.001),
+                 f"akc stats.avg_trial_entries: feed {stats['avg_trial_entries']}, re-derived {avg}")
 
-    # The workbook's own Summary tab must say the same.
-    summary = wb["Summary"]
-    labels = {}
-    for r in range(1, summary.max_row + 1):
-        label = text(summary.cell(r, 1).value)
-        if label:
-            labels[label.lower()] = summary.cell(r, 2).value
-    for label, key in (("events listed", "events"), ("events with results posted", "with_results"),
-                       ("lc trial entries", "trial_entries"), ("lc trial competitors", "trial_competitors"),
-                       ("lc test entries (jc/qc)", "test_entries"), ("lc test competitors", "test_competitors"),
-                       ("total entries (trial + test)", "total_entries"), ("events that held an lc trial", "events_with_trial"),
-                       ("largest lc trial entry", "largest_trial"), ("smallest lc trial entry", "smallest_trial")):
-        check.expect(label in labels and num(labels[label]) == stats[key], f"akc Summary '{label}': sheet {labels.get(label)}, feed {stats[key]}")
-    sheet_avg = num(labels.get("average lc trial entries per trial"))
-    check.expect(sheet_avg is not None and abs(sheet_avg - stats["avg_trial_entries"]) < 0.001, f"akc Summary average: sheet {sheet_avg}, feed {stats['avg_trial_entries']}")
-
-    # By month, re-derived and matched against the Summary's own table.
-    months = {}
-    for r in range(1, summary.max_row + 1):
-        first = summary.cell(r, 1).value
-        if hasattr(first, "date"):
-            months[first.date().isoformat()[:7]] = [summary.cell(r, c).value for c in range(2, 8)]
+    # By month, re-derived; the table must cover the period month by month.
+    months = []
+    year, month = int(period["start"][:4]), int(period["start"][5:7])
+    while f"{year:04d}-{month:02d}" <= period["end"][:7]:
+        months.append(f"{year:04d}-{month:02d}")
+        month += 1
+        if month == 13:
+            year, month = year + 1, 1
+    check.expect([row["month"] for row in feed["by_month"]] == months, f"akc by_month covers {[r['month'] for r in feed['by_month']]}, the period is {months}")
     for row in feed["by_month"]:
         in_month = [r for r in rows if r["date"].startswith(row["month"])]
         in_posted = [r for r in in_month if r["posted"]]
         in_held = [r for r in in_posted if r["trial"] is not None]
-        entries = int(sum(r["trial"] for r in in_held))
-        tests = int(sum(r["test"] or 0 for r in in_posted))
+        entries = sum(r["trial"] for r in in_held)
+        tests = sum(r["test"] or 0 for r in in_posted)
         mine = (len(in_month), len(in_posted), entries, tests, entries + tests)
         theirs = (row["events"], row["with_results"], row["trial_entries"], row["test_entries"], row["total_entries"])
         check.expect(mine == theirs, f"akc by_month {row['month']}: feed {theirs}, re-derived {mine}")
         avg_m = entries / len(in_held) if in_held else None
         check.expect((avg_m is None and row["avg_trial_entries"] is None) or (avg_m is not None and row["avg_trial_entries"] is not None and abs(avg_m - row["avg_trial_entries"]) < 0.001),
                      f"akc by_month {row['month']} average: feed {row['avg_trial_entries']}, re-derived {avg_m}")
-        sheet_row = months.get(row["month"])
-        check.expect(sheet_row is not None and tuple(int(num(v) or 0) for v in sheet_row[:5]) == theirs,
-                     f"akc by_month {row['month']}: the Summary tab says {sheet_row}, feed {theirs}")
 
     # Rankings: trials by entries, clubs and states by their posted trial entries.
     trial_rows = [dict(r) for r in held]
     _akc_rank(trial_rows, "trial")
-    want_trials = {(r["date"], r["club"], int(r["trial"])): r["_rank"] for r in trial_rows}
+    want_trials = {(r["date"], r["club"], r["trial"]): r["_rank"] for r in trial_rows}
     got_trials = {(t["date"], t["club"], t["trial_entries"]): t["rank"] for t in feed["rankings"]["trials"]}
     check.expect(want_trials == got_trials, f"akc trial ranking differs from the re-derivation ({len(want_trials)} vs {len(got_trials)} rows)")
+    ranked = [t["rank"] for t in feed["rankings"]["trials"]]
+    check.expect(ranked == sorted(ranked), "akc trial ranking is not in rank order")
 
     def grouped(key):
         groups = {}
@@ -810,11 +774,11 @@ def check_akc(check: Checker) -> None:
             g["n"] += 1
             if not r["posted"]:
                 continue
-            g["tests"] += int(r["test"] or 0)
+            g["tests"] += r["test"] or 0
             if r["trial"] is not None:
                 g["trials"] += 1
-                g["entries"] += int(r["trial"])
-                g["largest"] = max(g["largest"] or 0, int(r["trial"]))
+                g["entries"] += r["trial"]
+                g["largest"] = max(g["largest"] or 0, r["trial"])
         out = [{key: k, **g, "_on": g["entries"] if g["trials"] else None} for k, g in groups.items()]
         _akc_rank(out, "_on")
         return {o[key]: o for o in out}
@@ -834,45 +798,16 @@ def check_akc(check: Checker) -> None:
                 and ((avg_g is None and g["avg_trial_entries"] is None) or (avg_g is not None and g["avg_trial_entries"] is not None and abs(avg_g - g["avg_trial_entries"]) < 0.001)),
                 f"akc {label} ranking {name}: feed {g}, re-derived {w}",
             )
-        # and the workbook's own ranking tab
-        tab = wb["Club ranking" if key == "club" else "State ranking"]
-        header_row = next((r for r in range(1, 10) if text(tab.cell(r, 1).value).lower() == "rank"), None)
-        check.expect(header_row is not None, f"akc: {tab.title} has no Rank header")
-        if header_row:
-            for r in range(header_row + 1, tab.max_row + 1):
-                name = text(tab.cell(r, 2).value)
-                if not name:
-                    continue
-                g = got.get(name)
-                check.expect(g is not None and num(tab.cell(r, 1).value) == g["rank"] and num(tab.cell(r, 4).value) == g["trial_entries"],
-                             f"akc {tab.title} {name}: sheet rank {tab.cell(r, 1).value} / entries {tab.cell(r, 4).value}, feed {g and (g['rank'], g['trial_entries'])}")
-    tab = wb["Trial ranking"]
-    header_row = next((r for r in range(1, 10) if text(tab.cell(r, 1).value).lower() == "rank"), None)
-    listed = 0
-    if header_row:
-        for r in range(header_row + 1, tab.max_row + 1):
-            when = tab.cell(r, 2).value
-            if when is None:
-                continue
-            listed += 1
-            key = (when.date().isoformat() if hasattr(when, "date") else text(when), text(tab.cell(r, 3).value), int(num(tab.cell(r, 6).value) or 0))
-            check.expect(got_trials.get(key) == num(tab.cell(r, 1).value), f"akc Trial ranking {key}: sheet rank {tab.cell(r, 1).value}, feed {got_trials.get(key)}")
-    check.expect(listed == len(got_trials), f"akc Trial ranking tab lists {listed} trials, feed ranks {len(got_trials)}")
 
-    # The privacy rule covers the feed and the committed workbook.
-    strings = ""
-    with zipfile.ZipFile(raw) as archive:
-        if "xl/sharedStrings.xml" in archive.namelist():
-            strings = archive.read("xl/sharedStrings.xml").decode("utf-8", "replace")
+    # The privacy rule covers the feed and the committed collection.
     for label, pattern in (
         ("email address", r"[\w.+-]+@[\w-]+\.[\w.]+"),
         ("phone number", r"\(?\d{3}\)?[-. ]\d{3}[-. ]\d{4}"),
         ("street address", r"\b\d{1,5}\s+\w+\s+(St|Street|Ave|Avenue|Rd|Road|Dr|Drive|Ln|Lane|Blvd|Way|Ct|Court)\b"),
     ):
-        for name, blob in (("data/akc.json", path.read_text(encoding="utf-8")), (f"data/akc/raw/{raw.name}", strings)):
+        for name, blob in (("data/akc.json", path.read_text(encoding="utf-8")), (f"data/akc/raw/{raw.name}", raw.read_text(encoding="utf-8"))):
             found = re.findall(pattern, blob, re.IGNORECASE)
             check.expect(not found, f"{name} contains a {label}: {found[:2]}")
-
 
 def check_titles(check: Checker) -> None:
     """Verify data/titles.json against the archived title listing."""

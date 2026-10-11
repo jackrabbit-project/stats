@@ -17,6 +17,7 @@ data/aok9-singles.json -diff
 data/notra.json -diff
 data/akc.json -diff
 data/akc/raw/*.xlsx binary
+data/akc/raw/*.json -diff eol=lf
 data/*-registry.json -diff
 data/lgra/snapshots/*.json -diff
 data/aok9/snapshots/*.json -diff

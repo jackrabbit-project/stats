@@ -52,8 +52,9 @@ jobs:
         run: python tools/notra.py
 
       - name: Refresh the AKC lure coursing entries
-        # A shared Google Sheet compiled by hand; when it cannot be fetched
-        # the feed is rebuilt from the committed workbook.
+        # Collected from AKC's Event Search and each event's results page;
+        # when AKC cannot be reached the feed is rebuilt from the newest
+        # committed collection.
         continue-on-error: true
         run: python tools/akc.py
 

@@ -40,7 +40,7 @@ assets/fonts/         Fraunces + IBM Plex Mono, self-hosted woff2
 js/app.js             Data loading, chrome, icons, search, formatting
 js/card.js            Canvas stat-card renderer
 js/racing.js          The racing pages: program table, WAVE helpers, overview and hound renderers, Singles
-tools/                Python ETL — fetch, parse, clubs, trials, events, build, titles, lgra, aok9, aok9_singles, notra, akc, check
+tools/                Python ETL — fetch, parse, clubs, trials, events, build, titles, lgra, aok9, aok9_singles, notra, akc_collect, akc, check
 tools/build_css.ps1   Rebuilds css/app.css (see tools/build_css.md)
 data/snapshots/       Every published standings page, archived verbatim
 data/trials/raw/      Every monthly trial results page, archived verbatim
@@ -76,7 +76,7 @@ python tools/fetch.py && python tools/clubs.py && python tools/parse.py && pytho
 
 `fetch.py` archives the live page under `data/snapshots/{date}.html`, named for the coverage date the page states about itself rather than the wall clock. It skips the write when the page is unchanged. Raw snapshots are committed so every figure on the site traces back to the bytes ASFA served on a given date — and so movement between publications can be computed.
 
-`trials.py` does the same for each monthly trial results page, and `clubs.py` for the club listing PDF that supplies club regions. `lgra.py` scrapes lgra.club for the current grading-guide workbook and `aok9.py` exports the AOK9 sprint guide sheet; each archives a parsed snapshot per guide date (the raw workbooks stay out of git: they are large, and their header rows carry the registrars' mailing details) and rebuilds its feed and registry from every snapshot. `aok9_singles.py` does the same for the AOK9 Singles sprint records, after `aok9.py`, because it joins each Singles dog to its sprint page. `notra.py` scrapes notra.org for the Other-Breed grading guide and treats it the same way. `akc.py` fetches the AKC lure coursing entries collected from AKC's Event Search, files each collection under its date (committed, since it holds nothing but club names, cities and counts) and recomputes every total and ranking from the event rows, checking them against the collection's own totals before it builds. A [weekly workflow](.github/workflows/refresh.yml) runs the whole chain and commits when anything changes.
+`trials.py` does the same for each monthly trial results page, and `clubs.py` for the club listing PDF that supplies club regions. `lgra.py` scrapes lgra.club for the current grading-guide workbook and `aok9.py` exports the AOK9 sprint guide sheet; each archives a parsed snapshot per guide date (the raw workbooks stay out of git: they are large, and their header rows carry the registrars' mailing details) and rebuilds its feed and registry from every snapshot. `aok9_singles.py` does the same for the AOK9 Singles sprint records, after `aok9.py`, because it joins each Singles dog to its sprint page. `notra.py` scrapes notra.org for the Other-Breed grading guide and treats it the same way. `akc.py` collects the year's AKC lure coursing events from AKC's Event Search and the entry counts from each event's results page (`akc_collect.py`), files each collection under its date (committed, since it holds nothing but club names, cities and counts) and recomputes every total and ranking from the event rows. A [weekly workflow](.github/workflows/refresh.yml) runs the whole chain and commits when anything changes.
 
 ## Serving locally
 
