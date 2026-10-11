@@ -365,6 +365,153 @@ def main() -> int:
     return check.report()
 
 
+def check_trial_breakdowns(check: Checker, trials: dict, raw_dir: Path) -> None:
+    """The trials page's figures: each trial's link to its own results, its
+    entries by stake, and the season by month, state, stake and club, all
+    re-derived here from the trial rows and the archived pages."""
+    from datetime import date
+
+    from trials import SECTION_PROGRAM, SECTIONS, section_name
+
+    rows = trials["trials"]
+
+    # Each trial links to its own detail block, and that block's heading
+    # carries the trial's date and Entry figure.
+    month_pages: dict[str, str] = {}
+    for row in rows:
+        month = row["date"][:7]
+        match = re.fullmatch(
+            r"https://www\.asfa\.org/trial/index(\d\d)(\d\d)\.html#R(\d+)", row.get("results_url", ""))
+        check.expect(
+            match is not None and match.group(1) == month[5:7] and match.group(2) == month[2:4],
+            f"{row['date']} {row['club_raw']}: results link {row.get('results_url')!r}")
+        if not match:
+            continue
+        if month not in month_pages:
+            page = raw_dir / f"{month}.html"
+            month_pages[month] = page.read_bytes().decode("cp1252", errors="replace") if page.exists() else ""
+        html = month_pages[month]
+        anchor = re.search(rf'<a\s+name="R{match.group(3)}"', html)
+        check.expect(anchor is not None, f"{row['results_url']}: no such anchor on the archived page")
+        if anchor:
+            heading = re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", html[anchor.end():anchor.end() + 1500]))
+            when = date.fromisoformat(row["date"]).strftime("%b %d, %Y")
+            entry = re.search(r"Entry:\s*(\d+)", heading)
+            check.expect(
+                when in heading and entry is not None and int(entry.group(1)) == row["entries"],
+                f"{row['results_url']}: the block's heading is not {when} with Entry {row['entries']}")
+
+    # Each trial's stakes add up to its program split.
+    for row in rows:
+        by_breed = row.get("by_breed", {})
+        check.expect(all(isinstance(v, int) and v > 0 for v in by_breed.values()),
+                     f"{row['date']} {row['club_raw']}: stake counts {by_breed}")
+        for program in ("breed", "singles", "lci"):
+            total = sum(v for k, v in by_breed.items() if SECTION_PROGRAM.get(k, "breed") == program)
+            check.expect(total == row["by_program"][program],
+                         f"{row['date']} {row['club_raw']}: {program} stakes sum to {total}, "
+                         f"the program split says {row['by_program'][program]}")
+    check.expect(
+        trials["unmatched_sections"] == sorted({k for r in rows for k in r["by_breed"]} - set(SECTIONS)),
+        f"unmatched_sections {trials['unmatched_sections']} is not the stakes outside ASFA's list")
+
+    # The season by stake, re-derived by the Entry-split route: the flat page
+    # cut at its Entry: markers, each heading resolved to its stake.
+    token_re = re.compile(
+        r"(LCI (?:LARGE|SMALL|SIGHTHOUND MIX))"
+        r"|([A-Z][A-Z &().'-]{2,40}?)\s+Judges?:"
+        r"|Flight [A-Z]\((\d+)")
+    derived: dict[str, int] = {}
+    for month in trials["months"]:
+        page = raw_dir / f"{month}.html"
+        if not page.exists():
+            continue
+        flat = page.read_bytes().decode("cp1252", errors="replace")
+        flat = re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", flat).replace("&nbsp;", " "))
+        parts = re.split(r"Entry:\s*(\d+)", flat)
+        for idx in range(1, len(parts) - 1, 2):
+            block = parts[idx + 1]
+            if "Judge" not in block:
+                continue
+            stake = None
+            tokens = list(token_re.finditer(block))
+            for k, token in enumerate(tokens):
+                lci, header, flight = token.groups()
+                if lci or header:
+                    stake = section_name(lci or header)
+                elif flight and stake:
+                    stop = tokens[k + 1].start() if k + 1 < len(tokens) else len(block)
+                    placed = len(re.findall(r"(?:^|\s)\d{1,2}\.\s", block[token.end():stop]))
+                    derived[stake] = derived.get(stake, 0) + max(int(flight), placed)
+    listed = {b["breed"]: b for b in trials["by_breed"]}
+    check.expect(set(listed) == set(derived),
+                 f"by_breed lists {sorted(set(listed) ^ set(derived))} differently from the Entry-split re-derivation")
+    for name, entries in derived.items():
+        if name in listed:
+            check.expect(listed[name]["entries"] == entries,
+                         f"by_breed {name}: trials.json says {listed[name]['entries']}, Entry-split says {entries}")
+
+    def ranks_ok(items: list[dict], field: str, label: str) -> None:
+        values = sorted((i[field] for i in items), reverse=True)
+        for item in items:
+            want = values.index(item[field]) + 1
+            check.expect(item["rank"] == want, f"{label}: rank {item['rank']} for {item[field]}, want {want}")
+
+    # The season by stake, by month, by state and by club, from the rows.
+    stakes: dict[str, list[int]] = {}
+    for row in rows:
+        for name, n in row["by_breed"].items():
+            stakes.setdefault(name, []).append(n)
+    for name, counts in stakes.items():
+        b = listed.get(name)
+        check.expect(
+            b is not None and (b["trials"], b["entries"], b["largest"]) == (len(counts), sum(counts), max(counts))
+            and b["average_entry"] == round(sum(counts) / len(counts), 1)
+            and b["program"] == SECTION_PROGRAM.get(name, "breed") and b["known"] == (name in SECTIONS),
+            f"by_breed {name}: {b} does not re-derive from the trial rows")
+    ranks_ok(trials["by_breed"], "entries", "by_breed")
+
+    check.expect([m["month"] for m in trials["by_month"]] == trials["months"],
+                 "by_month does not cover the published months")
+    for m in trials["by_month"]:
+        in_month = [r for r in rows if r["date"].startswith(m["month"])]
+        entries = sum(r["entries"] for r in in_month)
+        want = (len(in_month), entries, *(sum(r["by_program"][p] for r in in_month) for p in ("breed", "singles", "lci", "absent")))
+        got = (m["trials"], m["entries"], m["breed"], m["singles"], m["lci"], m["absent"])
+        check.expect(want == got, f"by_month {m['month']}: {got}, re-derived {want}")
+        check.expect(m["average_entry"] == (round(entries / len(in_month), 1) if in_month else None),
+                     f"by_month {m['month']} average {m['average_entry']}")
+
+    from events import US_STATES
+
+    states: dict = {}
+    for row in rows:
+        check.expect(
+            row["state"] is None or row["state"] in US_STATES or row["location"].endswith("CAN"),
+            f"{row['date']} {row['club_raw']}: state {row['state']!r} from {row['location']!r}")
+        states.setdefault(row["state"], []).append(row)
+    check.expect(len(states) == len(trials["by_state"]), "by_state lists a different set of states")
+    for s in trials["by_state"]:
+        mine = states.get(s["state"], [])
+        entries = sum(r["entries"] for r in mine)
+        want = (len(mine), entries, max((r["entries"] for r in mine), default=0), len({r["club_slug"] for r in mine}))
+        check.expect((s["trials"], s["entries"], s["largest"], s["clubs"]) == want
+                     and mine and s["average_entry"] == round(entries / len(mine), 1),
+                     f"by_state {s['state']}: {s} re-derives as {want}")
+    ranks_ok(trials["by_state"], "entries", "by_state")
+
+    clubs: dict = {}
+    for row in rows:
+        clubs.setdefault(row["club_slug"], []).append(row["entries"])
+    for c in trials["by_club"]:
+        mine = clubs.get(c["slug"], [])
+        check.expect(
+            mine and (c["trials"], c["entries"], c["largest"]) == (len(mine), sum(mine), max(mine))
+            and c["average_entry"] == round(sum(mine) / len(mine), 1),
+            f"by_club {c['club']}: {c} does not re-derive from the trial rows")
+    ranks_ok(trials["by_club"], "entries", "by_club")
+
+
 def check_trials(check: Checker) -> None:
     """Verify data/trials.json against the archived monthly pages."""
     path = ROOT / "data" / "trials.json"
@@ -472,6 +619,8 @@ def check_trials(check: Checker) -> None:
             == sum(r["by_program"][key] for r in rows),
             f"stats.by_program.{key} does not re-sum from the trial rows",
         )
+
+    check_trial_breakdowns(check, trials, raw_dir)
 
     # Every trial is either assigned a region or openly unassigned.
     for row in rows:

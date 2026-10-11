@@ -715,6 +715,7 @@ const NAV_ASFA = [
   ['leaders.html', 'Leaders'],
   ['kennels.html', 'Kennels'],
   ['regions.html', 'Regions'],
+  ['trials.html', 'Trials'],
   ['lci.html', 'LCI'],
   // The stats pages stay up front; Events sits with the reference material.
   ['events.html', 'Events'],

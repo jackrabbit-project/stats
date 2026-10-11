@@ -10,6 +10,7 @@ ASFA publishes the standings as one long page of stacked breed tables, and trial
 - **Leaderboards** — most BIF, most BOB, most points, highest breed standing
 - **Kennels** — standings by kennel
 - **Regions** — Top 20 standings per region, plus which regions and clubs are drawing the most trial entries
+- **Trials** — every ASFA trial this season with its entries split into breed, Singles and LCI: by month, state, club and breed, the largest trials, and every trial with filters and a link to its own results on asfa.org
 - **LCI** — Lure Chasing Instinct standings by division, with the program's scoring and titles
 - **Bowen** — how the point system works, with a calculator
 - **Titles** — every hound with a new ASFA title this season
@@ -29,7 +30,7 @@ ASFA publishes the standings as one long page of stacked breed tables, and trial
 ```
 index.html            The hub: one search across every program, three program cards (LGRA and NOTRA share one)
 asfa.html  events.html  browse.html  dog.html  leaders.html  kennels.html  titles.html
-regions.html  lci.html  bowen.html  rulebooks.html  rulebook.html  about.html  404.html
+regions.html  trials.html  lci.html  bowen.html  rulebooks.html  rulebook.html  about.html  404.html
 akc.html              AKC lure coursing by the numbers: the year's events and entries
 lgra.html  aok9.html  notra.html  racing-dog.html   The racing sections (tabbed pages, one hound page)
 software-list.html    A standalone survey of dog-sport software, deliberately unlinked
@@ -47,7 +48,7 @@ data/trials/raw/      Every monthly trial results page, archived verbatim
 data/events/raw/      The trial schedule page, archived verbatim
 data/clubs/raw/       The ASFA club listing PDF — fetched locally, never committed
 data/season.json      Standings — loaded by every page
-data/trials.json      Trial entries by club and region — loaded by regions.html
+data/trials.json      Every trial with its entries by program and by breed, and the season by month, state, club and region — loaded by trials.html and regions.html
 data/events.json      The trial schedule — loaded by events.html
 data/clubs.json       Club directory: name, region, initials, affiliation only
 data/lgra/snapshots/  Each LGRA grading guide, parsed, one file per guide date
@@ -76,7 +77,7 @@ python tools/fetch.py && python tools/clubs.py && python tools/parse.py && pytho
 
 `fetch.py` archives the live page under `data/snapshots/{date}.html`, named for the coverage date the page states about itself rather than the wall clock. It skips the write when the page is unchanged. Raw snapshots are committed so every figure on the site traces back to the bytes ASFA served on a given date — and so movement between publications can be computed.
 
-`trials.py` does the same for each monthly trial results page, and `clubs.py` for the club listing PDF that supplies club regions. `lgra.py` scrapes lgra.club for the current grading-guide workbook and `aok9.py` exports the AOK9 sprint guide sheet; each archives a parsed snapshot per guide date (the raw workbooks stay out of git: they are large, and their header rows carry the registrars' mailing details) and rebuilds its feed and registry from every snapshot. `aok9_singles.py` does the same for the AOK9 Singles sprint records, after `aok9.py`, because it joins each Singles dog to its sprint page. `notra.py` scrapes notra.org for the Other-Breed grading guide and treats it the same way. `akc.py` collects the year's AKC lure coursing events from AKC's Event Search and the entry counts from each event's results page (`akc_collect.py`), files each collection under its date (committed, since it holds nothing but club names, cities and counts) and recomputes every total and ranking from the event rows. A [weekly workflow](.github/workflows/refresh.yml) runs the whole chain and commits when anything changes.
+`trials.py` does the same for each monthly trial results page, splitting each trial's entries by program and by breed from the flight sizes in its results, and `clubs.py` for the club listing PDF that supplies club regions. `lgra.py` scrapes lgra.club for the current grading-guide workbook and `aok9.py` exports the AOK9 sprint guide sheet; each archives a parsed snapshot per guide date (the raw workbooks stay out of git: they are large, and their header rows carry the registrars' mailing details) and rebuilds its feed and registry from every snapshot. `aok9_singles.py` does the same for the AOK9 Singles sprint records, after `aok9.py`, because it joins each Singles dog to its sprint page. `notra.py` scrapes notra.org for the Other-Breed grading guide and treats it the same way. `akc.py` collects the year's AKC lure coursing events from AKC's Event Search and the entry counts from each event's results page (`akc_collect.py`), files each collection under its date (committed, since it holds nothing but club names, cities and counts) and recomputes every total and ranking from the event rows. A [weekly workflow](.github/workflows/refresh.yml) runs the whole chain and commits when anything changes.
 
 ## Serving locally
 

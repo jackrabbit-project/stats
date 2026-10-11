@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#F7F5EF">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#1B1917">
+  <title>ASFA trials by the numbers, 2026 — Gazehound Stats</title>
+  <meta name="description" content="Every ASFA lure coursing trial in 2026 with its entries: by month, state, club and breed, from ASFA's monthly trial results. Unofficial; ASFA's posted results govern.">
+  <link rel="canonical" href="https://stats.gazehound.io/trials.html">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Gazehound Stats">
+  <meta property="og:title" content="ASFA trials by the numbers, 2026 — Gazehound Stats">
+  <meta property="og:description" content="Every ASFA lure coursing trial in 2026 with its entries: by month, state, club and breed. Unofficial; ASFA's posted results govern.">
+  <meta property="og:url" content="https://stats.gazehound.io/trials.html">
+  <meta property="og:image" content="https://stats.gazehound.io/assets/og.png?v=4">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="preload" href="assets/fonts/fraunces-latin-var.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/plex-mono-400.woff2" as="font" type="font/woff2" crossorigin>
+  <script src="js/theme.js?v=20260823"></script>
+  <link rel="stylesheet" href="css/app.css?v=20261011a">
+  <link rel="icon" href="assets/favicon.ico?v=4" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png?v=4">
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png?v=4">
+</head>
+<body class="min-h-screen flex flex-col">
+  <header id="site-header"></header>
+  <main id="main" class="flex-1 max-w-6xl mx-auto w-full px-4 py-6 space-y-6"></main>
+  <footer id="site-footer" class="bg-asfa-navy text-white py-8"></footer>
+
+  <script src="js/app.js?v=20261011a"></script>
+  <script>
+    /* Every ASFA trial of the season with the entries it drew, laid out the
+       way the AKC page lays out AKC's events: by month, state, stake and
+       club, then every trial with filters. Rendered from data/trials.json,
+       which tools/trials.py builds from ASFA's monthly trial results pages;
+       each trial links to its own results there. */
+    page('trials.html', () => {
+      const main = document.getElementById('main');
+      main.innerHTML = '<div class="card"><p class="text-sm text-asfa-text/60">Loading trial results…</p></div>';
+      loadTrials().then(render).catch((error) => {
+        console.error(error);
+        main.innerHTML = `
+          <div class="card">
+            <h2 class="card-title">Trial results unavailable</h2>
+            <p class="text-sm">Could not load <code>data/trials.json</code>: ${esc(error.message)}</p>
+          </div>`;
+      });
+    });
+
+    function render(feed) {
+      const main = document.getElementById('main');
+      const { stats } = feed;
+      const bp = stats.by_program;
+      const trials = feed.trials;
+      const n = (v) => (v == null ? '—' : Number(v).toLocaleString('en-US'));
+      const avg = (v) => (v == null ? '—' : (Math.round(v * 10) / 10).toLocaleString('en-US'));
+      const day = (iso) => new Date(iso + 'T00:00:00');
+      const shortDate = (iso) => day(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+      const weekday = (iso) => day(iso).toLocaleDateString('en-US', { weekday: 'short' });
+      const external = (href, text, cls = 'lnk') =>
+        `<a href="${esc(href)}" class="${cls}" target="_blank" rel="noopener noreferrer">${text}</a>`;
+      const tile = ([value, label, detail, title]) =>
+        `<div class="tile"${title ? ` title="${esc(title)}"` : ''}><div class="tile-value text-asfa-accent">${value}</div><div class="tile-label">${label}</div>${
+          detail ? `<div class="tile-label mt-0.5 text-asfa-text/60">${detail}</div>` : ''}</div>`;
+      const rankCell = (rank) => `<td class="num text-asfa-text/50">${rank == null ? '—' : rank}</td>`;
+      const region = (r) => (r == null ? '—' : r);
+      const note = (t) => (t.note ? ` <span class="text-xs text-asfa-text/55 font-normal">${esc(t.note)}</span>` : '');
+      const where = (t) => esc(t.location);
+      const stakeTag = (b) => (b.program === 'singles' ? 'Singles stake' : b.program === 'lci' ? 'LCI division' : '');
+
+      // Largest trials: ranked on entries, ties sharing a rank as ASFA's Top 20 does.
+      const byEntries = [...trials].sort((a, b) => b.entries - a.entries || a.date.localeCompare(b.date));
+      byEntries.forEach((t, i) => {
+        t.rank = i && t.entries === byEntries[i - 1].entries ? byEntries[i - 1].rank : i + 1;
+      });
+      const largest = byEntries[0];
+
+      const stakeNames = feed.by_breed.map((b) => b.breed);
+      const stateList = feed.by_state.map((s) => s.state).filter(Boolean).sort();
+      const clubList = [...new Set(trials.map((t) => t.club))].sort((a, b) => a.localeCompare(b));
+      const regionList = [...new Set(trials.map((t) => t.region).filter((r) => r != null))].sort((a, b) => a - b);
+
+      main.innerHTML = `
+        <div class="flex flex-wrap items-start justify-between gap-x-6 gap-y-3">
+          <div class="max-w-3xl">
+            <h1 class="font-display text-3xl text-asfa-text">ASFA trials by the numbers, ${feed.season}</h1>
+            <p class="text-sm text-asfa-text/70 mt-1">
+              Every ASFA lure coursing trial from January 1, ${feed.season} through
+              <span class="font-semibold text-asfa-accent">${formatDate(feed.as_of)}</span>:
+              ${n(stats.trials)} trials and ${n(stats.entries)} entries, from ASFA's
+              ${external(feed.source_url, 'monthly trial results')}. Each trial links to its own results there.
+            </p>
+          </div>
+          <a href="akc.html" class="btn shrink-0 whitespace-nowrap text-asfa-akc" title="The AKC counterpart">AKC lure coursing by the numbers →</a>
+        </div>
+
+        <section class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3" aria-label="Totals">
+          ${[
+            [n(stats.trials), 'trials held'],
+            [n(stats.entries), 'entries in all', `${n(bp.breed)} breed + ${n(bp.singles)} Singles + ${n(bp.lci)} LCI`],
+            [avg(stats.entries / stats.trials), 'entries per trial, average'],
+            [n(largest.entries), 'largest trial', '', `${largest.club}, ${formatDate(largest.date)}`],
+            [n(stats.clubs), 'clubs holding trials'],
+          ].map(tile).join('')}
+        </section>
+
+        <div class="grid md:grid-cols-2 gap-6">
+          <section class="card">
+            <h2 class="card-title">By month</h2>
+            <p class="text-xs text-asfa-text/55 mb-2">Entries split by what they ran: a breed stake, the Singles stake or LCI.</p>
+            <div class="tbl-wrap"><table class="tbl">
+              <thead><tr>
+                <th scope="col">Month</th><th scope="col" class="num">Trials</th><th scope="col" class="num">Entries</th>
+                <th scope="col" class="num">Breed</th><th scope="col" class="num">Singles</th><th scope="col" class="num">LCI</th>
+                <th scope="col" class="num">Avg</th>
+              </tr></thead>
+              <tbody>
+                ${feed.by_month.map((m) => `
+                  <tr>
+                    <td>${m.label}</td><td class="num">${m.trials}</td>
+                    <td class="num font-semibold text-asfa-accent">${n(m.entries)}</td>
+                    <td class="num">${n(m.breed)}</td><td class="num">${n(m.singles)}</td><td class="num">${n(m.lci)}</td>
+                    <td class="num">${avg(m.average_entry)}</td>
+                  </tr>`).join('')}
+                <tr class="bg-asfa-bg2 font-semibold">
+                  <td>Total</td><td class="num">${stats.trials}</td><td class="num">${n(stats.entries)}</td>
+                  <td class="num">${n(bp.breed)}</td><td class="num">${n(bp.singles)}</td><td class="num">${n(bp.lci)}</td>
+                  <td class="num">${avg(stats.entries / stats.trials)}</td>
+                </tr>
+              </tbody>
+            </table></div>
+          </section>
+
+          <section class="card" id="states">
+            <h2 class="card-title">States</h2>
+            <p class="text-xs text-asfa-text/55 mb-2">By where each trial was held, ranked on entries.</p>
+            <div id="states-table"></div>
+          </section>
+        </div>
+
+        <section class="card" id="breeds">
+          <h2 class="card-title">Entries by breed</h2>
+          <p class="text-xs text-asfa-text/55 mb-2">
+            Each breed's stakes this season, with the Singles stake and the LCI divisions alongside, ranked
+            on entries. Pick a name to list the trials it ran at.
+          </p>
+          <div class="tbl-wrap"><table class="tbl">
+            <thead><tr>
+              <th scope="col" class="num">#</th><th scope="col">Breed or stake</th>
+              <th scope="col" class="num">Trials</th><th scope="col" class="num">Entries</th>
+              <th scope="col" class="num">Avg</th><th scope="col" class="num">Largest</th>
+            </tr></thead>
+            <tbody>
+              ${feed.by_breed.map((b) => `
+                <tr>
+                  ${rankCell(b.rank)}
+                  <td class="font-semibold"><a href="?breed=${encodeURIComponent(b.breed)}#all-trials" class="lnk" data-breed="${esc(b.breed)}">${esc(b.breed)}</a>${
+                    stakeTag(b) ? ` <span class="text-xs text-asfa-text/55 font-normal whitespace-nowrap">${stakeTag(b)}</span>` : ''}</td>
+                  <td class="num">${b.trials}</td><td class="num font-semibold text-asfa-accent">${n(b.entries)}</td>
+                  <td class="num">${avg(b.average_entry)}</td><td class="num">${b.largest}</td>
+                </tr>`).join('')}
+            </tbody>
+          </table></div>
+          ${feed.unmatched_sections.length ? `<p class="text-xs text-asfa-accent mt-3">
+            Not matched to an ASFA stake, shown as ASFA's results print them: ${feed.unmatched_sections.map(esc).join('; ')}.</p>` : ''}
+          <p class="text-xs text-asfa-text/55 mt-3">
+            Counted from the flights in each trial's posted results, so a hound counts under the stake it ran in.
+            Trials is the number of trials where the stake had at least one hound; Avg is entries per such trial.
+          </p>
+        </section>
+
+        <section class="card" id="clubs">
+          <h2 class="card-title">Clubs</h2>
+          <p class="text-xs text-asfa-text/55 mb-2">Every club that has held an ASFA trial this season, ranked on entries.</p>
+          <div class="tbl-wrap"><table class="tbl">
+            <thead><tr>
+              <th scope="col" class="num">#</th><th scope="col">Club</th><th scope="col" class="num">Region</th>
+              <th scope="col" class="num">Trials</th><th scope="col" class="num">Entries</th>
+              <th scope="col" class="num">Avg</th><th scope="col" class="num">Largest</th><th scope="col">Where</th>
+            </tr></thead>
+            <tbody>
+              ${feed.by_club.map((c) => `
+                <tr>
+                  ${rankCell(c.rank)}
+                  <td class="font-semibold">${esc(c.club)}${c.initials ? ` <span class="text-xs text-asfa-text/55 font-normal">${esc(c.initials)}</span>` : ''}</td>
+                  <td class="num">${region(c.region)}</td><td class="num">${c.trials}</td>
+                  <td class="num font-semibold text-asfa-accent">${n(c.entries)}</td>
+                  <td class="num">${avg(c.average_entry)}</td><td class="num">${c.largest}</td>
+                  <td class="text-xs text-asfa-text/70">${esc(c.venue)}${c.venue_count > 1 ? ` <span class="text-asfa-text/50">+${c.venue_count - 1}</span>` : ''}</td>
+                </tr>`).join('')}
+            </tbody>
+          </table></div>
+          <p class="text-xs text-asfa-text/55 mt-3">
+            Region is the club's home region in ASFA's club listing, not where the trial was held; the
+            <a href="regions.html#trials" class="lnk">Regions page</a> totals entries that way.
+          </p>
+        </section>
+
+        <section class="card" id="largest">
+          <h2 class="card-title">Largest trials</h2>
+          <p class="text-xs text-asfa-text/55 mb-2">Ranked on entries; tied trials share a rank.</p>
+          <div id="largest-table"></div>
+        </section>
+
+        <section class="card no-print" id="all-trials">
+          <h2 class="card-title">All trials</h2>
+          <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
+            <label class="block">
+              <span class="text-xs font-semibold text-asfa-text/60 uppercase tracking-wide">Month</span>
+              <select id="f-month" class="mt-1 w-full select">
+                <option value="">All months</option>
+                ${feed.by_month.map((m) => `<option value="${m.month}">${m.label}</option>`).join('')}
+              </select>
+            </label>
+            <label class="block">
+              <span class="text-xs font-semibold text-asfa-text/60 uppercase tracking-wide">Region</span>
+              <select id="f-region" class="mt-1 w-full select">
+                <option value="">All regions</option>
+                ${regionList.map((r) => `<option value="${r}">Region ${r}</option>`).join('')}
+              </select>
+            </label>
+            <label class="block">
+              <span class="text-xs font-semibold text-asfa-text/60 uppercase tracking-wide">State</span>
+              <select id="f-state" class="mt-1 w-full select">
+                <option value="">All states</option>
+                ${stateList.map((s) => `<option value="${esc(s)}">${esc(s)}</option>`).join('')}
+              </select>
+            </label>
+            <label class="block">
+              <span class="text-xs font-semibold text-asfa-text/60 uppercase tracking-wide">Club</span>
+              <select id="f-club" class="mt-1 w-full select">
+                <option value="">All clubs</option>
+                ${clubList.map((c) => `<option value="${esc(c)}">${esc(c)}</option>`).join('')}
+              </select>
+            </label>
+            <label class="block">
+              <span class="text-xs font-semibold text-asfa-text/60 uppercase tracking-wide">Breed or stake</span>
+              <select id="f-breed" class="mt-1 w-full select">
+                <option value="">Any</option>
+                ${stakeNames.map((b) => `<option value="${esc(b)}">${esc(b)}</option>`).join('')}
+              </select>
+            </label>
+          </div>
+          <p id="f-count" class="text-xs text-asfa-text/55 mt-3"></p>
+        </section>
+
+        <section class="card">
+          <div id="trials-table"></div>
+          <p class="text-xs text-asfa-text/55 mt-3">
+            Each Results link opens that trial's results on ASFA's page for the month.
+          </p>
+        </section>
+
+        <section class="card" id="about">
+          <h2 class="card-title">About this page</h2>
+          <ul class="text-sm leading-relaxed list-disc pl-5 space-y-1">
+            <li>Entries are ASFA's own Entry figure for each trial: every hound entered, in the breed stakes,
+              the Singles stake and the LCI program together.</li>
+            <li>The split into breed, Singles and LCI, and the entries by breed, are read from the flight sizes
+              in each trial's posted results.</li>
+            <li>Region is the club's home region in ASFA's club listing. States go by where the trial was held.</li>
+            <li>A trial is listed once ASFA posts its results, which ASFA does month by month.</li>
+          </ul>
+          <p class="text-sm leading-relaxed mt-4">
+            Source: ASFA's ${external(feed.source_url, 'monthly trial results')}, results posted through
+            ${formatDate(feed.as_of)}. ASFA's posted results govern wherever they disagree with this page.
+          </p>
+          <p class="text-sm mt-3">
+            Corrections: <a href="mailto:info@gazehound.io" class="lnk">info@gazehound.io</a>
+          </p>
+        </section>`;
+
+      /* ----- states: the top dozen beside the by-month table, the rest on request */
+      const states = feed.by_state;
+      const STATES_SHOWN = 12;
+      let statesExpanded = states.length <= STATES_SHOWN;
+      const statesEl = document.getElementById('states-table');
+      function paintStates() {
+        const rows = statesExpanded ? states : states.slice(0, STATES_SHOWN);
+        statesEl.innerHTML = `
+          <div class="tbl-wrap"><table class="tbl">
+            <thead><tr>
+              <th scope="col" class="num">#</th><th scope="col">State</th><th scope="col" class="num">Trials</th>
+              <th scope="col" class="num">Entries</th><th scope="col" class="num">Avg</th><th scope="col" class="num">Largest</th>
+            </tr></thead>
+            <tbody>
+              ${rows.map((s) => `
+                <tr>
+                  ${rankCell(s.rank)}<td class="font-semibold">${esc(s.state || '—')}</td><td class="num">${s.trials}</td>
+                  <td class="num font-semibold text-asfa-accent">${n(s.entries)}</td>
+                  <td class="num">${avg(s.average_entry)}</td><td class="num">${s.largest}</td>
+                </tr>`).join('')}
+            </tbody>
+          </table></div>
+          ${states.length > STATES_SHOWN ? `<p class="text-sm mt-3 no-print">
+            <button type="button" id="states-toggle" class="lnk">${statesExpanded ? `Show the top ${STATES_SHOWN}` : `Show all ${states.length} states`}</button></p>` : ''}`;
+        const toggle = document.getElementById('states-toggle');
+        if (toggle) toggle.addEventListener('click', () => { statesExpanded = !statesExpanded; paintStates(); });
+      }
+      paintStates();
+      window.addEventListener('beforeprint', () => { if (!statesExpanded) { statesExpanded = true; paintStates(); } });
+
+      /* ----- largest trials: top 20, the rest on request (and when printing) */
+      let expanded = false;
+      const largestEl = document.getElementById('largest-table');
+      function paintLargest() {
+        const rows = expanded ? byEntries : byEntries.slice(0, 20);
+        largestEl.innerHTML = `
+          <div class="tbl-wrap"><table class="tbl">
+            <thead><tr>
+              <th scope="col" class="num">#</th><th scope="col">Date</th><th scope="col">Club</th><th scope="col">Where</th>
+              <th scope="col" class="num">Region</th><th scope="col" class="num">Entries</th>
+              <th scope="col" class="num">Breed</th><th scope="col" class="num">Singles</th><th scope="col" class="num">LCI</th>
+            </tr></thead>
+            <tbody>
+              ${rows.map((t) => `
+                <tr>
+                  ${rankCell(t.rank)}<td class="whitespace-nowrap">${shortDate(t.date)}</td>
+                  <td class="font-semibold">${esc(t.club)}${note(t)}</td>
+                  <td class="text-xs text-asfa-text/70 whitespace-nowrap">${where(t)}</td>
+                  <td class="num">${region(t.region)}</td>
+                  <td class="num font-semibold text-asfa-accent">${n(t.entries)}</td>
+                  <td class="num">${n(t.by_program.breed)}</td><td class="num">${n(t.by_program.singles)}</td><td class="num">${n(t.by_program.lci)}</td>
+                </tr>`).join('')}
+            </tbody>
+          </table></div>
+          ${byEntries.length > 20 ? `<p class="text-sm mt-3 no-print">
+            <button type="button" id="largest-toggle" class="lnk">${expanded ? 'Show the top 20' : `Show all ${byEntries.length} trials`}</button></p>` : ''}`;
+        const toggle = document.getElementById('largest-toggle');
+        if (toggle) toggle.addEventListener('click', () => { expanded = !expanded; paintLargest(); });
+      }
+      paintLargest();
+      window.addEventListener('beforeprint', () => { if (!expanded) { expanded = true; paintLargest(); } });
+
+      /* ----- every trial: filters from the URL, a sortable table */
+      const FILTERS = ['month', 'region', 'state', 'club', 'breed'];
+      const els = Object.fromEntries(FILTERS.map((key) => [key, document.getElementById(`f-${key}`)]));
+      els.count = document.getElementById('f-count');
+      els.table = document.getElementById('trials-table');
+      for (const key of FILTERS) {
+        const value = param(key) || '';
+        if (value && [...els[key].options].some((o) => o.value === value)) els[key].value = value;
+      }
+
+      const sort = { key: 'date', dir: 1 };
+      const valueOf = (t, key) => {
+        if (key === 'where') return t.location;
+        if (key === 'breed' || key === 'singles' || key === 'lci') return t.by_program[key];
+        if (key === 'stake') return t.by_breed[els.breed.value] || 0;
+        return t[key];
+      };
+      function sorted(rows) {
+        return [...rows].sort((a, b) => {
+          const av = valueOf(a, sort.key);
+          const bv = valueOf(b, sort.key);
+          let order;
+          if (av == null && bv == null) order = 0;
+          else if (av == null) return 1;
+          else if (bv == null) return -1;
+          else if (typeof av === 'string') order = sort.dir * av.localeCompare(bv);
+          else order = sort.dir * (av - bv);
+          return order || a.date.localeCompare(b.date) || a.club.localeCompare(b.club);
+        });
+      }
+
+      function syncUrl() {
+        const q = new URLSearchParams();
+        for (const key of FILTERS) if (els[key].value) q.set(key, els[key].value);
+        const qs = q.toString();
+        history.replaceState(null, '', (qs ? `?${qs}` : location.pathname) + location.hash);
+      }
+
+      function selected() {
+        const f = Object.fromEntries(FILTERS.map((key) => [key, els[key].value]));
+        return trials.filter((t) =>
+          (!f.month || t.date.startsWith(f.month))
+          && (!f.region || String(t.region) === f.region)
+          && (!f.state || t.state === f.state)
+          && (!f.club || t.club === f.club)
+          && (!f.breed || t.by_breed[f.breed]));
+      }
+
+      function paintTrials() {
+        syncUrl();
+        const stake = els.breed.value;
+        const columns = [
+          ['date', 'Date', '', 1],
+          ['club', 'Club', '', 1],
+          ['where', 'Where', '', 1],
+          ['region', 'Region', 'num', 1],
+          ['entries', 'Entries', 'num', -1],
+          ['breed', 'Breed', 'num', -1],
+          ['singles', 'Singles', 'num', -1],
+          ['lci', 'LCI', 'num', -1],
+          ...(stake ? [['stake', stake, 'num', -1]] : []),
+          ['', 'Results', ''],
+        ];
+        if (sort.key === 'stake' && !stake) { sort.key = 'date'; sort.dir = 1; }
+        const rows = sorted(selected());
+        const filtering = FILTERS.some((key) => els[key].value);
+        const entries = rows.reduce((sum, t) => sum + t.entries, 0);
+        const stakeEntries = stake ? rows.reduce((sum, t) => sum + (t.by_breed[stake] || 0), 0) : 0;
+        els.count.innerHTML = `Showing ${rows.length} of ${trials.length} trials${
+          filtering ? ` with ${n(entries)} entries between them${stake ? `, ${n(stakeEntries)} of them ${esc(stake)}` : ''}` : ''}.${
+          filtering ? ' <button type="button" id="f-clear" class="lnk">Clear filters</button>' : ''}`;
+        const clear = document.getElementById('f-clear');
+        if (clear) clear.addEventListener('click', () => {
+          for (const key of FILTERS) els[key].value = '';
+          paintTrials();
+        });
+        els.table.innerHTML = rows.length ? `
+          <div class="tbl-wrap"><table class="tbl">
+            ${sortableHead(columns, sort)}
+            <tbody>
+              ${rows.map((t) => `
+                <tr>
+                  <td class="whitespace-nowrap">${shortDate(t.date)}<span class="block text-[10px] text-asfa-text/55 uppercase tracking-wide">${weekday(t.date)}</span></td>
+                  <td class="font-semibold">${esc(t.club)}${note(t)}</td>
+                  <td class="text-xs text-asfa-text/70 whitespace-nowrap">${where(t)}</td>
+                  <td class="num">${region(t.region)}</td>
+                  <td class="num font-semibold text-asfa-accent">${n(t.entries)}</td>
+                  <td class="num">${n(t.by_program.breed)}</td>
+                  <td class="num">${n(t.by_program.singles)}</td>
+                  <td class="num">${n(t.by_program.lci)}</td>
+                  ${stake ? `<td class="num font-semibold">${n(t.by_breed[stake] || 0)}</td>` : ''}
+                  <td class="whitespace-nowrap">${external(t.results_url, 'Results', 'lnk text-xs')}</td>
+                </tr>`).join('')}
+            </tbody>
+          </table></div>` : `<p class="text-sm text-asfa-text/70">No trial matches those filters.</p>`;
+        wireSort(els.table, columns, sort, paintTrials);
+        scheduleFitTables();
+      }
+      for (const key of FILTERS) els[key].addEventListener('change', paintTrials);
+
+      // A breed's name in the table above lists the trials it ran at.
+      document.getElementById('breeds').addEventListener('click', (event) => {
+        const link = event.target.closest('a[data-breed]');
+        if (!link) return;
+        event.preventDefault();
+        for (const key of FILTERS) els[key].value = '';
+        els.breed.value = link.dataset.breed;
+        paintTrials();
+        document.getElementById('all-trials').scrollIntoView({ block: 'start' });
+      });
+
+      paintTrials();
+      // A link from the breed table lands before the page has its content, so
+      // the browser's own jump stops short; finish it now, without animation.
+      if (location.hash === '#all-trials') document.getElementById('all-trials').scrollIntoView({ block: 'start', behavior: 'instant' });
+    }
+  </script>
+</body>
+</html>

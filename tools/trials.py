@@ -24,9 +24,11 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import html as html_module
 import json
 import re
 import sys
+import unicodedata
 from collections import Counter
 from datetime import date, datetime, timezone
 from pathlib import Path
@@ -73,6 +75,31 @@ PROGRAM_TOKEN_RE = re.compile(
     r"|([A-Z][A-Z &().'-]{2,40}?)\s+Judges?:"
     r"|Flight [A-Z]\((\d+)"
 )
+
+# ASFA's stakes as its title listing names them: the eligible breeds, the
+# Singles stake and the three LCI divisions (Podengo Pequeno runs in the Top 20
+# and the results though the title index leaves it out). A results heading is
+# matched to one of these by section_name().
+SECTIONS = (
+    "Afghan Hound", "Azawakh", "Basenji", "Borzoi", "Chart Polski",
+    "Cirneco dell'Etna", "Galgo Español", "Greyhound", "Ibizan Hound",
+    "Irish Wolfhound", "Italian Greyhound", "Magyar Agar", "Peruvian Inca Orchid",
+    "Pharaoh Hound", "Podengo Pequeno", "Rhodesian Ridgeback", "Saluki",
+    "Scottish Deerhound", "Silken Windhound", "Sloughi", "Whippet",
+    "Singles", "LCI Large", "LCI Small", "LCI Sighthound Mix",
+)
+SECTION_PROGRAM = {
+    "Singles": "singles", "LCI Large": "lci", "LCI Small": "lci", "LCI Sighthound Mix": "lci",
+}
+MONTH_NAMES = ("January", "February", "March", "April", "May", "June", "July",
+               "August", "September", "October", "November", "December")
+
+# A venue whose state ASFA misprinted, keyed by the location exactly as the
+# results print it. The location text stays as printed; only the state the
+# trial is counted under is set. Greater Twin Cities Whippet Club's September
+# 12, 2026 trial reads "Farmington, NMN"; its trial the next day, same field,
+# reads "Farmington, MN".
+VENUE_STATES = {"Farmington, NMN": "MN"}
 
 
 class TrialParseError(RuntimeError):
@@ -158,7 +185,7 @@ def parse_summary_rows(html: str, month: int, season: int) -> list[dict]:
             "club_raw": club,
             "date": held.isoformat(),
             "location": location,
-            "state": state_match.group(1).upper() if state_match else None,
+            "state": VENUE_STATES.get(location) or (state_match.group(1).upper() if state_match else None),
             "entries": int(entry_match.group(1)),
             "note": note,
             "detail_ref": anchor.group(1),
@@ -209,6 +236,68 @@ def parse_detail_headers(html: str) -> dict[str, tuple[str, int, str]]:
     return headers
 
 
+def _plain(text: str) -> str:
+    """Upper case, accents dropped, anything but letters and digits a space."""
+    text = unicodedata.normalize("NFKD", html_module.unescape(text))
+    text = "".join(c for c in text if not unicodedata.combining(c))
+    return " ".join(re.sub(r"[^A-Z0-9]+", " ", text.upper()).split())
+
+
+# The longest name first, so "ITALIAN GREYHOUND" is never read as "GREYHOUND".
+_SECTION_KEYS = sorted(((_plain(name), name) for name in SECTIONS), key=lambda kv: -len(kv[0]))
+
+
+def section_name(heading: str) -> str | None:
+    """The ASFA stake a results heading names, or None for Best in Field.
+
+    The heading capture sometimes starts a few tokens early ("NC) GREYHOUND",
+    "NQ) WHIPPET", "B BASENJI", "LCI LCI LARGE"), so a heading is matched to
+    the longest stake name it ends with. A heading that ends with none comes
+    back in title case, to be listed openly as unmatched rather than guessed.
+    """
+    words = _plain(heading)
+    if words == "BEST IN FIELD" or words.endswith(" BEST IN FIELD"):
+        return None
+    for key, name in _SECTION_KEYS:
+        if words == key or words.endswith(" " + key):
+            return name
+    return words.title()
+
+
+def _flights(flat: str):
+    """Each flight in one trial's detail block as (program, stake, hounds)."""
+    program, section = "breed", None
+    tokens = list(PROGRAM_TOKEN_RE.finditer(flat))
+    for k, token in enumerate(tokens):
+        lci, header, flight = token.groups()
+        if lci:
+            program, section = "lci", section_name(lci)
+        elif header:
+            section = section_name(header)
+            # Classify by content, not by which alternative fired: the
+            # header capture sometimes starts a few caps tokens early
+            # ("NC) SINGLES"), and a section is what its name says.
+            if section in SECTION_PROGRAM:
+                program = SECTION_PROGRAM[section]
+            elif section in SECTIONS:
+                program = "breed"
+            elif "SINGLE" in header:
+                program = "singles"
+            elif "LCI" in header:
+                program = "lci"
+            else:
+                program = "breed"
+        elif flight:
+            # A flight ran at least as many hounds as it places. ASFA
+            # printed one flight "(0)" above a hound placed first with
+            # Best of Breed (Azawakh at CLCA, February 22, 2026); the
+            # printed size alone made that hound look entered, never ran.
+            stop = tokens[k + 1].start() if k + 1 < len(tokens) else len(flat)
+            placed = len(re.findall(r"(?:^|\s)\d{1,2}\.\s",
+                                    flat[token.end():stop]))
+            yield program, section, max(int(flight), placed)
+
+
 def parse_program_entries(html: str) -> dict[str, dict]:
     """Sum each trial's flight sizes by program, keyed by its detail anchor.
 
@@ -219,32 +308,23 @@ def parse_program_entries(html: str) -> dict[str, dict]:
     tallies: dict[str, dict] = {}
     for ref, flat in detail_blocks(html):
         tally = {"breed": 0, "singles": 0, "lci": 0}
-        program = "breed"
-        tokens = list(PROGRAM_TOKEN_RE.finditer(flat))
-        for k, token in enumerate(tokens):
-            lci, header, flight = token.groups()
-            if lci:
-                program = "lci"
-            elif header:
-                # Classify by content, not by which alternative fired: the
-                # header capture sometimes starts a few caps tokens early
-                # ("NC) SINGLES"), and a section is what its name says.
-                if "SINGLE" in header:
-                    program = "singles"
-                elif "LCI" in header:
-                    program = "lci"
-                else:
-                    program = "breed"
-            elif flight:
-                # A flight ran at least as many hounds as it places. ASFA
-                # printed one flight "(0)" above a hound placed first with
-                # Best of Breed (Azawakh at CLCA, February 22, 2026); the
-                # printed size alone made that hound look entered, never ran.
-                stop = tokens[k + 1].start() if k + 1 < len(tokens) else len(flat)
-                placed = len(re.findall(r"(?:^|\s)\d{1,2}\.\s",
-                                        flat[token.end():stop]))
-                tally[program] += max(int(flight), placed)
+        for program, _, hounds in _flights(flat):
+            tally[program] += hounds
         tallies[ref] = tally
+    return tallies
+
+
+def parse_section_entries(html: str) -> dict[str, dict[str, int]]:
+    """The same flights summed by stake (each breed, Singles, each LCI
+    division), keyed by detail anchor. Stakes with no hounds are left out."""
+    tallies: dict[str, dict[str, int]] = {}
+    for ref, flat in detail_blocks(html):
+        tally: Counter = Counter()
+        for _, section, hounds in _flights(flat):
+            if section is None:
+                raise TrialParseError(f"R{ref}: a flight sits outside any stake heading")
+            tally[section] += hounds
+        tallies[ref] = {name: n for name, n in sorted(tally.items(), key=lambda kv: (-kv[1], kv[0])) if n}
     return tallies
 
 
@@ -283,10 +363,11 @@ def aggregate(trials: list[dict]) -> tuple[list[dict], list[dict]]:
         club = by_club.setdefault(trial["club_slug"], {
             "club": trial["club"], "slug": trial["club_slug"],
             "initials": trial["initials"], "region": trial["region"],
-            "trials": 0, "entries": 0, "venues": Counter(),
+            "trials": 0, "entries": 0, "largest": 0, "venues": Counter(),
         })
         club["trials"] += 1
         club["entries"] += trial["entries"]
+        club["largest"] = max(club["largest"], trial["entries"])
         club["venues"][trial["location"]] += 1
 
         region = by_region.setdefault(trial["region"], {
@@ -305,7 +386,9 @@ def aggregate(trials: list[dict]) -> tuple[list[dict], list[dict]]:
         primary, _ = max(venues.items(), key=lambda kv: (kv[1], kv[0]))
         club["venue"] = primary
         club["venue_count"] = len(venues)
+        club["average_entry"] = round(club["entries"] / club["trials"], 1)
         clubs.append(club)
+    competition_rank(clubs, "entries")
     clubs.sort(key=lambda c: (-c["entries"], c["club"]))
 
     regions = []
@@ -317,6 +400,62 @@ def aggregate(trials: list[dict]) -> tuple[list[dict], list[dict]]:
     regions.sort(key=lambda r: (r["region"] is None, r["region"] or 0))
 
     return clubs, regions
+
+
+def competition_rank(rows: list[dict], field: str) -> None:
+    """Ties share a rank and the next rank skips, as ASFA's Top 20 ranks."""
+    previous, rank = None, 0
+    for position, row in enumerate(sorted(rows, key=lambda r: -r[field]), 1):
+        if row[field] != previous:
+            rank, previous = position, row[field]
+        row["rank"] = rank
+
+
+def summaries(trials: list[dict], months: list[str]) -> dict:
+    """The season by month, by venue state and by stake."""
+    by_month = []
+    for key in months:
+        rows = [t for t in trials if t["date"].startswith(key)]
+        entries = sum(t["entries"] for t in rows)
+        by_month.append({
+            "month": key, "label": MONTH_NAMES[int(key[5:7]) - 1],
+            "trials": len(rows), "entries": entries,
+            **{p: sum(t["by_program"][p] for t in rows) for p in ("breed", "singles", "lci", "absent")},
+            "average_entry": round(entries / len(rows), 1) if rows else None,
+        })
+
+    states: dict[str, dict] = {}
+    for t in trials:
+        state = states.setdefault(t["state"] or "", {
+            "state": t["state"], "trials": 0, "entries": 0, "largest": 0, "clubs": set()})
+        state["trials"] += 1
+        state["entries"] += t["entries"]
+        state["largest"] = max(state["largest"], t["entries"])
+        state["clubs"].add(t["club_slug"])
+    by_state = []
+    for state in states.values():
+        state["clubs"] = len(state["clubs"])
+        state["average_entry"] = round(state["entries"] / state["trials"], 1)
+        by_state.append(state)
+    competition_rank(by_state, "entries")
+    by_state.sort(key=lambda s: (s["rank"], -s["trials"], s["state"] or ""))
+
+    stakes: dict[str, dict] = {}
+    for t in trials:
+        for name, hounds in t["by_breed"].items():
+            stake = stakes.setdefault(name, {
+                "breed": name, "program": SECTION_PROGRAM.get(name, "breed"),
+                "known": name in SECTIONS, "trials": 0, "entries": 0, "largest": 0})
+            stake["trials"] += 1
+            stake["entries"] += hounds
+            stake["largest"] = max(stake["largest"], hounds)
+    by_breed = []
+    for stake in stakes.values():
+        stake["average_entry"] = round(stake["entries"] / stake["trials"], 1)
+        by_breed.append(stake)
+    competition_rank(by_breed, "entries")
+    by_breed.sort(key=lambda s: (s["rank"], -s["trials"], s["breed"]))
+    return {"by_month": by_month, "by_state": by_state, "by_breed": by_breed}
 
 
 def main() -> int:
@@ -349,6 +488,7 @@ def main() -> int:
 
         month_rows = parse_summary_rows(html, month, season)
         programs = parse_program_entries(html)
+        sections = parse_section_entries(html)
         headers = parse_detail_headers(html)
         claimed = {row["detail_ref"] for row in month_rows if row["detail_ref"] in programs}
         for row in month_rows:
@@ -380,6 +520,15 @@ def main() -> int:
             # ran; their program is unknowable, so they are carried separately
             # rather than guessed into one.
             row["by_program"] = {**tally, "absent": row["entries"] - ran}
+            # The same flights by stake; they must add up to the same hounds.
+            row["by_breed"] = sections[ref]
+            if sum(row["by_breed"].values()) != ran:
+                raise TrialParseError(
+                    f"{season}-{month:02d}: {row['club_raw']} stakes sum to "
+                    f"{sum(row['by_breed'].values())}, programs to {ran}")
+            # Straight to the trial's own results on ASFA's page, by its
+            # detail anchor (the right one even where ASFA's index link is not).
+            row["results_url"] = f"{url}#R{ref}"
         trials.extend(month_rows)
 
     trials.sort(key=lambda t: (t["date"], t["club_raw"]))
@@ -407,9 +556,11 @@ def main() -> int:
             },
         },
         "unmatched_clubs": unmatched,
+        "unmatched_sections": sorted({name for t in trials for name in t["by_breed"]} - set(SECTIONS)),
         "regions": regions_as_list(),
         "by_region": region_totals,
         "by_club": clubs,
+        **summaries(trials, [f"{season}-{m:02d}" for m in months]),
         "trials": trials,
     }
     OUTPUT.write_text(
@@ -428,6 +579,15 @@ def main() -> int:
         for name in unmatched:
             print(f"     {name}")
         print("  Add a mapping to data/club-aliases.json.")
+    unread = [t for t in trials if not t["state"]]
+    if unread:
+        print(f"  {len(unread)} venue(s) with no readable state (counted under '-' by state): "
+              f"{[(t['date'], t['location']) for t in unread]}")
+        print("  Add the location to VENUE_STATES in tools/trials.py if it is a misprint.")
+    if bundle["unmatched_sections"]:
+        print(f"  {len(bundle['unmatched_sections'])} results heading(s) match no ASFA stake "
+              f"(shown as they are): {bundle['unmatched_sections']}")
+        print("  Add the stake to SECTIONS in tools/trials.py if ASFA has added one.")
     return 0
 
 
