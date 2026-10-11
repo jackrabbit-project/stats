@@ -385,7 +385,7 @@ def check_trials(check: Checker) -> None:
             continue
         html = page.read_bytes().decode("cp1252", errors="replace")
         for tr in re.findall(r"<tr\b[^>]*>(.*?)</tr>", html, re.DOTALL | re.I):
-            if not re.search(r'href="#R\d+"', tr):
+            if not re.search(r'href="#R\d[^"]*"', tr):  # typos too ("#R1-")
                 continue
             cells = re.findall(r"<td\b[^>]*>(.*?)</td>", tr, re.DOTALL | re.I)
             if len(cells) == 2 and re.search(r"Entry:\s*\d+", cells[1]):

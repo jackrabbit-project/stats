@@ -1,7 +1,7 @@
 {
   "season": 2026,
-  "as_of": "2026-08-09",
-  "generated": "2026-10-05",
+  "as_of": "2026-09-13",
+  "generated": "2026-10-11",
   "source_url": "https://www.asfa.org/trial/index0111.html",
   "months": [
     "2026-01",
@@ -11,19 +11,20 @@
     "2026-05",
     "2026-06",
     "2026-07",
-    "2026-08"
+    "2026-08",
+    "2026-09"
   ],
   "region_source": "ASFA Constitution & By-Laws, rev. 08/01/2026, Article V, Section 3",
   "stats": {
-    "trials": 96,
-    "entries": 2949,
-    "clubs": 35,
+    "trials": 115,
+    "entries": 3626,
+    "clubs": 37,
     "unassigned_trials": 0,
     "unassigned_entries": 0,
     "by_program": {
-      "breed": 1925,
-      "singles": 488,
-      "lci": 536,
+      "breed": 2368,
+      "singles": 594,
+      "lci": 664,
       "absent": 0
     }
   },
@@ -147,24 +148,24 @@
   "by_region": [
     {
       "region": 1,
-      "trials": 7,
-      "entries": 275,
+      "trials": 8,
+      "entries": 318,
       "clubs": 3,
-      "average_entry": 39.3
+      "average_entry": 39.8
     },
     {
       "region": 2,
-      "trials": 4,
-      "entries": 71,
-      "clubs": 3,
-      "average_entry": 17.8
+      "trials": 3,
+      "entries": 38,
+      "clubs": 2,
+      "average_entry": 12.7
     },
     {
       "region": 3,
-      "trials": 13,
-      "entries": 333,
-      "clubs": 3,
-      "average_entry": 25.6
+      "trials": 14,
+      "entries": 336,
+      "clubs": 4,
+      "average_entry": 24.0
     },
     {
       "region": 4,
@@ -175,45 +176,45 @@
     },
     {
       "region": 5,
-      "trials": 18,
-      "entries": 545,
+      "trials": 23,
+      "entries": 715,
       "clubs": 6,
-      "average_entry": 30.3
+      "average_entry": 31.1
     },
     {
       "region": 6,
-      "trials": 11,
-      "entries": 414,
-      "clubs": 5,
-      "average_entry": 37.6
+      "trials": 13,
+      "entries": 545,
+      "clubs": 6,
+      "average_entry": 41.9
     },
     {
       "region": 7,
-      "trials": 6,
-      "entries": 141,
+      "trials": 11,
+      "entries": 219,
       "clubs": 2,
-      "average_entry": 23.5
+      "average_entry": 19.9
     },
     {
       "region": 8,
-      "trials": 15,
-      "entries": 503,
+      "trials": 18,
+      "entries": 624,
       "clubs": 6,
-      "average_entry": 33.5
+      "average_entry": 34.7
     },
     {
       "region": 9,
-      "trials": 8,
-      "entries": 407,
+      "trials": 10,
+      "entries": 538,
       "clubs": 2,
-      "average_entry": 50.9
+      "average_entry": 53.8
     },
     {
       "region": 10,
-      "trials": 11,
-      "entries": 201,
-      "clubs": 3,
-      "average_entry": 18.3
+      "trials": 12,
+      "entries": 234,
+      "clubs": 4,
+      "average_entry": 19.5
     }
   ],
   "by_club": [
@@ -222,10 +223,10 @@
       "slug": "gazehounds-of-new-england",
       "initials": "GONE",
       "region": 9,
-      "trials": 6,
-      "entries": 301,
+      "trials": 8,
+      "entries": 432,
       "venue": "Blandford, MA",
-      "venue_count": 2
+      "venue_count": 3
     },
     {
       "club": "Colorado Lure Coursing Association",
@@ -238,6 +239,26 @@
       "venue_count": 1
     },
     {
+      "club": "Minnesota Coursing Association",
+      "slug": "minnesota-coursing-association",
+      "initials": "MCA",
+      "region": 5,
+      "trials": 6,
+      "entries": 232,
+      "venue": "Farmington, MN",
+      "venue_count": 3
+    },
+    {
+      "club": "Silken Windhounds for Endurance, Perf. & Training",
+      "slug": "silken-windhounds-for-endurance-perf-training",
+      "initials": "SWEPT",
+      "region": 1,
+      "trials": 5,
+      "entries": 219,
+      "venue": "Roy, WA",
+      "venue_count": 3
+    },
+    {
       "club": "Upper Chesapeake Bay Saluki Club",
       "slug": "upper-chesapeake-bay-saluki-club",
       "initials": "UCBSC",
@@ -245,6 +266,16 @@
       "trials": 6,
       "entries": 196,
       "venue": "Littlestown, PA",
+      "venue_count": 2
+    },
+    {
+      "club": "Greater Twin Cities Whippet Club",
+      "slug": "greater-twin-cities-whippet-club",
+      "initials": "GTCWC",
+      "region": 5,
+      "trials": 6,
+      "entries": 178,
+      "venue": "Farmington, MN",
       "venue_count": 2
     },
     {
@@ -258,14 +289,24 @@
       "venue_count": 2
     },
     {
-      "club": "Silken Windhounds for Endurance, Perf. & Training",
-      "slug": "silken-windhounds-for-endurance-perf-training",
-      "initials": "SWEPT",
-      "region": 1,
+      "club": "Mason Dixon Ibizan Hound Club",
+      "slug": "mason-dixon-ibizan-hound-club",
+      "initials": "MDIHC",
+      "region": 8,
       "trials": 4,
-      "entries": 176,
-      "venue": "Roy, WA",
-      "venue_count": 3
+      "entries": 158,
+      "venue": "Littlestown, PA",
+      "venue_count": 1
+    },
+    {
+      "club": "Lure Enthusiasts of Georgia Sighthounds",
+      "slug": "lure-enthusiasts-of-georgia-sighthounds",
+      "initials": "LEGS",
+      "region": 7,
+      "trials": 6,
+      "entries": 149,
+      "venue": "Whitesburg, GA",
+      "venue_count": 1
     },
     {
       "club": "Michigan Gazehound Association",
@@ -288,24 +329,14 @@
       "venue_count": 1
     },
     {
-      "club": "Greater Twin Cities Whippet Club",
-      "slug": "greater-twin-cities-whippet-club",
-      "initials": "GTCWC",
-      "region": 5,
-      "trials": 4,
-      "entries": 129,
-      "venue": "Farmington, MN",
+      "club": "Ohio,Kentucky, Indiana Gazehound Organization",
+      "slug": "ohio-kentucky-indiana-gazehound-organization",
+      "initials": "OKIGO",
+      "region": 6,
+      "trials": 2,
+      "entries": 131,
+      "venue": "Fairborn, OH",
       "venue_count": 1
-    },
-    {
-      "club": "Minnesota Coursing Association",
-      "slug": "minnesota-coursing-association",
-      "initials": "MCA",
-      "region": 5,
-      "trials": 4,
-      "entries": 129,
-      "venue": "Farmington, MN",
-      "venue_count": 3
     },
     {
       "club": "Northern Azawakh Association",
@@ -335,16 +366,6 @@
       "trials": 2,
       "entries": 101,
       "venue": "Leesburg, VA",
-      "venue_count": 1
-    },
-    {
-      "club": "Lure Enthusiasts of Georgia Sighthounds",
-      "slug": "lure-enthusiasts-of-georgia-sighthounds",
-      "initials": "LEGS",
-      "region": 7,
-      "trials": 4,
-      "entries": 97,
-      "venue": "Whitesburg, GA",
       "venue_count": 1
     },
     {
@@ -378,6 +399,26 @@
       "venue_count": 1
     },
     {
+      "club": "Gazehound Association of the Smoky Mountains",
+      "slug": "gazehound-association-of-the-smoky-mountains",
+      "initials": "GASM",
+      "region": 7,
+      "trials": 5,
+      "entries": 70,
+      "venue": "Limestone, TN",
+      "venue_count": 1
+    },
+    {
+      "club": "Ibizan Hound Club of the United States",
+      "slug": "ibizan-hound-club-of-the-united-states",
+      "initials": "IHCUS",
+      "region": 5,
+      "trials": 3,
+      "entries": 69,
+      "venue": "Cedar Falls, IA",
+      "venue_count": 2
+    },
+    {
       "club": "Southern Idaho Sighthound Field Association",
       "slug": "southern-idaho-sighthound-field-association",
       "initials": "SISFA",
@@ -396,16 +437,6 @@
       "entries": 53,
       "venue": "Mountainaire, NM",
       "venue_count": 2
-    },
-    {
-      "club": "Ibizan Hound Club of the United States",
-      "slug": "ibizan-hound-club-of-the-united-states",
-      "initials": "IHCUS",
-      "region": 5,
-      "trials": 2,
-      "entries": 51,
-      "venue": "Cedar Falls, IA",
-      "venue_count": 1
     },
     {
       "club": "Sight Hound Organization of Tidewater",
@@ -448,16 +479,6 @@
       "venue_count": 1
     },
     {
-      "club": "Gazehound Association of the Smoky Mountains",
-      "slug": "gazehound-association-of-the-smoky-mountains",
-      "initials": "GASM",
-      "region": 7,
-      "trials": 2,
-      "entries": 44,
-      "venue": "Limestone, TN",
-      "venue_count": 1
-    },
-    {
       "club": "Western Washington Whippet Association",
       "slug": "western-washington-whippet-association",
       "initials": "WWWA",
@@ -465,16 +486,6 @@
       "trials": 1,
       "entries": 44,
       "venue": "Roy, WA",
-      "venue_count": 1
-    },
-    {
-      "club": "Mason Dixon Ibizan Hound Club",
-      "slug": "mason-dixon-ibizan-hound-club",
-      "initials": "MDIHC",
-      "region": 8,
-      "trials": 1,
-      "entries": 37,
-      "venue": "Littlestown, PA",
       "venue_count": 1
     },
     {
@@ -491,7 +502,7 @@
       "club": "Central Coast Association of Sighthounds",
       "slug": "central-coast-association-of-sighthounds",
       "initials": "CCASH",
-      "region": 2,
+      "region": 10,
       "trials": 1,
       "entries": 33,
       "venue": "Arroyo Grande,CA",
@@ -565,6 +576,16 @@
       "trials": 1,
       "entries": 9,
       "venue": "Gray Summit, MO",
+      "venue_count": 1
+    },
+    {
+      "club": "Rocky Mountain Irish Wolfhound Association",
+      "slug": "rocky-mountain-irish-wolfhound-association",
+      "initials": "RMIWA",
+      "region": 3,
+      "trials": 1,
+      "entries": 3,
+      "venue": "Cheyenne, WY",
       "venue_count": 1
     }
   ],
@@ -1682,7 +1703,7 @@
       },
       "club": "Central Coast Association of Sighthounds",
       "club_slug": "central-coast-association-of-sighthounds",
-      "region": 2,
+      "region": 10,
       "initials": "CCASH"
     },
     {
@@ -2296,6 +2317,348 @@
       "club_slug": "silken-windhounds-for-endurance-perf-training",
       "region": 1,
       "initials": "SWEPT"
+    },
+    {
+      "club_raw": "ROCKY MOUNTAIN IRISH WOLFHOUND ASSOCIATION",
+      "date": "2026-09-02",
+      "location": "Cheyenne, WY",
+      "state": "WY",
+      "entries": 3,
+      "note": "Irish Wolfhound Specialty",
+      "by_program": {
+        "breed": 1,
+        "singles": 2,
+        "lci": 0,
+        "absent": 0
+      },
+      "club": "Rocky Mountain Irish Wolfhound Association",
+      "club_slug": "rocky-mountain-irish-wolfhound-association",
+      "region": 3,
+      "initials": "RMIWA"
+    },
+    {
+      "club_raw": "GAZEHOUND ASSOCIATION OF THE SMOKY MOUNTAINS",
+      "date": "2026-09-05",
+      "location": "Limestone, TN",
+      "state": "TN",
+      "entries": 9,
+      "note": "Silken Windhound Specialty",
+      "by_program": {
+        "breed": 5,
+        "singles": 4,
+        "lci": 0,
+        "absent": 0
+      },
+      "club": "Gazehound Association of the Smoky Mountains",
+      "club_slug": "gazehound-association-of-the-smoky-mountains",
+      "region": 7,
+      "initials": "GASM"
+    },
+    {
+      "club_raw": "GAZEHOUNDS OF NEW ENGLAND",
+      "date": "2026-09-05",
+      "location": "Starkville, NY",
+      "state": "NY",
+      "entries": 66,
+      "note": "Region 9 Invitational",
+      "by_program": {
+        "breed": 40,
+        "singles": 11,
+        "lci": 15,
+        "absent": 0
+      },
+      "club": "Gazehounds of New England",
+      "club_slug": "gazehounds-of-new-england",
+      "region": 9,
+      "initials": "GONE"
+    },
+    {
+      "club_raw": "MASON DIXON IBIZAN HOUND CLUB",
+      "date": "2026-09-05",
+      "location": "Littlestown, PA",
+      "state": "PA",
+      "entries": 30,
+      "note": "",
+      "by_program": {
+        "breed": 13,
+        "singles": 3,
+        "lci": 14,
+        "absent": 0
+      },
+      "club": "Mason Dixon Ibizan Hound Club",
+      "club_slug": "mason-dixon-ibizan-hound-club",
+      "region": 8,
+      "initials": "MDIHC"
+    },
+    {
+      "club_raw": "MINNESOTA COURSING ASSOCIATION, Inc.",
+      "date": "2026-09-05",
+      "location": "Farmington, MN",
+      "state": "MN",
+      "entries": 53,
+      "note": "The Minnesota Cup",
+      "by_program": {
+        "breed": 32,
+        "singles": 5,
+        "lci": 16,
+        "absent": 0
+      },
+      "club": "Minnesota Coursing Association",
+      "club_slug": "minnesota-coursing-association",
+      "region": 5,
+      "initials": "MCA"
+    },
+    {
+      "club_raw": "SILKEN WINDHOUNDS FOR ENDURANCE,PERFORMANCE & TRAINING",
+      "date": "2026-09-05",
+      "location": "Roy, WA",
+      "state": "WA",
+      "entries": 43,
+      "note": "",
+      "by_program": {
+        "breed": 34,
+        "singles": 6,
+        "lci": 3,
+        "absent": 0
+      },
+      "club": "Silken Windhounds for Endurance, Perf. & Training",
+      "club_slug": "silken-windhounds-for-endurance-perf-training",
+      "region": 1,
+      "initials": "SWEPT"
+    },
+    {
+      "club_raw": "GAZEHOUND ASSOCIATION OF THE SMOKY MOUNTAINS",
+      "date": "2026-09-06",
+      "location": "Limestone, TN",
+      "state": "TN",
+      "entries": 10,
+      "note": "Silken Windhound Specialty",
+      "by_program": {
+        "breed": 6,
+        "singles": 4,
+        "lci": 0,
+        "absent": 0
+      },
+      "club": "Gazehound Association of the Smoky Mountains",
+      "club_slug": "gazehound-association-of-the-smoky-mountains",
+      "region": 7,
+      "initials": "GASM"
+    },
+    {
+      "club_raw": "GAZEHOUNDS OF NEW ENGLAND",
+      "date": "2026-09-06",
+      "location": "Starkville, NY",
+      "state": "NY",
+      "entries": 65,
+      "note": "",
+      "by_program": {
+        "breed": 36,
+        "singles": 11,
+        "lci": 18,
+        "absent": 0
+      },
+      "club": "Gazehounds of New England",
+      "club_slug": "gazehounds-of-new-england",
+      "region": 9,
+      "initials": "GONE"
+    },
+    {
+      "club_raw": "MASON DIXON IBIZAN HOUND CLUB",
+      "date": "2026-09-06",
+      "location": "Littlestown, PA",
+      "state": "PA",
+      "entries": 47,
+      "note": "",
+      "by_program": {
+        "breed": 28,
+        "singles": 5,
+        "lci": 14,
+        "absent": 0
+      },
+      "club": "Mason Dixon Ibizan Hound Club",
+      "club_slug": "mason-dixon-ibizan-hound-club",
+      "region": 8,
+      "initials": "MDIHC"
+    },
+    {
+      "club_raw": "MINNESOTA COURSING ASSOCIATION, Inc.",
+      "date": "2026-09-06",
+      "location": "Farmington, MN",
+      "state": "MN",
+      "entries": 50,
+      "note": "The Minneapolis Cup",
+      "by_program": {
+        "breed": 28,
+        "singles": 5,
+        "lci": 17,
+        "absent": 0
+      },
+      "club": "Minnesota Coursing Association",
+      "club_slug": "minnesota-coursing-association",
+      "region": 5,
+      "initials": "MCA"
+    },
+    {
+      "club_raw": "GAZEHOUND ASSOCIATION OF THE SMOKY MOUNTAINS",
+      "date": "2026-09-07",
+      "location": "Limestone, TN",
+      "state": "TN",
+      "entries": 7,
+      "note": "",
+      "by_program": {
+        "breed": 5,
+        "singles": 2,
+        "lci": 0,
+        "absent": 0
+      },
+      "club": "Gazehound Association of the Smoky Mountains",
+      "club_slug": "gazehound-association-of-the-smoky-mountains",
+      "region": 7,
+      "initials": "GASM"
+    },
+    {
+      "club_raw": "IBIZAN HOUND CLUB OF THE UNITED STATES",
+      "date": "2026-09-07",
+      "location": "Sorento, IL",
+      "state": "IL",
+      "entries": 18,
+      "note": "Ibizan Hound National Specialty",
+      "by_program": {
+        "breed": 17,
+        "singles": 1,
+        "lci": 0,
+        "absent": 0
+      },
+      "club": "Ibizan Hound Club of the United States",
+      "club_slug": "ibizan-hound-club-of-the-united-states",
+      "region": 5,
+      "initials": "IHCUS"
+    },
+    {
+      "club_raw": "MASON DIXON IBIZAN HOUND CLUB",
+      "date": "2026-09-07",
+      "location": "Littlestown, PA",
+      "state": "PA",
+      "entries": 44,
+      "note": "",
+      "by_program": {
+        "breed": 28,
+        "singles": 3,
+        "lci": 13,
+        "absent": 0
+      },
+      "club": "Mason Dixon Ibizan Hound Club",
+      "club_slug": "mason-dixon-ibizan-hound-club",
+      "region": 8,
+      "initials": "MDIHC"
+    },
+    {
+      "club_raw": "GREATER TWIN CITIES WHIPPET CLUB",
+      "date": "2026-09-12",
+      "location": "Farmington, NMN",
+      "state": null,
+      "entries": 29,
+      "note": "",
+      "by_program": {
+        "breed": 15,
+        "singles": 6,
+        "lci": 8,
+        "absent": 0
+      },
+      "club": "Greater Twin Cities Whippet Club",
+      "club_slug": "greater-twin-cities-whippet-club",
+      "region": 5,
+      "initials": "GTCWC"
+    },
+    {
+      "club_raw": "LURE ENTHUSIASTS OF GEORGIA COURSING CLUB",
+      "date": "2026-09-12",
+      "location": "Whitesburg, GA",
+      "state": "GA",
+      "entries": 25,
+      "note": "",
+      "by_program": {
+        "breed": 21,
+        "singles": 3,
+        "lci": 1,
+        "absent": 0
+      },
+      "club": "Lure Enthusiasts of Georgia Sighthounds",
+      "club_slug": "lure-enthusiasts-of-georgia-sighthounds",
+      "region": 7,
+      "initials": "LEGS"
+    },
+    {
+      "club_raw": "OKI GAZEHOUND ORGANIZATION",
+      "date": "2026-09-12",
+      "location": "Fairborn, OH",
+      "state": "OH",
+      "entries": 62,
+      "note": "Region 6 Invitational",
+      "by_program": {
+        "breed": 52,
+        "singles": 10,
+        "lci": 0,
+        "absent": 0
+      },
+      "club": "Ohio,Kentucky, Indiana Gazehound Organization",
+      "club_slug": "ohio-kentucky-indiana-gazehound-organization",
+      "region": 6,
+      "initials": "OKIGO"
+    },
+    {
+      "club_raw": "GREATER TWIN CITIES WHIPPET CLUB",
+      "date": "2026-09-13",
+      "location": "Farmington, MN",
+      "state": "MN",
+      "entries": 20,
+      "note": "",
+      "by_program": {
+        "breed": 10,
+        "singles": 3,
+        "lci": 7,
+        "absent": 0
+      },
+      "club": "Greater Twin Cities Whippet Club",
+      "club_slug": "greater-twin-cities-whippet-club",
+      "region": 5,
+      "initials": "GTCWC"
+    },
+    {
+      "club_raw": "LURE ENTHUSIASTS OF GEORGIA COURSING CLUB",
+      "date": "2026-09-13",
+      "location": "Whitesburg, GA",
+      "state": "GA",
+      "entries": 27,
+      "note": "",
+      "by_program": {
+        "breed": 23,
+        "singles": 2,
+        "lci": 2,
+        "absent": 0
+      },
+      "club": "Lure Enthusiasts of Georgia Sighthounds",
+      "club_slug": "lure-enthusiasts-of-georgia-sighthounds",
+      "region": 7,
+      "initials": "LEGS"
+    },
+    {
+      "club_raw": "OKI GAZEHOUND ORGANIZATION",
+      "date": "2026-09-13",
+      "location": "Fairborn, OH",
+      "state": "OH",
+      "entries": 69,
+      "note": "",
+      "by_program": {
+        "breed": 49,
+        "singles": 20,
+        "lci": 0,
+        "absent": 0
+      },
+      "club": "Ohio,Kentucky, Indiana Gazehound Organization",
+      "club_slug": "ohio-kentucky-indiana-gazehound-organization",
+      "region": 6,
+      "initials": "OKIGO"
     }
   ]
 }

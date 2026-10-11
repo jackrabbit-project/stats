@@ -1,46 +1,48 @@
 {
   "season": 2026,
-  "as_of": "2026-08-31",
-  "generated": "2026-10-05",
+  "as_of": "2026-09-17",
+  "generated": "2026-10-11",
   "source_url": "https://www.asfa.org/titles/index.htm",
   "stats": {
-    "total": 99,
+    "total": 133,
     "by_program": {
-      "singles": 9,
-      "breed": 54,
-      "lci": 36
+      "singles": 11,
+      "breed": 75,
+      "lci": 47
     },
     "by_title": {
-      "TCP": 9,
-      "FCh": 41,
-      "LCC": 10,
-      "LCM": 7,
-      "LCE": 2,
-      "LCI": 20,
-      "LCM2": 1,
+      "TCP": 11,
+      "FCh": 58,
+      "LCC": 15,
+      "LCM": 9,
+      "LCE": 3,
+      "LCI": 22,
+      "LCM2": 2,
       "VFCh": 3,
-      "LCA": 3,
+      "LCA": 6,
       "VLCM": 2,
-      "VLCC": 1
+      "VLCC": 1,
+      "LCM3": 1
     },
     "by_section": {
-      "Singles": 9,
-      "Whippet": 22,
-      "LCI Sighthound Mix": 8,
-      "Greyhound": 3,
-      "Ibizan Hound": 3,
-      "Saluki": 3,
-      "Rhodesian Ridgeback": 5,
-      "Silken Windhound": 5,
-      "Basenji": 4,
-      "LCI Large": 18,
-      "Borzoi": 5,
-      "LCI Small": 10,
-      "Italian Greyhound": 2,
-      "Scottish Deerhound": 1,
-      "Pharaoh Hound": 1
+      "Singles": 11,
+      "Whippet": 25,
+      "LCI Sighthound Mix": 13,
+      "Greyhound": 4,
+      "Ibizan Hound": 4,
+      "Saluki": 4,
+      "Rhodesian Ridgeback": 6,
+      "Silken Windhound": 9,
+      "Basenji": 5,
+      "LCI Large": 22,
+      "Borzoi": 8,
+      "LCI Small": 12,
+      "Italian Greyhound": 5,
+      "Scottish Deerhound": 2,
+      "Pharaoh Hound": 2,
+      "Azawakh": 1
     },
-    "matched_to_profiles": 64
+    "matched_to_profiles": 85
   },
   "titles": [
     {
@@ -449,7 +451,7 @@
       "date": "2026-05-02",
       "owners_raw": "Erin & Patrick McNeill",
       "program": "breed",
-      "dog_id": "wildbriar-sweden-the-deal-at-cold-harbor--whippet"
+      "dog_id": null
     },
     {
       "section": "LCI Large",
@@ -533,7 +535,7 @@
       "date": "2026-05-03",
       "owners_raw": "Ron Viola & Iva Kimmelman",
       "program": "breed",
-      "dog_id": "merci-isle-after-midnight--whippet"
+      "dog_id": null
     },
     {
       "section": "Basenji",
@@ -581,7 +583,7 @@
       "date": "2026-05-09",
       "owners_raw": "Jessica Charbonneau",
       "program": "lci",
-      "dog_id": null
+      "dog_id": "dolly-charbonneau--lci-large"
     },
     {
       "section": "Singles",
@@ -653,7 +655,7 @@
       "date": "2026-05-10",
       "owners_raw": "Anthony Schneider",
       "program": "breed",
-      "dog_id": "williway-brown-water-bossman--whippet"
+      "dog_id": null
     },
     {
       "section": "Pharaoh Hound",
@@ -785,7 +787,7 @@
       "date": "2026-05-24",
       "owners_raw": "Myra Roth",
       "program": "lci",
-      "dog_id": "crystal-spirit-birch-gabbro-merges-lives--lci-sighthound-mix"
+      "dog_id": null
     },
     {
       "section": "Whippet",
@@ -809,7 +811,7 @@
       "date": "2026-06-06",
       "owners_raw": "Athena Pollack & Kristopher Cunningham",
       "program": "lci",
-      "dog_id": "hero-treasure-keeper--lci-sighthound-mix"
+      "dog_id": null
     },
     {
       "section": "LCI Small",
@@ -857,7 +859,7 @@
       "date": "2026-06-07",
       "owners_raw": "Janet Welter",
       "program": "breed",
-      "dog_id": "ravenna-keep-a-spot-open-at-warp-nine--borzoi"
+      "dog_id": null
     },
     {
       "section": "Ibizan Hound",
@@ -893,7 +895,7 @@
       "date": "2026-06-07",
       "owners_raw": "Janie Ohman",
       "program": "lci",
-      "dog_id": null
+      "dog_id": "vintage-any-way-the-force-flows--lci-sighthound-mix"
     },
     {
       "section": "LCI Sighthound Mix",
@@ -905,7 +907,7 @@
       "date": "2026-06-07",
       "owners_raw": "Katie Weihbrecht",
       "program": "lci",
-      "dog_id": "heritage-point-s-unfogging-the-future--lci-sighthound-mix"
+      "dog_id": null
     },
     {
       "section": "LCI Small",
@@ -1181,7 +1183,7 @@
       "date": "2026-08-02",
       "owners_raw": "Sheri Ploughman & Ivy Rebelo",
       "program": "lci",
-      "dog_id": null
+      "dog_id": "constellation-dancer-v-tierkreis--lci-large"
     },
     {
       "section": "Whippet",
@@ -1230,6 +1232,414 @@
       "owners_raw": "Colleen & Rebecca Sayre",
       "program": "breed",
       "dog_id": null
+    },
+    {
+      "section": "Singles",
+      "title": "Title of Coursing Proficiency (TCP)",
+      "title_abbr": "TCP",
+      "call_name": "SA Fin",
+      "registered_name": "DC Pure Elegance Super Trooper SC DCAT",
+      "registered_raw": "DC Pure Elegance Super Trooper SC DCAT, HP68295202, D, May 03 2023",
+      "date": "2026-09-02",
+      "owners_raw": "Emily Wu",
+      "program": "singles",
+      "dog_id": "pure-elegance-super-trooper--singles"
+    },
+    {
+      "section": "Basenji",
+      "title": "Lure Courser Of Merit 3",
+      "title_abbr": "LCM3",
+      "call_name": "Munchkin",
+      "registered_name": "Borassus One Sweet Treat, LCM",
+      "registered_raw": "Borassus One Sweet Treat, LCM, B, Dec 18 2020",
+      "date": "2026-09-05",
+      "owners_raw": "Kathy Sanders",
+      "program": "breed",
+      "dog_id": "borassus-one-sweet-treat--basenji"
+    },
+    {
+      "section": "Borzoi",
+      "title": "Field Champion",
+      "title_abbr": "FCh",
+      "call_name": "Xxtra",
+      "registered_name": "Avalon Xxtra Xxtra",
+      "registered_raw": "Avalon Xxtra Xxtra, HP71054702, B, Jun 28 2024",
+      "date": "2026-09-05",
+      "owners_raw": "Susan Cecere & Sandra Moore",
+      "program": "breed",
+      "dog_id": "avalon-xxtra-xxtra--borzoi"
+    },
+    {
+      "section": "Italian Greyhound",
+      "title": "Field Champion",
+      "title_abbr": "FCh",
+      "call_name": "Lola",
+      "registered_name": "GCh DC Sogno Della Guerriera Divina, SC BCAT JSR",
+      "registered_raw": "GCh DC Sogno Della Guerriera Divina, SC BCAT JSR, TS66587501, B, Jan 26 2025",
+      "date": "2026-09-05",
+      "owners_raw": "Greg & Jennifer Behrens",
+      "program": "breed",
+      "dog_id": "sogno-della-guerriera-divina--italian-greyhound"
+    },
+    {
+      "section": "Italian Greyhound",
+      "title": "Field Champion",
+      "title_abbr": "FCh",
+      "call_name": "Theo",
+      "registered_name": "Theophilus Grey Blur",
+      "registered_raw": "Theophilus Grey Blur, PAL290043, D, Nov 19 2022",
+      "date": "2026-09-05",
+      "owners_raw": "Madeline Worrell",
+      "program": "breed",
+      "dog_id": "theophilus-grey-blur--italian-greyhound"
+    },
+    {
+      "section": "LCI Large",
+      "title": "Lure Chasing Champion",
+      "title_abbr": "LCC",
+      "call_name": "Daisy",
+      "registered_name": "Dr Daisy Doolittle, LCI",
+      "registered_raw": "Dr Daisy Doolittle, LCI, MB14420201, B, May 022023",
+      "date": "2026-09-05",
+      "owners_raw": "Cydney Sloan & Rachel Ratay",
+      "program": "lci",
+      "dog_id": "dr-daisy-doolittle--lci-large"
+    },
+    {
+      "section": "LCI Large",
+      "title": "Lure Chasing Advanced",
+      "title_abbr": "LCA",
+      "call_name": "Octavia",
+      "registered_name": "Avalon Octavia Butler LCI, PL021758, b",
+      "registered_raw": "Avalon Octavia Butler LCI, PL021758, b, Nov 16 2015",
+      "date": "2026-09-05",
+      "owners_raw": "D Pei Wu",
+      "program": "lci",
+      "dog_id": null
+    },
+    {
+      "section": "LCI Sighthound Mix",
+      "title": "Lure Chasing Champion",
+      "title_abbr": "LCC",
+      "call_name": "Poki",
+      "registered_name": "Apsara's Be The Leaf Of Tova LCI",
+      "registered_raw": "Apsara's Be The Leaf Of Tova LCI, SHM034, B, Mar 13 2021",
+      "date": "2026-09-05",
+      "owners_raw": "Ezri Silverberg",
+      "program": "lci",
+      "dog_id": "apsara-s-be-the-leaf-of-tova--lci-sighthound-mix"
+    },
+    {
+      "section": "LCI Small",
+      "title": "Lure Chasing Champion",
+      "title_abbr": "LCC",
+      "call_name": "Jenny",
+      "registered_name": "Forever Young 8675309 LCA",
+      "registered_raw": "Forever Young 8675309 LCA, SM034, B, Sep 04 2021",
+      "date": "2026-09-05",
+      "owners_raw": "Laura Breckheimer",
+      "program": "lci",
+      "dog_id": null
+    },
+    {
+      "section": "LCI Small",
+      "title": "Lure Chasing Excellent",
+      "title_abbr": "LCE",
+      "call_name": "Willow",
+      "registered_name": "Gone Like The Winde LCC LCA",
+      "registered_raw": "Gone Like The Winde LCC LCA, MB10561101, B, Feb 05 2022",
+      "date": "2026-09-05",
+      "owners_raw": "Melanie Gorham",
+      "program": "lci",
+      "dog_id": null
+    },
+    {
+      "section": "Silken Windhound",
+      "title": "Field Champion",
+      "title_abbr": "FCh",
+      "call_name": "Angus",
+      "registered_name": "Winsome Qilin's Magic",
+      "registered_raw": "Winsome Qilin's Magic, 2022-1107/01, D, Mar 07 2022",
+      "date": "2026-09-05",
+      "owners_raw": "Gallia Painter Mackinnon",
+      "program": "breed",
+      "dog_id": null
+    },
+    {
+      "section": "Azawakh",
+      "title": "Field Champion",
+      "title_abbr": "FCh",
+      "call_name": "Obi",
+      "registered_name": "Starfire's Obie At Zafis",
+      "registered_raw": "Starfire's Obie At Zafis, HP67935709, D, Aug 22 2022",
+      "date": "2026-09-06",
+      "owners_raw": "Jan Butterworth",
+      "program": "breed",
+      "dog_id": "starfire-s-obi-at-zafis--azawakh"
+    },
+    {
+      "section": "LCI Large",
+      "title": "Lure Chasing Champion",
+      "title_abbr": "LCC",
+      "call_name": "Josh",
+      "registered_name": "Drywood's Josh On Course LCI",
+      "registered_raw": "Drywood's Josh On Course LCI, D197-177, D, sep 19 2023",
+      "date": "2026-09-06",
+      "owners_raw": "Sarah Anderson",
+      "program": "lci",
+      "dog_id": "drywood-s-josh-on-course--lci-large"
+    },
+    {
+      "section": "LCI Sighthound Mix",
+      "title": "Lure Chasing Instinct",
+      "title_abbr": "LCI",
+      "call_name": "Chomper",
+      "registered_name": "Apsara's Don't Eat The Tourists",
+      "registered_raw": "Apsara's Don't Eat The Tourists, SHM071, D, Nov 04 2024",
+      "date": "2026-09-06",
+      "owners_raw": "Sara Martin",
+      "program": "lci",
+      "dog_id": "apsara-s-don-t-eat-the-tourists--lci-sighthound-mix"
+    },
+    {
+      "section": "LCI Sighthound Mix",
+      "title": "Lure Chasing Instinct",
+      "title_abbr": "LCI",
+      "call_name": "Ozzy",
+      "registered_name": "Apsara's Jurassic Bark",
+      "registered_raw": "Apsara's Jurassic Bark, SHM074, D, Nov 04 2024",
+      "date": "2026-09-06",
+      "owners_raw": "Chelsea Ruzzo",
+      "program": "lci",
+      "dog_id": "apsara-s-jurassic-bark--lci-sighthound-mix"
+    },
+    {
+      "section": "LCI Sighthound Mix",
+      "title": "Lure Chasing Champion",
+      "title_abbr": "LCC",
+      "call_name": "Ozzy",
+      "registered_name": "Apsara's Jurassic Bark",
+      "registered_raw": "Apsara's Jurassic Bark, SHM074, D, Nov 04 2024",
+      "date": "2026-09-06",
+      "owners_raw": "Chelsea Ruzzo",
+      "program": "lci",
+      "dog_id": "apsara-s-jurassic-bark--lci-sighthound-mix"
+    },
+    {
+      "section": "LCI Sighthound Mix",
+      "title": "Lure Chasing Advanced",
+      "title_abbr": "LCA",
+      "call_name": "Pepper",
+      "registered_name": "ComicbookK9 I Love You 3000 LCI LCC",
+      "registered_raw": "ComicbookK9 I Love You 3000 LCI LCC, MA90561401, B, Jun 22 2020",
+      "date": "2026-09-06",
+      "owners_raw": "Becky Dammann",
+      "program": "lci",
+      "dog_id": "comicbookk9-i-love-you-3000--lci-sighthound-mix"
+    },
+    {
+      "section": "Silken Windhound",
+      "title": "Field Champion",
+      "title_abbr": "FCh",
+      "call_name": "Dio",
+      "registered_name": "Solo's In Noble Fashion P925-685",
+      "registered_raw": "Solo's In Noble Fashion P925-685, D, Dec 16 2019",
+      "date": "2026-09-06",
+      "owners_raw": "Alexis Chernish",
+      "program": "breed",
+      "dog_id": null
+    },
+    {
+      "section": "Borzoi",
+      "title": "Field Champion",
+      "title_abbr": "FCh",
+      "call_name": "Spock",
+      "registered_name": "Avalon Heritage WW MHD Search4spock",
+      "registered_raw": "Avalon Heritage WW MHD Search4spock, HP64165507, D, Nov 19 2021",
+      "date": "2026-09-07",
+      "owners_raw": "Susan Cecere & Sandra Moore",
+      "program": "breed",
+      "dog_id": "avaloin-heritage-ww-mhd-search4spock--borzoi"
+    },
+    {
+      "section": "Ibizan Hound",
+      "title": "Lure Courser Of Merit 2",
+      "title_abbr": "LCM2",
+      "call_name": "Maverick",
+      "registered_name": "MBIV DC Treybeau's I Ain't Worried LCM SC BCAT ATT",
+      "registered_raw": "MBIV DC Treybeau's I Ain't Worried LCM SC BCAT ATT, HP6883401, D, Jun 09 2023",
+      "date": "2026-09-07",
+      "owners_raw": "Sabrina Wright-Hiller",
+      "program": "breed",
+      "dog_id": "treybeau-s-i-ain-t-worried--ibizan-hound"
+    },
+    {
+      "section": "Borzoi",
+      "title": "Field Champion",
+      "title_abbr": "FCh",
+      "call_name": "Vega",
+      "registered_name": "Teine Shining Star",
+      "registered_raw": "Teine Shining Star, HP63970004, B, Oct 01 2021",
+      "date": "2026-09-12",
+      "owners_raw": "Magdalena Krasny",
+      "program": "breed",
+      "dog_id": "teine-shining-star--borzoi"
+    },
+    {
+      "section": "Greyhound",
+      "title": "Field Champion",
+      "title_abbr": "FCh",
+      "call_name": "Sagan",
+      "registered_name": "Halfmoon Looking Up",
+      "registered_raw": "Halfmoon Looking Up, HP62599703, D, May 08 2021",
+      "date": "2026-09-12",
+      "owners_raw": "Kathleen & Wayne Johnson",
+      "program": "breed",
+      "dog_id": "halfmoon-looking-up--greyhound"
+    },
+    {
+      "section": "Italian Greyhound",
+      "title": "Field Champion",
+      "title_abbr": "FCh",
+      "call_name": "Nugget",
+      "registered_name": "Kikit Sequel Story, TCP",
+      "registered_raw": "Kikit Sequel Story, TCP, TS60776201, D, Auf 26 2023",
+      "date": "2026-09-12",
+      "owners_raw": "Lee Warden",
+      "program": "breed",
+      "dog_id": "kikit-sequel-story--italian-greyhound"
+    },
+    {
+      "section": "Pharaoh Hound",
+      "title": "Field Champion",
+      "title_abbr": "FCh",
+      "call_name": "Dragon",
+      "registered_name": "DC Kaije's Abundance SC",
+      "registered_raw": "DC Kaije's Abundance SC, HP70282802, B, May 12 2024",
+      "date": "2026-09-12",
+      "owners_raw": "Kaije Knls",
+      "program": "breed",
+      "dog_id": "kaije-s-abundance--pharaoh-hound"
+    },
+    {
+      "section": "Rhodesian Ridgeback",
+      "title": "Lure Courser Of Merit",
+      "title_abbr": "LCM",
+      "call_name": "Daytona",
+      "registered_name": "FC Chiastolite On TheRoad Again By Venus SC",
+      "registered_raw": "FC Chiastolite On TheRoad Again By Venus SC, HP64405910, B, Jn 25 2022",
+      "date": "2026-09-12",
+      "owners_raw": "Kay Straky & Rosemary Marnoch",
+      "program": "breed",
+      "dog_id": "chiastolite-on-the-road-again-by-venus--rhodesian-ridgeback"
+    },
+    {
+      "section": "Scottish Deerhound",
+      "title": "Field Champion",
+      "title_abbr": "FCh",
+      "call_name": "Vela",
+      "registered_name": "Kyleakin Vela",
+      "registered_raw": "Kyleakin Vela, HP64465701, B, Jan 08 2022",
+      "date": "2026-09-12",
+      "owners_raw": "Betty Stephenson",
+      "program": "breed",
+      "dog_id": "kyleakin-vela--scottish-deerhound"
+    },
+    {
+      "section": "Singles",
+      "title": "Title of Coursing Proficiency (TCP)",
+      "title_abbr": "TCP",
+      "call_name": "WH Stripe",
+      "registered_name": "Labyrinth Red Stripe",
+      "registered_raw": "Labyrinth Red Stripe, HP72661402, D, Apr 08 2025",
+      "date": "2026-09-12",
+      "owners_raw": "Lynette Pirrung",
+      "program": "singles",
+      "dog_id": "labyrinth-red-stripe--singles"
+    },
+    {
+      "section": "Whippet",
+      "title": "Field Champion",
+      "title_abbr": "FCh",
+      "call_name": "Conway",
+      "registered_name": "Krisdan's My One And Only SC",
+      "registered_raw": "Krisdan's My One And Only SC, HP70110506, D, Jan 31 2024",
+      "date": "2026-09-12",
+      "owners_raw": "Rebecca & Michael Spurbeck",
+      "program": "breed",
+      "dog_id": "krisdan-s-my-one-and-only--whippet"
+    },
+    {
+      "section": "LCI Large",
+      "title": "Lure Chasing Advanced",
+      "title_abbr": "LCA",
+      "call_name": "Ellie",
+      "registered_name": "Laurelhills Pure Elegance CGC TKN LCI LCC",
+      "registered_raw": "Laurelhills Pure Elegance CGC TKN LCI LCC, DN78677402, B, Mar 29 2024",
+      "date": "2026-09-13",
+      "owners_raw": "Kay Straky",
+      "program": "lci",
+      "dog_id": null
+    },
+    {
+      "section": "Saluki",
+      "title": "Field Champion",
+      "title_abbr": "FCh",
+      "call_name": "Raven",
+      "registered_name": "El Riyah Ravani Tal Al Arz",
+      "registered_raw": "El Riyah Ravani Tal Al Arz, HP67649502, B, Apr 01 2023",
+      "date": "2026-09-13",
+      "owners_raw": "Stephanie Annee",
+      "program": "breed",
+      "dog_id": "el-riyah-ravani-tal-al-arz--saluki"
+    },
+    {
+      "section": "Silken Windhound",
+      "title": "Field Champion",
+      "title_abbr": "FCh",
+      "call_name": "Monarch",
+      "registered_name": "Avalon Jungle Book 2024-1222/01",
+      "registered_raw": "Avalon Jungle Book 2024-1222/01, B, Mar 10 2024",
+      "date": "2026-09-13",
+      "owners_raw": "Kirsten Upton",
+      "program": "breed",
+      "dog_id": null
+    },
+    {
+      "section": "Silken Windhound",
+      "title": "Field Champion",
+      "title_abbr": "FCh",
+      "call_name": "Swoop",
+      "registered_name": "Wildmeadow Last Seond Curves",
+      "registered_raw": "Wildmeadow Last Seond Curves, B537520, B, Jul 22 2023",
+      "date": "2026-09-13",
+      "owners_raw": "Kirsten Upton",
+      "program": "breed",
+      "dog_id": null
+    },
+    {
+      "section": "Whippet",
+      "title": "Field Champion",
+      "title_abbr": "FCh",
+      "call_name": "Allison",
+      "registered_name": "UKC Ch HnrCh Nota Bene Audrey BCAT",
+      "registered_raw": "UKC Ch HnrCh Nota Bene Audrey BCAT, HP62432408, B, May 10 2021",
+      "date": "2026-09-13",
+      "owners_raw": "Julie Black & Sonja Sams",
+      "program": "breed",
+      "dog_id": null
+    },
+    {
+      "section": "Whippet",
+      "title": "Lure Courser Of Merit",
+      "title_abbr": "LCM",
+      "call_name": "Hugo",
+      "registered_name": "Hyflyte OhhThe Places Hugo TCP FCh",
+      "registered_raw": "Hyflyte OhhThe Places Hugo TCP FCh, KL4203197, D, Jun 16 2022",
+      "date": "2026-09-13",
+      "owners_raw": "Sue & Rich Lang",
+      "program": "breed",
+      "dog_id": "hyflyte-ohh-the-places-hugo--whippet"
     }
   ]
 }

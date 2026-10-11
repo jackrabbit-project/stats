@@ -1,7 +1,7 @@
 {
-  "source_url": "https://www.asfa.org/docs/2026.08.23 Club updates.pdf",
-  "source_file": "2026.08.23-Club-updates.pdf",
-  "generated": "2026-10-05",
+  "source_url": "https://www.asfa.org/clubs/2026.10-08 Club updates.pdf",
+  "source_file": "2026.10-08-Club-updates.pdf",
+  "generated": "2026-10-11",
   "note": "Club name, region, initials and affiliation only. The source PDF also lists liaison names, addresses, phone numbers and email addresses; those are deliberately not extracted or stored.",
   "clubs": [
     {
@@ -91,7 +91,7 @@
       "initials": "CCASH",
       "affiliation": "M",
       "affiliation_label": "Member",
-      "region": 2,
+      "region": 10,
       "match_key": "central coast"
     },
     {
@@ -260,8 +260,8 @@
       "name": "Lure Enthusiasts of Georgia Sighthounds",
       "slug": "lure-enthusiasts-of-georgia-sighthounds",
       "initials": "LEGS",
-      "affiliation": "FTA",
-      "affiliation_label": "Fast Track Affiliate",
+      "affiliation": "M",
+      "affiliation_label": "Member",
       "region": 7,
       "match_key": "enthusiasts georgia"
     },

@@ -10,9 +10,10 @@ but unused.
 
 Entries are credited to the club's home region, taken from data/clubs.json,
 not to the region the venue sits in. Clubs travel: Borzoi Club of America is a
-Region 4 club that held its 2026 trial in Nebraska, and Central Coast
-Association of Sighthounds is a Region 2 club that ran in Arroyo Grande, which
-is geographically Region 10.
+Region 4 club that held its 2026 trial in Nebraska. A club's region is
+whatever ASFA's current club listing says, for every month at once: the
+October 2026 listing moved Central Coast Association of Sighthounds from
+Region 2 to Region 10, and its earlier trials moved with it.
 
 Usage:
     python tools/trials.py                # current season
@@ -119,7 +120,10 @@ def parse_summary_rows(html: str, month: int, season: int) -> list[dict]:
     rows: list[dict] = []
     for tr in re.findall(r"<tr\b[^>]*>(.*?)</tr>", html, re.S | re.I):
         # Summary rows are the ones whose first cell jumps to a detail anchor.
-        anchor = re.search(r'href="#R(\d+)"', tr)
+        # The link is taken as written, typos included ("#R1-" for "#R10" on
+        # September 2026); main() pairs a link that names no detail block
+        # with its block by club, date and entry instead.
+        anchor = re.search(r'href="#R(\d[^"]*)"', tr)
         if not anchor:
             continue
         cells = re.findall(r"<td\b[^>]*>(.*?)</td>", tr, re.S | re.I)
@@ -162,16 +166,13 @@ def parse_summary_rows(html: str, month: int, season: int) -> list[dict]:
     return rows
 
 
-def parse_program_entries(html: str) -> dict[str, dict]:
-    """Sum each trial's flight sizes by program, keyed by its detail anchor.
+def detail_blocks(html: str) -> list[tuple[str, str]]:
+    """Each trial's detail block as (anchor number, flattened text).
 
-    The summary's Entry figure includes every program run at the trial —
-    regular breed stakes, Singles and LCI together — which is why the split
-    has to be re-derived from the flights rather than read off the page.
+    Anchor names repeat: a stray duplicate "R1" often sits a few characters
+    after a real anchor. The genuine block starts are strictly increasing
+    (R1, R2, R3, ...), so anything out of sequence is markup debris.
     """
-    # Anchor names repeat: a stray duplicate "R1" often sits a few characters
-    # after a real anchor. The genuine block starts are strictly increasing
-    # (R1, R2, R3, ...), so anything out of sequence is markup debris.
     anchors: list[tuple[int, str]] = []
     highest = 0
     for match in re.finditer(r'<a\s+name="R(\d+)"', html):
@@ -179,13 +180,44 @@ def parse_program_entries(html: str) -> dict[str, dict]:
         if number > highest:
             anchors.append((match.start(), match.group(1)))
             highest = number
-
-    tallies: dict[str, dict] = {}
+    blocks = []
     for i, (start, ref) in enumerate(anchors):
         end = anchors[i + 1][0] if i + 1 < len(anchors) else len(html)
-        segment = html[start:end]
         flat = collapse(
-            re.sub(r"<[^>]+>", " ", segment).replace("&nbsp;", " "))
+            re.sub(r"<[^>]+>", " ", html[start:end]).replace("&nbsp;", " "))
+        blocks.append((ref, flat))
+    return blocks
+
+
+def _club_words(name: str) -> str:
+    return " ".join(re.sub(r"[^A-Z0-9]+", " ", name.upper().replace("&AMP;", "&")).split())
+
+
+def parse_detail_headers(html: str) -> dict[str, tuple[str, int, str]]:
+    """Each detail block's own heading: (date, Entry figure, club words),
+    keyed by its anchor. The heading repeats the summary row's club, date
+    and Entry, which is what lets a mislinked summary row find its block."""
+    headers: dict[str, tuple[str, int, str]] = {}
+    for ref, flat in detail_blocks(html):
+        date_match = DATE_RE.search(flat)
+        entry_match = ENTRY_RE.search(flat)
+        if not date_match or not entry_match or entry_match.start() < date_match.start():
+            continue
+        month_name, day, year = date_match.groups()
+        held = date(int(year), MONTHS[month_name[:3].lower()], int(day)).isoformat()
+        headers[ref] = (held, int(entry_match.group(1)), _club_words(flat[: date_match.start()]))
+    return headers
+
+
+def parse_program_entries(html: str) -> dict[str, dict]:
+    """Sum each trial's flight sizes by program, keyed by its detail anchor.
+
+    The summary's Entry figure includes every program run at the trial —
+    regular breed stakes, Singles and LCI together — which is why the split
+    has to be re-derived from the flights rather than read off the page.
+    """
+    tallies: dict[str, dict] = {}
+    for ref, flat in detail_blocks(html):
         tally = {"breed": 0, "singles": 0, "lci": 0}
         program = "breed"
         tokens = list(PROGRAM_TOKEN_RE.finditer(flat))
@@ -317,8 +349,25 @@ def main() -> int:
 
         month_rows = parse_summary_rows(html, month, season)
         programs = parse_program_entries(html)
+        headers = parse_detail_headers(html)
+        claimed = {row["detail_ref"] for row in month_rows if row["detail_ref"] in programs}
         for row in month_rows:
-            tally = programs.get(row.pop("detail_ref"))
+            ref = row.pop("detail_ref")
+            if ref not in programs:
+                # A summary link that names no detail block (ASFA's typo):
+                # the one unclaimed block whose heading has the same club,
+                # date and Entry figure is this trial's.
+                want = (row["date"], row["entries"], _club_words(row["club_raw"]))
+                matches = [r for r, head in headers.items() if head == want and r not in claimed]
+                if len(matches) != 1:
+                    raise TrialParseError(
+                        f"{season}-{month:02d}: {row['club_raw']} links to '#R{ref}', which is "
+                        f"not a detail block, and {len(matches)} unclaimed blocks match it")
+                print(f"  {season}-{month:02d}: {row['club_raw']} {row['date']} links to "
+                      f"'#R{ref}' on ASFA's page; paired with block R{matches[0]} by club, date and entry")
+                ref = matches[0]
+                claimed.add(ref)
+            tally = programs.get(ref)
             if tally is None:
                 raise TrialParseError(
                     f"{season}-{month:02d}: {row['club_raw']} has no detail block")

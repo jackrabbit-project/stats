@@ -2,9 +2,9 @@
   "seasons": [
     2026
   ],
-  "fetched": "2026-09-28",
+  "fetched": "2026-10-11",
   "source_url": "https://www.asfa.org/event/index.htm",
-  "calendar_pdf_url": "https://www.asfa.org/event/ASFA%20Calendar%2008-21-2026%20Updates.pdf",
+  "calendar_pdf_url": "https://www.asfa.org/event/ASFA%20Calendar%2010-01-2026%20Updates.pdf",
   "region_source": "ASFA Constitution & By-Laws, rev. 08/01/2026, Article V, Section 3",
   "regions": [
     {
@@ -123,9 +123,9 @@
     }
   ],
   "stats": {
-    "events": 119,
-    "cancelled": 6,
-    "with_premium": 98
+    "events": 124,
+    "cancelled": 7,
+    "with_premium": 103
   },
   "unmatched_initials": [
     "IWALE"
@@ -1308,7 +1308,7 @@
       "initials": "SANE",
       "specialty": true,
       "national": false,
-      "cancelled": false,
+      "cancelled": true,
       "venue": "Bolduc Farm, Blandford",
       "state": "MA",
       "region": 9,
@@ -1334,7 +1334,7 @@
     {
       "start": "2026-09-26",
       "end": "2026-09-27",
-      "type": "AB",
+      "type": "AB/LCI",
       "initials": "USRCC",
       "specialty": false,
       "national": false,
@@ -1567,7 +1567,7 @@
       "venue": "Goshen",
       "state": "UT",
       "region": 3,
-      "premium_url": null,
+      "premium_url": "https://www.asfa.org/event/premiums/USRCC%20ASFA%20SW%20October%2017-18,%202026%20(1).pdf",
       "premium_inferred": false,
       "club": "Utah Sighthounds Racing and Coursing Club"
     },
@@ -1635,6 +1635,21 @@
       "start": "2026-10-24",
       "end": "2026-10-25",
       "type": "AB/LCI",
+      "initials": "LVCC",
+      "specialty": false,
+      "national": false,
+      "cancelled": false,
+      "venue": "Lambertville",
+      "state": "NJ",
+      "region": 8,
+      "premium_url": null,
+      "premium_inferred": false,
+      "club": "Lehigh Valley Coursing Club"
+    },
+    {
+      "start": "2026-10-24",
+      "end": "2026-10-25",
+      "type": "AB/LCI",
       "initials": "SHOT",
       "specialty": false,
       "national": false,
@@ -1645,6 +1660,21 @@
       "premium_url": "https://www.asfa.org/event/premiums/SHOT%20October%202026.pdf",
       "premium_inferred": false,
       "club": "Sight Hound Organization of Tidewater"
+    },
+    {
+      "start": "2026-10-31",
+      "end": "2026-10-31",
+      "type": "SW",
+      "initials": "DFB",
+      "specialty": true,
+      "national": false,
+      "cancelled": false,
+      "venue": "Tonopah",
+      "state": "AZ",
+      "region": 10,
+      "premium_url": null,
+      "premium_inferred": false,
+      "club": "Desert Fun Bunch"
     },
     {
       "start": "2026-10-31",
@@ -1679,6 +1709,21 @@
     {
       "start": "2026-11-01",
       "end": "2026-11-01",
+      "type": "SW",
+      "initials": "DFB",
+      "specialty": true,
+      "national": false,
+      "cancelled": false,
+      "venue": "Tonopah",
+      "state": "AZ",
+      "region": 10,
+      "premium_url": null,
+      "premium_inferred": false,
+      "club": "Desert Fun Bunch"
+    },
+    {
+      "start": "2026-11-01",
+      "end": "2026-11-01",
       "type": "AB",
       "initials": "IGCA",
       "specialty": false,
@@ -1687,7 +1732,7 @@
       "venue": "Elverta",
       "state": "CA",
       "region": 2,
-      "premium_url": null,
+      "premium_url": "https://www.asfa.org/event/premiums/ASFA%20Premium%20IGCA%20specialty%202026%20v2.pdf",
       "premium_inferred": false,
       "club": "Italian Greyhound Club of America"
     },
@@ -1732,7 +1777,7 @@
       "venue": "Santa Fe",
       "state": "NM",
       "region": 3,
-      "premium_url": null,
+      "premium_url": "https://www.asfa.org/event/premiums/LLCC%20Region%203%20Invitational%20(1).pdf",
       "premium_inferred": false,
       "club": "Lobo Lure Coursing Club"
     },
@@ -1747,7 +1792,7 @@
       "venue": "Hanover Lure Coursing Complex, Littlestown",
       "state": "PA",
       "region": 8,
-      "premium_url": null,
+      "premium_url": "https://www.asfa.org/event/premiums/MDIHC%20ASFA%20Regional%20Trial%20Premium%20--2026%20Final-.pdf",
       "premium_inferred": false,
       "club": "Mason Dixon Ibizan Hound Club"
     },
@@ -1762,8 +1807,8 @@
       "venue": "Santa Fe",
       "state": "NM",
       "region": 3,
-      "premium_url": null,
-      "premium_inferred": false,
+      "premium_url": "https://www.asfa.org/event/premiums/LLCC%20Region%203%20Invitational%20(1).pdf",
+      "premium_inferred": true,
       "club": "Lobo Lure Coursing Club"
     },
     {
@@ -1780,6 +1825,21 @@
       "premium_url": null,
       "premium_inferred": false,
       "club": "Lure Enthusiasts of Georgia Sighthounds"
+    },
+    {
+      "start": "2026-11-21",
+      "end": "2026-11-22",
+      "type": "REGIV/LCI",
+      "initials": "ORCA",
+      "specialty": false,
+      "national": false,
+      "cancelled": false,
+      "venue": "Couch Ranch, Vinita",
+      "state": "OK",
+      "region": 4,
+      "premium_url": null,
+      "premium_inferred": false,
+      "club": "Oklahoma Racing and Coursing Association"
     },
     {
       "start": "2026-11-21",
@@ -1855,6 +1915,21 @@
       "premium_url": null,
       "premium_inferred": false,
       "club": "Tri-State Sighthound Club"
+    },
+    {
+      "start": "2026-12-19",
+      "end": "2026-12-20",
+      "type": "AB/LCI",
+      "initials": "CLCA",
+      "specialty": false,
+      "national": false,
+      "cancelled": false,
+      "venue": "Peyton",
+      "state": "CO",
+      "region": 3,
+      "premium_url": null,
+      "premium_inferred": false,
+      "club": "Colorado Lure Coursing Association"
     },
     {
       "start": "2026-12-19",
