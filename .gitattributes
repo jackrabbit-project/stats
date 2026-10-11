@@ -15,6 +15,8 @@ data/lgra.json -diff
 data/aok9.json -diff
 data/aok9-singles.json -diff
 data/notra.json -diff
+data/wra.json -diff
+data/notra-whippets.json -diff
 data/akc.json -diff
 data/akc/raw/*.xlsx binary
 data/akc/raw/*.json -diff eol=lf
@@ -23,5 +25,7 @@ data/lgra/snapshots/*.json -diff
 data/aok9/snapshots/*.json -diff
 data/aok9-singles/snapshots/*.json -diff
 data/notra/snapshots/*.json -diff
+data/wra/snapshots/*.json -diff
+data/notra-whippets/snapshots/*.json -diff
 
 * text=auto

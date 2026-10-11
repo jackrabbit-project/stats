@@ -26,6 +26,12 @@ data/aok9-singles/raw/
 # NOTRA's Other-Breed grading guide, archived by tools/notra.py, is kept out
 # for the same reasons; data/notra/snapshots is its archive.
 data/notra/raw/
+# NOTRA's Whippet guide and WRA's reports and Point Records stay out too:
+# they are the bodies' own files, WRA's two reports come to nearly 4 MB a
+# week, and the Point Records PDF carries email addresses. Their snapshots
+# under data/notra-whippets/snapshots and data/wra/snapshots are the archive.
+data/notra-whippets/raw/
+data/wra/raw/
 # The AKC collections under data/akc/raw/ ARE committed: they hold club
 # names, cities and entry counts only, and check.py greps them for anything
 # else.

@@ -1,6 +1,6 @@
-# Gazehound Stats — ASFA lure coursing, LGRA, AOK9 and NOTRA racing
+# Gazehound Stats — ASFA lure coursing, LGRA, AOK9 and NOTRA racing, and whippet racing
 
-A searchable, browsable view of **American Sighthound Field Association lure coursing data** (the Top 20 standings and the trial results behind them), and of the **LGRA**, **AOK9** and **NOTRA** racing grading guides.
+A searchable, browsable view of **American Sighthound Field Association lure coursing data** (the Top 20 standings and the trial results behind them), and of the **LGRA**, **AOK9** and **NOTRA** racing grading guides, with whippet racing from the **WRA** and **NOTRA** in beta.
 
 ASFA publishes the standings as one long page of stacked breed tables, and trial results as a page per month. You cannot search either, look up a single hound, or see where a hound sits against the rest of its breed without counting by hand. This site reads those pages and rearranges them.
 
@@ -19,20 +19,22 @@ ASFA publishes the standings as one long page of stacked breed tables, and trial
 - **LGRA racing** — standings by breed and all-breed on this season's National points, career points, WAVE and grade, per-hound pages with the last three meets and progress toward GRC and SGRC, from LGRA's grading guide
 - **AOK9 racing** — the same for R.A.C.E.'s all-breed sprint program: breed and mixed divisions, BRC, MRC and TRC and the Supreme titles, Turtle points, from the AOK9 sprint grading guide
 - **AOK9 Singles** — a tab of its own for the stake where dogs that can't run in company race alone, timed: Singles titles and progress toward them, each breed's Singles dogs with their average and personal best, and a Singles record on every hound page, from the AOK9 Singles sprint records
-- **NOTRA racing** — oval racing for every sighthound breed but the Whippet: standings by breed and all-breed on this season's National points, career points, WAVE and grade, per-hound pages with the last three meets, DQ/OC/DNF counts and progress toward ORC, SORC and the Junior and Senior Oval Racer titles, from NOTRA's Other-Breed grading guide
+- **NOTRA racing** — oval racing for every sighthound breed but the Whippet (whippets have their own pages, below): standings by breed and all-breed on this season's National points, career points, WAVE and grade, per-hound pages with the last three meets, DQ/OC/DNF counts and progress toward ORC, SORC and the Junior and Senior Oval Racer titles, from NOTRA's Other-Breed grading guide
+- **Whippet racing (beta)** — one section for the whippet racing bodies, each with its own page and tabs. **WRA** straight racing, added at the WRA's request: standings on this season's National points, career points, the rule 5.2 average and grade, each whippet's last three adult meets, and its CR, CRX, WRCh and WRChX titles with their dates, from WRA's grading guide reports and the Registrar's Whippet Point Records. **NOTRA Whippets** oval racing: standings, rating, WAVE and grade on the four-program scale, ORC and SORC, OTR-only meets and faults as the recorder writes them, from NOTRA's Whippet grading guide
 - **AKC entries** — a quiet page apart from the programs: every AKC lure coursing event this year with its LC trial and JC/QC test entries, by month and ranked by trial, club and state, collected from AKC's Event Search (an AKC stats tab on the hub and a link on the Regions page)
-- **One search** across all four programs, in the header of every page (press `/` or Ctrl+K) and on the hub at `/`: a floating panel with ASFA, LGRA, AOK9 and NOTRA filters and the season's leaders before you type
+- **One search** across every program, in the header of every page (press `/` or Ctrl+K) and on the hub at `/`: a floating panel with a filter per program and the season's leaders before you type
 
-**This is an independent, unofficial project. It is not authorized, approved, or endorsed by ASFA, LGRA, R.A.C.E., NOTRA or the AKC, and it is not a publication of any of them.** Wherever this site and [ASFA's published standings](https://www.asfa.org/20/index.htm), the [LGRA grading guide](https://lgra.club/grading-guide), the [AOK9 sprint grading guide](https://aok9racing.com/documents--forms.html) or the [NOTRA Other-Breed grading guide](https://www.notra.org/index.html) disagree, the body's own publication governs.
+**This is an independent, unofficial project. It is not authorized, approved, or endorsed by ASFA, LGRA, R.A.C.E., NOTRA, the WRA or the AKC, and it is not a publication of any of them; the WRA pages were added at the WRA's request.** Wherever this site and [ASFA's published standings](https://www.asfa.org/20/index.htm), the [LGRA grading guide](https://lgra.club/grading-guide), the [AOK9 sprint grading guide](https://aok9racing.com/documents--forms.html), the [NOTRA grading guides](https://www.notra.org/index.html) or [WRA's grading guide and Point Records](https://www.whippetracing.org/ReportList.cfm) disagree, the body's own publication governs.
 
 ## Layout
 
 ```
-index.html            The hub: one search across every program, three program cards (LGRA and NOTRA share one)
+index.html            The hub: one search across every program, the program cards (LGRA and NOTRA share one; WRA and NOTRA Whippets share the Whippet racing card)
 asfa.html  events.html  browse.html  dog.html  leaders.html  kennels.html  titles.html
 regions.html  trials.html  lci.html  bowen.html  rulebooks.html  rulebook.html  about.html  404.html
 akc.html              AKC lure coursing by the numbers: the year's events and entries
 lgra.html  aok9.html  notra.html  racing-dog.html   The racing sections (tabbed pages, one hound page)
+wra.html  notra-whippets.html   Whippet racing (beta): one section, each body's page with its own tabs
 software-list.html    A standalone survey of dog-sport software, deliberately unlinked
 css/input.css         Design tokens (light + dark), fonts, components — the source
 css/app.css           Compiled stylesheet, checked in — what pages load
@@ -41,7 +43,7 @@ assets/fonts/         Fraunces + IBM Plex Mono, self-hosted woff2
 js/app.js             Data loading, chrome, icons, search, formatting
 js/card.js            Canvas stat-card renderer
 js/racing.js          The racing pages: program table, WAVE helpers, overview and hound renderers, Singles
-tools/                Python ETL — fetch, parse, clubs, trials, events, build, titles, lgra, aok9, aok9_singles, notra, akc_collect, akc, check
+tools/                Python ETL — fetch, parse, clubs, trials, events, build, titles, lgra, aok9, aok9_singles, notra, wra, notra_whippets, akc_collect, akc, check
 tools/build_css.ps1   Rebuilds css/app.css (see tools/build_css.md)
 data/snapshots/       Every published standings page, archived verbatim
 data/trials/raw/      Every monthly trial results page, archived verbatim
@@ -55,12 +57,16 @@ data/lgra/snapshots/  Each LGRA grading guide, parsed, one file per guide date
 data/aok9/snapshots/  Each AOK9 sprint grading guide, parsed, one file per guide date
 data/aok9-singles/snapshots/  Each AOK9 Singles sprint records sheet, parsed, one file per date
 data/notra/snapshots/ Each NOTRA Other-Breed grading guide, parsed, one file per guide date
+data/wra/snapshots/   Each WRA grading guide with the Point Records joined, parsed, one file per report date
+data/notra-whippets/snapshots/  Each NOTRA Whippet grading guide, parsed, one file per guide date
 data/lgra/raw/        The workbooks as downloaded — fetched locally, never committed
-data/aok9/raw/  data/aok9-singles/raw/  data/notra/raw/
+data/aok9/raw/  data/aok9-singles/raw/  data/notra/raw/  data/wra/raw/  data/notra-whippets/raw/
 data/lgra.json        Active LGRA hounds with standings, owners, movement — loaded by lgra.html
 data/aok9.json        The same for AOK9 — loaded by aok9.html
 data/aok9-singles.json  Every AOK9 Singles dog, joined to its sprint page — loaded by aok9.html and the hub
 data/notra.json       The same for NOTRA's Other Breeds — loaded by notra.html
+data/wra.json         WRA's active list with standings, averages and the Registrar's titles — loaded by wra.html
+data/notra-whippets.json  Active NOTRA whippets — loaded by notra-whippets.html
 data/akc/raw/         The AKC entries as collected, one file per collection date (committed: counts only)
 data/akc.json         Every AKC lure coursing event this year with its entries, totals and rankings — loaded by akc.html
 data/*-registry.json  Every hound ever registered, compact — loaded on demand
@@ -72,12 +78,12 @@ The site is static files with no framework and no runtime dependencies — no CD
 
 ```bash
 pip install -r requirements.txt
-python tools/fetch.py && python tools/clubs.py && python tools/parse.py && python tools/trials.py && python tools/events.py && python tools/build.py && python tools/titles.py && python tools/lgra.py && python tools/aok9.py && python tools/aok9_singles.py && python tools/notra.py && python tools/akc.py && python tools/check.py
+python tools/fetch.py && python tools/clubs.py && python tools/parse.py && python tools/trials.py && python tools/events.py && python tools/build.py && python tools/titles.py && python tools/lgra.py && python tools/aok9.py && python tools/aok9_singles.py && python tools/notra.py && python tools/wra.py && python tools/notra_whippets.py && python tools/akc.py && python tools/check.py
 ```
 
 `fetch.py` archives the live page under `data/snapshots/{date}.html`, named for the coverage date the page states about itself rather than the wall clock. It skips the write when the page is unchanged. Raw snapshots are committed so every figure on the site traces back to the bytes ASFA served on a given date — and so movement between publications can be computed.
 
-`trials.py` does the same for each monthly trial results page, splitting each trial's entries by program and by breed from the flight sizes in its results, and `clubs.py` for the club listing PDF that supplies club regions. `lgra.py` scrapes lgra.club for the current grading-guide workbook and `aok9.py` exports the AOK9 sprint guide sheet; each archives a parsed snapshot per guide date (the raw workbooks stay out of git: they are large, and their header rows carry the registrars' mailing details) and rebuilds its feed and registry from every snapshot. `aok9_singles.py` does the same for the AOK9 Singles sprint records, after `aok9.py`, because it joins each Singles dog to its sprint page. `notra.py` scrapes notra.org for the Other-Breed grading guide and treats it the same way. `akc.py` collects the year's AKC lure coursing events from AKC's Event Search and the entry counts from each event's results page (`akc_collect.py`), files each collection under its date (committed, since it holds nothing but club names, cities and counts) and recomputes every total and ranking from the event rows. A [weekly workflow](.github/workflows/refresh.yml) runs the whole chain and commits when anything changes.
+`trials.py` does the same for each monthly trial results page, splitting each trial's entries by program and by breed from the flight sizes in its results, and `clubs.py` for the club listing PDF that supplies club regions. `lgra.py` scrapes lgra.club for the current grading-guide workbook and `aok9.py` exports the AOK9 sprint guide sheet; each archives a parsed snapshot per guide date (the raw workbooks stay out of git: they are large, and their header rows carry the registrars' mailing details) and rebuilds its feed and registry from every snapshot. `aok9_singles.py` does the same for the AOK9 Singles sprint records, after `aok9.py`, because it joins each Singles dog to its sprint page. `notra.py` scrapes notra.org for the Other-Breed grading guide and treats it the same way, and `notra_whippets.py` NOTRA's Whippet guide, dating each meet code from the key below its whippets. `wra.py` reads WRA's two grading-guide reports (the active and the inactive list) and the Registrar's Whippet Point Records PDF, joins them by call name, with the registered name and owner to confirm, and takes titles from the Point Records, which WRA names as the record; it makes four requests a week and keeps a parsed snapshot per report date. `akc.py` collects the year's AKC lure coursing events from AKC's Event Search and the entry counts from each event's results page (`akc_collect.py`), files each collection under its date (committed, since it holds nothing but club names, cities and counts) and recomputes every total and ranking from the event rows. A [weekly workflow](.github/workflows/refresh.yml) runs the whole chain and commits when anything changes.
 
 ## Serving locally
 
@@ -119,7 +125,7 @@ Then open <http://localhost:8765>. The pages fetch `data/season.json`, so openin
 
 ## Reporting an error
 
-Please check against the source first: [ASFA's published standings](https://www.asfa.org/20/index.htm), the [LGRA grading guide](https://lgra.club/grading-guide), the [AOK9 sprint grading guide](https://aok9racing.com/documents--forms.html) or the [NOTRA Other-Breed grading guide](https://www.notra.org/index.html). If the two disagree, the published page is right and this site has a bug — please [open an issue](https://github.com/jackrabbit-project/stats/issues/new) or email **info@gazehound.io**. If the body's own listing looks wrong, that goes to the ASFA Records Secretary, the LGRA Registrar/Recorder, the AOK9 National Racing Director or the NOTRA Other-Breed Recorder, not here.
+Please check against the source first: [ASFA's published standings](https://www.asfa.org/20/index.htm), the [LGRA grading guide](https://lgra.club/grading-guide), the [AOK9 sprint grading guide](https://aok9racing.com/documents--forms.html), the [NOTRA grading guides](https://www.notra.org/index.html) or [WRA's grading guide and Point Records](https://www.whippetracing.org/ReportList.cfm). If the two disagree, the published page is right and this site has a bug — please [open an issue](https://github.com/jackrabbit-project/stats/issues/new) or email **info@gazehound.io**. If the body's own listing looks wrong, that goes to the ASFA Records Secretary, the LGRA Registrar/Recorder, the AOK9 National Racing Director, the NOTRA Other-Breed or Whippet Recorder, or the WRA Registrar, not here.
 
 ## License
 

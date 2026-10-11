@@ -361,6 +361,8 @@ def main() -> int:
     check_racing(check, "lgra")
     check_racing(check, "aok9")
     check_racing(check, "notra")
+    check_racing(check, "wra")
+    check_racing(check, "notra-whippets")
     check_singles(check)
     return check.report()
 
@@ -1133,6 +1135,53 @@ RACING = {
         "undecoded_share": 0.02,
         "earliest_year": 1992,
     },
+    "wra": {
+        # 2026 WRA Rule Book. The report dates no meet and prints no number:
+        # ids are the call name, slugged; the average is rule 5.2's plain
+        # mean, on the active list only (the inactive list keeps averages
+        # with no meets behind them); grades on the active list follow the
+        # 5.2 bands but for whippets reduced for a year without a completed
+        # meet; titles are the Registrar's Point Records, checked apart.
+        "waves": ["avg"],
+        "meet_streams": ["meets"],
+        "champion": [],
+        "supreme": [],
+        "career_ranks": [("lftm", "rank_career")],
+        "owner_sums": ["ytd", "lftm"],
+        "owner_best": "avg",
+        "wave_rule": "mean",
+        "wave_scope": "active",
+        "wave_agreement": 0.99,
+        "grades": {"field": "grade", "bands": [(15, "A"), (10, "B"), (4, "C")], "floor": "D",
+                   "min_share": 0.99, "active_only": True, "extra": ("F",)},
+        "expected_sections": None,
+        "id_pattern": r"^[a-z0-9]+(?:-[a-z0-9]+)*$",
+        "undated_meets": True,
+        "undecoded_share": 1.0,
+    },
+    "notra-whippets": {
+        # NOTRA Rules (Feb 2025) for whippets: scores out of 29, grades on the
+        # four-program bands of 4.2.2 (15.2 / 11 / 7.6, read at two places),
+        # ORC at 15 ORC points (5.3), the SORC from the recorder's title
+        # record (5.4 turns on sex, which the guide omits), OTR-only #n meets
+        # listed but never graded (2.2.3). Pre-2022 codes the key no longer
+        # lists stay undated.
+        "waves": ["wave"],
+        "meet_streams": ["meets"],
+        "champion": [("titled_orc", "orc", lambda row: (row["orc"] or 0) >= 15)],
+        "supreme": [],
+        "career_ranks": [("lftm", "rank_career")],
+        "owner_sums": ["ytd", "lftm"],
+        "owner_best": "wave",
+        "wave_rule": "recorder",
+        "wave_agreement": 0.95,
+        "grades": {"field": "grade", "bands": [(15.2, "A"), (11, "B"), (7.6, "C")], "floor": "D",
+                   "min_share": 0.99, "round": 2},
+        "expected_sections": None,
+        "id_pattern": r"^\d+$",
+        "undecoded_share": 0.03,
+        "earliest_year": 2010,
+    },
 }
 
 # LGRA year letters, enumerated rather than computed: A..Z then AA..AZ.
@@ -1154,6 +1203,95 @@ def _racing_wave(meets: list[list]) -> float | None:
         total += score * weight
         weight_sum += weight
     return total / weight_sum
+
+
+def _wra_average(meets: list[list]) -> float:
+    """WRA rule 5.2: the mean of the completed meets among the last three;
+    with none completed, of the incomplete ones; with no meet at all, 0."""
+    completed = [meet[3] for meet in meets if meet[4] and meet[3] is not None]
+    pool = completed or [meet[3] for meet in meets if meet[3] is not None]
+    return sum(pool) / len(pool) if pool else 0.0
+
+
+def _whippet_wave(meets: list[list]) -> float:
+    """NOTRA's whippet WAVE as the recorder keeps it: OTR-only meets (column
+    8 false) never count; N and F are completed (column 4); with nothing
+    completed, the plain mean of the scratches only when all three slots are
+    graded meets, else 0."""
+    graded = [meet for meet in meets if meet[8]]
+    completed = [meet[3] for meet in graded if meet[4] and meet[3] is not None]
+    if completed:
+        total = weight_sum = 0.0
+        for score, weight in zip(completed[:3], (1.0, 0.7, 0.5)):
+            total += score * weight
+            weight_sum += weight
+        return total / weight_sum
+    if len(graded) == 3 and all(meet[3] is not None for meet in graded):
+        return sum(meet[3] for meet in graded) / 3
+    return 0.0
+
+
+_WAVE_RULES = {"weighted": _racing_wave, "mean": _wra_average, "recorder": _whippet_wave}
+
+_ROMAN = ["", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII", "XIII",
+          "XIV", "XV", "XVI", "XVII", "XVIII", "XIX", "XX"]
+
+
+def _check_wra_titles(check: Checker, label: str, rows: list[dict], feed: dict) -> None:
+    """WRA's titles are the Registrar's Point Records, not the report's points
+    columns: each CR ladder runs CR, CRX, CRX-II without a gap; WRChX levels
+    likewise; no title is dated after the records themselves; titled{} and
+    the stats count exactly what is listed; and only matched whippets carry
+    the records' figures."""
+    stats = feed["stats"]
+    records_date = feed["records_date"]
+    season = str(feed["season"])
+    for row in rows:
+        listed = row["titles_record"] or []
+        titles = [title for title, _ in listed]
+        ladder = [title for title in titles if title.startswith("CR")]
+        expected = (["CR", "CRX"] + [f"CRX-{_ROMAN[n]}" for n in range(2, len(ladder))])[:len(ladder)]
+        check.expect(ladder == expected, f"{label}: {row['id']} CR titles {ladder} skip a level")
+        excellent = [title for title in titles if title.startswith("WRChX")]
+        expected_x = (["WRChX"] + [f"WRChX-{_ROMAN[n]}" for n in range(2, len(excellent) + 1)])
+        check.expect(excellent == expected_x[:len(excellent)],
+                     f"{label}: {row['id']} WRChX titles {excellent} skip a level")
+        check.expect(row["titled"] == {"cr": len(ladder), "wrch": "WRCh" in titles,
+                                       "wrchx": len(excellent)},
+                     f"{label}: {row['id']} titled {row['titled']} disagrees with its titles")
+        check.expect(all(when is None or when <= records_date for _, when in listed),
+                     f"{label}: {row['id']} has a title dated after the Point Records")
+        check.expect(row["in_records"] or not listed,
+                     f"{label}: {row['id']} carries titles without a Point Records row")
+        check.expect(row["cr_points"] == (row["cr_record"] if row["in_records"] else row["cr"]),
+                     f"{label}: {row['id']} cr_points is not the Registrar's figure")
+        if not row["in_records"]:
+            check.expect(row["cr_record"] is None and row["wrch"] is None and row["nat_record"] is None,
+                         f"{label}: {row['id']} has Point Records figures but no row there")
+    check.expect(stats["titled_cr"] == sum(row["titled"]["cr"] > 0 for row in rows),
+                 f"{label}: stats.titled_cr is not the count of CR titles listed")
+    check.expect(stats["titled_wrch"] == sum(bool(row["titled"]["wrch"]) for row in rows),
+                 f"{label}: stats.titled_wrch is not the count of WRCh titles listed")
+    check.expect(stats["titled_wrchx"] == sum(row["titled"]["wrchx"] > 0 for row in rows),
+                 f"{label}: stats.titled_wrchx is not the count of WRChX titles listed")
+    check.expect(
+        stats["wrch_this_year"] == sum(
+            any(title == "WRCh" and (when or "").startswith(season) for title, when in row["titles_record"] or [])
+            for row in rows),
+        f"{label}: stats.wrch_this_year disagrees with the WRCh dates")
+    active = [row for row in rows if row["active"]]
+    matched = [row for row in active if row["in_records"]]
+    check.expect(len(matched) >= 0.6 * len(active),
+                 f"{label}: only {len(matched)} of {len(active)} active whippets found in the Point Records")
+    check.expect(stats["records_unmatched_active"] == len(active) - len(matched),
+                 f"{label}: stats.records_unmatched_active disagrees with the registry")
+    check.expect(sorted(feed["unmatched_records"]) == sorted(row["call_name"] for row in active
+                                                              if not row["in_records"]),
+                 f"{label}: unmatched_records disagrees with the registry")
+    check.expect(stats["hounds_dii"] == sum(bool(row["dii"]) for row in active),
+                 f"{label}: stats.hounds_dii is not the count of active DII whippets")
+    check.expect(all(row["avg"] == 0 and not row["meets"] for row in active if row["grade"] == "F"),
+                 f"{label}: an F grade on a whippet with an average or meets")
 
 
 def _racing_rank(rows: list[dict], field: str) -> dict[str, int | None]:
@@ -1232,8 +1370,9 @@ def check_racing(check: Checker, org: str) -> None:
     check.expect(len(set(by_id)) == len(rows), f"{label}: duplicate ids in the registry")
     # NOTRA re-uses a number with a letter (SW-225A) and lists hounds still
     # waiting for one as FTE or PEND.
-    check.expect(all(re.match(r"^[A-Z]{1,8}-(\d+[A-Z]?|FTE|PEND)(-\d+)?$", row["id"]) for row in rows),
-                 f"{label}: an id does not look like PREFIX-NUMBER")
+    id_pattern = spec.get("id_pattern", r"^[A-Z]{1,8}-(\d+[A-Z]?|FTE|PEND)(-\d+)?$")
+    check.expect(all(re.match(id_pattern, row["id"]) for row in rows),
+                 f"{label}: an id does not match {id_pattern}")
     duplicates = [row for row in rows if row.get("duplicate_of")]
     check.expect(all(row["id"].startswith(row["duplicate_of"] + "-") for row in duplicates),
                  f"{label}: a duplicate_of does not match its id")
@@ -1277,15 +1416,23 @@ def check_racing(check: Checker, org: str) -> None:
         check.expect(row["last_raced"] == expected,
                      f"{label}: {row['id']} last_raced {row['last_raced']} "
                      f"!= {expected} from its listed meets")
-    raced = [row for row in rows
-             if any(meet[1] == season for stream in spec["meet_streams"] for meet in row[stream])]
-    check.expect(stats["hounds_raced"] == len(raced),
-                 f"{label}: stats.hounds_raced {stats['hounds_raced']} vs {len(raced)} re-counted")
-    check.expect(stats["breeds_raced"] == len({row["breed_slug"] for row in raced}),
-                 f"{label}: stats.breeds_raced disagrees with a re-count")
-    check.expect(stats["hounds_ytd"] <= stats["hounds_raced"] <= stats["hounds_active"],
-                 f"{label}: points {stats['hounds_ytd']} / raced {stats['hounds_raced']} / "
-                 f"active {stats['hounds_active']} are out of order")
+    if spec.get("undated_meets"):
+        # WRA's report dates no meet, so nobody can be counted as racing
+        # this year from it; the feed says so with None, never a guess.
+        check.expect(stats["hounds_raced"] is None and stats["breeds_raced"] is None,
+                     f"{label}: hounds or breeds raced counted from undated meets")
+        check.expect(stats["hounds_ytd"] <= stats["hounds_active"],
+                     f"{label}: points {stats['hounds_ytd']} / active {stats['hounds_active']} out of order")
+    else:
+        raced = [row for row in rows
+                 if any(meet[1] == season for stream in spec["meet_streams"] for meet in row[stream])]
+        check.expect(stats["hounds_raced"] == len(raced),
+                     f"{label}: stats.hounds_raced {stats['hounds_raced']} vs {len(raced)} re-counted")
+        check.expect(stats["breeds_raced"] == len({row["breed_slug"] for row in raced}),
+                     f"{label}: stats.breeds_raced disagrees with a re-count")
+        check.expect(stats["hounds_ytd"] <= stats["hounds_raced"] <= stats["hounds_active"],
+                     f"{label}: points {stats['hounds_ytd']} / raced {stats['hounds_raced']} / "
+                     f"active {stats['hounds_active']} are out of order")
     for section in sections:
         members = by_slug.get(section["slug"], [])
         check.expect(section["registry"] == len(members)
@@ -1318,29 +1465,53 @@ def check_racing(check: Checker, org: str) -> None:
 
     # 4. WAVE arithmetic, with the registrar's overrides tolerated in bulk
     #    but flagged one by one; grades follow the bands.
+    wave_of = _WAVE_RULES[spec.get("wave_rule", "weighted")]
     for wave_field, stream in zip(spec["waves"], spec["meet_streams"]):
-        rated = [row for row in rows if row[wave_field] is not None]
+        rated = [row for row in rows if row[wave_field] is not None
+                 and (spec.get("wave_scope") != "active" or row["active"])]
         agree = 0
         for row in rated:
-            computed = _racing_wave(row[stream])
+            computed = wave_of(row[stream])
             if computed is not None and abs(computed - row[wave_field]) <= 0.01:
                 agree += 1
         share = agree / max(1, len(rated))
         check.expect(share >= spec["wave_agreement"],
                      f"{label}: {wave_field} agrees with the rule for only {share:.1%}")
         for dog in feed["dogs"]:
-            computed = _racing_wave(by_id[dog["id"]][stream])
+            computed = wave_of(by_id[dog["id"]][stream])
             matches = (dog[wave_field] is not None and computed is not None
                        and abs(computed - dog[wave_field]) <= 0.01)
             check.expect(dog[f"{wave_field}_matches"] == matches,
                          f"{label}: {dog['id']} {wave_field}_matches flag is wrong")
-        grade_field = {"wave": "grade", "bwave": "bgrade", "mwave": "mgrade"}[wave_field]
-        for row in rows:
-            value = row[wave_field]
-            expected = (None if value is None else "A" if value >= 11 else "B" if value >= 8
-                        else "C" if value >= 5.5 else "D")
-            check.expect(row[grade_field] == expected,
-                         f"{label}: {row['id']} grade {row[grade_field]} for WAVE {value}")
+        grades = spec.get("grades")
+        if grades:
+            # Grades as the officer prints them: on the program's own bands
+            # for all but a handful the rules move (an idle year, say).
+            field = grades["field"]
+            scope = [row for row in rows if row["active"]] if grades.get("active_only") else rows
+
+            def band(value: float) -> str:
+                read = round(value, grades.get("round", 6))
+                return next((letter for floor, letter in grades["bands"] if read >= floor),
+                            grades["floor"])
+
+            banded = [row for row in scope if row[field] in ("A", "B", "C", "D")
+                      and row[wave_field] is not None]
+            agree = sum(band(row[wave_field]) == row[field] for row in banded)
+            check.expect(agree >= grades["min_share"] * len(banded),
+                         f"{label}: grades follow the bands for only {agree} of {len(banded)}")
+            allowed = {"A", "B", "C", "D", *grades.get("extra", ())}
+            check.expect(all(row[field] in allowed or (row[field] is None and row[wave_field] is None)
+                             for row in scope),
+                         f"{label}: a grade outside {sorted(allowed)}, or a grade without a figure")
+        else:
+            grade_field = {"wave": "grade", "bwave": "bgrade", "mwave": "mgrade"}[wave_field]
+            for row in rows:
+                value = row[wave_field]
+                expected = (None if value is None else "A" if value >= 11 else "B" if value >= 8
+                            else "C" if value >= 5.5 else "D")
+                check.expect(row[grade_field] == expected,
+                             f"{label}: {row['id']} grade {row[grade_field]} for WAVE {value}")
 
     # 5. Meet codes decode to plausible years and, where the scheme gives
     #    one, dates. LGRA numbered meets sequentially before 2012 and by
@@ -1384,8 +1555,17 @@ def check_racing(check: Checker, org: str) -> None:
     if org == "lgra":
         check.expect(weekend / max(1, dated) >= 0.85,
                      f"{label}: only {weekend / max(1, dated):.0%} of dated meets fall on a weekend")
-    check.expect(len(this_year) == stats["meets_this_year"],
-                 f"{label}: meets this year {len(this_year)} vs stats {stats['meets_this_year']}")
+    if spec.get("undated_meets"):
+        # Counted from WRA's meet list (verified meets of the season up to
+        # the report's date), which the snapshot keeps.
+        meet_dates = (snapshot or {}).get("meet_dates", [])
+        check.expect(len(meet_dates) == stats["meets_this_year"],
+                     f"{label}: meets this year {stats['meets_this_year']} vs {len(meet_dates)} listed")
+        check.expect(all(day.startswith(str(season)) and day <= feed["guide_date"] for day in meet_dates),
+                     f"{label}: a verified meet outside the season or after the report")
+    else:
+        check.expect(len(this_year) == stats["meets_this_year"],
+                     f"{label}: meets this year {len(this_year)} vs stats {stats['meets_this_year']}")
 
     # 6. Titles follow the points columns.
     for stat_key, flag, earned in spec["champion"]:
@@ -1401,6 +1581,28 @@ def check_racing(check: Checker, org: str) -> None:
                 or ((row["brc"] or 0) + (row["mrc"] or 0) >= 12 and (row["mrc"] or 0) >= 2)
                 for row in rows),
             f"{label}: stats.titled_champion is not the count of dogs with a BRC or MRC")
+    if org == "wra":
+        _check_wra_titles(check, label, rows, feed)
+    if org == "notra-whippets":
+        # The SORC turns on sex (5.4), which the guide does not print: it is
+        # the recorder's title record, and only an ORC holder can have one.
+        for row in rows:
+            record = row["title_record"] or {}
+            check.expect(row["titled"]["sorc"] == bool(record.get("sorc")),
+                         f"{label}: {row['id']} titled.sorc disagrees with the title record")
+            # A cell naming a title needs the 15 points; a stray cell (SQUIRREL's
+            # holds a misplaced meet code) names none and is left as written.
+            names_title = bool(record.get("orc_meet") or record.get("orc_date") or record.get("sorc"))
+            check.expect(not names_title or (row["orc"] or 0) >= 15,
+                         f"{label}: {row['id']} has a title record without 15 ORC points")
+        check.expect(stats["titled_sorc"] == sum(bool(row["titled"]["sorc"]) for row in rows),
+                     f"{label}: stats.titled_sorc is not the count of SORC records")
+        check.expect(stats["hounds_restricted"] == sum(bool(row["restricted"]) for row in rows),
+                     f"{label}: stats.hounds_restricted disagrees with the registry")
+        for row in rows:
+            years = [meet[1] for meet in row["meets"] if meet[1]]
+            check.expect(row["last_year"] == (max(years) if years else None),
+                         f"{label}: {row['id']} last_year is wrong")
     for field, flag in spec["supreme"]:
         for dog in feed["dogs"]:
             level = int((dog[field] or 0) // 30)

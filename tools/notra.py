@@ -15,8 +15,8 @@ titles for the last two seasons; they are not read.
 This script archives a parsed snapshot of each new guide under
 data/notra/snapshots/, then rebuilds data/notra.json (active hounds,
 standings, owners, movement) and data/notra-registry.json (every hound,
-compact) from all snapshots. Whippets, whose guide has its own layout, are
-not covered yet.
+compact) from all snapshots. Whippets, whose guide has its own layout and
+rules, are built by tools/notra_whippets.py.
 
 Usage:
     python tools/notra.py                    # fetch, archive if changed, rebuild
@@ -559,8 +559,8 @@ def build(snapshots: list[dict]) -> tuple[dict, dict]:
         "titles_since_previous": titles_since,
         "meet_columns": ["code", "year", "date", "score", "complete", "status", "read"],
         "notes": [
-            "Other Breeds only: the Whippet guide has its own layout and is not "
-            "covered.",
+            "Other Breeds only: NOTRA's Whippet guide, with its own layout and "
+            "rules, is built separately (tools/notra_whippets.py).",
             "Standings rank this season's National points (the guide's YTD NORC "
             "column) within each breed and across breeds; career standings rank "
             "lifetime National points (LFTM NORC).",

@@ -19,6 +19,7 @@ module.exports = {
           slate: 'rgb(var(--slate) / <alpha-value>)',
           amber: 'rgb(var(--amber) / <alpha-value>)',
           akc: 'rgb(var(--akc) / <alpha-value>)',
+          whippet: 'rgb(var(--whippet) / <alpha-value>)',
           border: 'rgb(var(--line) / <alpha-value>)',
           navy: 'rgb(var(--well) / <alpha-value>)',
           paper: 'rgb(var(--paper) / <alpha-value>)',

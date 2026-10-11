@@ -166,6 +166,166 @@ const ORGS = {
     faults: true,
     meetStatus: true,
   },
+  /* Whippet racing (beta). WRA's grading guide is two web reports, the
+     active and the inactive list, with the Registrar's Whippet Point Records
+     beside them (2026 WRA Rule Book). One breed; no race numbers, so the
+     call name is the key; meets are scores without dates; an average stands
+     in for the WAVE (rule 5.2); titles are the Point Records'. */
+  wra: {
+    key: 'wra',
+    name: 'WRA',
+    fullName: 'Whippet Racing Association',
+    program: 'whippet racing',
+    title: 'WRA whippet racing',
+    page: 'wra.html',
+    noun: 'whippet', nouns: 'whippets',
+    singleBreed: true,
+    subTabs: 'whippet',
+    noIds: true,
+    waves: [['avg', 'Average', 'grade']],
+    waveMax: 29,
+    gradeBands: [[4, 'C'], [10, 'B'], [15, 'A']],
+    seasonLabel: 'National points this year',
+    careers: [['lftm', 'rank_career', 'Career National points', null, null]],
+    careerNote: 'Fifty lifetime National points make a WRChX for a dog and thirty for a bitch (rule 7.5.4); the title shown is the Registrar\'s.',
+    champion: [],
+    supreme: [],
+    titleInUse: wraTitleInUse,
+    titlesLabel: 'Title in use, from the Registrar\'s Point Records',
+    titlesBoardNote: 'From consecutive copies of the Registrar\'s Point Records.',
+    titleProgress: wraTitleProgress,
+    progressNote: 'Titles and title points from the Registrar\'s Whippet Point Records, which WRA names as the correct record; the Registrar\'s records govern.',
+    tiles: (dog) => [
+      [ptsLabel(dog.ytd), 'National points this year'],
+      [ptsLabel(dog.lftm), 'career National points'],
+      [ptsLabel(dog.cr_points), 'CR points'],
+      [dog.titled && dog.titled.wrch ? 'WRCh' : `${ptsLabel(wraWrchPoints(dog) || 0)} / 15`, 'WRCh points'],
+    ],
+    streams: [['meets', 'Last three adult meets']],
+    browse: [
+      ['rank_breed', 'Rank', 'num', 1],
+      ['call_name', 'Call name', '', 1],
+      ['registered_name', 'Registered name', '', 1],
+      ['owner_raw', 'Owner', '', 1],
+      ['ytd', 'This year', 'num', -1],
+      ['lftm', 'Career', 'num', -1],
+      ['cr_points', 'CR pts', 'num', -1],
+      ['avg', 'Average', 'num', -1],
+      ['meets_run', 'Meets', 'num', -1],
+    ],
+    meetStatus: true,
+    meetCodeHeader: null,
+    statusLegend: 'C completed the meet; SCR scratched; PSCR scratched, most likely in the paddock (rule 3.2.3; WRA publishes no legend); DNF did not finish; DQ disqualified. Newest first; the report gives no dates.',
+    plainMean: true,
+    averageRule: 'rule 5.2',
+    ownArithmetic: true,
+    dogNote: (dog) => [
+      dog.dii ? 'Approved for Division II (rule 7.5.5); DII points and titles are on the DII Registrar\'s lists, not here.' : '',
+      dog.meets_run != null ? `${dog.meets_run} meet${dog.meets_run === 1 ? '' : 's'} run, puppy meets included${
+        dog.exempt ? '; exempt from height measurement (rule 3.2.2.5)' : ''}.` : '',
+    ].filter(Boolean).join(' '),
+    overviewTiles: (stats) => [
+      [stats.hounds_active.toLocaleString('en-US'), 'whippets on the active list'],
+      [stats.hounds_ytd, 'with National points this year'],
+      [stats.meets_this_year, 'meets verified this year'],
+      [stats.wrch_this_year, 'WRCh titles earned this year'],
+      [stats.titled_wrch, 'WRCh titled, all time'],
+    ],
+    hubTiles: (stats) => [
+      [stats.hounds_active.toLocaleString('en-US'), 'on the active list'],
+      [stats.hounds_ytd, 'with points this year'],
+      [stats.meets_this_year, 'meets this year'],
+      [stats.titled_wrch, 'WRCh titled, all time'],
+    ],
+    intro: (feed) => `${feed.season} standings from WRA's grading guide ${guideDate(feed)}, and titles from the
+        Registrar's Whippet Point Records of ${formatDate(feed.records_date)}, as published by
+        <a href="${esc(feed.site_url)}" class="lnk" target="_blank" rel="noopener noreferrer">whippetracing.org</a>.`,
+    browseNote: () => 'Whippets on WRA\'s active list',
+    kennelNote: 'The report prints a surname and an initial, so a kennel here is that name: two owners who share both share a line. A co-owned whippet counts for every name on its row.',
+    rules: '2026 WRA Rule Book',
+    calendar: 'https://www.whippetracing.org/MeetListDisplay.cfm',
+    calendarLabel: 'WRA race meets',
+    guideName: 'WRA grading guide',
+    officer: 'Registrar',
+    titledTile: (stats) => [stats.titled_wrch, 'WRCh titled, all time'],
+    titledKeys: ['wrch'], titledLabel: 'WRCh titled',
+    agreement: (stats) => `${Math.round(stats.wave_agreement * 1000) / 10}%`,
+    careerOf: (dog) => dog.lftm || 0,
+    noCard: true,
+    hubSub: 'Straight racing',
+    hubLine: 'WRA straight racing · NOTRA oval racing',
+    coverageWord: 'guide',
+  },
+  /* NOTRA's Whippet guide (NOTRA Rules, February 2025): its own layout and
+     rules beside the Other-Breed guide. Scores out of 29 (four programs; a
+     three-program score is scaled by 29/22), grade bands at 15.2, 11 and
+     7.6, an ORC at 15 points, a SORC at 50 or 30 points by sex (which the
+     guide does not print, so the recorder's title record decides), a rating
+     that seeds, OTR-only meets listed but not graded. */
+  'notra-whippets': {
+    key: 'notra-whippets',
+    name: 'NOTRA Whippets',
+    fullName: 'National Oval Track Racing Association',
+    program: 'whippet oval racing',
+    title: 'NOTRA whippet oval racing',
+    page: 'notra-whippets.html',
+    noun: 'whippet', nouns: 'whippets',
+    singleBreed: true,
+    subTabs: 'whippet',
+    waves: [['wave', 'WAVE', 'grade']],
+    waveMax: 29,
+    gradeBands: [[7.6, 'C'], [11, 'B'], [15.2, 'A']],
+    seasonLabel: 'National points this year',
+    careers: [['lftm', 'rank_career', 'Career National points', 'sorc', 'SORC']],
+    careerNote: 'Fifty lifetime National points make a SORC for a dog and thirty for a bitch (rule 5.4); the guide prints no sex, so the title shown is the recorder\'s.',
+    champion: [['orc', 'ORC', 'Oval Racing Champion', 15]],
+    supreme: [],
+    titleInUse: notraWhippetTitleInUse,
+    titlesLabel: 'Title in use',
+    titleProgress: notraWhippetProgress,
+    progressNote: 'ORC points from the points column, the SORC from the recorder\'s title record in the guide; the NOTRA Whippet Recorder\'s certificate is the record.',
+    tiles: (dog) => [
+      [ptsLabel(dog.ytd), 'National points this year'],
+      [ptsLabel(dog.lftm), 'career National points'],
+      [`${ptsLabel(dog.orc)} / 15`, 'ORC points'],
+      [dog.rating ?? '—', 'rating'],
+    ],
+    streams: [['meets', 'Last three meets']],
+    browse: [
+      ['rank_breed', 'Rank', 'num', 1],
+      ['call_name', 'Call name', '', 1],
+      ['registered_name', 'Registered name', '', 1],
+      ['owner_raw', 'Owner', '', 1],
+      ['ytd', 'This year', 'num', -1],
+      ['lftm', 'Career', 'num', -1],
+      ['orc', 'ORC pts', 'num', -1],
+      ['wave', 'WAVE', 'num', -1],
+      ['rating', 'Rating', 'num', 1],
+      ['last_raced', 'Last raced', '', -1],
+    ],
+    meetStatus: true,
+    meetCodeHeader: 'Code',
+    meetPlacing: true,
+    statusLegend: 'N completed every program; F completed, with an off-course run or a did-not-finish in the final program; S scratched; D disqualified; X as the recorder writes it. Place is the final placing in the meet.',
+    ownArithmetic: true,
+    faultsView: notraWhippetFaults,
+    dogNote: (dog) => (dog.restricted ? 'Restricted from entry under rule 6.2, as the guide marks it.' : ''),
+    intro: (feed) => `${feed.season} standings from NOTRA's Whippet grading guide ${guideDate(feed)}, as published by
+        <a href="${esc(feed.site_url)}" class="lnk" target="_blank" rel="noopener noreferrer">notra.org</a>.`,
+    kennelNote: 'The guide prints a surname and nothing else, so a kennel here is a surname: two Joneses share a line. A co-owned whippet counts for every surname on its row.',
+    rules: 'NOTRA Rules, February 2025',
+    calendar: 'https://www.notra.org/RaceDates.html',
+    calendarLabel: 'NOTRA race dates',
+    guideName: 'NOTRA Whippet grading guide',
+    officer: 'recorder',
+    titledTile: (stats) => [stats.titled_orc, 'ORC titled, all time'],
+    titledKeys: ['orc'], titledLabel: 'ORC titled',
+    agreement: (stats) => `${Math.round(stats.wave_agreement * 1000) / 10}%`,
+    careerOf: (dog) => dog.lftm || 0,
+    noCard: true,
+    hubSub: 'Oval racing',
+    coverageWord: 'guide',
+  },
 };
 
 /* ---------------------------------------------------------------- helpers */
@@ -202,17 +362,20 @@ function gradeBadge(grade) {
 
 /** A 0 to 22 bar with the grade boundaries ticked on it; a program scored
     out of 29 (NOTRA's four-program whippet meets) scales the ticks with it. */
-function waveBar(value, max = 22) {
+function waveBar(value, max = 22, bands = null, title = 'WAVE') {
   if (value == null) return '';
   const pct = (n) => `${Math.max(0, Math.min(100, (n / max) * 100))}%`;
   const at = (n) => Math.round(n * max / 22 * 10) / 10;
   const tick = (n, label) => `
     <span class="absolute top-0 bottom-0 border-l border-asfa-border" style="left:${pct(n)}" aria-hidden="true"></span>
     <span class="absolute -bottom-4 text-[10px] font-mono text-asfa-text/55 -translate-x-1/2" style="left:${pct(n)}" aria-hidden="true">${label}</span>`;
+  // A program with bands of its own (NOTRA's four-program whippet column,
+  // WRA's average) ticks them as its rules print them.
+  const ticks = bands || [[at(5.5), 'C'], [at(8), 'B'], [at(11), 'A']];
   return `
-    <div class="relative h-3 bg-asfa-bg2 border border-asfa-border mt-3 mb-5" role="img" aria-label="WAVE ${waveLabel(value)} of a possible ${max}">
+    <div class="relative h-3 bg-asfa-bg2 border border-asfa-border mt-3 mb-5" role="img" aria-label="${title} ${waveLabel(value)} of a possible ${max}">
       <div class="h-full bg-asfa-accent" style="width:${pct(value)}"></div>
-      ${tick(at(5.5), 'C')}${tick(at(8), 'B')}${tick(at(11), 'A')}
+      ${ticks.map(([n, label]) => tick(n, label)).join('')}
       <span class="absolute -bottom-4 right-0 text-[10px] font-mono text-asfa-text/55" aria-hidden="true">${max}</span>
     </div>`;
 }
@@ -284,15 +447,48 @@ function idNote(dog) {
 }
 
 /** What to call a meet: its date when the code carries one, otherwise the
-    year and the registrar's number. */
+    year and the registrar's number. WRA's report dates no meet: its slots
+    are "Latest meet", "Meet 2", "Meet 3". */
 function meetLabel(meet, org) {
   if (meet.date) return formatDateShort(meet.date);
+  if (org === 'wra') return meet.code;
+  if (org === 'notra-whippets' && /^#/.test(meet.code)) return meet.year ? `${meet.year}, OTR-only meet` : 'OTR-only meet';
   if (org === 'aok9') {
     const match = /^(\d{4})-S(\d+)/.exec(meet.code);
     if (match) return `${match[1]}, sanctioned meet ${Number(match[2])}`;
   }
   if (meet.year) return `${meet.year}, meet ${meet.code.replace(/^[A-Za-z]+/, '')}`;
   return 'undated';
+}
+
+/** The arithmetic spelled out for a program's own rule: WRA's average (rule
+    5.2) is a plain mean; NOTRA's whippet WAVE leaves OTR-only meets out and,
+    with nothing completed, averages scratches only across three graded
+    meets, as the recorder does. */
+function averageArithmetic(org, meets) {
+  const r = (x) => waveLabel(x);
+  const n = (x) => ptsLabel(x);
+  if (org === 'wra') {
+    const complete = meets.filter((m) => m.complete && m.score != null).map((m) => m.score);
+    const listed = meets.filter((m) => m.score != null).map((m) => m.score);
+    if (complete.length) {
+      return complete.length === 1 ? `the one completed meet, ${n(complete[0])}`
+        : `(${complete.map(n).join(' + ')}) ÷ ${complete.length} = ${r(complete.reduce((a, b) => a + b, 0) / complete.length)}`;
+    }
+    if (listed.length) return `no meet completed, so the mean of the incomplete ones: ${r(listed.reduce((a, b) => a + b, 0) / listed.length)}`;
+    return '';
+  }
+  const graded = meets.filter((m) => m.graded !== false);
+  const skipped = meets.length - graded.length;
+  const note = skipped ? ` (${skipped === 1 ? 'the OTR-only meet is' : `${skipped} OTR-only meets are`} left out)` : '';
+  const completeMeets = graded.filter((m) => m.complete && m.score != null);
+  if (!completeMeets.length) {
+    if (graded.length === 3 && graded.every((m) => m.score != null)) {
+      return `every graded meet was a scratch, so the plain mean: ${r(graded.reduce((s, m) => s + m.score, 0) / 3)}${note}`;
+    }
+    return `no completed graded meet${note}`;
+  }
+  return `${waveArithmetic(completeMeets)}${note}`;
 }
 
 /** The WAVE arithmetic spelled out, per rule 4.2.2. */
@@ -332,9 +528,14 @@ function movementCell(dog) {
   return '<span class="badge badge-flat"><span aria-hidden="true">–</span><span class="sr-only">no change</span></span>';
 }
 
-/** Titles the points columns say this hound holds, as badges. */
+/** Titles the points columns say this hound holds, as badges. A whippet
+    shows one, the title in use (WRA rule 7.2, NOTRA rule 5.6). */
 function titleBadges(org, dog) {
   const spec = ORGS[org];
+  if (spec.titleInUse) {
+    const held = spec.titleInUse(dog);
+    return held ? `<span class="badge ${held.cls} normal-case" title="${esc(held.name)}">${esc(held.title)}</span>` : '';
+  }
   const out = [];
   for (const [field, label, name, need, rule] of spec.champion) {
     const earned = rule ? rule.done(dog) : (dog[field] || 0) >= need;
@@ -347,6 +548,133 @@ function titleBadges(org, dog) {
     }
   }
   return out.join(' ');
+}
+
+/* ------------------------------------------------- whippet title helpers */
+
+/** WRA rule 7.2: each title replaces the one before it in use (the CRX the
+    CR, the WRCh the CRX, the WRChX the WRCh), so a whippet carries one. */
+function wraTitleInUse(dog) {
+  const titles = (dog.titles_record || []).map(([title]) => title);
+  const last = (re) => titles.filter((title) => re.test(title)).pop();
+  const title = last(/^WRChX/) || last(/^WRCh$/) || last(/^CR/);
+  if (!title) return null;
+  return {
+    title,
+    cls: /^WRChX/.test(title) ? 'badge-t-lcm' : /^WRCh/.test(title) ? 'badge-t-fch' : 'badge-t-tcp',
+    name: /^WRChX/.test(title) ? 'Whippet Race Champion Excellent' : /^WRCh/.test(title) ? 'Whippet Race Champion'
+      : /^CRX/.test(title) ? 'Companion Racer Excellent' : 'Companion Racer',
+  };
+}
+
+/** WRCh points: the Registrar's, or the report's for a whippet the Point
+    Records do not list. */
+function wraWrchPoints(dog) {
+  return dog.in_records ? dog.wrch : dog.wrch_site;
+}
+
+/** The CR ladder by level: 1 CR, 2 CRX, 3 CRX-II and on. */
+function wraCrTitle(level) {
+  if (level <= 0) return '';
+  if (level === 1) return 'CR';
+  return level === 2 ? 'CRX' : `CRX-${romanLevel(level - 1)}`;
+}
+
+/** The WRA title ladders (rules 7.5.1 to 7.5.4), read from the Registrar's
+    Point Records: the CR and CRX run on race points from completed meets and
+    close at the WRCh; the WRCh needs 15 WRCh points; the WRChX runs on
+    lifetime National points, 50 for a dog and 30 for a bitch, and neither
+    list says which a whippet is. */
+function wraTitleProgress(dog, feed) {
+  const titles = dog.titles_record || [];
+  const dateOf = (name) => (titles.find(([title]) => title === name) || [])[1];
+  const out = [];
+  const wrch = Boolean(dog.titled && dog.titled.wrch);
+  const wrchPts = wraWrchPoints(dog);
+  out.push(progressBar(wrch ? (wrchPts ?? 15) : wrchPts, 15, 'WRCh · Whippet Race Champion', {
+    done: wrch,
+    pending: !wrch && (wrchPts || 0) >= 15 ? 'no title date in the record yet' : '',
+    note: wrch && dateOf('WRCh') ? `Earned ${formatDate(dateOf('WRCh'))}.` : '',
+  }));
+  const level = (dog.titled && dog.titled.cr) || 0;
+  if (wrch) {
+    if (level) {
+      out.push(`<p class="text-sm mt-3"><span class="font-semibold">CR titles</span>
+        <span class="text-asfa-text/70">· ${wraCrTitle(level)} before the WRCh; the CRX titles go only to whippets without one (rule 7.5.2).</span></p>`);
+    }
+  } else {
+    const need = level === 0 ? 15 : 75 + 60 * (level - 1);
+    const name = level === 0 ? 'Companion Racer' : 'Companion Racer Excellent';
+    // The record's level governs: points past the mark without the next
+    // title in the record are shown as such, not as earned.
+    out.push(progressBar(dog.cr_points, need, `${wraCrTitle(level + 1)} · ${name}${level ? ` (${wraCrTitle(level)} earned)` : ''}`, {
+      done: false,
+      pending: (dog.cr_points || 0) >= need ? 'not yet in the record' : '',
+      note: 'Race points from completed meets (rules 7.5.1 and 7.5.2).',
+    }));
+  }
+  const nat = dog.in_records ? dog.nat_record : dog.lftm;
+  const xTitles = titles.filter(([title]) => /^WRChX/.test(title));
+  out.push(`
+    <div class="mt-3 text-sm">
+      <div class="flex flex-wrap justify-between gap-x-3">
+        <span class="font-semibold">WRChX · Whippet Race Champion Excellent</span>
+        <span class="text-asfa-text/70">${ptsLabel(nat || 0)} lifetime National points${xTitles.length ? ' · earned' : ''}</span>
+      </div>
+      <p class="text-xs text-asfa-text/60">${xTitles.length
+        ? `${xTitles.map(([title, when]) => `${esc(title)}${when ? ` ${formatDate(when)}` : ''}`).join('; ')}. ` : ''}Fifty
+        points for a dog, thirty for a bitch, and again at each further fifty or thirty (rule 7.5.4).
+        Neither list gives a whippet's sex, so no bar is drawn.</p>
+    </div>`);
+  out.push(`<p class="text-xs text-asfa-text/60 mt-3">${titles.length
+    ? `On record: ${titles.map(([title, when]) => `${esc(title)}${when ? ` (${formatDateShort(when)})` : ''}`).join(', ')}.`
+    : dog.in_records ? 'No titles on record.'
+      : `Not in the Registrar's Point Records${feed && feed.records_date ? ` of ${formatDate(feed.records_date)}` : ''}; the bars use the report's own columns.`}</p>`);
+  return out.join('');
+}
+
+/** NOTRA rule 5.6: a whippet shows one NOTRA suffix, its highest. */
+function notraWhippetTitleInUse(dog) {
+  if (dog.titled && dog.titled.sorc) return { title: 'SORC', cls: 'badge-t-lcm', name: 'Supreme Oval Racing Champion' };
+  if (dog.titled && dog.titled.orc) return { title: 'ORC', cls: 'badge-t-fch', name: 'Oval Racing Champion' };
+  return null;
+}
+
+/** NOTRA whippet titles (rules 5.3 and 5.4): the ORC on 15 ORC points; the
+    SORC on lifetime National points, 50 for a dog and 30 for a bitch, which
+    the guide cannot tell apart, so the recorder's title record decides. */
+function notraWhippetProgress(dog) {
+  const record = dog.title_record || {};
+  const orc = Boolean(dog.titled && dog.titled.orc);
+  const sorc = Boolean(dog.titled && dog.titled.sorc);
+  const where = (meet, when) => `${meet ? ` at meet ${esc(meet)}` : ''}${when ? `, ${formatDate(when)}` : ''}`;
+  return [
+    progressBar(dog.orc, 15, 'ORC · Oval Racing Champion', {
+      done: orc,
+      note: orc && (record.orc_meet || record.orc_date) ? `Earned${where(record.orc_meet, record.orc_date)}.` : '',
+    }),
+    `
+    <div class="mt-3 text-sm">
+      <div class="flex flex-wrap justify-between gap-x-3">
+        <span class="font-semibold">SORC · Supreme Oval Racing Champion</span>
+        <span class="text-asfa-text/70">${ptsLabel(dog.lftm || 0)} lifetime National points${sorc ? ' · earned' : ''}</span>
+      </div>
+      <p class="text-xs text-asfa-text/60">${sorc ? `Earned${where(record.sorc_meet, record.sorc_date)}, by the recorder's title record. ` : ''}Fifty
+        points for a dog, thirty for a bitch, and again at each further fifty or thirty (rule 5.4).
+        The guide prints no sex, so no bar is drawn${sorc ? ', and a SORC II or higher would not show here' : ''}.</p>
+    </div>`,
+  ].join('');
+}
+
+/** NOTRA's Whippet guide writes faults out rather than counting them. */
+function notraWhippetFaults(dog) {
+  const faults = dog.faults || {};
+  if (!faults.oc_dnf && !faults.dq) return '<p class="text-sm text-asfa-text/70">None recorded.</p>';
+  return `
+    ${faults.oc_dnf ? `<p class="text-sm"><span class="font-semibold">Off course and did not finish:</span> <span class="font-mono text-xs">${esc(faults.oc_dnf)}</span></p>` : ''}
+    ${faults.dq ? `<p class="text-sm mt-1"><span class="font-semibold">Disqualifications:</span> <span class="font-mono text-xs">${esc(faults.dq)}</span></p>` : ''}
+    <p class="text-xs text-asfa-text/60 mt-2">As the recorder writes them: the meet code, then OC (off course), DNF (did not finish) or DQ,
+      with the program and the number of programs in the meet, so DNF 3/4 is the third of four.</p>`;
 }
 
 /* sortableHead and wireSort live in app.js; sortRows stays here for its
@@ -381,15 +709,19 @@ function renderRacingOverview(org, feed, main, singles = null) {
   const hasPrevious = Boolean(feed.previous_guide_date);
   const nouns = spec.nouns;
 
-  document.title = `${spec.name} ${spec.program} standings — Gazehound Stats`;
+  document.title = `${spec.title || `${spec.name} ${spec.program}`} standings — Gazehound Stats`;
 
   // Singles runs at the same AOK9 meets, so its dogs and meets count in the
   // program's totals; the Singles feed carries the combined figures.
   const combined = singles && singles.combined;
-  const tiles = [
+  // A one-breed program (the whippet bodies) has no breeds to count or
+  // compare: its tiles, standings and browse speak of the one breed.
+  const single = Boolean(spec.singleBreed);
+  const tiles = spec.overviewTiles ? spec.overviewTiles(stats) : [
     [combined ? combined.dogs_raced : stats.hounds_raced, `${nouns} racing this year`],
     [stats.hounds_ytd, `${nouns} with points this year`],
-    [combined ? combined.breeds_raced : stats.breeds_raced, 'breeds racing this year'],
+    single ? [stats.hounds_active, `active ${nouns}`]
+      : [combined ? combined.breeds_raced : stats.breeds_raced, 'breeds racing this year'],
     [combined ? combined.meets_this_year : stats.meets_this_year, `meets this year`],
     spec.titledTile(stats),
   ];
@@ -427,7 +759,7 @@ function renderRacingOverview(org, feed, main, singles = null) {
   // The hound at the top of each breed's standings, one line per breed.
   const leaders = sections.filter((s) => s.leader)
     .sort((a, b) => b.leader.ytd - a.leader.ytd || a.breed.localeCompare(b.breed));
-  const leadersBoard = `
+  const leadersBoard = single ? '' : `
       <div class="card">
         <h2 class="card-title">Breed leaders</h2>
         <p class="text-xs text-asfa-text/60 mb-3">The ${spec.noun} at the top of each breed's standings, by ${spec.seasonLabel}.</p>
@@ -453,16 +785,16 @@ function renderRacingOverview(org, feed, main, singles = null) {
     return `
       <div class="card">
         <h2 class="card-title">${label}</h2>
-        <p class="text-xs text-asfa-text/60 mb-3">All-time totals. Rank is against every ${spec.noun} ever registered; only ${nouns} still racing are listed, so retired ${nouns} hold the gaps. Thirty points make a ${supremeLabel}, sixty a ${supremeLabel}2, and so on.</p>
+        <p class="text-xs text-asfa-text/60 mb-3">All-time totals. Rank is against every ${spec.noun} ever registered; only ${nouns} still racing are listed, so retired ${nouns} hold the gaps. ${spec.careerNote || `Thirty points make a ${supremeLabel}, sixty a ${supremeLabel}2, and so on.`}</p>
         ${top.length ? `<div class="tbl-wrap"><table class="tbl">
-          <thead><tr><th scope="col" class="num">Rank</th><th scope="col">${spec.noun[0].toUpperCase() + spec.noun.slice(1)}</th><th scope="col">Breed</th><th scope="col" class="num">Points</th><th scope="col">Title</th></tr></thead>
+          <thead><tr><th scope="col" class="num">Rank</th><th scope="col">${spec.noun[0].toUpperCase() + spec.noun.slice(1)}</th>${single ? '' : '<th scope="col">Breed</th>'}<th scope="col" class="num">Points</th><th scope="col">Title</th></tr></thead>
           <tbody>${top.map((dog) => `
             <tr>
               <td class="num font-semibold">${dog[rankKey]}</td>
               <td><a href="${racingDogUrl(org, dog.id)}" class="lnk font-semibold">${esc(dog.call_name)}</a></td>
-              <td class="text-asfa-text/80">${esc(dog.breed)}</td>
+              ${single ? '' : `<td class="text-asfa-text/80">${esc(dog.breed)}</td>`}
               <td class="num font-semibold text-asfa-accent">${ptsLabel(dog[field])}</td>
-              <td>${dog.titled[supremeKey] ? `<span class="badge badge-t-lcm">${supremeLabel}${dog.titled[supremeKey] > 1 ? dog.titled[supremeKey] : ''}</span>` : ''}</td>
+              <td>${spec.titleInUse ? titleBadges(org, dog) : dog.titled[supremeKey] ? `<span class="badge badge-t-lcm">${supremeLabel}${dog.titled[supremeKey] > 1 ? dog.titled[supremeKey] : ''}</span>` : ''}</td>
             </tr>`).join('')}</tbody>
         </table></div>` : `<p class="text-sm text-asfa-text/70">None recorded.</p>`}
       </div>`;
@@ -472,24 +804,56 @@ function renderRacingOverview(org, feed, main, singles = null) {
   const titlesBoard = hasPrevious ? `
       <div class="card">
         <h2 class="card-title">New titles since ${formatDate(feed.previous_guide_date)}</h2>
-        <p class="text-xs text-asfa-text/60 mb-3">Read from the points columns of consecutive guides.</p>
+        <p class="text-xs text-asfa-text/60 mb-3">${spec.titlesBoardNote || 'Read from the points columns of consecutive guides.'}</p>
         ${newTitles.length ? `<div class="tbl-wrap"><table class="tbl"><tbody>${newTitles.slice(0, 40).map((row) => `
           <tr><td><a href="${racingDogUrl(org, row.id)}" class="lnk font-semibold">${esc(row.call_name)}</a></td>
-              <td class="text-asfa-text/80">${esc(row.breed)}</td>
+              ${single ? '' : `<td class="text-asfa-text/80">${esc(row.breed)}</td>`}
               <td class="num"><span class="badge badge-t-fch">${esc(row.title)}</span></td></tr>`).join('')}</tbody></table></div>`
           : `<p class="text-sm text-asfa-text/70">No new titles between the two guides.</p>`}
       </div>` : '';
 
+  // One-breed programs: every dog with points this year, ranked, in place of
+  // the per-breed cards.
+  const Noun = spec.noun[0].toUpperCase() + spec.noun.slice(1);
+  const fullStandings = single ? dogs.filter((dog) => dog.rank_all)
+    .sort((a, b) => a.rank_all - b.rank_all || a.call_name.localeCompare(b.call_name)) : [];
+  const waveKey = spec.waves[0][0];
+  const gradeKey = spec.waves[0][2];
+  const standingsTable = `
+      <div class="card">
+        <div class="tbl-wrap"><table class="tbl">
+          <thead><tr><th scope="col" class="num">Rank</th><th scope="col">${Noun}</th><th scope="col">Registered name</th>
+            <th scope="col">Owner</th><th scope="col" class="num">Points</th><th scope="col" class="num">${spec.waves[0][1]}</th></tr></thead>
+          <tbody>${fullStandings.map((dog) => `
+            <tr>
+              <td class="num font-semibold">${dog.rank_all}</td>
+              <td><a href="${racingDogUrl(org, dog.id)}" class="lnk font-semibold">${esc(dog.call_name)}</a></td>
+              <td class="text-asfa-text/80">${esc(dog.registered_name)}</td>
+              <td class="text-asfa-text/80">${esc(dog.owner_raw)}</td>
+              <td class="num font-semibold text-asfa-accent">${ptsLabel(dog.ytd)}</td>
+              <td class="num">${waveLabel(dog[waveKey])} ${gradeBadge(dog[gradeKey])}</td>
+            </tr>`).join('')}</tbody>
+        </table></div>
+      </div>`;
+
+  /* The whippet bodies share one section whose header nav names the bodies,
+     so each body's own tabs sit at the top of its page. */
+  const TAB_LABELS = [['overview', 'Overview'], ['standings', 'Standings'], ['browse', 'Browse'], ['kennels', 'Kennels'], ['about', 'About']];
+  const subTabs = spec.subTabs ? `
+    <nav class="flex flex-wrap gap-2 no-print subtabs-${spec.subTabs}" aria-label="${esc(spec.name)} pages" id="sub-tabs">
+      ${TAB_LABELS.map(([id, label]) => `<a href="#${id}" class="tab" data-tab="${id}">${label}</a>`).join('')}
+    </nav>` : '';
+
   main.innerHTML = `
     <div>
-      <h1 class="font-display text-3xl text-asfa-text">${spec.name} ${spec.program}</h1>
+      <h1 class="font-display text-3xl text-asfa-text">${spec.title || `${spec.name} ${spec.program}`}</h1>
       <p class="text-sm text-asfa-text/70 mt-1">
-        ${season} standings from the grading guide ${guideDate(feed)}, as published by
-        <a href="${esc(feed.site_url)}" class="lnk" target="_blank" rel="noopener noreferrer">${esc(feed.site_url.replace(/^https?:\/\//, ''))}</a>.
-        <a href="${spec.calendar}" class="lnk whitespace-nowrap" target="_blank" rel="noopener noreferrer">${spec.name} race calendar →</a>
+        ${spec.intro ? spec.intro(feed) : `${season} standings from the grading guide ${guideDate(feed)}, as published by
+        <a href="${esc(feed.site_url)}" class="lnk" target="_blank" rel="noopener noreferrer">${esc(feed.site_url.replace(/^https?:\/\//, ''))}</a>.`}
+        <a href="${spec.calendar}" class="lnk whitespace-nowrap" target="_blank" rel="noopener noreferrer">${spec.calendarLabel || `${spec.name} race calendar`} →</a>
       </p>
     </div>
-
+    ${subTabs}
 
     <section id="overview" class="space-y-8">
     <section id="tiles" class="grid grid-cols-2 md:grid-cols-5 gap-3">
@@ -499,42 +863,45 @@ function renderRacingOverview(org, feed, main, singles = null) {
 
     <section class="grid grid-cols-1 md:grid-cols-3 gap-6">
       <div class="card md:row-span-2">
-        <h2 class="card-title">All-breed standings</h2>
-        <p class="text-xs text-asfa-text/60 mb-3">${spec.seasonLabel}, all breeds.</p>
+        <h2 class="card-title">${single ? 'Standings' : 'All-breed standings'}</h2>
+        <p class="text-xs text-asfa-text/60 mb-3">${spec.seasonLabel}${single ? '' : ', all breeds'}.</p>
         <div class="tbl-wrap"><table class="tbl">
-          <thead><tr><th scope="col" class="num">Rank</th><th scope="col">${spec.noun[0].toUpperCase() + spec.noun.slice(1)}</th><th scope="col">Breed</th><th scope="col" class="num">Points</th></tr></thead>
+          <thead><tr><th scope="col" class="num">Rank</th><th scope="col">${Noun}</th>${single ? '' : '<th scope="col">Breed</th>'}<th scope="col" class="num">Points</th></tr></thead>
           <tbody>${allBreed.map((dog) => `
             <tr>
               <td class="num font-semibold">${dog.rank_all}</td>
               <td><a href="${racingDogUrl(org, dog.id)}" class="lnk font-semibold">${esc(dog.call_name)}</a></td>
-              <td class="text-asfa-text/80">${esc(dog.breed)}</td>
+              ${single ? '' : `<td class="text-asfa-text/80">${esc(dog.breed)}</td>`}
               <td class="num font-semibold text-asfa-accent">${ptsLabel(dog.ytd)}</td>
             </tr>`).join('')}</tbody>
         </table></div>
+        ${single && fullStandings.length > allBreed.length ? `<a href="${spec.page}#standings" class="lnk text-sm inline-block mt-3">All ${fullStandings.length} with points →</a>` : ''}
       </div>
       ${leadersBoard}
-      <div class="space-y-6">${careerBoards}${titlesBoard}</div>
+      ${single ? `${careerBoards}<div class="space-y-6">${titlesBoard}</div>` : `<div class="space-y-6">${careerBoards}${titlesBoard}</div>`}
     </section>
     </section>
 
     <section id="standings" class="space-y-4">
       <div>
-        <h2 class="font-display text-2xl text-asfa-text">Standings by breed</h2>
-        <p class="text-sm text-asfa-text/70 mt-1">Ranked by ${spec.seasonLabel}.</p>
+        <h2 class="font-display text-2xl text-asfa-text">${single ? 'Standings' : 'Standings by breed'}</h2>
+        <p class="text-sm text-asfa-text/70 mt-1">Ranked by ${spec.seasonLabel}${single ? '; ties share a rank' : ''}.</p>
       </div>
-      ${rankedSections.length
-        ? `<div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">${standingsCards}</div>`
-        : `<p class="text-sm text-asfa-text/70">No ${nouns} have points yet this year.</p>`}
+      ${single
+        ? (fullStandings.length ? standingsTable : `<p class="text-sm text-asfa-text/70">No ${nouns} have points yet this year.</p>`)
+        : rankedSections.length
+          ? `<div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">${standingsCards}</div>`
+          : `<p class="text-sm text-asfa-text/70">No ${nouns} have points yet this year.</p>`}
     </section>
 
     <section id="browse" class="space-y-6">
     <div class="card">
-      <h2 class="card-title">Browse by breed</h2>
+      <h2 class="card-title">${single ? `Browse ${nouns}` : 'Browse by breed'}</h2>
       <p class="text-xs text-asfa-text/60 mb-3">
-        ${nouns.charAt(0).toUpperCase() + nouns.slice(1)} active since ${formatDate(feed.active_since)}; the whole
+        ${spec.browseNote ? spec.browseNote(feed) : `${nouns.charAt(0).toUpperCase() + nouns.slice(1)} active since ${formatDate(feed.active_since)}`}; the whole
         registry (${stats.hounds_registry.toLocaleString('en-US')} ${nouns}) is a click away below the table.
       </p>
-      ${sections.length > 30 ? `
+      ${single ? '' : sections.length > 30 ? `
         <label class="block mb-3">
           <span class="sr-only">Breed</span>
           <select id="breed-select" class="select w-full sm:w-auto sm:min-w-[20rem] px-3 py-2"></select>
@@ -554,9 +921,9 @@ function renderRacingOverview(org, feed, main, singles = null) {
       </label>
       <div id="owner-table"></div>
       <p class="text-xs text-asfa-text/55 mt-3">
-        The guide prints a surname and nothing else, so a kennel here is a surname within a
+        ${spec.kennelNote || `The guide prints a surname and nothing else, so a kennel here is a surname within a
         breed: two Joneses racing Pharaoh Hounds share a line, and one owner racing two breeds
-        gets two. A co-owned ${spec.noun} counts for every surname on its row.
+        gets two. A co-owned ${spec.noun} counts for every surname on its row.`}
       </p>
     </div>
     </section>
@@ -573,6 +940,12 @@ function renderRacingOverview(org, feed, main, singles = null) {
     const wanted = location.hash.slice(1);
     const tab = TABS.includes(wanted) ? wanted : 'overview';
     TABS.forEach((id) => document.getElementById(id).classList.toggle('hidden', id !== tab));
+    document.querySelectorAll('#sub-tabs a[data-tab]').forEach((link) => {
+      const on = link.dataset.tab === tab;
+      link.classList.toggle('tab-active', on);
+      if (on) link.setAttribute('aria-current', 'page');
+      else link.removeAttribute('aria-current');
+    });
     // After the browser's own jump to the anchor, and without the page's smooth
     // scrolling, so the page heading stays in view.
     setTimeout(() => window.scrollTo({ top: 0, behavior: 'instant' }), 0);
@@ -607,6 +980,7 @@ function renderRacingOverview(org, feed, main, singles = null) {
       breedSelect.value = activeSlug || '';
       return;
     }
+    if (!grid) return;   // a one-breed program has no breed chips
     grid.innerHTML = sections.map((section) => {
       const active = section.slug === activeSlug;
       return `<button data-slug="${section.slug}"
@@ -657,9 +1031,9 @@ function renderRacingOverview(org, feed, main, singles = null) {
               if (key === 'registered_name' || key === 'owner_raw') return `<td class="text-asfa-text/80">${esc(dog[key])}</td>`;
               if (key === 'last_raced') return `<td class="whitespace-nowrap">${dog.last_raced ? formatDateShort(dog.last_raced) : (dog.last_year ? dog.last_year : '—')}</td>`;
               if (key === 'rank_breed') return `<td class="num font-semibold">${dog.rank_breed ?? '—'}</td>`;
-              if (key.endsWith('wave')) {
-                const gradeField = spec.waves.find(([f]) => f === key)[2];
-                return `<td class="num">${waveLabel(dog[key])} ${gradeBadge(dog[gradeField])}</td>`;
+              const waveSpec = spec.waves.find(([f]) => f === key);
+              if (waveSpec) {
+                return `<td class="num">${waveLabel(dog[key])} ${gradeBadge(dog[waveSpec[2]])}</td>`;
               }
               return `<td class="num ${key === 'ytd' ? 'font-semibold' : ''}">${ptsLabel(dog[key])}</td>`;
             }).join('')}
@@ -682,8 +1056,8 @@ function renderRacingOverview(org, feed, main, singles = null) {
     const columns = spec.browse;
     panel.innerHTML = `
       <div class="flex flex-wrap items-baseline justify-between gap-2">
-        <h3 class="font-display text-xl text-asfa-text">${esc(section.breed)}</h3>
-        <p class="text-sm text-asfa-text/70">${section.ytd} with points this year · ${section.active} active · ${section.registry} all time</p>
+        ${single ? '' : `<h3 class="font-display text-xl text-asfa-text">${esc(section.breed)}</h3>`}
+        <p class="text-sm text-asfa-text/70">${section.ytd} with points this year · ${section.active.toLocaleString('en-US')} active · ${section.registry.toLocaleString('en-US')} all time</p>
       </div>
       <div class="tbl-wrap mt-3"><table class="tbl">
         ${sortableHead(columns, sort, hasPrevious ? '<th scope="col" class="num">Since</th>' : '')}
@@ -696,8 +1070,8 @@ function renderRacingOverview(org, feed, main, singles = null) {
         </p>` : `
         <p class="text-sm mt-3 no-print">
           ${showAll
-            ? `Showing every ${esc(section.breed)} ever registered. <button type="button" id="registry-toggle" class="lnk">Active ${nouns} only</button>`
-            : `<button type="button" id="registry-toggle" class="lnk">Show all ${section.registry} ${esc(section.breed)} ${nouns} ever registered</button>`}
+            ? `Showing every ${single ? spec.noun : esc(section.breed)} ever registered. <button type="button" id="registry-toggle" class="lnk">Active ${nouns} only</button>`
+            : `<button type="button" id="registry-toggle" class="lnk">Show all ${section.registry.toLocaleString('en-US')} ${single ? '' : `${esc(section.breed)} `}${nouns} ever registered</button>`}
         </p>`}`;
     wireSort(panel, columns, sort, paintTable);
     const toggle = panel.querySelector('#registry-toggle');
@@ -744,12 +1118,12 @@ function renderRacingOverview(org, feed, main, singles = null) {
     const shown = found.slice(0, needle ? 200 : 25);
     ownerTable.innerHTML = shown.length ? `
       <div class="tbl-wrap"><table class="tbl">
-        <thead><tr><th scope="col">Kennel</th><th scope="col">Breed</th><th scope="col" class="num">${nouns.charAt(0).toUpperCase() + nouns.slice(1)}</th>
+        <thead><tr><th scope="col">Kennel</th>${single ? '' : '<th scope="col">Breed</th>'}<th scope="col" class="num">${nouns.charAt(0).toUpperCase() + nouns.slice(1)}</th>
           <th scope="col" class="num">This year</th><th scope="col" class="num">Career</th></tr></thead>
         <tbody>${shown.map((owner) => `
           <tr>
             <td><a href="${racingOwnerUrl(org, owner.key)}" class="lnk font-semibold" data-owner="${esc(owner.key)}">${esc(owner.name)}</a></td>
-            <td><a href="${racingBreedUrl(org, owner.breed_slug)}" class="lnk">${esc(owner.breed)}</a></td>
+            ${single ? '' : `<td><a href="${racingBreedUrl(org, owner.breed_slug)}" class="lnk">${esc(owner.breed)}</a></td>`}
             <td class="num">${owner.hounds}</td>
             <td class="num font-semibold">${ptsLabel(owner.ytd)}</td>
             <td class="num">${ptsLabel(owner[sumField])}</td>
@@ -791,7 +1165,7 @@ function renderRacingOverview(org, feed, main, singles = null) {
       <nav class="text-sm text-asfa-text/70"><a href="${spec.page}#kennels" class="lnk" id="kennel-back">Kennels</a> › ${esc(owner.name)}</nav>
       <section class="card">
         <h2 class="card-title">${esc(owner.name)}</h2>
-        <p class="text-sm text-asfa-text/70"><a href="${racingBreedUrl(org, owner.breed_slug)}" class="lnk">${esc(owner.breed)}</a></p>
+        ${single ? '' : `<p class="text-sm text-asfa-text/70"><a href="${racingBreedUrl(org, owner.breed_slug)}" class="lnk">${esc(owner.breed)}</a></p>`}
         <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mt-4">
           <div class="tile"><div class="tile-value">${owner.hounds}</div><div class="tile-label">active ${owner.hounds === 1 ? spec.noun : nouns}</div></div>
           <div class="tile"><div class="tile-value">${ptsLabel(owner.ytd)}</div><div class="tile-label">${spec.seasonLabel}</div></div>
@@ -806,8 +1180,8 @@ function renderRacingOverview(org, feed, main, singles = null) {
           <tbody>${rows.map((dog) => browseRow(dog, columns)).join('')}</tbody>
         </table></div>
         <p class="text-xs text-asfa-text/55 mt-3">
-          A co-owned ${spec.noun} is listed under every surname on its guide row, so totals
-          across kennels add to more than the breed total.
+          A co-owned ${spec.noun} is listed under every ${single && org === 'wra' ? 'name' : 'surname'} on its guide row, so totals
+          across kennels add to more than the ${single ? '' : 'breed '}total.
         </p>
       </section>`;
     wireSort(kennelFocus, columns, kennelSort, paintKennel);
@@ -846,6 +1220,26 @@ const POINTS_BY_STARTERS = {
   rows: [
     ['2', '1', '', ''], ['3 – 4', '1', '0.5', ''], ['5 – 7', '2', '1', ''], ['8 – 10', '3', '1.5', '0.5'],
     ['11 – 15', '4', '2', '1'], ['16 – 21', '5', '3', '1.5'], ['22 or more', '6', '4', '2'],
+  ],
+};
+
+/* WRA (rules 7.3 and 7.4): WRCh and National points by adult starters, to
+   the whippets with the most race points at the meet, five places from 80
+   up. NOTRA's Whippet chart (rules 5.3 and 5.4): by starters from 15 up,
+   four places. */
+const POINTS_WRA = {
+  columns: ['Adult starters', 'High score', 'Second', 'Third', 'Fourth', 'Fifth'],
+  rows: [
+    ['15 – 19', '2', '', '', '', ''], ['20 – 29', '3', '1', '', '', ''], ['30 – 39', '4', '2', '', '', ''],
+    ['40 – 49', '5', '3', '1', '', ''], ['50 – 59', '6', '4', '2', '', ''], ['60 – 69', '7', '5', '3', '1', ''],
+    ['70 – 79', '8', '6', '4', '2', ''], ['80 or more', '8', '6', '4', '3', '2'],
+  ],
+};
+const POINTS_WHIPPET = {
+  columns: ['Starters', 'First', 'Second', 'Third', 'Fourth'],
+  rows: [
+    ['15 – 19', '2', '', '', ''], ['20 – 29', '3', '1', '', ''], ['30 – 39', '4', '2', '', ''],
+    ['40 – 49', '5', '3', '1', ''], ['50 – 59', '6', '4', '2', ''], ['60 or more', '7', '5', '3', '1'],
   ],
 };
 
@@ -985,10 +1379,10 @@ const ABOUT = {
         and <strong>SOR</strong>, Senior Oval Racer, after six legs, a leg being such a meet
         finished in the top half of the hounds that ran every heat.
       </p>`,
-    cannot: [`<li><strong>Whippets are not included.</strong> NOTRA keeps a separate Whippet guide
-          with its own layout (a rating as well as a WAVE, meets by code rather than by date,
-          scores out of 29); these pages cover the Other-Breed guide, every sighthound breed but
-          the Whippet.</li>`],
+    cannot: [`<li><strong>Whippets have pages of their own.</strong> NOTRA keeps a separate Whippet
+          guide with its own layout and rules (a rating as well as a WAVE, scores out of 29, an
+          ORC at 15 points); it is on <a href="notra-whippets.html" class="lnk">NOTRA Whippets</a>,
+          in the Whippet racing section. These pages cover the Other-Breed guide.</li>`],
     source: (feed) => `
       <p class="text-sm leading-relaxed">
         The National Oval Track Racing Association's Other-Breed Recorder publishes one workbook,
@@ -1019,12 +1413,194 @@ const ABOUT = {
         Recorder, not here.
       </p>`,
   },
+  wra: {
+    waveCard: (feed) => `
+    <section class="card">
+      <h2 class="card-title">Average and grades</h2>
+      <p class="text-sm leading-relaxed">
+        A meet's score is the race points a whippet earns there, by its place in each race, out
+        of a possible 29 (rule 5.4). Its average is the mean of the completed meets among its last
+        three adult meets; with none completed, the mean of the incomplete ones, where it
+        scratched, did not finish or was disqualified; with no adult meet, 0 (rule 5.2):
+      </p>
+      <p class="font-mono text-sm mt-2 p-3 bg-asfa-bg2 border border-asfa-border">
+        Average = (sum of the completed meets) ÷ (number of completed meets)
+      </p>
+      <p class="text-sm leading-relaxed mt-2">
+        The grade is a band on it: <strong>A</strong> 15 and up, <strong>B</strong> 10 to 14.9,
+        <strong>C</strong> 4 to 9.9, <strong>D</strong> below 4 (rule 5.2). A whippet drops one
+        grade for each year in which it has not completed a meet, so a grade can sit below its
+        average's band. <strong>F</strong>, which the rule book does not define, appears only on
+        whippets with no adult meet on record; a first-time entrant races as a D.
+      </p>
+      <p class="text-sm leading-relaxed mt-2">
+        This site recomputes every average from the three meets the report lists and shows the
+        Registrar's published figure. The two agree for ${ORGS.wra.agreement(feed.stats)} of the
+        whippets on the active list; where they differ, a whippet's page says so, and the
+        published figure governs.
+      </p>
+    </section>`,
+    points: POINTS_WRA,
+    pointsIntro: `WRCh points and National points go to the whippets with the most race points at a
+        meet, by the number of adult starters (rules 7.3 and 7.4). WRCh points go only to
+        whippets without a WRCh: when the top scorer holds one, they pass to the next whippet
+        without one. National points go to titled and untitled whippets alike. CR points are the
+        race points themselves, from completed meets (rule 7.5.1).`,
+    titles: `
+      <p class="text-sm leading-relaxed mt-3">
+        <strong>CR</strong>, Companion Racer: 15 race points from completed meets (rule 7.5.1).
+        <strong>CRX</strong>, Companion Racer Excellent: 60 more, 75 in all, then CRX-II, CRX-III
+        and so on at each further 60, for whippets without a WRCh or WRChX (rule 7.5.2).
+        <strong>WRCh</strong>, Whippet Race Champion: 15 WRCh points (rule 7.5.3).
+        <strong>WRChX</strong>, Whippet Race Champion Excellent: 50 lifetime National points for a
+        dog or 30 for a bitch, with WRChX-II, -III and so on at each further 50 or 30 (rule 7.5.4).
+        Each title replaces the one before it in use (rule 7.2), so a whippet here carries one,
+        its highest; its page lists every title on record with its date. The Point Records also
+        carry the points and titles of NAWRA, which merged into the WRA in 2017.
+      </p>`,
+    cannot: [
+      `<li><strong>No meet dates.</strong> The report lists a whippet's last three adult meets as
+          scores and completion codes, newest first, with no dates or clubs, so these pages cannot
+          say when a whippet last raced.</li>`,
+      `<li><strong>No race numbers.</strong> WRA issues none, so the call name is the key: a
+          whippet's page address is built from it.</li>`,
+      `<li><strong>No sex.</strong> Neither list gives it, and the WRChX needs it (50 points for a
+          dog, 30 for a bitch), so WRChX titles here are the Registrar's, never computed.</li>`,
+      (feed) => {
+        const missing = feed.dogs.filter((dog) => !dog.in_records);
+        const pointed = missing.filter((dog) => (dog.wrch_site || 0) > 0 || (dog.cr || 0) >= 15).length;
+        return `<li><strong>Not every whippet is in the Point Records.</strong> ${missing.length} whippets
+          on the active list have no row there; ${pointed
+            ? `${pointed} of them have title points on the report`
+            : 'none of them has a title or a WRCh point on the report'}, and their pages use the
+          report's own figures.</li>`;
+      },
+      `<li><strong>Division II and puppy racing are not covered.</strong> DII points and titles are
+          on the DII Registrar's lists (rule 7.5.5), and puppy meets are not on the report.</li>`,
+    ],
+    source: (feed) => `
+      <p class="text-sm leading-relaxed">
+        The Whippet Racing Association publishes its
+        <a href="${esc(feed.source_page)}" class="lnk" target="_blank" rel="noopener noreferrer">grading guide</a>
+        as two reports, the active list and the inactive list, stamped with the date the Registrar
+        last updated them. Together they list every whippet registered, with its grade and
+        average, its CR, WRCh and National points, and, on the active list, the scores and
+        completion codes of its last three adult meets. Beside them the Registrar keeps the
+        <a href="${esc(feed.records_url)}" class="lnk" target="_blank" rel="noopener noreferrer">Whippet Point Records</a>,
+        which WRA's own help sheet names as the correct record of points and titles. The
+        arithmetic follows the
+        <a href="${esc(feed.rules_url)}" class="lnk" target="_blank" rel="noopener noreferrer">2026 WRA Rule Book</a>.
+      </p>
+      <ul class="text-sm leading-relaxed list-disc pl-5 mt-2 space-y-1">
+        <li><strong>Standings</strong> rank the report's "N Pts ${feed.season}" column, this year's National points.</li>
+        <li><strong>Career standings</strong> rank lifetime National points (the "N Pts L/T" column) across every whippet registered.</li>
+        <li><strong>Titles and title points</strong> are the Point Records': the report's CR column reads 0 once a whippet has 15 WRCh points, and the help sheet calls the report's WRCh points wrong. Each row of the Point Records is matched to the report by call name, with the registered name and owner to confirm it.</li>
+        <li><strong>Meets this year</strong> counts the meets marked verified on WRA's <a href="${ORGS.wra.calendar}" class="lnk" target="_blank" rel="noopener noreferrer">meet list</a>.</li>
+        <li><strong>Active</strong> means WRA's own active list. Test records and duplicate records in WRA's database are left out.</li>
+      </ul>`,
+    disclaimer: `
+      <p class="text-sm leading-relaxed">
+        These pages are an independent, unofficial project, added at the WRA's request. They are
+        not a WRA publication, service, or software, and they are not endorsed by the Whippet
+        Racing Association. The WRA's name is used only to identify the source of the reports,
+        the Point Records and the rule book cited here. Those are the WRA's work and remain its
+        property; they are reproduced with attribution and links to the originals. Wherever this
+        site and the WRA's own records disagree, <strong>the WRA's records govern</strong>, and
+        questions about a whippet's record go to the WRA Registrar, not here.
+      </p>`,
+  },
+  'notra-whippets': {
+    waveCard: (feed) => `
+    <section class="card">
+      <h2 class="card-title">WAVE, grades and rating</h2>
+      <p class="text-sm leading-relaxed">
+        WAVE is the weighted average of the completed meets among a whippet's last three, out of a
+        possible 29: winning the high-point race in all four programs pays 8, 5, 8 and 8 points
+        (table 4-4), and a three-program score is scaled up by 29 ÷ 22 first, as the guide prints
+        it (rule 4.2.2):
+      </p>
+      <p class="font-mono text-sm mt-2 p-3 bg-asfa-bg2 border border-asfa-border">
+        WAVE = (meet 1 + 0.7 × meet 2 + 0.5 × meet 3) ÷ 2.2
+      </p>
+      <p class="text-sm leading-relaxed mt-2">
+        with meet 1 the most recent. Two completed meets divide by 1.7; one is the score itself.
+        The recorder counts a meet marked N or F as completed. OTR-only meets, with fewer than 15
+        starters, are listed but not graded (rule 2.2.3). With nothing completed, the recorder
+        averages the scratches only when all three listed meets are graded ones, and this site
+        does the same. The grade is a band on the four-program column of rule 4.2.2:
+        <strong>A</strong> 15.2 and up, <strong>B</strong> 11 up to 15.2, <strong>C</strong> 7.6
+        up to 11, <strong>D</strong> below 7.6. Whippets are seeded by the guide's
+        <strong>rating</strong>, 1 the highest, which follows the WAVE (rule 4.2.3.4).
+      </p>
+      <p class="text-sm leading-relaxed mt-2">
+        This site recomputes every WAVE from the three meets the guide lists and shows the
+        recorder's published figure. The two agree for ${ORGS['notra-whippets'].agreement(feed.stats)}
+        of whippets; where they differ, a whippet's page says so, and the published figure governs.
+      </p>
+    </section>`,
+    points: POINTS_WHIPPET,
+    pointsIntro: `At a meet with 15 or more whippet starters, the top finishers earn points by the
+        number of starters (rule 5.3); smaller meets pay OTR points only and are not graded (rule
+        2.2.3). ORC points go only to untitled whippets and stop at 15; National (NORC) points go
+        to the first four by the same chart, titled or not (rule 5.4). Tied places split the
+        points.`,
+    titles: `
+      <p class="text-sm leading-relaxed mt-3">
+        <strong>ORC</strong>, Oval Racing Champion: 15 ORC points (rule 5.3), where other breeds
+        need 12. <strong>SORC</strong>, Supreme Oval Racing Champion: 50 lifetime National points
+        for a dog or 30 for a bitch, with SORC II, III and so on at each further 50 or 30 (rule
+        5.4). A whippet shows one NOTRA suffix, its highest (rule 5.6). The OTR and OTRM titles
+        (rule 5.5) and the Division II titles (rule 5.7) are kept on separate lists, not in the
+        guide.
+      </p>`,
+    cannot: [
+      `<li><strong>The guide prints no sex.</strong> The SORC needs 50 points for a dog and 30 for a
+          bitch, so it is taken from the recorder's title record in the guide; SORC II and higher
+          are not recorded there.</li>`,
+      `<li><strong>OTR-only meets</strong> (fewer than 15 starters, coded #1, #2 and so on) are shown
+          on a whippet's page but not graded, as in the guide.</li>`,
+      `<li><strong>Older meets are undated.</strong> The guide's meet key starts in February 2022, so
+          an older code shows without a date.</li>`,
+      `<li><strong>Restricted whippets</strong>, shaded in the guide under rule 6.2, say so on their
+          pages.</li>`,
+    ],
+    source: (feed) => `
+      <p class="text-sm leading-relaxed">
+        NOTRA's Whippet Recorder publishes the
+        <a href="${esc(feed.source_page)}" class="lnk" target="_blank" rel="noopener noreferrer">Whippet grading guide</a>,
+        a spreadsheet updated after each meet. It lists the whippets racing in recent seasons with
+        their rating, grade and WAVE, ORC points, National points for this year, earlier years
+        and lifetime, handicap points, the code, placing, score and status of their last three
+        meets, and their title, off-course, did-not-finish and disqualification records. A key
+        below the whippets dates each meet code. The arithmetic follows the
+        <a href="${esc(feed.rules_url)}" class="lnk" target="_blank" rel="noopener noreferrer">NOTRA Rules</a>
+        (February 2025). The guide's date is read from the "Current as of" note beside its link.
+      </p>
+      <ul class="text-sm leading-relaxed list-disc pl-5 mt-2 space-y-1">
+        <li><strong>Standings</strong> rank the guide's Curr NORC column, this year's National points.</li>
+        <li><strong>Career standings</strong> rank lifetime National points (the Lftm NORC column).</li>
+        <li><strong>Titles:</strong> 15 ORC points is an ORC; the SORC is the recorder's title record. The recorder's certificate is the record.</li>
+        <li><strong>Active</strong> means National points this year, or a meet since the start of last season; an OTR-only meet counts as racing, though it is never graded.</li>
+        <li>Every other breed is on <a href="notra.html" class="lnk">NOTRA racing</a>, from NOTRA's Other-Breed guide.</li>
+      </ul>`,
+    disclaimer: `
+      <p class="text-sm leading-relaxed">
+        These pages are an independent, unofficial project. They are <strong>not authorized,
+        approved, or endorsed by the National Oval Track Racing Association</strong>, and they are
+        not a NOTRA publication, service, or software. NOTRA's name is used only to identify the
+        source of the grading guide and the rules cited here. The grading guide is NOTRA's work
+        and remains NOTRA's property; it is reproduced with attribution and a link to the
+        original. Wherever this site and the published guide disagree, <strong>the guide
+        governs</strong>, and questions about a whippet's record go to the NOTRA Whippet
+        Recorder, not here.
+      </p>`,
+  },
 };
 
 function aboutRacing(org, feed, singles = null) {
   const spec = ORGS[org];
   const about = ABOUT[org];
-  const common = `
+  const waveCard = about.waveCard ? about.waveCard(feed) : `
     <section class="card">
       <h2 class="card-title">WAVE and grades</h2>
       <p class="text-sm leading-relaxed">
@@ -1047,7 +1623,9 @@ function aboutRacing(org, feed, singles = null) {
         ${spec.nouns}; where they differ, a ${spec.noun}'s page says so, and the published
         figure governs.
       </p>
-    </section>
+    </section>`;
+  const common = `
+    ${waveCard}
     <section class="card">
       <h2 class="card-title">Points and titles</h2>
       <p class="text-sm leading-relaxed">
@@ -1061,9 +1639,9 @@ function aboutRacing(org, feed, singles = null) {
       <ul class="text-sm space-y-3">
         <li><strong>There is no race-by-race record.</strong> The guide keeps a ${spec.noun}'s last
           three meets and its running totals, nothing older and no times.</li>
-        <li><strong>Points do not compare across breeds.</strong> A breed that fills a program
-          most weekends offers far more of them than one that rarely races.</li>
-        ${about.cannot.join('')}
+        ${spec.singleBreed ? '' : `<li><strong>Points do not compare across breeds.</strong> A breed that fills a program
+          most weekends offers far more of them than one that rarely races.</li>`}
+        ${about.cannot.map((item) => (typeof item === 'function' ? item(feed) : item)).join('')}
       </ul>
     </section>
     <section class="card">
@@ -1110,8 +1688,9 @@ function renderRacingDog(org, feed, main, singles = null) {
     if (move && !move.new) {
       const parts = [];
       const rank = move.rank_breed_delta;
-      if (rank > 0) parts.push(`climbed ${rank} place${rank === 1 ? '' : 's'} in the breed`);
-      else if (rank < 0) parts.push(`fell ${-rank} place${rank === -1 ? '' : 's'} in the breed`);
+      const within = spec.singleBreed ? 'in the standings' : 'in the breed';
+      if (rank > 0) parts.push(`climbed ${rank} place${rank === 1 ? '' : 's'} ${within}`);
+      else if (rank < 0) parts.push(`fell ${-rank} place${rank === -1 ? '' : 's'} ${within}`);
       if (move.ytd_delta) parts.push(`gained ${ptsLabel(move.ytd_delta)} point${move.ytd_delta === 1 ? '' : 's'} this year`);
       if (move.new_titles && move.new_titles.length) parts.push(`earned ${move.new_titles.join(', ')}`);
       if (parts.length) movementLine = `${parts.join(', ')} since the guide of ${formatDate(move.since)}`;
@@ -1123,10 +1702,13 @@ function renderRacingDog(org, feed, main, singles = null) {
       ? `#${dog.rank_breed}`
       : '—';
     const standingContext = dog.rank_breed
-      ? `in ${esc(dog.breed)} this year`
+      ? (spec.singleBreed ? 'this year' : `in ${esc(dog.breed)} this year`)
       : 'no points this year';
 
-    const rankLine = dog.rank_breed
+    const rankLine = dog.rank_breed && spec.singleBreed
+      ? `Ranked <strong>#${dog.rank_breed}</strong> of ${feed.stats.hounds_ytd} ${spec.nouns} with points this year,
+         on <strong>${ptsLabel(dog.ytd)}</strong> ${spec.seasonLabel}.`
+      : dog.rank_breed
       ? `Ranked <strong>#${dog.rank_breed}</strong> of ${feed.sections.find((s) => s.slug === dog.breed_slug)?.ytd ?? '?'} ${esc(dog.breed)}
          ${spec.nouns} with points this year, and <strong>#${dog.rank_all}</strong> of ${feed.stats.hounds_ytd} across every breed,
          on <strong>${ptsLabel(dog.ytd)}</strong> ${spec.seasonLabel}.`
@@ -1136,7 +1718,7 @@ function renderRacingDog(org, feed, main, singles = null) {
       ? dog.owners.map((owner) => `<a href="${racingOwnerUrl(org, `${owner.key}|${dog.breed_slug}`)}" class="lnk">${esc(owner.name)}</a>`).join(', ')
       : esc(dog.owner_raw);
 
-    const titleProgress = [
+    const titleProgress = spec.titleProgress ? spec.titleProgress(dog, feed) : [
       ...spec.champion.map(([field, label, name, need, rule]) => progressBar(
         rule ? rule.value(dog) : dog[field], need, `${label} · ${name}`,
         rule ? { done: rule.done(dog), note: rule.note ? rule.note(dog) : '', pending: rule.pending ? rule.pending(dog) : '' } : {})),
@@ -1151,7 +1733,7 @@ function renderRacingDog(org, feed, main, singles = null) {
     ].join('');
 
     const meetTables = meetsByStream.map(([field, label, meets]) => {
-      const complete = meets.filter((m) => m.complete && m.score != null);
+      const complete = meets.filter((m) => m.graded !== false && m.complete && m.score != null);
       const weights = ['1', '0.7', '0.5'];
       let used = 0;
       return `
@@ -1159,26 +1741,33 @@ function renderRacingDog(org, feed, main, singles = null) {
           <h2 class="card-title">${label}</h2>
           ${meets.length ? `
           <div class="tbl-wrap"><table class="tbl">
-            <thead><tr><th scope="col">Meet</th><th scope="col">${spec.meetStatus ? 'Date as written' : 'Code'}</th><th scope="col" class="num">Score</th>${
+            <thead><tr><th scope="col">Meet</th>${spec.meetCodeHeader === null ? '' : `<th scope="col">${spec.meetCodeHeader || (spec.meetStatus ? 'Date as written' : 'Code')}</th>`}${
+              spec.meetPlacing ? '<th scope="col" class="num">Place</th>' : ''}<th scope="col" class="num">Score</th>${
               spec.meetStatus ? '<th scope="col">Status</th>' : ''}<th scope="col">Counted</th></tr></thead>
             <tbody>${meets.map((meet) => {
-              const counted = meet.complete && meet.score != null && (complete.length ? used < 3 : false);
-              const weight = counted ? weights[used++] : null;
+              const graded = meet.graded !== false;
+              const counted = graded && meet.complete && meet.score != null && (complete.length ? used < 3 : false);
+              const weight = counted && !spec.plainMean ? weights[used++] : null;
+              const countedCell = !graded
+                ? '<span class="badge badge-flat">OTR only</span> <span class="text-xs text-asfa-text/60">not graded, rule 2.2.3</span>'
+                : meet.complete
+                  ? (spec.plainMean ? 'in the average' : weight ? `× ${weight}` : '—')
+                  // With no complete meet listed, the rule takes the plain mean
+                  // of the incomplete ones, so they count rather than drop out.
+                  : `<span class="badge badge-prov">incomplete</span> <span class="text-xs text-asfa-text/60">${
+                    complete.length || meet.score == null ? 'excluded' : 'in the plain mean'}, ${spec.averageRule || 'rule 4.2.2'}</span>`;
               return `
               <tr>
                 <td class="whitespace-nowrap">${meetLabel(meet, org)}</td>
-                <td class="font-mono text-xs">${esc(meet.code)}</td>
+                ${spec.meetCodeHeader === null ? '' : `<td class="font-mono text-xs">${esc(meet.code)}</td>`}
+                ${spec.meetPlacing ? `<td class="num">${meet.placing == null || meet.placing === 99 ? '—' : meet.placing}</td>` : ''}
                 <td class="num font-semibold">${ptsLabel(meet.score)}</td>
                 ${spec.meetStatus ? `<td class="font-mono text-xs">${esc(meet.status || '')}</td>` : ''}
-                <td>${meet.complete
-                  ? (weight ? `× ${weight}` : '—')
-                  // With no complete meet listed, rule 4.2.2 takes the plain mean
-                  // of the incomplete ones, so they count rather than drop out.
-                  : `<span class="badge badge-prov">incomplete</span> <span class="text-xs text-asfa-text/60">${
-                    complete.length || meet.score == null ? 'excluded' : 'in the plain mean'}, rule 4.2.2</span>`}</td>
+                <td>${countedCell}</td>
               </tr>`;
             }).join('')}</tbody>
-          </table></div>${meets.some((m) => m.read) ? `
+          </table></div>${spec.statusLegend ? `
+          <p class="text-xs text-asfa-text/65 mt-2">${spec.statusLegend}</p>` : ''}${meets.some((m) => m.read) ? `
           <p class="text-xs text-asfa-text/65 mt-2">${meets.filter((m) => m.read).map((m) =>
             `<span class="font-mono">${esc(m.code)}</span> is read as ${formatDateShort(m.date)}`).join('; ')}:
             the cell falls after the guide's own date, so its day and month are taken the other way round.</p>` : ''}` : `<p class="text-sm text-asfa-text/70">No meets listed.</p>`}
@@ -1197,8 +1786,8 @@ function renderRacingDog(org, feed, main, singles = null) {
             <span class="font-display text-3xl text-asfa-accent">${waveLabel(value)}</span>
             ${gradeBadge(dog[gField])}
           </div>
-          ${value == null ? `<p class="text-sm text-asfa-text/70 mt-2">No ${title} on record.</p>` : waveBar(value, spec.waveMax)}
-          ${meets.length ? `<p class="text-sm text-asfa-text/80 mt-2">From the last three meets: ${waveArithmetic(meets)}.</p>` : ''}
+          ${value == null ? `<p class="text-sm text-asfa-text/70 mt-2">No ${title} on record.</p>` : waveBar(value, spec.waveMax, spec.gradeBands, title)}
+          ${meets.length ? `<p class="text-sm text-asfa-text/80 mt-2">From the last three meets: ${spec.ownArithmetic ? averageArithmetic(org, meets) : waveArithmetic(meets)}.</p>` : ''}
           ${value != null && matches === false && computed != null ? `
             <p class="text-xs text-asfa-text/65 mt-2">
               The guide publishes ${waveLabel(value)}; the three meets it lists compute to ${waveLabel(computed)}.
@@ -1226,14 +1815,15 @@ function renderRacingDog(org, feed, main, singles = null) {
           <div class="flex-1 min-w-[16rem]">
             <h1 class="font-display text-3xl text-asfa-text leading-tight">${esc(dog.call_name)}</h1>
             <p class="text-asfa-text/85">${esc(dog.registered_name)}</p>
-            ${titleBadges(org, dog) ? `<p class="text-xs text-asfa-text/70 mt-1">Titles by the points columns: ${titleBadges(org, dog)}</p>` : ''}
+            ${titleBadges(org, dog) ? `<p class="text-xs text-asfa-text/70 mt-1">${spec.titlesLabel || 'Titles by the points columns'}: ${titleBadges(org, dog)}</p>` : ''}
             <p class="text-sm text-asfa-text/70 mt-1">
-              <a href="${racingBreedUrl(org, dog.breed_slug)}" class="lnk">${esc(dog.breed)}</a>
+              <a href="${racingBreedUrl(org, dog.breed_slug)}" class="lnk">${esc(dog.breed)}</a>${spec.noIds ? '' : `
               · <span class="font-mono text-xs">${esc(publishedId(dog))}</span>${
-                idNote(dog) ? ` <span class="text-xs">(${idNote(dog)})</span>` : ''}
+                idNote(dog) ? ` <span class="text-xs">(${idNote(dog)})</span>` : ''}`}
               ${fromRegistry ? ' · <span class="badge badge-flat">inactive</span>' : ''}
             </p>
             <p class="text-sm mt-1">Owned by ${ownersLine}</p>
+            ${spec.dogNote && spec.dogNote(dog) ? `<p class="text-xs text-asfa-text/65 mt-1">${spec.dogNote(dog)}</p>` : ''}
             ${dog.note ? `<p class="text-xs text-asfa-text/65 mt-1">Registrar's note: ${esc(dog.note)}</p>` : ''}
             ${movementLine ? `<p class="text-sm mt-2">${movementCell(dog)} <span class="text-asfa-text/70">${esc(movementLine)}</span></p>` : ''}
           </div>
@@ -1257,14 +1847,16 @@ function renderRacingDog(org, feed, main, singles = null) {
 
       <section class="card">
         <h2 class="card-title">Progress toward titles</h2>
-        <p class="text-xs text-asfa-text/60">Read from the points columns; the ${spec.name} ${spec.officer}'s certificate is the record.</p>
+        <p class="text-xs text-asfa-text/60">${spec.progressNote || `Read from the points columns; the ${spec.name} ${spec.officer}'s certificate is the record.`}</p>
         ${titleProgress}
       </section>
 
       ${meetTables}
 
       <section class="card">
-        ${spec.faults ? `
+        ${spec.faultsView ? `
+        <h2 class="card-title">Faults on record</h2>
+        ${spec.faultsView(dog)}` : spec.faults ? `
         <h2 class="card-title">Faults on record</h2>
         ${dog.faults ? `<p class="text-sm">${ptsLabel(dog.faults.dq)} disqualification${dog.faults.dq === 1 ? '' : 's'} ·
           ${ptsLabel(dog.faults.oc)} off course · ${ptsLabel(dog.faults.dnf)} did not finish
@@ -1306,8 +1898,9 @@ function renderRacingDog(org, feed, main, singles = null) {
       </div>` : ''}
 
       <p class="text-xs text-asfa-text/55">
-        Figures as published in the ${spec.name} grading guide ${guideDate(feed)}${
-          sdog ? ` and the Singles sprint records ${guideDate(singles)}` : ''}.
+        Figures as published in the ${spec.singleBreed ? spec.guideName : `${spec.name} grading guide`} ${guideDate(feed)}${
+          sdog ? ` and the Singles sprint records ${guideDate(singles)}` : ''}${
+          feed.records_date ? `, titles from the Registrar's Whippet Point Records of ${formatDate(feed.records_date)}` : ''}.
         <a href="${spec.page}#about" class="lnk">What the columns mean</a>.
       </p>`;
     const cardBtn = main.querySelector('#card-btn');
@@ -1357,7 +1950,8 @@ function timeLabel(value) {
 }
 
 function romanLevel(n) {
-  const numerals = ['', 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X'];
+  const numerals = ['', 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X',
+    'XI', 'XII', 'XIII', 'XIV', 'XV', 'XVI', 'XVII', 'XVIII', 'XIX', 'XX'];
   return numerals[n] || String(n);
 }
 
@@ -1861,6 +2455,7 @@ function cardWave(org, dog) {
 
 /** Whether a racing record has anything worth a card. */
 function hasCardRecord(org, dog) {
+  if (ORGS[org].noCard) return false;
   return Boolean(dog.rank_breed || cardWave(org, dog).value != null || ORGS[org].careerOf(dog));
 }
 

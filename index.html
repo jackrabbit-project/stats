@@ -20,7 +20,7 @@
   <link rel="preload" href="assets/fonts/fraunces-latin-var.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/plex-mono-400.woff2" as="font" type="font/woff2" crossorigin>
   <script src="js/theme.js?v=20260823"></script>
-  <link rel="stylesheet" href="css/app.css?v=20261011a">
+  <link rel="stylesheet" href="css/app.css?v=20261011b">
   <link rel="icon" href="assets/favicon.ico?v=4" sizes="any">
   <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png?v=4">
   <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png?v=4">
@@ -32,7 +32,7 @@
     <section class="bg-asfa-bg2 border-b border-asfa-border">
       <div class="max-w-3xl mx-auto px-4 py-10 text-center">
         <h1 class="font-display text-4xl md:text-5xl text-asfa-text tracking-tight">Find your hound.</h1>
-        <p class="mt-2 text-asfa-text/75">Lure coursing and racing standings, points, titles and records from ASFA, LGRA, AOK9 and NOTRA.</p>
+        <p class="mt-2 text-asfa-text/75">Lure coursing and racing standings, points, titles and records from ASFA, LGRA, AOK9 and NOTRA, and whippet racing from WRA and NOTRA.</p>
 
         <div class="relative mt-6 text-left">
           <label for="search" class="sr-only">Search hounds by name across every program</label>
@@ -53,7 +53,7 @@
       <section class="card">
         <h2 class="card-title">Track your hound across programs</h2>
         <p class="text-sm text-asfa-text/70 mb-3">Look up any hound in ASFA lure coursing, LGRA straight racing, AOK9
-          sprint racing or NOTRA oval racing, follow the breed standings, watch titles land, and find where to run next.</p>
+          sprint racing, NOTRA oval racing or whippet racing, follow the breed standings, watch titles land, and find where to run next.</p>
         <p class="text-sm text-asfa-text/70 mb-3">Know someone chasing a Top 20 spot, a racing championship, or next weekend's meet? Pass it on.</p>
         <div id="share-links" class="flex flex-wrap gap-2"></div>
       </section>
@@ -62,10 +62,10 @@
 
   <footer id="site-footer" class="bg-asfa-navy text-white py-8"></footer>
 
-  <script src="js/app.js?v=20261011a"></script>
-  <script src="js/racing.js?v=20261010a"></script>
+  <script src="js/app.js?v=20261011b"></script>
+  <script src="js/racing.js?v=20261011b"></script>
   <script>
-    pageHub(({ asfa, lgra, aok9, trials, singles, notra }) => {
+    pageHub(({ asfa, lgra, aok9, trials, singles, notra, wra, notraWhippets }) => {
       const programs = document.getElementById('programs');
       const coverage = [];
 
@@ -162,6 +162,39 @@
       const aok9Body = racingCard(aok9, 'aok9', 'AOK9', 'dogs', aok9 && singles ? singles.combined : null);
       const notraBody = racingCard(notra, 'notra', 'NOTRA', 'hounds');
 
+      /* Whippet racing (beta): the whippet bodies side by side in one card
+         across, in the section's plum. One breed, so no breed counts: the
+         whippets racing (WRA's report dates no meet, so its active list
+         stands in), with points, the meets and the titled. */
+      const whippetCard = (feed, org, name) => {
+        if (!feed) return unavailable(name);
+        const leader = feed.dogs.find((dog) => dog.rank_all === 1);
+        coverage.push(`${name} ${ORGS[org].coverageWord || 'guide'} ${guideDate(feed, 'of')}`);
+        return tiles(ORGS[org].hubTiles ? ORGS[org].hubTiles(feed.stats) : [
+          [feed.stats.hounds_raced, 'whippets racing this year'],
+          [feed.stats.hounds_ytd, 'with points this year'],
+          [feed.stats.meets_this_year, 'meets this year'],
+          ORGS[org].titledTile(feed.stats),
+        ]) + (leader ? `<p class="text-sm text-asfa-text/70 mt-3">Leading this year: <span class="font-semibold text-asfa-green">${esc(leader.call_name)}</span>, ${ptsLabel(leader.ytd)} points.</p>` : '');
+      };
+      const wraBody = whippetCard(wra, 'wra', 'WRA');
+      const notraWhippetsBody = whippetCard(notraWhippets, 'notra-whippets', 'NOTRA Whippets');
+      const betaBadge = '<span class="badge badge-flat ml-2 align-middle font-mono text-[10px] uppercase tracking-widest">Beta</span>';
+      const whippetPair = `
+        <div class="card program-card program-whippet flex flex-col md:col-span-2">
+          <h2 class="font-display text-3xl text-asfa-text">Whippet racing${betaBadge}</h2>
+          <p class="font-mono text-[10px] uppercase tracking-widest text-asfa-muted mt-0.5">${ORGS.wra.hubLine || 'Whippet racing records'}</p>
+          <div class="grid md:grid-cols-2 gap-y-8 md:gap-x-8 mt-5">
+            ${[['wra', 'WRA', ORGS.wra.hubSub, wraBody], ['notra-whippets', 'NOTRA Whippets', ORGS['notra-whippets'].hubSub, notraWhippetsBody]].map(([org, title, sub, body]) => `
+            <a href="${org}.html" class="program-whippet flex flex-col group">
+              <h3 class="font-display text-2xl program-label">${title}</h3>
+              <p class="font-mono text-[10px] uppercase tracking-widest text-asfa-muted mt-0.5">${sub || ''}</p>
+              <div class="mt-4">${body}</div>
+              <p class="text-sm mt-auto pt-4 underline underline-offset-2 text-asfa-text/80 group-hover:text-asfa-text">Standings, grades, titles →</p>
+            </a>`).join('')}
+          </div>
+        </div>`;
+
       // Announces the Singles records, added in September 2026, and the NOTRA
       // section, added in October 2026, for the rest of the season; from 2027
       // they are old news and the notes drop away. Each shows only when its
@@ -178,7 +211,8 @@
         + card('aok9.html', 'AOK9 racing', 'All-breed sprint racing', aok9Body, 'Standings by breed, WAVE, titles', 'aok9', singlesNote)
         + racingPair([
           ['lgra', 'LGRA racing', 'Straight racing · 200 yards', lgraBody, 'Standings by breed, WAVE, titles', ''],
-          ['notra', 'NOTRA racing', 'Oval racing · OB', notraBody, 'Standings by breed, WAVE, titles', notraNote]]);
+          ['notra', 'NOTRA racing', 'Oval racing · OB', notraBody, 'Standings by breed, WAVE, titles', notraNote]])
+        + whippetPair;
       // The one place figures roll up: see countUp in app.js.
       animateTiles(programs);
 
@@ -196,19 +230,19 @@
         </a>`;
       /* The index the header search uses too; dogs not racing lately come
          from the racing registries, loaded on the first search. */
-      const entries = buildSearchEntries({ asfa, lgra, aok9, singles, notra });
-      const registryFallback = (query) => searchDormant(query, { lgra, aok9, singles, notra }, entries);
+      const entries = buildSearchEntries({ asfa, lgra, aok9, singles, notra, wra, 'notra-whippets': notraWhippets });
+      const registryFallback = (query) => searchDormant(query, { lgra, aok9, singles, notra, wra, 'notra-whippets': notraWhippets }, entries);
       attachSearch(document.getElementById('search'), document.getElementById('search-results'), entries, {
         row,
-        empty: "No hound matches that name. ASFA lists only each breed's Top 20; LGRA, AOK9 and NOTRA list active dogs.",
+        empty: "No hound matches that name. ASFA lists only each breed's Top 20; LGRA, AOK9, NOTRA and WRA list active dogs.",
         fallback: registryFallback,
-        fallbackNote: 'Not racing lately, from the all-time LGRA, AOK9 and NOTRA records:',
+        fallbackNote: 'Not racing lately, from the all-time LGRA, AOK9, NOTRA and WRA records:',
       });
 
       /* ----- share links, plain sharer URLs */
       const shareUrl = window.location.origin + window.location.pathname;
       const shareTitle = 'Gazehound Stats';
-      const shareBlurb = 'ASFA lure coursing, LGRA, AOK9 and NOTRA racing standings, searchable by hound.';
+      const shareBlurb = 'ASFA lure coursing, LGRA, AOK9, NOTRA and whippet racing standings, searchable by hound.';
       const su = encodeURIComponent(shareUrl);
       const st = encodeURIComponent(`${shareTitle} — ${shareBlurb}`);
       const shares = [

@@ -60,6 +60,7 @@
     --slate: 61 90 128;        /* the LGRA program colour      #3D5A80 */
     --amber: 143 98 16;        /* the NOTRA program colour     #8F6210 */
     --akc: 0 53 148;           /* the AKC page, AKC's own blue  #003594 */
+    --whippet: 110 61 120;     /* the Whippet racing colour    #6E3D78 */
     --well: 34 38 31;          /* footer, dark in both themes  #22261F */
     --well-ink: 247 245 239;   /* text on the well             #F7F5EF */
 
@@ -89,6 +90,7 @@
       --slate: 138 168 205;     /* #8AA8CD */
       --amber: 217 179 92;      /* #D9B35C */
       --akc: 143 176 242;       /* #8FB0F2 */
+      --whippet: 200 162 212;   /* #C8A2D4 */
       --well: 22 21 19;         /* #161513 */
       --well-ink: 231 226 214;  /* #E7E2D6 */
 
@@ -114,6 +116,7 @@
     --slate: 138 168 205;     /* #8AA8CD */
     --amber: 217 179 92;      /* #D9B35C */
     --akc: 143 176 242;       /* #8FB0F2 */
+    --whippet: 200 162 212;   /* #C8A2D4 */
     --well: 22 21 19;         /* #161513 */
     --well-ink: 231 226 214;  /* #E7E2D6 */
     --badge-up-bg: 34 57 44;    --badge-up-ink: 169 211 184;
@@ -232,6 +235,7 @@
 .program-lgra { --program: var(--slate); }
 .program-aok9 { --program: var(--green); }
 .program-notra { --program: var(--amber); }
+.program-whippet { --program: var(--whippet); }
 /* Inside a shared card, each half's label takes that half's own colour. */
 .program-card .program-label { color: rgb(var(--program)); }
 
@@ -596,7 +600,9 @@ ol.rb-l { list-style: decimal; }
   .tagline-year-asfa,
   .tagline-year-aok9,
   .tagline-year-notra,
-  .tagline-year-akc {
+  .tagline-year-akc,
+  .tagline-year-wra,
+  .tagline-year-notra-whippets {
     display: none;
   }
 }
@@ -743,6 +749,19 @@ ol.rb-l { list-style: decimal; }
   gap: 0.25rem;
   padding: 0 0.6rem;
   border-bottom: 1px solid rgb(var(--line));
+  /* Seven programs outgrow a phone: the row scrolls sideways, the last tab
+     cut at the edge to show there is more, instead of spilling out. */
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.search-tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.search-tabs .tab {
+  flex: 0 0 auto;
+  white-space: nowrap;
 }
 
 .search-list {
@@ -899,6 +918,11 @@ ol.rb-l { list-style: decimal; }
 .tab-active {
   color: rgb(var(--ink));
   border-bottom-color: rgb(var(--rust));
+}
+
+/* The whippet bodies' own tabs, under the section's plum. */
+.subtabs-whippet .tab-active {
+  border-bottom-color: rgb(var(--whippet));
 }
 
 /* Breed picker chips: an almanac index tab — selected gets an ink border

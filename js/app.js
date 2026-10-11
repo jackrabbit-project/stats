@@ -56,18 +56,23 @@ function loadEvents() {
     records are a feed of their own, read beside the sprint one. */
 const RACING_URLS = {
   lgra: 'data/lgra.json', aok9: 'data/aok9.json', 'aok9-singles': 'data/aok9-singles.json',
-  notra: 'data/notra.json',
+  notra: 'data/notra.json', wra: 'data/wra.json', 'notra-whippets': 'data/notra-whippets.json',
 };
 /* The racing programs in the order the site shows them: feed key, the badge
    the search wears, the guide each is reproduced from. racing.js holds the
    full table (ORGS); this short one serves the chrome and the search, which
-   every page loads. */
+   every page loads. WRA and NOTRA's Whippets make up the Whippet racing
+   section. */
 const RACING_PROGRAMS = [
   ['lgra', 'LGRA', 'LGRA grading guide'],
   ['aok9', 'AOK9', 'AOK9 sprint racing grading guide'],
   ['notra', 'NOTRA', 'NOTRA Other-Breed grading guide'],
+  ['wra', 'WRA', 'WRA grading guide'],
+  ['notra-whippets', 'NOTRA Whippets', 'NOTRA Whippet grading guide'],
 ];
 const isRacingSection = (key) => RACING_PROGRAMS.some(([org]) => org === key);
+// One breed each: their leaders lead the whippets, not "all breeds".
+const WHIPPET_PROGRAMS = new Set(['wra', 'notra-whippets']);
 const racingPromises = {};
 
 function loadRacing(org) {
@@ -456,8 +461,11 @@ async function searchDormant(query, feeds, entries, program = '') {
     const dormant = rows.filter((dog) => !dog.active
       && !listed.has(`${name}|${dog.id}`) && !offered.has(`${name}|${dog.id}`)).map((dog) => {
       const breed = breeds.get(dog.breed_slug) || dog.breed_slug;
+      // AOK9's registry keeps a year for undated meets; the others a date.
+      // WRA's inactive list carries no meets at all.
+      const year = dog.last_year || (dog.last_raced ? dog.last_raced.slice(0, 4) : null);
       return searchEntry({ ...dog, breed }, name, racingDogUrl(org, dog.id),
-        `${breed} · ${dog.last_year ? `last raced ${dog.last_year}` : 'no meets recorded'}`, 1e6);
+        `${breed} · ${year ? `last raced ${year}` : org === 'wra' ? 'inactive list' : 'no meets recorded'}`, 1e6);
     });
     found.push(...searchDogs(query, dormant, 20));
   }
@@ -484,7 +492,7 @@ function searchLeaders(feeds, program, count) {
     const top = feed.dogs.filter((dog) => dog.rank_all)
       .sort((a, b) => a.rank_all - b.rank_all || a.call_name.localeCompare(b.call_name)).slice(0, count);
     if (top.length) {
-      groups.push([`${name} · leading all breeds this year`, top.map((dog) =>
+      groups.push([`${name} · leading ${WHIPPET_PROGRAMS.has(org) ? 'the whippets' : 'all breeds'} this year`, top.map((dog) =>
         searchEntry(dog, name, racingDogUrl(org, dog.id), `${dog.breed} · ${points(dog.ytd)} pts`, dog.rank_all))]);
     }
   }
@@ -497,10 +505,11 @@ function loadSearchFeeds() {
   if (!loadSearchFeeds.promise) {
     loadSearchFeeds.promise = Promise.allSettled([
       loadSeason(), loadRacing('lgra'), loadRacing('aok9'), loadRacing('aok9-singles'), loadRacing('notra'),
+      loadRacing('wra'), loadRacing('notra-whippets'),
     ]).then((results) => {
-      const [asfa, lgra, aok9, singles, notra] = results.map((result) =>
+      const [asfa, lgra, aok9, singles, notra, wra, notraWhippets] = results.map((result) =>
         (result.status === 'fulfilled' ? result.value : null));
-      const feeds = { asfa, lgra, aok9, singles, notra };
+      const feeds = { asfa, lgra, aok9, singles, notra, wra, 'notra-whippets': notraWhippets };
       return { feeds, entries: buildSearchEntries(feeds) };
     });
   }
@@ -745,12 +754,20 @@ const NAV_NOTRA = [
   ['notra.html#kennels', 'Kennels'],
   ['notra.html#about', 'About'],
 ];
+/* Whippet racing gathers several bodies' records in one section: its nav
+   names the bodies, and each body's page carries its own tabs (overview,
+   standings, browse, kennels, about) inside the page. */
+const NAV_WHIPPETS = [
+  ['wra.html', 'WRA'],
+  ['notra-whippets.html', 'NOTRA Whippets'],
+];
 const NAV_HUB = [
   ['index.html', 'Home'],
   ['asfa.html', 'ASFA coursing'],
   ['lgra.html', 'LGRA racing'],
   ['aok9.html', 'AOK9 racing'],
   ['notra.html', 'NOTRA racing'],
+  ['wra.html', 'Whippet racing'],
   ['akc.html', 'AKC stats'],
 ];
 
@@ -793,6 +810,22 @@ const SECTIONS = {
     color: 'text-asfa-amber', line: 'border-asfa-amber',
     disclaimer: 'notra.html#about',
   },
+  // Whippet racing, in beta: one entry in the program menu (WRA's page is
+  // its home), one plum colour, the bodies as tabs. Each body keeps its own
+  // section key so its pages load its own feed and footer source line.
+  wra: {
+    home: 'wra.html', nav: NAV_WHIPPETS,
+    program: 'Whippet racing', beta: true, group: 'whippets',
+    color: 'text-asfa-whippet', line: 'border-asfa-whippet',
+    disclaimer: 'wra.html#about',
+  },
+  'notra-whippets': {
+    home: 'notra-whippets.html', nav: NAV_WHIPPETS,
+    program: 'Whippet racing', beta: true, group: 'whippets',
+    color: 'text-asfa-whippet', line: 'border-asfa-whippet',
+    disclaimer: 'notra-whippets.html#about',
+    menu: false,
+  },
   // AKC lure coursing entries: one page of event-level counts, not a
   // program. It wears the hub's nav and AKC's own blue, sits outside the
   // program menu, and is reached from the ASFA Regions page.
@@ -804,7 +837,10 @@ const SECTIONS = {
     menu: false,
   },
 };
-const PAGE_SECTIONS = { 'index.html': 'hub', 'lgra.html': 'lgra', 'aok9.html': 'aok9', 'notra.html': 'notra', 'akc.html': 'akc' };
+const PAGE_SECTIONS = {
+  'index.html': 'hub', 'lgra.html': 'lgra', 'aok9.html': 'aok9', 'notra.html': 'notra', 'akc.html': 'akc',
+  'wra.html': 'wra', 'notra-whippets.html': 'notra-whippets',
+};
 
 function sectionOf(current) {
   if (current === 'racing-dog.html') {
@@ -999,11 +1035,16 @@ const FOOTER_LINKS = [
     ['link', 'Race dates', 'https://www.notra.org/RaceDates.html'],
     ['facebook', 'Notra OB Racing group', 'https://www.facebook.com/groups/notraob'],
   ]],
+  ['Whippet racing', [
+    ['globe', 'whippetracing.org, the WRA site', 'https://www.whippetracing.org'],
+    ['link', 'WRA race meets', 'https://www.whippetracing.org/MeetListDisplay.cfm'],
+    ['link', 'NOTRA race dates', 'https://www.notra.org/RaceDates.html'],
+  ]],
 ];
 
 function footerLinks() {
   return `
-        <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-4">${FOOTER_LINKS.map(([heading, links]) => `
+        <div class="grid sm:grid-cols-2 lg:grid-cols-5 gap-x-6 gap-y-4">${FOOTER_LINKS.map(([heading, links]) => `
           <div>
             <p class="font-mono text-[10px] uppercase tracking-widest text-asfa-wellink/60 mb-1.5">${heading}</p>
             <ul class="space-y-1">${links.map(([glyph, label, href]) => `
@@ -1045,16 +1086,17 @@ function footerSource(sectionKey, feed) {
     return feed ? `
         <p>
           Figures reproduced from the ${link(feed.source_url, guide)}
-          ${guideDate(feed)}, published at
+          ${guideDate(feed)}${feed.records_url ? `, with titles from the ${link(feed.records_url, "Registrar's Whippet Point Records")}
+          of ${formatDate(feed.records_date)}` : ''}, published at
           ${link(feed.source_page, esc(feed.source_page.replace(/^https?:\/\//, '')))}.
-          The published guide is authoritative wherever it disagrees with this page.
+          The published ${feed.records_url ? 'records are' : 'guide is'} authoritative wherever ${feed.records_url ? 'they disagree' : 'it disagrees'} with this page.
         </p>` : `
         <p>Figures reproduced from the ${guide}. The published guide is authoritative
           wherever it disagrees with this page.</p>`;
   }
   return `
         <p>
-          Figures reproduced from ASFA's Top 20 standings and the LGRA, AOK9 and NOTRA
+          Figures reproduced from ASFA's Top 20 standings and the LGRA, AOK9, NOTRA and WRA
           grading guides. Each body's own publication is authoritative wherever it
           disagrees with this site.
         </p>`;
@@ -1120,13 +1162,16 @@ function renderChrome(feed, current, sectionKey = sectionOf(current)) {
               <a href="index.html" class="font-display font-semibold text-xl leading-tight text-asfa-text whitespace-nowrap">Gazehound Stats</a>
               <span class="relative">
                 <button type="button" id="program-menu-button" aria-haspopup="menu" aria-expanded="false" aria-controls="program-menu"
-                        class="max-w-full font-mono text-[11px] font-semibold uppercase tracking-widest ${section.color} whitespace-nowrap inline-flex items-center gap-1 hover:underline"><span class="truncate">${section.program}<span class="tagline-year tagline-year-${sectionKey}"> · ${seasonOf(feed)}</span></span>${icon('chevronDown')}</button>
+                        class="max-w-full font-mono text-[11px] font-semibold uppercase tracking-widest ${section.color} whitespace-nowrap inline-flex items-center gap-1 hover:underline"><span class="truncate">${section.program}${section.beta ? ' · beta' : ''}<span class="tagline-year tagline-year-${sectionKey}"> · ${seasonOf(feed)}</span></span>${icon('chevronDown')}</button>
                 <div id="program-menu" role="menu" aria-label="Switch program" class="hidden absolute left-0 top-full mt-1.5 z-30 min-w-[15rem] bg-asfa-surface border border-asfa-border shadow-sm py-1">
-                  ${Object.entries(SECTIONS).filter(([, s]) => s.menu !== false).map(([key, s]) => `
-                  <a role="menuitem" href="${s.home}" ${key === sectionKey ? 'aria-current="page"' : ''}
+                  ${Object.entries(SECTIONS).filter(([, s]) => s.menu !== false).map(([key, s]) => {
+                    const here = key === sectionKey || Boolean(s.group && s.group === section.group);
+                    return `
+                  <a role="menuitem" href="${s.home}" ${here ? 'aria-current="page"' : ''}
                      class="block px-3 py-1.5 font-mono text-[11px] uppercase tracking-widest ${s.color} hover:bg-asfa-bg2 focus:bg-asfa-bg2 focus:outline-none">${
-                       key === 'hub' ? 'Home · all programs' : s.program}${
-                       key === sectionKey ? ' <span class="text-asfa-muted" aria-hidden="true">✓</span>' : ''}</a>`).join('')}
+                       key === 'hub' ? 'Home · all programs' : s.program}${s.beta ? ' · beta' : ''}${
+                       here ? ' <span class="text-asfa-muted" aria-hidden="true">✓</span>' : ''}</a>`;
+                  }).join('')}
                 </div>
               </span>
             </span>
@@ -1180,12 +1225,12 @@ function renderChrome(feed, current, sectionKey = sectionOf(current)) {
     footer.innerHTML = `
       <div class="max-w-4xl mx-auto px-4 text-sm text-asfa-wellink/85 space-y-4">${footerLinks()}${footerSource(sectionKey, feed)}
         <p class="text-xs text-asfa-wellink/65">
-          <span class="font-semibold text-asfa-wellink/85">Unofficial fan site</span> — not an ASFA, LGRA, AOK9${
-            sectionKey === 'akc' ? ', NOTRA or AKC' : ' or NOTRA'} publication.
+          <span class="font-semibold text-asfa-wellink/85">Unofficial fan site</span> — not an ASFA, LGRA, AOK9, NOTRA${
+            sectionKey === 'akc' ? ', WRA or AKC' : ' or WRA'} publication.
           Not affiliated with, endorsed by, or sponsored by the American Sighthound Field
           Association, the Large Gazehound Racing Association, Racing and Coursing
-          Enthusiasts (R.A.C.E.), which runs the AOK9 program, ${sectionKey === 'akc' ? 'the National Oval Track Racing Association, or the American Kennel Club. "AKC" and "American Kennel Club" are marks of the American Kennel Club, used here only to identify the source of the event listings.' : `or the National Oval Track
-          Racing Association.`}
+          Enthusiasts (R.A.C.E.), which runs the AOK9 program, the National Oval Track
+          Racing Association, ${sectionKey === 'akc' ? 'the Whippet Racing Association, or the American Kennel Club. "AKC" and "American Kennel Club" are marks of the American Kennel Club, used here only to identify the source of the event listings.' : 'or the Whippet Racing Association.'}
           ${sectionKey === 'hub' ? '' : `<a href="${section.disclaimer}" class="underline hover:text-asfa-wellink whitespace-nowrap">Full disclaimer</a>`}
         </p>
         <p class="text-xs text-asfa-wellink/65 flex flex-wrap items-center justify-center gap-x-2 gap-y-1.5 text-center">
@@ -1315,13 +1360,14 @@ function pageHub(render) {
   renderChrome(null, 'index.html', 'hub');
   Promise.allSettled([
     loadSeason(), loadRacing('lgra'), loadRacing('aok9'), loadTrials(), loadRacing('aok9-singles'), loadRacing('notra'),
+    loadRacing('wra'), loadRacing('notra-whippets'),
   ]).then((results) => {
-    const [asfa, lgra, aok9, trials, singles, notra] = results.map((result) => {
+    const [asfa, lgra, aok9, trials, singles, notra, wra, notraWhippets] = results.map((result) => {
       if (result.status === 'rejected') console.warn(result.reason);
       return result.status === 'fulfilled' ? result.value : null;
     });
     try {
-      render({ asfa, lgra, aok9, trials, singles, notra });
+      render({ asfa, lgra, aok9, trials, singles, notra, wra, notraWhippets });
     } catch (error) {
       console.error(error);
       showFailure(
