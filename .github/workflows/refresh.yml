@@ -59,6 +59,31 @@ jobs:
         continue-on-error: true
         run: python tools/notra_whippets.py
 
+      # Whippet racing is in beta, so each whippet guide is verified on its
+      # own: one that fails its checks goes back to the last committed copy,
+      # every other program still updates, and the run is flagged at the end.
+      - name: Verify the WRA data
+        id: check_wra
+        continue-on-error: true
+        run: python tools/check.py --only wra
+
+      - name: Hold back the WRA data if it failed its checks
+        if: steps.check_wra.outcome == 'failure'
+        run: |
+          git checkout -- data/wra.json data/wra-registry.json data/wra/
+          git clean -fdq -- data/wra/
+
+      - name: Verify the NOTRA Whippet data
+        id: check_notra_whippets
+        continue-on-error: true
+        run: python tools/check.py --only notra-whippets
+
+      - name: Hold back the NOTRA Whippet data if it failed its checks
+        if: steps.check_notra_whippets.outcome == 'failure'
+        run: |
+          git checkout -- data/notra-whippets.json data/notra-whippets-registry.json data/notra-whippets/
+          git clean -fdq -- data/notra-whippets/
+
       - name: Refresh the AKC lure coursing entries
         # Collected from AKC's Event Search and each event's results page;
         # when AKC cannot be reached the feed is rebuilt from the newest
@@ -73,7 +98,7 @@ jobs:
           python tools/events.py
           python tools/build.py
           python tools/titles.py
-          python tools/check.py
+          python tools/check.py --skip wra,notra-whippets
 
       - name: Commit if anything changed
         run: |
@@ -83,7 +108,7 @@ jobs:
             echo "No change in the published standings or guides."
             exit 0
           fi
-          CHANGED=$(git diff --name-only -- data/)
+          CHANGED=$( (git diff --name-only -- data/; git ls-files --others --exclude-standard -- data/) )
           PARTS=()
           if echo "$CHANGED" | grep -q '^data/season.json$'; then
             PARTS+=("ASFA standings through $(python -c "import json;print(json.load(open('data/season.json'))['as_of'])")")
@@ -114,3 +139,9 @@ jobs:
           git add data/
           git commit -m "$MSG"
           git push
+
+      - name: Flag whippet data held back
+        if: steps.check_wra.outcome == 'failure' || steps.check_notra_whippets.outcome == 'failure'
+        run: |
+          echo "::error title=Whippet data held back::A whippet guide failed its checks and was not published this week. The other programs updated as usual. See the Verify step for the failures."
+          exit 1

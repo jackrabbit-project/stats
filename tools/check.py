@@ -4,11 +4,17 @@ build.py and this script derive the same numbers by different routes. If they
 disagree, one of them has a bug — which is the point.
 
 Usage:
-    python tools/check.py
+    python tools/check.py                              # everything
+    python tools/check.py --only wra,notra-whippets    # just these racing programs
+    python tools/check.py --skip wra,notra-whippets    # everything but these
+
+The weekly refresh checks the beta whippet programs on their own, so a
+whippet guide that fails holds back only its own files.
 """
 
 from __future__ import annotations
 
+import argparse
 import json
 import re
 import sys
@@ -73,6 +79,25 @@ def count_html_rows(path: Path) -> tuple[int, int]:
 
 
 def main() -> int:
+    parser = argparse.ArgumentParser(description="Verify the published data.")
+    parser.add_argument("--only", default="",
+                        help="comma-separated racing programs to check on their own")
+    parser.add_argument("--skip", default="",
+                        help="comma-separated racing programs to leave out")
+    args = parser.parse_args()
+    only = [org for org in args.only.split(",") if org]
+    skip = {org for org in args.skip.split(",") if org}
+    unknown = sorted((set(only) | skip) - set(RACING))
+    if unknown:
+        print(f"Unknown racing program(s): {', '.join(unknown)}; "
+              f"known: {', '.join(RACING)}", file=sys.stderr)
+        return 2
+    if only:
+        check = Checker()
+        for org in only:
+            check_racing(check, org)
+        return check.report()
+
     if not SEASON.exists():
         print("data/season.json missing. Run tools/build.py first.", file=sys.stderr)
         return 1
@@ -358,11 +383,9 @@ def main() -> int:
     check_events(check)
     check_akc(check)
     check_titles(check)
-    check_racing(check, "lgra")
-    check_racing(check, "aok9")
-    check_racing(check, "notra")
-    check_racing(check, "wra")
-    check_racing(check, "notra-whippets")
+    for org in RACING:
+        if org not in skip:
+            check_racing(check, org)
     check_singles(check)
     return check.report()
 
