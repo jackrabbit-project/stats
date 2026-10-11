@@ -53,6 +53,7 @@
     --ink-muted: 110 108 100;  /* captions, labels, idle nav   #6E6C64 */
     --line: 220 216 204;       /* hairlines                    #DCD8CC */
     --line-strong: 201 196 182;/* input borders, thead rule    #C9C4B6 */
+    --hover: 222 218 207;      /* menu and tab hover pill      #DEDACF */
     --green: 44 110 73;        /* links, positive data         #2C6E49 */
     --green-hi: 31 76 51;      /* green hover                  #1F4C33 */
     --rust: 164 74 47;         /* accents, active, focus ring  #A44A2F */
@@ -83,6 +84,7 @@
       --ink-muted: 165 160 150; /* #A5A096 */
       --line: 53 50 44;         /* #35322C */
       --line-strong: 76 72 64;  /* #4C4840 */
+      --hover: 54 51 45;        /* #36332D */
       --green: 133 183 155;     /* #85B79B */
       --green-hi: 169 205 182;  /* #A9CDB6 — hover lightens, not darkens */
       --rust: 206 134 99;       /* #CE8663 */
@@ -109,6 +111,7 @@
     --ink-muted: 165 160 150; /* #A5A096 */
     --line: 53 50 44;         /* #35322C */
     --line-strong: 76 72 64;  /* #4C4840 */
+    --hover: 54 51 45;        /* #36332D */
     --green: 133 183 155;     /* #85B79B */
     --green-hi: 169 205 182;  /* #A9CDB6 — hover lightens, not darkens */
     --rust: 206 134 99;       /* #CE8663 */
@@ -913,6 +916,54 @@ ol.rb-l { list-style: decimal; }
 
 .tab:hover {
   color: rgb(var(--ink));
+}
+
+/* A soft grey pill behind the menu item or tab under the pointer (her ask
+   2026-10-11: the old hovers, darker text or a faint panel tint, barely
+   showed in light mode). It sits on a pseudo-element so an active tab's
+   underline keeps its square ends. Touch screens skip the hover, so a
+   tapped tab does not keep a pill; keyboard focus shows it too. */
+.tab,
+.pill-hover {
+  position: relative;
+  isolation: isolate;
+}
+
+.tab::before,
+.pill-hover::before {
+  content: '';
+  position: absolute;
+  inset: 0.3rem 0;
+  border-radius: 9999px;
+  background: rgb(var(--hover));
+  opacity: 0;
+  transition: opacity 0.12s ease;
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* Menu rows: held in from the menu's edges so the pill reads as an oval. */
+.pill-row::before {
+  inset: 0.125rem 0.375rem;
+}
+
+@media (hover: hover) {
+  .tab:hover::before,
+  .pill-hover:hover::before {
+    opacity: 1;
+  }
+}
+
+.tab:focus-visible::before,
+.pill-hover:focus-visible::before {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tab::before,
+  .pill-hover::before {
+    transition: none;
+  }
 }
 
 .tab-active {

@@ -1003,7 +1003,7 @@ function navActive(href, current, nav) {
 function paintNav(navEl, current, nav, line = 'border-asfa-accent') {
   navEl.querySelectorAll('a[href]').forEach((link) => {
     const active = navActive(link.getAttribute('href'), current, nav);
-    link.className = `shrink-0 px-2.5 py-2.5 font-mono text-xs uppercase tracking-[0.1em] border-b-2 ${
+    link.className = `pill-hover shrink-0 px-2.5 py-2.5 font-mono text-xs uppercase tracking-[0.1em] border-b-2 ${
       active ? `text-asfa-text ${line}` : 'text-asfa-muted border-transparent hover:text-asfa-text'}`;
     if (active) link.setAttribute('aria-current', 'page');
     else link.removeAttribute('aria-current');
@@ -1168,7 +1168,7 @@ function renderChrome(feed, current, sectionKey = sectionOf(current)) {
                     const here = key === sectionKey || Boolean(s.group && s.group === section.group);
                     return `
                   <a role="menuitem" href="${s.home}" ${here ? 'aria-current="page"' : ''}
-                     class="block px-3 py-1.5 font-mono text-[11px] uppercase tracking-widest ${s.color} hover:bg-asfa-bg2 focus:bg-asfa-bg2 focus:outline-none">${
+                     class="pill-hover pill-row block px-4 py-2 font-mono text-[11px] uppercase tracking-widest ${s.color} focus:outline-none">${
                        key === 'hub' ? 'Home · all programs' : s.program}${s.beta ? ' · beta' : ''}${
                        here ? ' <span class="text-asfa-muted" aria-hidden="true">✓</span>' : ''}</a>`;
                   }).join('')}
