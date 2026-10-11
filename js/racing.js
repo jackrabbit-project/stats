@@ -636,16 +636,22 @@ function wraTitleProgress(dog, feed) {
       note: 'Race points from completed meets (rules 7.5.1 and 7.5.2).',
     }));
   }
-  const nat = dog.in_records ? dog.nat_record : dog.lftm;
+  // The report's lifetime figure, as the tiles and career standings show it;
+  // the Registrar's Point Records differ for a few older whippets, and the
+  // line names their figure then rather than silently swapping one in.
+  const nat = dog.lftm || 0;
+  const registrar = dog.in_records && dog.nat_record != null && Math.abs(dog.nat_record - nat) > 0.01
+    ? dog.nat_record : null;
   const xTitles = titles.filter(([title]) => /^WRChX/.test(title));
   out.push(`
     <div class="mt-3 text-sm">
       <div class="flex flex-wrap justify-between gap-x-3">
         <span class="font-semibold">WRChX · Whippet Race Champion Excellent</span>
-        <span class="text-asfa-text/70">${ptsLabel(nat || 0)} lifetime National points${xTitles.length ? ' · earned' : ''}</span>
+        <span class="text-asfa-text/70">${ptsLabel(nat)} lifetime National points${xTitles.length ? ' · earned' : ''}</span>
       </div>
       <p class="text-xs text-asfa-text/60">${xTitles.length
-        ? `${xTitles.map(([title, when]) => `${esc(title)}${when ? ` ${formatDate(when)}` : ''}`).join('; ')}. ` : ''}Fifty
+        ? `${xTitles.map(([title, when]) => `${esc(title)}${when ? ` ${formatDate(when)}` : ''}`).join('; ')}. ` : ''}${
+        registrar != null ? `The Registrar's Point Records list ${ptsLabel(registrar)} lifetime National points. ` : ''}Fifty
         points for a dog, thirty for a bitch, and again at each further fifty or thirty (rule 7.5.4).
         Neither list gives a whippet's sex, so no bar is drawn.</p>
     </div>`);
