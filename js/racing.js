@@ -409,6 +409,30 @@ function progressBar(value, need, label, opts = {}) {
     </div>`;
 }
 
+/** Progress toward a title whose mark depends on sex, which neither
+    whippet body publishes (WRA's WRChX, rule 7.5.4; NOTRA's whippet SORC,
+    rule 5.4): one bar to the dog's mark with the bitch's mark ticked on it,
+    both labelled, so an owner reads the one that applies. */
+function twoMarkBar(value, bitch, dog, label, note = '') {
+  const v = value || 0;
+  const pct = (n) => Math.max(0, Math.min(100, (n / dog) * 100));
+  return `
+    <div class="mt-3">
+      <div class="flex flex-wrap justify-between gap-x-3 text-sm">
+        <span class="font-semibold">${label}</span>
+        <span class="text-asfa-text/70">${ptsLabel(v)} lifetime National points</span>
+      </div>
+      <div class="relative h-2 bg-asfa-bg2 border border-asfa-border mt-1 mb-5" role="img"
+           aria-label="${label}: ${ptsLabel(v)} lifetime National points; the mark is ${bitch} for a bitch, ${dog} for a dog">
+        <div class="h-full bg-asfa-accent" style="width:${pct(v)}%"></div>
+        <span class="absolute -top-1 -bottom-1 border-l-2 border-asfa-text/60" style="left:${pct(bitch)}%" aria-hidden="true"></span>
+        <span class="absolute -bottom-4 text-[10px] font-mono text-asfa-text/60 -translate-x-1/2 whitespace-nowrap" style="left:${pct(bitch)}%" aria-hidden="true">bitch ${bitch}</span>
+        <span class="absolute -bottom-4 right-0 text-[10px] font-mono text-asfa-text/60 whitespace-nowrap" aria-hidden="true">dog ${dog}</span>
+      </div>
+      ${note ? `<p class="text-xs text-asfa-text/60">${note}</p>` : ''}
+    </div>`;
+}
+
 /** MRC and SMC need 12 points together and at least 2 of them mixed. With the
     12 there but not the 2, the bar is full yet the title is not earned; say
     what is missing instead of leaving "12 / 12" to puzzle over. */
@@ -607,7 +631,7 @@ function wraCrTitle(level) {
     Point Records: the CR and CRX run on race points from completed meets and
     close at the WRCh; the WRCh needs 15 WRCh points; the WRChX runs on
     lifetime National points, 50 for a dog and 30 for a bitch, and neither
-    list says which a whippet is. */
+    list says which a whippet is, so its bar marks both. */
 function wraTitleProgress(dog, feed) {
   const titles = dog.titles_record || [];
   const dateOf = (name) => (titles.find(([title]) => title === name) || [])[1];
@@ -643,18 +667,16 @@ function wraTitleProgress(dog, feed) {
   const registrar = dog.in_records && dog.nat_record != null && Math.abs(dog.nat_record - nat) > 0.01
     ? dog.nat_record : null;
   const xTitles = titles.filter(([title]) => /^WRChX/.test(title));
-  out.push(`
-    <div class="mt-3 text-sm">
-      <div class="flex flex-wrap justify-between gap-x-3">
-        <span class="font-semibold">WRChX · Whippet Race Champion Excellent</span>
-        <span class="text-asfa-text/70">${ptsLabel(nat)} lifetime National points${xTitles.length ? ' · earned' : ''}</span>
-      </div>
-      <p class="text-xs text-asfa-text/60">${xTitles.length
-        ? `${xTitles.map(([title, when]) => `${esc(title)}${when ? ` ${formatDate(when)}` : ''}`).join('; ')}. ` : ''}${
-        registrar != null ? `The Registrar's Point Records list ${ptsLabel(registrar)} lifetime National points. ` : ''}Fifty
-        points for a dog, thirty for a bitch, and again at each further fifty or thirty (rule 7.5.4).
-        Neither list gives a whippet's sex, so no bar is drawn.</p>
-    </div>`);
+  // The next WRChX level: the first at 50 / 30, each further one 50 / 30 on.
+  const next = xTitles.length + 1;
+  const xName = (n) => (n === 1 ? 'WRChX' : `WRChX-${romanLevel(n)}`);
+  out.push(twoMarkBar(nat, 30 * next, 50 * next,
+    `${xName(next)} · Whippet Race Champion Excellent${xTitles.length ? ` (${xName(xTitles.length)} earned)` : ''}`,
+    [
+      xTitles.length ? `${xTitles.map(([title, when]) => `${esc(title)}${when ? ` ${formatDate(when)}` : ''}`).join('; ')}.` : '',
+      registrar != null ? `The Registrar's Point Records list ${ptsLabel(registrar)} lifetime National points.` : '',
+      'Fifty lifetime National points for a dog, thirty for a bitch, and again at each further fifty or thirty (rule 7.5.4). Neither list gives a whippet\'s sex, so the bar marks both.',
+    ].filter(Boolean).join(' ')));
   out.push(`<p class="text-xs text-asfa-text/60 mt-3">${titles.length
     ? `On record: ${titles.map(([title, when]) => `${esc(title)}${when ? ` (${formatDateShort(when)})` : ''}`).join(', ')}.`
     : dog.in_records ? 'No titles on record.'
@@ -682,16 +704,14 @@ function notraWhippetProgress(dog) {
       done: orc,
       note: orc && (record.orc_meet || record.orc_date) ? `Earned${where(record.orc_meet, record.orc_date)}.` : '',
     }),
-    `
-    <div class="mt-3 text-sm">
-      <div class="flex flex-wrap justify-between gap-x-3">
-        <span class="font-semibold">SORC · Supreme Oval Racing Champion</span>
-        <span class="text-asfa-text/70">${ptsLabel(dog.lftm || 0)} lifetime National points${sorc ? ' · earned' : ''}</span>
-      </div>
-      <p class="text-xs text-asfa-text/60">${sorc ? `Earned${where(record.sorc_meet, record.sorc_date)}, by the recorder's title record. ` : ''}Fifty
-        points for a dog, thirty for a bitch, and again at each further fifty or thirty (rule 5.4).
-        The guide prints no sex, so no bar is drawn${sorc ? ', and a SORC II or higher would not show here' : ''}.</p>
-    </div>`,
+    // The guide records the SORC itself and nothing beyond, so a holder's
+    // bar runs on to SORC II at 100 / 60.
+    twoMarkBar(dog.lftm || 0, sorc ? 60 : 30, sorc ? 100 : 50,
+      `${sorc ? 'SORC II' : 'SORC'} · Supreme Oval Racing Champion${sorc ? ' (SORC earned)' : ''}`,
+      [
+        sorc ? `SORC earned${where(record.sorc_meet, record.sorc_date)}, by the recorder's title record; the guide records no SORC II or higher.` : '',
+        'Fifty lifetime National points for a dog, thirty for a bitch, and again at each further fifty or thirty (rule 5.4). The guide prints no sex, so the bar marks both.',
+      ].filter(Boolean).join(' ')),
   ].join('');
 }
 
