@@ -66,7 +66,7 @@ const RACING_URLS = {
 const RACING_PROGRAMS = [
   ['lgra', 'LGRA', 'LGRA grading guide'],
   ['aok9', 'AOK9', 'AOK9 sprint racing grading guide'],
-  ['notra', 'NOTRA', 'NOTRA Other-Breed grading guide'],
+  ['notra', 'NOTRA OB', 'NOTRA Other-Breed grading guide'],
   ['wra', 'WRA', 'WRA grading guide'],
   ['notra-whippets', 'NOTRA Whippets', 'NOTRA Whippet grading guide'],
 ];
@@ -766,7 +766,7 @@ const NAV_HUB = [
   ['asfa.html', 'ASFA coursing'],
   ['lgra.html', 'LGRA racing'],
   ['aok9.html', 'AOK9 racing'],
-  ['notra.html', 'NOTRA racing'],
+  ['notra.html', 'NOTRA OB racing'],
   ['wra.html', 'Whippet racing'],
   ['akc.html', 'AKC stats'],
 ];
@@ -806,7 +806,7 @@ const SECTIONS = {
   },
   notra: {
     home: 'notra.html', nav: NAV_NOTRA,
-    program: 'NOTRA oval racing',
+    program: 'NOTRA OB racing',
     color: 'text-asfa-amber', line: 'border-asfa-amber',
     disclaimer: 'notra.html#about',
   },
@@ -1030,7 +1030,7 @@ const FOOTER_LINKS = [
     ['link', 'Race calendar', 'https://aok9racing.com/calendar.html'],
     ['facebook', 'R.A.C.E. & AOK9 Racing group', 'https://www.facebook.com/groups/772408469471681'],
   ]],
-  ['NOTRA oval racing', [
+  ['NOTRA OB racing', [
     ['globe', 'notra.org, the official site', 'https://www.notra.org'],
     ['link', 'Race dates', 'https://www.notra.org/RaceDates.html'],
     ['facebook', 'Notra OB Racing group', 'https://www.facebook.com/groups/notraob'],

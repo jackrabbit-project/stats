@@ -220,6 +220,15 @@
   padding: 1rem 1.25rem;
 }
 
+/* The pointers between NOTRA's two guides take the other section's colour. */
+.callout-whippet {
+  box-shadow: inset 3px 0 0 rgb(var(--whippet));
+}
+
+.callout-amber {
+  box-shadow: inset 3px 0 0 rgb(var(--amber));
+}
+
 /* The hub's program cards: each program in its own colour — rust for ASFA
    (the site's accent), slate for LGRA, moss for AOK9, amber for NOTRA — as a
    rule across the top, a faint wash below it, and the heading and figures in

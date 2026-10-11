@@ -20,7 +20,7 @@
   <link rel="preload" href="assets/fonts/fraunces-latin-var.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/plex-mono-400.woff2" as="font" type="font/woff2" crossorigin>
   <script src="js/theme.js?v=20260823"></script>
-  <link rel="stylesheet" href="css/app.css?v=20261011c">
+  <link rel="stylesheet" href="css/app.css?v=20261011d">
   <link rel="icon" href="assets/favicon.ico?v=4" sizes="any">
   <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png?v=4">
   <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png?v=4">
@@ -62,8 +62,8 @@
 
   <footer id="site-footer" class="bg-asfa-navy text-white py-8"></footer>
 
-  <script src="js/app.js?v=20261011c"></script>
-  <script src="js/racing.js?v=20261011b"></script>
+  <script src="js/app.js?v=20261011d"></script>
+  <script src="js/racing.js?v=20261011d"></script>
   <script>
     pageHub(({ asfa, lgra, aok9, trials, singles, notra, wra, notraWhippets }) => {
       const programs = document.getElementById('programs');
@@ -160,7 +160,7 @@
       };
       const lgraBody = racingCard(lgra, 'lgra', 'LGRA', 'hounds');
       const aok9Body = racingCard(aok9, 'aok9', 'AOK9', 'dogs', aok9 && singles ? singles.combined : null);
-      const notraBody = racingCard(notra, 'notra', 'NOTRA', 'hounds');
+      const notraBody = racingCard(notra, 'notra', 'NOTRA OB', 'hounds');
 
       /* Whippet racing (beta): the whippet bodies side by side in one card
          across, in the section's plum. One breed, so no breed counts: the
@@ -211,7 +211,7 @@
         + card('aok9.html', 'AOK9 racing', 'All-breed sprint racing', aok9Body, 'Standings by breed, WAVE, titles', 'aok9', singlesNote)
         + racingPair([
           ['lgra', 'LGRA racing', 'Straight racing · 200 yards', lgraBody, 'Standings by breed, WAVE, titles', ''],
-          ['notra', 'NOTRA racing', 'Oval racing · OB', notraBody, 'Standings by breed, WAVE, titles', notraNote]])
+          ['notra', 'NOTRA OB racing', 'Oval racing · Other Breeds', notraBody, 'Standings by breed, WAVE, titles', notraNote]])
         + whippetPair;
       // The one place figures roll up: see countUp in app.js.
       animateTiles(programs);

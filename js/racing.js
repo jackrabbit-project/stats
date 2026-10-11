@@ -117,9 +117,12 @@ const ORGS = {
   },
   notra: {
     key: 'notra',
-    name: 'NOTRA',
+    // "NOTRA OB" (NOTRA's own word for its Other-Breed guide) tells these
+    // pages from NOTRA Whippets wherever the two sit side by side.
+    name: 'NOTRA OB',
     fullName: 'National Oval Track Racing Association',
     program: 'oval racing',
+    title: 'NOTRA OB racing',
     page: 'notra.html',
     noun: 'hound', nouns: 'hounds',
     waves: [['wave', 'WAVE', 'grade']],
@@ -152,6 +155,13 @@ const ORGS = {
     ],
     rules: 'NOTRA Rules, February 2025',
     calendar: 'https://www.notra.org/RaceDates.html',
+    calendarLabel: 'NOTRA race calendar',
+    intro: (feed) => `${feed.season} oval racing standings for every sighthound breed but the Whippet, from NOTRA's
+        Other-Breed (OB) grading guide ${guideDate(feed)}, as published by
+        <a href="${esc(feed.site_url)}" class="lnk" target="_blank" rel="noopener noreferrer">${esc(feed.site_url.replace(/^https?:\/\//, ''))}</a>.`,
+    overviewNote: () => crossLink(
+      '<strong>Whippets have pages of their own.</strong> NOTRA keeps a separate Whippet grading guide with its own rules; its standings, ratings and titles are under NOTRA Whippets, in the Whippet racing section.',
+      'notra-whippets.html', 'NOTRA Whippets', 'whippet'),
     guideName: 'NOTRA Other-Breed grading guide',
     officer: 'recorder',
     titledTile: (stats) => [stats.titled_orc, 'ORC titled, all time'],
@@ -309,6 +319,9 @@ const ORGS = {
     statusLegend: 'N completed every program; F completed, with an off-course run or a did-not-finish in the final program; S scratched; D disqualified; X as the recorder writes it. Place is the final placing in the meet.',
     ownArithmetic: true,
     faultsView: notraWhippetFaults,
+    overviewNote: () => crossLink(
+      '<strong>Other breeds have pages of their own.</strong> NOTRA\'s Other-Breed (OB) guide covers every other sighthound breed; its standings are under NOTRA OB racing.',
+      'notra.html', 'NOTRA OB racing', 'amber'),
     dogNote: (dog) => (dog.restricted ? 'Restricted from entry under rule 6.2, as the guide marks it.' : ''),
     intro: (feed) => `${feed.season} standings from NOTRA's Whippet grading guide ${guideDate(feed)}, as published by
         <a href="${esc(feed.site_url)}" class="lnk" target="_blank" rel="noopener noreferrer">notra.org</a>.`,
@@ -548,6 +561,16 @@ function titleBadges(org, dog) {
     }
   }
   return out.join(' ');
+}
+
+/** A prominent pointer between NOTRA's two guides, at the top of each
+    overview: the text, then a button in the other section's colour. */
+function crossLink(text, href, label, colour) {
+  return `
+    <div class="callout callout-${colour} flex flex-wrap items-center justify-between gap-x-6 gap-y-3">
+      <p class="text-sm leading-relaxed max-w-prose">${text}</p>
+      <a href="${href}" class="btn shrink-0 text-asfa-${colour}">${label} →</a>
+    </div>`;
 }
 
 /* ------------------------------------------------- whippet title helpers */
@@ -856,6 +879,7 @@ function renderRacingOverview(org, feed, main, singles = null) {
     ${subTabs}
 
     <section id="overview" class="space-y-8">
+    ${spec.overviewNote ? spec.overviewNote(feed) : ''}
     <section id="tiles" class="grid grid-cols-2 md:grid-cols-5 gap-3">
       ${tiles.map(([value, label]) =>
         `<div class="tile"><div class="tile-value">${value}</div><div class="tile-label">${label}</div></div>`).join('')}
@@ -1581,7 +1605,7 @@ const ABOUT = {
         <li><strong>Career standings</strong> rank lifetime National points (the Lftm NORC column).</li>
         <li><strong>Titles:</strong> 15 ORC points is an ORC; the SORC is the recorder's title record. The recorder's certificate is the record.</li>
         <li><strong>Active</strong> means National points this year, or a meet since the start of last season; an OTR-only meet counts as racing, though it is never graded.</li>
-        <li>Every other breed is on <a href="notra.html" class="lnk">NOTRA racing</a>, from NOTRA's Other-Breed guide.</li>
+        <li>Every other breed is on <a href="notra.html" class="lnk">NOTRA OB racing</a>, from NOTRA's Other-Breed guide.</li>
       </ul>`,
     disclaimer: `
       <p class="text-sm leading-relaxed">
