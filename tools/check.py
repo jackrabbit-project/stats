@@ -1760,20 +1760,25 @@ def _competition_places(points: list[float]) -> list[int]:
 
 
 def check_cwa(check: Checker) -> None:
-    """data/cwa.json against the newest snapshot under data/cwa/snapshots:
-    the standings as CWA charts them (places by its tie rule, each chart's
-    own date), the all-time list with sex from CWA's dog and bitch lists,
-    and every title row, ineligible ones flagged and left out of the counts."""
+    """data/cwa.json and data/cwa-registry.json against the newest snapshot
+    under data/cwa/snapshots: the grading guides row for row (averages by
+    CWA's rule, grades by its bands, racing this year), the standings as CWA
+    charts them (places by its tie rule, each chart's own date), the
+    all-time list with sex from CWA's dog and bitch lists, and every title
+    row, ineligible ones flagged and left out of the counts."""
     import datetime as dt
 
     feed_path = ROOT / "data" / "cwa.json"
+    registry_path = ROOT / "data" / "cwa-registry.json"
     snapshot_dir = ROOT / "data" / "cwa" / "snapshots"
-    check.expect(feed_path.exists(), "CWA: data/cwa.json missing; run tools/cwa.py")
-    if not feed_path.exists():
+    label = "CWA"
+    check.expect(feed_path.exists() and registry_path.exists(),
+                 f"{label}: data/cwa.json or data/cwa-registry.json missing; run tools/cwa.py")
+    if not (feed_path.exists() and registry_path.exists()):
         return
     feed = json.loads(feed_path.read_text(encoding="utf-8"))
+    registry = json.loads(registry_path.read_text(encoding="utf-8"))
     stats = feed["stats"]
-    label = "CWA"
     check.expect(feed["snapshots"] == sorted(path.stem for path in snapshot_dir.glob("*.json")),
                  f"{label}: feed.snapshots does not list the archived snapshots")
     snapshot_path = snapshot_dir / f"{feed['guide_date']}.json"
@@ -1782,15 +1787,67 @@ def check_cwa(check: Checker) -> None:
         return
     snap = json.loads(snapshot_path.read_text(encoding="utf-8"))
     season = snap["season"]
-    dogs = feed["dogs"]
-    ids = [dog["id"] for dog in dogs]
-    check.expect(len(set(ids)) == len(ids), f"{label}: a whippet id repeats")
-    check.expect(all(re.fullmatch(r"[a-z0-9]+(?:-[a-z0-9]+)*", dog_id) for dog_id in ids),
-                 f"{label}: a whippet id is not a slug")
-    id_set = set(ids)
-    used: set[str] = set()
 
-    # 1. Standings: CWA's rows, in place order, places by its tie rule.
+    # 1. The grading guides, row for row, with what the site derives.
+    columns = feed["whippet_columns"]
+    check.expect(registry["columns"] == columns, f"{label}: registry and feed columns differ")
+    current = [dict(zip(columns, row)) for row in feed["whippets"]]
+    others = [dict(zip(columns, row)) for row in registry["rows"]]
+    archived = [w for w in others if w["on"] == "archive"]
+    list_only = [w for w in others if w["on"] == "lists"]
+    check.expect(len(archived) + len(list_only) == len(others), f"{label}: a registry row is neither archive nor list-only")
+    ids = [w["id"] for w in current + others]
+    check.expect(len(set(ids)) == len(ids), f"{label}: a whippet id repeats")
+    id_set = set(ids)
+    raw_keys = ("cwa_no", "call_name", "registered_name", "owner_raw", "grade", "avg", "dpc_points",
+                "dpc_status", "hc", "arx_points", "arx_status", "narx", "trp_meets", "trp_status",
+                "dq", "dq_date", "meets", "pr_points", "year_last_run", "never_raced", "completed_meets")
+    for where, rows in (("current", current), ("archive", archived)):
+        kept = snap["guide"][where]["rows"]
+        check.expect(Counter(json.dumps([w[k] for k in raw_keys]) for w in rows)
+                     == Counter(json.dumps([row[k] for k in raw_keys]) for row in kept),
+                     f"{label}: the {where} guide rows differ from the snapshot")
+    for w in current + archived:
+        check.expect(w["on"] in ("current", "archive"), f"{label}: {w['id']} sits on {w['on']}")
+        base = w["duplicate_of"] or w["id"]
+        check.expect(w["id"] == base or re.fullmatch(re.escape(base) + r"-\d+", w["id"]),
+                     f"{label}: {w['id']} does not follow its number {base}")
+        if w["cwa_no"] and re.fullmatch(r"[0-9A-Za-z]+", w["cwa_no"]):
+            check.expect(base == w["cwa_no"], f"{label}: {w['id']} is not keyed by its CWA number {w['cwa_no']}")
+        listed = [meet[2] for meet in w["meets"] if meet[2] is not None]
+        mean = sum(listed) / len(listed) if listed else 0.0
+        check.expect(abs(w["avg_computed"] - mean) <= 1e-6,
+                     f"{label}: {w['id']} avg_computed {w['avg_computed']} is not its meets' mean")
+        dated = [meet[0] for meet in w["meets"] if meet[0]]
+        check.expect(w["last_raced"] == (max(dated) if dated else None), f"{label}: {w['id']} last_raced is wrong")
+        check.expect(all(day <= dt.date.today().isoformat() for day in dated),
+                     f"{label}: {w['id']} has a meet after today")
+    shared = sum(w["duplicate_of"] is not None for w in archived)
+    check.expect(stats["archive_listed"] == len(archived) and stats["archive_shared_numbers"] == shared
+                 and stats["list_only"] == len(list_only) and stats["whippets_current"] == len(current),
+                 f"{label}: guide counts disagree")
+    check.expect(stats["raced_this_year"] == sum(w["year_last_run"] == season for w in current)
+                 and stats["never_raced"] == sum(bool(w["never_raced"]) for w in current),
+                 f"{label}: racing this year or never raced disagrees")
+    # CWA's rule: the average of the last three completed meets; grades A 15
+    # and up, B 10, C 5, D below, FTE before the first meet, a grade dropped
+    # for a year idle. The published figures govern; most follow the rule.
+    with_meets = [w for w in current if w["meets"] and w["avg"] is not None]
+    agree = sum(abs(w["avg"] - w["avg_computed"]) <= 0.01 for w in with_meets)
+    check.expect(abs(stats["avg_agreement"] - round(agree / max(1, len(with_meets)), 4)) < 1e-9
+                 and agree >= 0.95 * len(with_meets),
+                 f"{label}: averages follow CWA's rule for {agree} of {len(with_meets)}")
+
+    def band(value: float) -> str:
+        return "A" if value >= 15 else "B" if value >= 10 else "C" if value >= 5 else "D"
+
+    graded = [w for w in current if w["grade"] in ("A", "B", "C", "D") and w["avg"] is not None]
+    in_band = sum(band(round(w["avg"], 1)) == w["grade"] for w in graded)
+    check.expect(in_band >= 0.85 * len(graded), f"{label}: grades follow the bands for only {in_band} of {len(graded)}")
+    check.expect(stats["grades_current"] == dict(sorted(Counter(w["grade"] or "" for w in current).items())),
+                 f"{label}: the grade counts disagree")
+
+    # 2. Standings: CWA's rows, in place order, places by its tie rule.
     check.expect(set(feed["standings"]) == {"racing", "high_combined"},
                  f"{label}: standings carry {sorted(feed['standings'])}, not racing and High Combined")
     for kind, chart in feed["standings"].items():
@@ -1807,9 +1864,8 @@ def check_cwa(check: Checker) -> None:
                      f"{label}: {kind} date {chart['as_of']} is off")
         for row in rows:
             check.expect(row["dog"] in id_set, f"{label}: {kind} row {row['call_name']} has no whippet")
-            used.add(row["dog"])
-    check.expect(feed["guide_date"] == max(chart["as_of"] for chart in feed["standings"].values()),
-                 f"{label}: the guide date is not the newest chart's date")
+    check.expect(feed["guide_date"] == max([c["as_of"] for c in feed["standings"].values()] + [stats["guide_updated"]]),
+                 f"{label}: the snapshot date is not the newest of the guide's and the charts' dates")
     racing = feed["standings"]["racing"]["rows"]
     top = min(racing, key=lambda row: (row["place"], row["call_name"])) if racing else None
     check.expect(stats["leader"] == ({"dog": top["dog"], "call_name": top["call_name"], "points": top["points"]}
@@ -1818,7 +1874,7 @@ def check_cwa(check: Checker) -> None:
                  and stats["high_combined_listed"] == len(feed["standings"]["high_combined"]["rows"]),
                  f"{label}: standings counts disagree")
 
-    # 2. All-time: the whole list, and each whippet's sex from CWA's own
+    # 3. All-time: the whole list, and each whippet's sex from CWA's own
     #    dog and bitch lists.
     listed = snap["all_time"]
     rows = feed["all_time"]["rows"]
@@ -1832,32 +1888,31 @@ def check_cwa(check: Checker) -> None:
         check.expect(row["sex"] in (expected, None) and (expected is None or row["sex"] == expected),
                      f"{label}: {row['name']} sex {row['sex']} vs the lists' {expected}")
         check.expect(row["dog"] in id_set, f"{label}: all-time row {row['name']} has no whippet")
-        used.add(row["dog"])
     points = [row["points"] for row in rows]
     check.expect(points == sorted(points, reverse=True) and all(p >= 50 for p in points),
                  f"{label}: the all-time list is out of order or under 50 points")
     check.expect(stats["all_time_listed"] == len(rows), f"{label}: stats.all_time_listed is wrong")
 
-    # 3. Titles: every row of every sheet, unpacked by the feed's own columns.
-    columns = feed["title_columns"]
-    titles = [dict(zip(columns, row)) for row in feed["titles"]]
+    # 4. Titles: every row of every sheet, unpacked by the feed's own columns.
+    titles = [dict(zip(feed["title_columns"], row)) for row in feed["titles"]]
     from_snapshot = Counter((code, row["title"], row["name"], row["earned"], row["year"], row["status"])
                             for code, sheet in snap["titles"].items() for row in sheet["rows"])
     in_feed = Counter((row["base"], row["title"], row["name"], row["earned"], row["year"], row["status"])
                       for row in titles)
     check.expect(from_snapshot == in_feed, f"{label}: title rows differ from the snapshot")
     today = dt.date.today().isoformat()
+    used: set[str] = set()
     for row in titles:
         check.expect(row["status"] in (None, "ineligible"), f"{label}: unknown status {row['status']}")
         check.expect(row["earned"] is None or (row["earned"] <= today and row["earned"][:4] == str(row["year"])),
                      f"{label}: {row['base']} {row['name']} earned {row['earned']} / {row['year']}")
         check.expect(row["year"] is None or 1991 <= row["year"] <= season,
                      f"{label}: {row['base']} {row['name']} year {row['year']} out of range")
-        check.expect(row["title"].startswith(row["base"]) or (row["base"] == "HCX" and row["title"].startswith("HCX")),
-                     f"{label}: level {row['title']} under {row['base']}")
-        check.expect(0 <= row["dog"] < len(dogs), f"{label}: a title row points past the whippets")
-        if 0 <= row["dog"] < len(dogs):
-            used.add(dogs[row["dog"]]["id"])
+        check.expect(row["title"].startswith(row["base"]), f"{label}: level {row['title']} under {row['base']}")
+        check.expect(row["dog"] in id_set, f"{label}: title row {row['name']} has no whippet")
+        used.add(row["dog"])
+    used |= {row["dog"] for row in rows} | {row["dog"] for chart in feed["standings"].values() for row in chart["rows"]}
+    check.expect({w["id"] for w in list_only} <= used, f"{label}: a list-only whippet is on no list")
     awarded = [row for row in titles if row["status"] is None]
     check.expect(stats["titles_total"] == len(awarded)
                  and stats["titles_ineligible"] == len(titles) - len(awarded),
@@ -1868,11 +1923,9 @@ def check_cwa(check: Checker) -> None:
                  f"{label}: titles this year disagree")
     for code, key in (("ARX", "arx_total"), ("TRP", "trp_total"), ("DPC", "dpc_total")):
         check.expect(stats[key] == sum(row["base"] == code for row in awarded), f"{label}: stats.{key} is wrong")
-    check.expect(used == id_set, f"{label}: {len(id_set - used)} whippets listed nowhere")
-    check.expect(stats["whippets"] == len(dogs), f"{label}: stats.whippets is wrong")
 
-    # 4. Nothing personal beyond names: CWA's pages carry a contact address.
-    for path in (feed_path, snapshot_path):
+    # 5. Nothing personal beyond names: CWA's pages carry a contact address.
+    for path in (feed_path, registry_path, snapshot_path):
         body = path.read_text(encoding="utf-8")
         for name, pattern in (("email address", r"[\w.+-]+@[\w-]+\.[\w.]+"),
                               ("phone number", r"\(\d{3}\)\s*\d{3}-\d{4}")):

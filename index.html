@@ -20,7 +20,7 @@
   <link rel="preload" href="assets/fonts/fraunces-latin-var.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/plex-mono-400.woff2" as="font" type="font/woff2" crossorigin>
   <script src="js/theme.js?v=20260823"></script>
-  <link rel="stylesheet" href="css/app.css?v=20261011h">
+  <link rel="stylesheet" href="css/app.css?v=20261011k">
   <link rel="icon" href="assets/favicon.ico?v=4" sizes="any">
   <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png?v=4">
   <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png?v=4">
@@ -62,7 +62,7 @@
 
   <footer id="site-footer" class="bg-asfa-navy text-white py-8"></footer>
 
-  <script src="js/app.js?v=20261011h"></script>
+  <script src="js/app.js?v=20261011k"></script>
   <script src="js/racing.js?v=20261011j"></script>
   <script>
     pageHub(({ asfa, lgra, aok9, trials, singles, notra, wra, notraWhippets, cwa }) => {
@@ -179,16 +179,16 @@
       };
       const wraBody = whippetCard(wra, 'wra', 'WRA');
       const notraWhippetsBody = whippetCard(notraWhippets, 'notra-whippets', 'NOTRA Whippets');
-      // CWA publishes standings and title lists, not a guide: its half counts
-      // titles and names the racing standings' leader.
+      // CWA: the whippets racing on its grading guide, its titles, and the
+      // racing standings' leader.
       let cwaBody = unavailable('CWA');
       if (cwa) {
         const s = cwa.stats;
-        coverage.push(`CWA racing standings as of ${formatDate(s.racing_as_of)}`);
+        coverage.push(`CWA guide of ${formatDate(s.guide_updated)}`);
         cwaBody = tiles([
+          [s.raced_this_year, 'whippets racing this year'],
           [s.titles_this_year, 'titles earned this year'],
           [s.arx_total.toLocaleString('en-US'), 'ARX titles, all time'],
-          [s.trp_total.toLocaleString('en-US'), 'TRP titles, all time'],
           [s.dpc_total.toLocaleString('en-US'), 'DPC titles, all time'],
         ]) + (s.leader ? `<p class="text-sm text-asfa-text/70 mt-3">Leading the racing standings: <span class="font-semibold text-asfa-green">${esc(s.leader.call_name)}</span>, ${ptsLabel(s.leader.points)} NARX points.</p>` : '');
       }
@@ -200,7 +200,7 @@
           <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-y-8 md:gap-x-8 mt-5">
             ${[['wra', 'WRA', ORGS.wra.hubSub, wraBody, 'Standings, grades, titles'],
               ['notra-whippets', 'NOTRA Whippets', ORGS['notra-whippets'].hubSub, notraWhippetsBody, 'Standings, grades, titles'],
-              ['cwa', 'CWA', 'Racing and High Combined', cwaBody, 'Standings, all-time, titles']].map(([org, title, sub, body, cta]) => `
+              ['cwa', 'CWA', 'Racing and High Combined', cwaBody, 'Standings, grades, titles']].map(([org, title, sub, body, cta]) => `
             <a href="${org}.html" class="program-whippet flex flex-col group">
               <h3 class="font-display text-2xl program-label">${title}</h3>
               <p class="font-mono text-[10px] uppercase tracking-widest text-asfa-muted mt-0.5">${sub || ''}</p>

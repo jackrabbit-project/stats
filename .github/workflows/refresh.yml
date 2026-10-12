@@ -84,7 +84,7 @@ jobs:
           git checkout -- data/notra-whippets.json data/notra-whippets-registry.json data/notra-whippets/
           git clean -fdq -- data/notra-whippets/
 
-      - name: Refresh CWA's standings and titles (Whippet racing, beta)
+      - name: Refresh CWA's grading guides, standings and titles (Whippet racing, beta)
         continue-on-error: true
         run: python tools/cwa.py
 
@@ -96,7 +96,7 @@ jobs:
       - name: Hold back the CWA data if it failed its checks
         if: steps.check_cwa.outcome == 'failure'
         run: |
-          git checkout -- data/cwa.json data/cwa/
+          git checkout -- data/cwa.json data/cwa-registry.json data/cwa/
           git clean -fdq -- data/cwa/
 
       - name: Refresh the AKC lure coursing entries
@@ -147,7 +147,7 @@ jobs:
             PARTS+=("WRA meets run $(python -c "import json;print(json.load(open('data/wra/meets-run.json'))['latest_meet'])")")
           fi
           if echo "$CHANGED" | grep -q '^data/cwa/snapshots/'; then
-            PARTS+=("CWA standings $(python -c "import json;print(json.load(open('data/cwa.json'))['guide_date'])")")
+            PARTS+=("CWA guide $(python -c "import json;print(json.load(open('data/cwa.json'))['guide_date'])")")
           fi
           if echo "$CHANGED" | grep -q '^data/notra-whippets/snapshots/'; then
             PARTS+=("NOTRA Whippet guide $(python -c "import json;print(json.load(open('data/notra-whippets.json'))['guide_date'])")")

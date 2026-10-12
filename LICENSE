@@ -73,10 +73,10 @@ the following, which are included under separate terms:
    WRA's request. That material remains the property of the WRA; the WRA's
    own records are authoritative wherever the two disagree.
 
-7. CWA DATA — "data/cwa.json" and the archived snapshots under "data/cwa/"
-   are derived from the standings, the all-time racing lists and the title
-   lists published by the Continental Whippet Alliance (CWA) at
-   continentalwhippetalliance.com. That material remains the property of
+7. CWA DATA — "data/cwa.json", "data/cwa-registry.json" and the archived
+   snapshots under "data/cwa/" are derived from the grading guides, the
+   standings, the all-time racing lists and the title lists published by
+   the Continental Whippet Alliance (CWA) at continentalwhippetalliance.com. That material remains the property of
    the CWA; the CWA's own records are authoritative wherever the two
    disagree.
 

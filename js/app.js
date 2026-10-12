@@ -423,8 +423,7 @@ function buildSearchEntries(feeds) {
         dog.rank_breed ? `${dog.breed} #${dog.rank_breed}` : dog.breed, dog.rank_all ?? 100000));
     }
   }
-  // CWA's whippets, from its standings, all-time list and title lists; each
-  // opens the CWA page on that whippet.
+  // CWA's whippets on its current grading guide; each opens its CWA page.
   if (feeds.cwa) entries.push(...cwaSearchEntries(feeds.cwa));
   // AOK9 Singles dogs racing lately that the sprint list does not carry: a
   // dog that races only Singles is found by name and opens its Singles record.
@@ -439,20 +438,27 @@ function buildSearchEntries(feeds) {
   return entries;
 }
 
-/** CWA's whippets as search entries: racing standings first, then the
-    all-time list, then every other title holder. */
+/** CWA's whippets on its current grading guide as search entries: the
+    racing standings first, then the rest by grade. */
 function cwaSearchEntries(cwa) {
   const points = (value) => (Number.isInteger(value) ? String(value) : String(Math.round(value * 100) / 100));
   const racing = new Map(cwa.standings.racing.rows.map((row) => [row.dog, row]));
-  const allTime = new Map(cwa.all_time.rows.map((row) => [row.dog, row]));
-  return cwa.dogs.map((dog) => {
-    const r = racing.get(dog.id);
-    const a = allTime.get(dog.id);
+  const order = { A: 1, B: 2, C: 3, D: 4, FTE: 5 };
+  return cwa.whippets.map((row) => {
+    const w = Object.fromEntries(cwa.whippet_columns.map((col, i) => [col, row[i]]));
+    const r = racing.get(w.id);
     const meta = r ? `Whippet #${r.place} · ${points(r.points)} NARX pts`
-      : a ? `Whippet · all-time #${a.place}` : 'Whippet · CWA titles';
-    return searchEntry({ id: dog.id, call_name: dog.call_name || dog.name, registered_name: dog.name, breed: 'Whippet' },
-      'CWA', `cwa.html?dog=${encodeURIComponent(dog.id)}`, meta, r ? r.place : a ? 1000 + a.place : 200000);
+      : w.grade === 'FTE' ? 'Whippet · first time entered' : w.grade ? `Whippet · grade ${w.grade}` : 'Whippet';
+    return searchEntry(cwaSearchDog(w), 'CWA', `cwa.html?dog=${encodeURIComponent(w.id)}`, meta,
+      r ? r.place : 1000 + (order[w.grade] || 6));
   });
+}
+
+/** A CWA whippet in the shape the search matches: the archived guide
+    and the lists often give no call name, so the registered name stands in. */
+function cwaSearchDog(w) {
+  const registered = w.registered_name || w.name || '';
+  return { id: w.id, call_name: w.call_name || registered, registered_name: registered, breed: 'Whippet' };
 }
 
 /** Dogs not racing lately: AOK9 Singles first, then the racing registries,
@@ -487,6 +493,14 @@ async function searchDormant(query, feeds, entries, program = '') {
         `${breed} · ${year ? `last raced ${year}` : org === 'wra' ? 'inactive list' : 'no meets recorded'}`, 1e6);
     });
     found.push(...searchDogs(query, dormant, 20));
+  }
+  // CWA's archived guide and the whippets found only on its lists.
+  if (feeds.cwa && want('CWA')) {
+    const rows = await loadRegistry('cwa');
+    const quiet = rows.filter((w) => !listed.has(`CWA|${w.id}`)).map((w) =>
+      searchEntry(cwaSearchDog(w), 'CWA', `cwa.html?dog=${encodeURIComponent(w.id)}`,
+        w.on === 'archive' ? `Whippet · archived guide${w.year_last_run ? `, last ran ${w.year_last_run}` : ''}` : 'Whippet · CWA titles', 1e6));
+    found.push(...searchDogs(query, quiet, 20));
   }
   return found.slice(0, 40);
 }
@@ -865,8 +879,8 @@ const SECTIONS = {
     disclaimer: 'notra-whippets.html#about',
     menu: false,
   },
-  // CWA publishes standings and title lists, not a grading guide: one page
-  // of its own (cwa.html) in the same section.
+  // CWA: its grading guides, standings and title lists, on one page of its
+  // own (cwa.html) in the same section.
   cwa: {
     home: 'cwa.html', nav: NAV_WHIPPETS,
     program: 'Whippet racing', beta: true, group: 'whippets',
@@ -1132,14 +1146,14 @@ function footerSource(sectionKey, feed) {
   if (sectionKey === 'cwa') {
     return feed ? `
         <p>
-          Standings, the all-time list and titles reproduced from the Continental Whippet
-          Alliance at ${link(feed.site_url, 'continentalwhippetalliance.com')}: racing standings as of
-          ${formatDate(feed.stats.racing_as_of)}, High Combined as of ${formatDate(feed.stats.high_combined_as_of)},
-          titles read ${formatDate(feed.fetched)}. CWA's own records are authoritative wherever
-          they disagree with this page.
+          Grading guides, standings, the all-time list and titles reproduced from the Continental
+          Whippet Alliance at ${link(feed.site_url, 'continentalwhippetalliance.com')}: the grading guide
+          updated ${formatDate(feed.stats.guide_updated)}, racing standings as of ${formatDate(feed.stats.racing_as_of)},
+          High Combined as of ${formatDate(feed.stats.high_combined_as_of)}, titles read ${formatDate(feed.fetched)}.
+          CWA's own records are authoritative wherever they disagree with this page.
         </p>` : `
-        <p>Standings and titles reproduced from the Continental Whippet Alliance. CWA's own
-          records are authoritative wherever they disagree with this page.</p>`;
+        <p>Grading guides, standings and titles reproduced from the Continental Whippet Alliance.
+          CWA's own records are authoritative wherever they disagree with this page.</p>`;
   }
   const racing = RACING_PROGRAMS.find(([org]) => org === sectionKey);
   if (racing) {
@@ -1157,7 +1171,7 @@ function footerSource(sectionKey, feed) {
   }
   return `
         <p>
-          Figures reproduced from ASFA's Top 20 standings, the LGRA, AOK9, NOTRA and WRA
+          Figures reproduced from ASFA's Top 20 standings, the LGRA, AOK9, NOTRA, WRA and CWA
           grading guides, and CWA's standings and title lists. Each body's own publication
           is authoritative wherever it disagrees with this site.
         </p>`;

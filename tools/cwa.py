@@ -2,9 +2,16 @@
 build the CWA feed (Whippet racing, beta).
 
 The Continental Whippet Alliance (continentalwhippetalliance.com) races and
-shows whippets and recognises both. It publishes no grading guide: no meets,
-averages or grades per whippet. What it does publish:
+shows whippets and recognises both. It publishes:
 
+- its grading guides (/grading-guides): the current one, a Google Sheet
+  ("Updated: 10/4/2026") with every whippet on CWA's books by CWA number:
+  grade, average, the last three meets (date, state, points), and progress
+  toward each title (ARX points, NARX points, DPC points, High Combined
+  wins, meets toward the TRP, Performance Racer points as of the last year
+  end, completed meets); and an archived one with older whippets in the
+  same layout (its meets carry a state but no date). Its "Ineligible" tab
+  is not read;
 - this year's standings on a page per year (/2026-toptens), as Datawrapper
   charts, each titled with its own date and meet count ("2026 Racing
   Standings as of 7/31/2026 (30 Race Meets)"): Racing (NARX points), High
@@ -17,14 +24,21 @@ averages or grades per whippet. What it does publish:
   DPC, DPCX, HC, HCX (levels), TRP and TRPX, each holder with the date or
   year earned.
 
-Nineteen downloads a week, a second or two apart: four pages from CWA's
-own site (the standings index, this year's standings page, the titles page
-and the all-time page, read for their links), then three charts from
-Datawrapper and twelve sheets from Google.
+Twenty-two downloads a week, a second or two apart: five pages from CWA's
+own site (the grading guides page, the standings index, this year's
+standings page, the titles page and the all-time page, read for their
+links), then three charts from Datawrapper and fourteen sheets from Google.
 
-A snapshot per standings date (the newest chart's date) is archived under
-data/cwa/snapshots/; later fetches with the same date replace it as titles
-are added. data/cwa.json is built from the newest snapshot. The raw
+Each whippet on a grading guide is keyed by its CWA number (a second
+whippet the archive gives the same number gets "-2"); rows on the standings
+and title lists join it by the registered name without its titles.
+Whippets found only on those lists keep a slug of their name.
+
+A snapshot per date (the newest of the guide's and the charts' dates) is
+archived under data/cwa/snapshots/; later fetches with the same date
+replace it. data/cwa.json (the current guide, standings, all-time list and
+titles) and data/cwa-registry.json (the archived guide and list-only
+whippets, loaded on demand) are built from the newest snapshot. The raw
 downloads stay out of git (data/cwa/raw/): CWA's pages carry a contact
 address. CWA was among the whippet racing bodies the site was asked to add.
 
@@ -61,11 +75,15 @@ ORG = "cwa"
 SITE_URL = "https://www.continentalwhippetalliance.com"
 INDEX_URL = f"{SITE_URL}/toptens"
 TITLES_URL = f"{SITE_URL}/titles"
+GRADING_URL = f"{SITE_URL}/grading-guides"
+SHEET_XLSX = "https://docs.google.com/spreadsheets/d/{id}/export?format=xlsx"
+SHEET_VIEW = "https://docs.google.com/spreadsheets/d/{id}/edit"
 ALL_TIME_URL = f"{SITE_URL}/all-time-racing"
 SHEET_CSV = "https://docs.google.com/spreadsheets/d/{id}/export?format=csv"
 RAW_DIR = DATA / "cwa" / "raw"
 SNAPSHOT_DIR = DATA / "cwa" / "snapshots"
 FEED = DATA / "cwa.json"
+REGISTRY = DATA / "cwa-registry.json"
 
 # Google answers a library User-Agent on a sheet export with a sign-in page.
 BROWSER_USER_AGENT = (
@@ -87,6 +105,19 @@ TITLES = {
 }
 RACING_TITLES = ("ARX", "NARX", "SRA", "TRP", "TRPX")
 TITLE_COLUMNS = ["base", "title", "name", "earned", "year", "owners", "status", "dog"]
+# The grading guides' columns, compared by their opening words.
+GUIDE_FIELDS = ["CWA NO", "CALL NAME", "REGISTERED NAME", "OWNER", "GRADE", "AVG", "DPC", "HC",
+                "ARX", "NARX", "TRP", "DQ", "DQ DATE", "LAST MEET", "", "2ND LAST MEET", "",
+                "3RD LAST MEET", "", "PR", "YR LAST RUN"]
+GUIDE_SHEETS = {"current": ("Current Grading Guide", "Grades"),
+                "archive": ("Archived Grading Guide", "ARCHIVE")}
+# A whippet as the feed packs it.
+WHIPPET_COLUMNS = ["id", "cwa_no", "call_name", "registered_name", "name", "owner_raw", "grade",
+                   "avg", "avg_computed", "dpc_points", "dpc_status", "hc", "arx_points",
+                   "arx_status", "narx", "trp_meets", "trp_status", "dq", "dq_date", "meets",
+                   "pr_points", "year_last_run", "never_raced", "completed_meets", "last_raced",
+                   "on", "duplicate_of"]
+LOC_RE = re.compile(r"^(\d{8})\s+([A-Z]{2})$")
 
 STANDINGS_LINK_RE = re.compile(r"^(\d{4}) (Mid-Year|Year-End) Standings$")
 CHART_TITLE_RE = re.compile(
@@ -162,6 +193,22 @@ def title_sheets(titles_html: bytes) -> dict[str, str]:
     return sheets
 
 
+def guide_sheets(page_html: bytes) -> dict[str, str]:
+    """{'current': sheet id, 'archive': sheet id} from the grading guides
+    page's links, matched by their text."""
+    found = {}
+    for anchor in _soup(page_html).find_all("a"):
+        text = " ".join(anchor.get_text(" ").split())
+        match = re.search(r"docs\.google\.com/spreadsheets/d/([A-Za-z0-9_-]+)", anchor.get("href") or "")
+        for kind, (label, _sheet) in GUIDE_SHEETS.items():
+            if match and text == label:
+                found[kind] = match.group(1)
+    missing = [kind for kind in GUIDE_SHEETS if kind not in found]
+    if missing:
+        raise RacingParseError(f"The grading guides page no longer links {missing}")
+    return found
+
+
 def all_time_tabs(page_html: bytes) -> list[tuple[str, str]]:
     """(gid, CSV URL) for each published tab on the all-time page."""
     tabs = []
@@ -189,6 +236,8 @@ def fetch_all() -> dict[str, bytes]:
         print(f"Fetched {url}  {len(data):,} bytes")
         return data
 
+    for kind, sheet in guide_sheets(keep("grading.html", GRADING_URL)).items():
+        keep(f"guide-{kind}.xlsx", SHEET_XLSX.format(id=sheet), browser=True)
     _, _, page_url = standings_link(keep("index.html", INDEX_URL))
     page = keep("standings.html", page_url)
     for src, _title in chart_frames(page):
@@ -338,6 +387,116 @@ def parse_title_sheet(code: str, raw: bytes) -> list[dict]:
     return rows
 
 
+def _head(value) -> str:
+    return " ".join(str(value or "").replace("_", " ").split()).upper()
+
+
+def _text(value) -> str:
+    if value is None:
+        return ""
+    if isinstance(value, float) and value.is_integer():
+        return str(int(value))
+    return " ".join(str(value).split())
+
+
+def _num(value) -> float | None:
+    if value is None or value == "":
+        return None
+    if isinstance(value, (int, float)):
+        return float(value)
+    try:
+        return float(str(value).strip())
+    except ValueError:
+        return None
+
+
+def _points_or_mark(value) -> tuple[float | None, str | None]:
+    """A progress cell holds points (or meets) toward a title, or the mark
+    CWA writes once it is earned ("ARX", "TRP30", "DPC", "CH")."""
+    number = _num(value)
+    if number is not None:
+        return number, None
+    return None, _text(value) or None
+
+
+def parse_guide(raw: bytes, kind: str) -> dict:
+    """One grading guide: its date (the current one only) and its whippets."""
+    import openpyxl
+
+    label, sheet = GUIDE_SHEETS[kind]
+    book = openpyxl.load_workbook(io.BytesIO(raw), read_only=True, data_only=True)
+    if sheet not in book.sheetnames:
+        raise RacingParseError(f"The {label} has no {sheet!r} sheet: {book.sheetnames}")
+    rows = [list(row) for row in book[sheet].iter_rows(values_only=True)]
+    try:
+        top = next(i for i, row in enumerate(rows[:6]) if row and _head(row[0]) == "CWA NO")
+    except StopIteration as error:
+        raise RacingParseError(f"The {label} has no CWA NO column") from error
+    header = [_head(cell) for cell in rows[top]] + [""] * 30
+    for position, want in enumerate(GUIDE_FIELDS):
+        if want and not header[position].startswith(want):
+            raise RacingParseError(f"{label}: column {position + 1} reads {header[position]!r}, not {want!r}")
+    updated = None
+    if kind == "current":
+        stamp = re.search(r"Updated:\s*(\d{1,2})/(\d{1,2})/(\d{4})", _text(rows[0][0] if rows[0] else ""))
+        if not stamp:
+            raise RacingParseError("The current grading guide has no 'Updated' line")
+        updated = _date(*stamp.groups())
+    as_of = re.search(r"AS OF (\d{1,2})/(\d{1,2})/(\d{4})", header[19])
+    completed_col = next((i for i, head in enumerate(header) if head.startswith("COMPLETED MEETS")), None)
+    whippets = []
+    for row in rows[top + 2:]:
+        row = list(row) + [None] * 30
+        call, registered = _text(row[1]), _text(row[2])
+        if not call and not registered:
+            continue   # CWA's blank template rows
+        meets = []
+        for loc_col, pts_col in ((13, 14), (15, 16), (17, 18)):
+            place, points = _text(row[loc_col]), _num(row[pts_col])
+            if not place and points is None:
+                continue
+            dated = LOC_RE.match(place)
+            if dated:
+                day = dated.group(1)
+                meets.append([_date(day[4:6], day[6:8], day[0:4]), dated.group(2), points])
+            else:
+                # A state alone (the archive dates no meet), or whatever CWA
+                # typed there ("14.5" once): kept as written.
+                meets.append([None, place or None, points])
+        dq_text = _text(row[12])
+        dq_dated = LOC_RE.match(dq_text)
+        last_run = _text(row[20])
+        dpc_points, dpc_status = _points_or_mark(row[6])
+        arx_points, arx_status = _points_or_mark(row[8])
+        trp_meets, trp_status = _points_or_mark(row[10])
+        completed = _num(row[completed_col]) if completed_col is not None else None
+        whippets.append({
+            "cwa_no": _text(row[0]) or None,
+            "call_name": call,
+            "registered_name": registered,
+            "owner_raw": _text(row[3]),
+            "grade": _text(row[4]) or None,
+            "avg": _num(row[5]),
+            "dpc_points": dpc_points, "dpc_status": dpc_status,
+            "hc": _num(row[7]),
+            "arx_points": arx_points, "arx_status": arx_status,
+            "narx": _num(row[9]),
+            "trp_meets": trp_meets, "trp_status": trp_status,
+            "dq": _num(row[11]),
+            "dq_date": ([_date(dq_dated.group(1)[4:6], dq_dated.group(1)[6:8], dq_dated.group(1)[0:4]),
+                         dq_dated.group(2)] if dq_dated else ([None, dq_text] if dq_text else None)),
+            "meets": meets,
+            "pr_points": _num(row[19]),
+            "year_last_run": int(last_run) if last_run.isdigit() else None,
+            "never_raced": last_run.upper() == "NR",
+            "completed_meets": int(completed) if completed is not None else None,
+        })
+    if not whippets:
+        raise RacingParseError(f"The {label} lists no whippets")
+    return {"updated": updated, "pr_as_of": _date(*as_of.groups()) if as_of else None,
+            "rows": whippets}
+
+
 def parse_all(files: dict[str, bytes]) -> dict:
     season, kind, page_url = standings_link(files["index.html"])
     standings = {}
@@ -360,10 +519,13 @@ def parse_all(files: dict[str, bytes]) -> dict:
         all_time[which] = listing
     if set(all_time) != set(ALL_TIME_LISTS.values()):
         raise RacingParseError(f"All-time lists found: {sorted(all_time)}")
+    sheets = guide_sheets(files["grading.html"])
+    guide = {kind: {**parse_guide(files[f"guide-{kind}.xlsx"], kind), "sheet": sheet}
+             for kind, sheet in sheets.items()}
     return {
         "org": ORG,
-        "guide_date": max(chart["as_of"] for chart in standings.values()),
-        "guide_date_source": "chart",
+        "guide_date": max([chart["as_of"] for chart in standings.values()] + [guide["current"]["updated"]]),
+        "guide_date_source": "guide",
         "season": season,
         "standings_kind": kind,
         "source_url": page_url,
@@ -372,6 +534,7 @@ def parse_all(files: dict[str, bytes]) -> dict:
         "standings": standings,
         "all_time": all_time,
         "titles": titles,
+        "guide": guide,
     }
 
 
@@ -413,14 +576,49 @@ def dog_id(name: str) -> str:
     return slug(core_name(name)) or slug(name)
 
 
-def build(snapshots: list[dict]) -> dict:
+def build(snapshots: list[dict]) -> tuple[dict, dict]:
     current = snapshots[-1]
     season = current["season"]
-    dogs: dict[str, dict] = {}
+    guide = current["guide"]
+
+    # ---- whippets: one per row of the grading guides, by CWA number
+    whippets: dict[str, dict] = {}
+    by_core: dict[str, str] = {}
+    for where in ("current", "archive"):
+        for row in guide[where]["rows"]:
+            number = row["cwa_no"] if row["cwa_no"] and re.fullmatch(r"[0-9A-Za-z]+", row["cwa_no"]) else None
+            base = number or dog_id(row["registered_name"] or row["call_name"])
+            wid, n = base, 1
+            while wid in whippets:
+                n += 1
+                wid = f"{base}-{n}"
+            listed = [meet[2] for meet in row["meets"] if meet[2] is not None]
+            computed = round(sum(listed) / len(listed), 6) if listed else 0.0
+            whippets[wid] = {
+                **row, "id": wid, "on": where, "duplicate_of": base if wid != base else None,
+                "name": core_name(row["registered_name"]) or row["registered_name"] or row["call_name"],
+                "avg_computed": computed,
+                "last_raced": max((meet[0] for meet in row["meets"] if meet[0]), default=None),
+            }
+            key = dog_id(row["registered_name"]) if row["registered_name"] else None
+            if key and key not in by_core:
+                by_core[key] = wid   # the current guide first, so it wins
+
+    # ---- the lists, joined by the registered name without titles; a whippet
+    #      on no guide keeps a slug of its name
+    list_only: dict[str, dict] = {}
+    current_calls = Counter(row["call_name"].lower() for row in whippets.values() if row["on"] == "current")
 
     def seen(name: str, call_name: str | None = None) -> str:
         key = dog_id(name)
-        entry = dogs.setdefault(key, {"id": key, "name": core_name(name) or name, "call_name": None})
+        if key in by_core:
+            return by_core[key]
+        if call_name and current_calls[call_name.lower()] == 1:
+            return next(w["id"] for w in whippets.values()
+                        if w["on"] == "current" and w["call_name"].lower() == call_name.lower())
+        key = key if key not in whippets else f"l-{key}"
+        entry = list_only.setdefault(key, {"id": key, "name": core_name(name) or name,
+                                           "call_name": call_name or "", "on": "lists"})
         if call_name and not entry["call_name"]:
             entry["call_name"] = call_name
         return key
@@ -451,14 +649,26 @@ def build(snapshots: list[dict]) -> dict:
     titles.sort(key=lambda row: (row["base"], row["name"]))
     titles.sort(key=lambda row: (row["year"] or 0, row["earned"] or ""), reverse=True)
 
+    on_guide = [w for w in whippets.values() if w["on"] == "current"]
+    archived = [w for w in whippets.values() if w["on"] == "archive"]
     awarded = [row for row in titles if row["status"] is None]
     this_year = [row for row in awarded if row["year"] == season]
-    ordered = sorted(dogs.values(), key=lambda dog: (dog["name"].lower(), dog["id"]))
-    index = {dog["id"]: position for position, dog in enumerate(ordered)}
     racing = standings["racing"]
     leader = min(racing["rows"], key=lambda row: (row["place"], row["call_name"]), default=None)
+    with_meets = [w for w in on_guide if w["meets"] and w["avg"] is not None]
     stats = {
         "season": season,
+        "guide_updated": guide["current"]["updated"],
+        "pr_as_of": guide["current"]["pr_as_of"],
+        "whippets_current": len(on_guide),
+        "raced_this_year": sum(w["year_last_run"] == season for w in on_guide),
+        "never_raced": sum(w["never_raced"] for w in on_guide),
+        "grades_current": dict(sorted(Counter(w["grade"] or "" for w in on_guide).items())),
+        "avg_agreement": round(sum(abs(w["avg"] - w["avg_computed"]) <= 0.01 for w in with_meets)
+                               / max(1, len(with_meets)), 4),
+        "archive_listed": len(archived),
+        "archive_shared_numbers": sum(w["duplicate_of"] is not None for w in archived),
+        "list_only": len(list_only),
         "racing_as_of": racing["as_of"],
         "racing_meets": racing["meets"],
         "racing_listed": len(racing["rows"]),
@@ -475,11 +685,14 @@ def build(snapshots: list[dict]) -> dict:
         "dpc_total": sum(row["base"] == "DPC" for row in awarded),
         "all_time_listed": len(all_time["rows"]),
         "latest_title": max((row["earned"] for row in awarded if row["earned"]), default=None),
-        "whippets": len(dogs),
         "leader": ({"dog": leader["dog"], "call_name": leader["call_name"], "points": leader["points"]}
                    if leader else None),
     }
-    return {
+
+    def pack(row: dict) -> list:
+        return [row.get(column) for column in WHIPPET_COLUMNS]
+
+    feed = {
         "org": ORG,
         "name": "CWA",
         "program": "whippet racing",
@@ -489,6 +702,9 @@ def build(snapshots: list[dict]) -> dict:
         "generated": today(),
         "fetched": current["fetched"],
         "site_url": SITE_URL,
+        "guide_page": GRADING_URL,
+        "guide_url": SHEET_VIEW.format(id=guide["current"]["sheet"]),
+        "archive_url": SHEET_VIEW.format(id=guide["archive"]["sheet"]),
         "standings_url": current["source_url"],
         "titles_url": TITLES_URL,
         "all_time_url": ALL_TIME_URL,
@@ -498,21 +714,28 @@ def build(snapshots: list[dict]) -> dict:
         "racing_titles": list(RACING_TITLES),
         "standings": standings,
         "all_time": all_time,
-        # Title rows packed as arrays (title_columns), the whippet as an index
-        # into dogs: the list runs to a couple of thousand rows.
+        # The current guide's whippets, packed by whippet_columns; the archive
+        # and list-only whippets are in data/cwa-registry.json.
+        "whippet_columns": WHIPPET_COLUMNS,
+        "whippets": [pack(w) for w in sorted(on_guide, key=lambda w: (w["call_name"].lower(), w["id"]))],
+        # Title rows packed as arrays (title_columns); dog is a whippet id.
         "title_columns": TITLE_COLUMNS,
         "titles": [[row["base"], row["title"], row["name"], row["earned"], row["year"],
-                    row["owners"], row["status"], index[row["dog"]]] for row in titles],
-        "dogs": ordered,
+                    row["owners"], row["status"], row["dog"]] for row in titles],
         "notes": [
+            "Whippets are CWA's grading guides as written, keyed by CWA number; avg_computed "
+            "is the mean of the listed meets (CWA rule: the last three completed meets).",
             "Standings are CWA's own charts, each with its own date and meet count; "
             "conformation standings are left out. Places are CWA's: ties share a place.",
-            "Titles are CWA's title sheets as written: a holder's name carries the "
-            "titles it held when the sheet was last edited.",
-            "dog groups one whippet's rows across lists by its registered name without "
-            "titles; names are shown as each list prints them.",
+            "Titles are CWA's title sheets as written, joined to a whippet by its "
+            "registered name without titles; names are shown as each list prints them.",
         ],
     }
+    registry_rows = sorted(archived, key=lambda w: ((w["call_name"] or w["name"]).lower(), w["id"]))
+    registry_rows += sorted(list_only.values(), key=lambda w: (w["name"].lower(), w["id"]))
+    registry = {"org": ORG, "guide_date": current["guide_date"], "season": season,
+                "columns": WHIPPET_COLUMNS, "rows": [pack(row) for row in registry_rows]}
+    return feed, registry
 
 
 # -------------------------------------------------------------------- main
@@ -547,17 +770,22 @@ def main() -> int:
                   file=sys.stderr)
 
     snapshots = load_snapshots(SNAPSHOT_DIR)
-    feed = build(snapshots)
+    feed, registry = build(snapshots)
     size = write_json(FEED, feed)
+    registry_size = write_json(REGISTRY, registry)
     stats = feed["stats"]
     print(
         f"CWA standings {feed['guide_date']}: racing as of {stats['racing_as_of']} "
         f"({stats['racing_listed']} listed, {stats['racing_meets']} meets), High Combined as of "
         f"{stats['high_combined_as_of']} ({stats['high_combined_listed']} listed); "
         f"{stats['titles_total']:,} titles ({stats['titles_this_year']} in {stats['season']}), "
-        f"{stats['all_time_listed']} on the all-time list, {stats['whippets']:,} whippets"
+        f"{stats['all_time_listed']} on the all-time list"
     )
-    print(f"Wrote {FEED.name} ({size:,} bytes)")
+    print(f"Grading guide {stats['guide_updated']}: {stats['whippets_current']} whippets, "
+          f"{stats['raced_this_year']} racing this year, average agreement {stats['avg_agreement']:.1%}; "
+          f"archive {stats['archive_listed']:,} ({stats['archive_shared_numbers']} on a shared number), "
+          f"{stats['list_only']:,} on the lists only")
+    print(f"Wrote {FEED.name} ({size:,} bytes) and {REGISTRY.name} ({registry_size:,} bytes)")
     return 0
 
 
