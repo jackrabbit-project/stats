@@ -573,7 +573,8 @@
         const filterNote = document.getElementById('owner-filter');
         filterNote.classList.toggle('hidden', !ownerFilter);
         filterNote.innerHTML = ownerFilter
-          ? `Owner: <strong>${esc(ownerFilter)}</strong> · <button type="button" class="lnk" id="owner-clear">Show every owner</button>` : '';
+          ? `Owner: <strong>${esc(ownerFilter)}</strong> · <a href="cwa.html#kennels" class="lnk">Every kennel</a>
+            · <a href="cwa.html#browse" class="lnk">Every whippet</a>` : '';
         browseCount.textContent = `${n(matched.length)} whippet${matched.length === 1 ? '' : 's'}${
           shown.length < matched.length ? `, the first ${shown.length} shown` : ''}.`;
         browseTable.innerHTML = matched.length ? `
@@ -598,16 +599,6 @@
             ? `No whippet on CWA's grading guides lists ${esc(ownerFilter)} as an owner; CWA's lists may spell the name another way.`
             : 'No whippet matches.'}</p>`;
         wireSort(browseTable, BROWSE, sort, paintBrowse);
-        const clear = document.getElementById('owner-clear');
-        if (clear) {
-          clear.addEventListener('click', () => {
-            ownerFilter = '';
-            const url = new URL(window.location.href);
-            url.searchParams.delete('owner');
-            history.replaceState(null, '', url);
-            paintBrowse();
-          });
-        }
         const more = document.getElementById('browse-all');
         if (more) more.addEventListener('click', () => { showAllRows = true; paintBrowse(); });
         if (typeof fitTables === 'function') fitTables();
