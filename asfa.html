@@ -34,7 +34,10 @@
         <p class="text-xs uppercase tracking-wide text-asfa-accent font-semibold mb-2">ASFA lure coursing</p>
         <h1 class="font-display text-4xl md:text-5xl text-asfa-accent tracking-tight">Find your hound.</h1>
         <p class="mt-2 text-asfa-text/75">See exactly where they stand in the breed this season.</p>
-        <p class="mt-1 text-sm text-asfa-text/60">Only hounds ranked in ASFA's Top 20 for their breed are listed; ASFA publishes no more.</p>
+        <!-- Highlighted so a hound outside its breed's Top 20 is not taken for missing. -->
+        <p class="mt-4 inline-block badge-prov border border-asfa-amber rounded px-4 py-2.5 text-sm">
+          <strong>Only hounds ranked in ASFA's Top 20 for their breed are listed;</strong> ASFA publishes no more.
+        </p>
 
         <div class="relative mt-6 text-left">
           <label for="search" class="sr-only">Search hounds by name</label>
