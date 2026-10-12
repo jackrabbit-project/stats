@@ -980,6 +980,67 @@ def check_akc(check: Checker) -> None:
                 f"akc {label} ranking {name}: feed {g}, re-derived {w}",
             )
 
+    # Competitors by breed, re-derived from each trial's stakes in the
+    # collection: a trial's stakes add up to its competitors, and a breed's
+    # figures are its starters over the trials it ran in.
+    raw_events = collection["events"]
+    with_stakes = ["trial_stakes" in r for r in raw_events]
+    got_breeds = feed["rankings"].get("breeds")
+    if not any(with_stakes):
+        check.expect(got_breeds is None, "akc: a breed table from a collection without stakes")
+    else:
+        check.expect(all(with_stakes), "akc: some collected rows lack trial_stakes")
+        sums: dict[str, dict] = {}
+        split = unsplit = 0
+        for r in raw_events:
+            stakes = r.get("trial_stakes")
+            if not r["results_posted"] or r["trial_entries"] is None:
+                check.expect(stakes == [], f"akc {r['event_number']}: stakes on an event without trial results")
+                continue
+            if stakes is None:
+                unsplit += 1
+                continue
+            split += 1
+            check.expect(all(s[0] in ("Open", "Special", "Veteran") and type(s[2]) is int and s[2] >= 0 and s[1] for s in stakes),
+                         f"akc {r['event_number']}: stake rows {stakes[:3]}")
+            check.expect(sum(s[2] for s in stakes) == r["trial_competitors"],
+                         f"akc {r['event_number']}: stakes add up to {sum(s[2] for s in stakes)}, competitors {r['trial_competitors']}")
+            per_breed: dict[str, int] = {}
+            for _stake, breed, starters in stakes:
+                per_breed[breed] = per_breed.get(breed, 0) + starters
+            for breed, count in per_breed.items():
+                if count:
+                    w = sums.setdefault(breed, {"trials": 0, "competitors": 0, "largest": 0})
+                    w["trials"] += 1
+                    w["competitors"] += count
+                    w["largest"] = max(w["largest"], count)
+        want_rows = [{"breed": b, **w} for b, w in sums.items()]
+        _akc_rank(want_rows, "competitors")
+        want_breeds = {w["breed"]: w for w in want_rows}
+        got = {g["breed"]: g for g in (got_breeds or [])}
+        check.expect(set(want_breeds) == set(got), f"akc breed table lists {sorted(set(want_breeds) ^ set(got))[:5]}")
+        for breed, w in want_breeds.items():
+            g = got.get(breed)
+            if g is None:
+                continue
+            check.expect(
+                (g["rank"], g["trials"], g["competitors"], g["largest"]) == (w["_rank"], w["trials"], w["competitors"], w["largest"])
+                and abs(g["avg_competitors"] - w["competitors"] / w["trials"]) < 0.001
+                and g["open"] + g["special"] + g["veteran"] == g["competitors"],
+                f"akc breed {breed}: feed {g}, re-derived {w}",
+            )
+        ranks = [g["rank"] for g in (got_breeds or [])]
+        check.expect(ranks == sorted(ranks), "akc breed table is not in rank order")
+        check.expect(
+            sum(w["competitors"] for w in want_breeds.values())
+            == sum(r["trial_competitors"] for r in raw_events if r.get("trial_stakes")),
+            "akc: the breeds' competitors do not add up to the split trials' competitors",
+        )
+        check.expect(
+            (stats.get("trials_by_breed"), stats.get("trials_not_by_breed")) == (split, unsplit),
+            f"akc trials by breed: feed {(stats.get('trials_by_breed'), stats.get('trials_not_by_breed'))}, re-derived {(split, unsplit)}",
+        )
+
     # The privacy rule covers the feed and the committed collection.
     for label, pattern in (
         ("email address", r"[\w.+-]+@[\w-]+\.[\w.]+"),

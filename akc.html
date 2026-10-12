@@ -55,6 +55,8 @@
         : '<span class="badge badge-flat">Not yet</span>');
 
       const { trials, clubs, states } = feed.rankings;
+      // Competitors by breed: null for a collection made before AKC's stakes were kept.
+      const breedTable = feed.rankings.breeds && feed.rankings.breeds.length ? feed.rankings.breeds : null;
       const unrankedStates = states.filter((s) => s.rank == null);
       const unrankedClubs = clubs.filter((c) => c.rank == null);
       const breeds = [...new Set(events.filter((e) => e.specialty).map((e) => e.scope))].sort();
@@ -86,7 +88,7 @@
           ].map(tile).join('')}
         </section>
 
-        <div class="grid md:grid-cols-2 gap-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <section class="card">
             <h2 class="card-title">By month</h2>
             <p class="text-xs text-asfa-text/55 mb-2">Entries count only events whose results AKC has posted.</p>
@@ -118,6 +120,35 @@
             <div id="states-table"></div>
           </section>
         </div>
+
+        ${breedTable ? `
+        <section class="card" id="breeds">
+          <h2 class="card-title">Competitors by breed</h2>
+          <p class="text-xs text-asfa-text/55 mb-2">Each breed's Open, Specials and Veterans stakes at the trials with results posted, ranked on competitors.</p>
+          <div class="tbl-wrap"><table class="tbl">
+            <thead><tr>
+              <th scope="col" class="num">#</th><th scope="col">Breed</th>
+              <th scope="col" class="num">Trials</th><th scope="col" class="num">Competitors</th>
+              <th scope="col" class="num">Avg</th><th scope="col" class="num">Largest</th>
+            </tr></thead>
+            <tbody>
+              ${breedTable.map((b) => `
+                <tr>
+                  ${rankCell(b.rank)}<td class="font-semibold">${esc(b.breed)}</td>
+                  <td class="num">${b.trials}</td>
+                  <td class="num font-semibold text-asfa-akc" title="${b.open} Open, ${b.special} Specials, ${b.veteran} Veterans">${n(b.competitors)}</td>
+                  <td class="num">${avg(b.avg_competitors)}</td><td class="num">${n(b.largest)}</td>
+                </tr>`).join('')}
+            </tbody>
+          </table></div>
+          <p class="text-xs text-asfa-text/55 mt-3">
+            Counted from the stakes in each trial's posted results. Competitors are the hounds that ran, so a
+            trial's breeds add up to its competitors, not its entries. Trials is the number of trials where the
+            breed had at least one hound; Avg is competitors per such trial.${stats.trials_not_by_breed
+              ? ` ${stats.trials_not_by_breed} trial${stats.trials_not_by_breed === 1 ? ' is' : 's are'} left out: AKC's results page
+                gives ${stats.trials_not_by_breed === 1 ? 'its' : 'their'} totals without a full list of stakes.` : ''}
+          </p>
+        </section>` : ''}
 
         <section class="card">
           <h2 class="card-title">Clubs</h2>
@@ -203,6 +234,8 @@
             <li>Trial entries are the Open, Specials and Veterans stakes. Test entries are the Junior Courser
               and Qualified Courser tests.</li>
             <li>Competitors are the hounds that actually ran; entries include those that scratched.</li>
+            <li>Competitors by breed are read from the stakes in each trial's posted results: the hounds that
+              started in each breed's Open, Specials and Veterans stakes.</li>
             <li>A blank count means no test (or no trial) was held, or that AKC had not yet posted the
               event's results.</li>
             <li>Coursing Ability Tests and Fast CAT are not included.</li>

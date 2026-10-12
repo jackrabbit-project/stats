@@ -14,7 +14,8 @@ Two public sources, both plain HTTP:
   then the page carries only the premium list, and the event is recorded as
   not posted, with no counts.
 
-A collection keeps each event's identity and counts, nothing else. The
+A collection keeps each event's identity and counts, with each trial's
+stakes (Open, Special or Veteran, the breed, the starters), nothing else. The
 search answer and the pages also carry secretaries' names, phones and
 addresses; none of that is read into the rows, and the whole collection is
 grepped for such things before it is handed back.
@@ -65,6 +66,27 @@ EVENT_NUMBER_RE = re.compile(r"^20\d{8}$")
 # so it yields no sections.
 SECTION_RE = re.compile(r"LC (Test|Trial)\s+([A-Za-z][A-Za-z .'\-]{0,40}?)\s+(?=Judging Panel Status:|Number of Entries:)")
 COUNTS_RE = re.compile(r"Number of Entries:\s*(\d+)\s*Number of Competitors:\s*(\d+)")
+
+# Each trial stake is a link into its placements ("Open WHIPPETS",
+# "Special BASENJIS", "Open Veteran WHIPPETS"), then its judges, then
+# "(N Starters)". The starters of a trial's stakes add up to its Number of
+# Competitors. Test stakes (Junior and Qualified Courser) link with
+# comp_type=LCTS and are not split by breed.
+STAKE_LINK_RE = re.compile(r'<a\b[^>]*href="[^"]*[?&]comp_type=LCTR\b[^"]*"[^>]*>(.*?)</a>', re.S | re.I)
+STAKE_LABEL_RE = re.compile(r"^(Open Veteran|Special Veteran|Veteran|Open|Special)\s+(\S.*)$")
+STARTERS_RE = re.compile(r"\((\d+)\s+Starters?\)")
+# AKC names a stake's breed in the plural, in capitals; the table shows the
+# breed as AKC's breed list names it.
+AKC_BREEDS = {
+    "AFGHAN HOUNDS": "Afghan Hound", "AZAWAKHS": "Azawakh", "BASENJIS": "Basenji",
+    "BORZOIS": "Borzoi", "CIRNECHI DELL'ETNA": "Cirneco dell'Etna", "GREYHOUNDS": "Greyhound",
+    "IBIZAN HOUNDS": "Ibizan Hound", "IRISH WOLFHOUNDS": "Irish Wolfhound",
+    "ITALIAN GREYHOUNDS": "Italian Greyhound", "PHARAOH HOUNDS": "Pharaoh Hound",
+    "RHODESIAN RIDGEBACKS": "Rhodesian Ridgeback", "SALUKIS": "Saluki",
+    "SCOTTISH DEERHOUNDS": "Scottish Deerhound", "SLOUGHIS": "Sloughi", "WHIPPETS": "Whippet",
+    "SILKEN WINDHOUNDS": "Silken Windhound", "PORTUGUESE PODENGOS": "Portuguese Podengo",
+}
+DIVISION_RE = re.compile(r"\s+DIV\.?\s*[A-Z0-9]+$")
 
 # The collection is committed, so it is checked for the contact details
 # the racing workbooks are kept out of git for.
@@ -195,8 +217,43 @@ def parse_sections(html: str) -> list[dict]:
     return sections
 
 
-def row_from(event: dict, sections: list[dict]) -> dict:
-    """One event row in the shape the feed and the checks expect."""
+def breed_name(text: str) -> str:
+    """'IBIZAN HOUNDS' -> 'Ibizan Hound'. A large stake split into
+    divisions ('WHIPPETS Div. A') counts under its breed. A breed not in the
+    list keeps AKC's words, title-cased, less the plural s."""
+    key = DIVISION_RE.sub("", " ".join(text.upper().split()))
+    if key in AKC_BREEDS:
+        return AKC_BREEDS[key]
+    words = key.title().split()
+    if words and words[-1].endswith("s") and not words[-1].endswith("ss"):
+        words[-1] = words[-1][:-1]
+    return " ".join(words)
+
+
+def parse_stakes(html: str) -> list[list] | None:
+    """Each trial stake on an event page as [stake, breed, starters], in
+    page order; the stake is Open, Special or Veteran. None when a stake
+    cannot be read (a label of another shape, or no starters count)."""
+    links = list(STAKE_LINK_RE.finditer(html))
+    stakes = []
+    for index, link in enumerate(links):
+        label = " ".join(html_module.unescape(re.sub(r"<[^>]+>", " ", link.group(1))).split())
+        stop = links[index + 1].start() if index + 1 < len(links) else len(html)
+        following = html_module.unescape(re.sub(r"<[^>]+>", " ", html[link.end():stop]))
+        named = STAKE_LABEL_RE.match(label)
+        count = STARTERS_RE.search(following)
+        if not named or not count:
+            return None
+        stake = "Veteran" if "Veteran" in named.group(1) else named.group(1)
+        stakes.append([stake, breed_name(named.group(2)), int(count.group(1))])
+    return stakes
+
+
+def row_from(event: dict, sections: list[dict], stakes: list[list] | None = None) -> dict:
+    """One event row in the shape the feed and the checks expect. The
+    trial's stakes are kept only when their starters add up to AKC's
+    Number of Competitors; otherwise trial_stakes is None and the trial is
+    left out of the counts by breed."""
     trials = [s for s in sections if s["kind"] == "trial" and s["entries"] is not None]
     tests = [s for s in sections if s["kind"] == "test" and s["entries"] is not None]
     posted = bool(trials or tests)
@@ -213,7 +270,14 @@ def row_from(event: dict, sections: list[dict]) -> dict:
         else:
             scope = ", ".join(breeds) + " specialty"
     trial_entries = total(trials, "entries")
+    trial_competitors = total(trials, "competitors")
     test_entries = total(tests, "entries")
+    if not trials:
+        trial_stakes = []
+    elif stakes and sum(stake[2] for stake in stakes) == trial_competitors:
+        trial_stakes = stakes
+    else:
+        trial_stakes = None
     when = event["date"]
     return {
         "date": when,
@@ -226,12 +290,13 @@ def row_from(event: dict, sections: list[dict]) -> dict:
         "scope": scope,
         "specialty": scope is not None and scope.lower() != "all-breed",
         "trial_entries": trial_entries,
-        "trial_competitors": total(trials, "competitors"),
+        "trial_competitors": trial_competitors,
         "test_entries": test_entries,
         "test_competitors": total(tests, "competitors"),
         "total_entries": (trial_entries or 0) + (test_entries or 0) if posted else None,
         "results_posted": posted,
         "url": EVENT_URL.format(number=event["event_number"]),
+        "trial_stakes": trial_stakes,
     }
 
 
@@ -245,11 +310,15 @@ def collect(start: str, end: str, delay: float = 0.5, limit: int | None = None, 
         events = events[:limit]
     rows = []
     for event in events:
-        rows.append(row_from(event, parse_sections(fetch_page(session, event["event_number"]))))
+        page = fetch_page(session, event["event_number"])
+        rows.append(row_from(event, parse_sections(page), parse_stakes(page)))
         if delay:
             time.sleep(delay)
     posted = sum(1 for r in rows if r["results_posted"])
-    log(f"Read {len(rows)} event pages: {posted} with results posted")
+    split = sum(1 for r in rows if r["trial_stakes"])
+    unsplit = sum(1 for r in rows if r["trial_stakes"] is None)
+    log(f"Read {len(rows)} event pages: {posted} with results posted, {split} trials split by breed"
+        + (f", {unsplit} without a full list of stakes" if unsplit else ""))
     collection = {
         "collected": today(),
         "period": {"start": start, "end": end},

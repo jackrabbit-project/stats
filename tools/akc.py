@@ -5,9 +5,11 @@ year, from AKC's Event Search, with the entry and competitor counts from
 that event's results page. By default this collects afresh (every event
 from January 1 to today), files the rows under data/akc/raw/<date>.json
 when they differ from the newest collection, and rebuilds the feed. Every
-figure the site shows (the totals, the by-month table, the trial, club and
-state rankings) is computed here from the rows; check.py re-derives them
-from the committed collection on its own.
+figure the site shows (the totals, the by-month table, the trial, club,
+state and breed rankings) is computed here from the rows; check.py
+re-derives them from the committed collection on its own. The breed table
+counts competitors, the starters of each trial's Open, Special and Veteran
+stakes; a collection made before the stakes were kept has no breed table.
 
 Usage:
     python tools/akc.py                     # collect, archive if changed, rebuild
@@ -39,6 +41,7 @@ ROW_FIELDS = ("date", "day", "club", "city", "state", "event_number", "scope", "
               "trial_entries", "trial_competitors", "test_entries", "test_competitors",
               "total_entries", "results_posted", "url")
 COUNT_FIELDS = ("trial_entries", "trial_competitors", "test_entries", "test_competitors", "total_entries")
+STAKES = ("Open", "Special", "Veteran")
 
 
 # -------------------------------------------------------------- collection
@@ -108,6 +111,26 @@ def read_collection(path: Path) -> dict:
                 raise RacingParseError(f"{number}: more competitors than entries")
         if number not in str(event["url"]):
             raise RacingParseError(f"{number}: the event link {event['url']} is for another event")
+        # Each trial's stakes: [] without trial results, None when they did
+        # not add up to AKC's competitor count, else [stake, breed, starters].
+        if "trial_stakes" in event:
+            stakes = event["trial_stakes"]
+            if event["trial_entries"] is None:
+                if stakes != []:
+                    raise RacingParseError(f"{number}: stakes on an event without trial results")
+            elif stakes is not None:
+                if not isinstance(stakes, list) or not stakes:
+                    raise RacingParseError(f"{number}: trial stakes {stakes!r}")
+                for stake in stakes:
+                    if (not isinstance(stake, list) or len(stake) != 3 or stake[0] not in STAKES
+                            or not isinstance(stake[1], str) or not stake[1].strip()
+                            or isinstance(stake[2], bool) or not isinstance(stake[2], int) or stake[2] < 0):
+                        raise RacingParseError(f"{number}: unreadable stake {stake!r}")
+                if sum(stake[2] for stake in stakes) != event["trial_competitors"]:
+                    raise RacingParseError(
+                        f"{number}: the stakes' starters do not add up to {event['trial_competitors']} competitors")
+    if len({"trial_stakes" in event for event in events}) > 1:
+        raise RacingParseError(f"{path.name}: some rows carry trial stakes and some do not")
     events.sort(key=lambda e: (e["date"], e["event_number"]))
     return data
 
@@ -223,6 +246,33 @@ def build(collection: dict, source_file: str, digest: str) -> dict:
     for state in states:
         del state["states"]
 
+    # Competitors by breed: a breed's Open, Special and Veteran starters at
+    # each posted trial, together, over the trials it ran in. None for a
+    # collection made before the stakes were kept.
+    breeds = None
+    if all("trial_stakes" in e for e in events):
+        groups: dict[str, dict] = {}
+        split = [e for e in held if e["trial_stakes"]]
+        for e in split:
+            at_trial: dict[str, int] = {}
+            for stake, breed, starters in e["trial_stakes"]:
+                group = groups.setdefault(breed, {"breed": breed, "trials": 0, "competitors": 0, "largest": 0,
+                                                  "open": 0, "special": 0, "veteran": 0})
+                group[stake.lower()] += starters
+                at_trial[breed] = at_trial.get(breed, 0) + starters
+            for breed, count in at_trial.items():
+                if count:
+                    groups[breed]["trials"] += 1
+                    groups[breed]["competitors"] += count
+                    groups[breed]["largest"] = max(groups[breed]["largest"], count)
+        breeds = [group for group in groups.values() if group["competitors"]]
+        for group in breeds:
+            group["avg_competitors"] = _round(group["competitors"] / group["trials"])
+        competition_rank(breeds, "competitors")
+        breeds.sort(key=lambda r: (r["rank"], r["breed"]))
+        stats["trials_by_breed"] = len(split)
+        stats["trials_not_by_breed"] = sum(1 for e in held if e["trial_stakes"] is None)
+
     return {
         "org": ORG,
         "name": "AKC",
@@ -234,8 +284,9 @@ def build(collection: dict, source_file: str, digest: str) -> dict:
         "source": {"name": SOURCE_NAME, "url": SOURCE_URL, "file": source_file, "sha256": digest},
         "stats": stats,
         "by_month": by_month,
-        "rankings": {"trials": trials, "clubs": clubs, "states": states},
-        "events": events,
+        "rankings": {"trials": trials, "clubs": clubs, "states": states, "breeds": breeds},
+        # The stakes stay in the collection; the page shows them only by breed.
+        "events": [{key: value for key, value in e.items() if key != "trial_stakes"} for e in events],
     }
 
 
@@ -312,6 +363,11 @@ def main() -> int:
         f"{stats['test_entries']:,} test entries, average trial {stats['avg_trial_entries']}, "
         f"{stats['clubs']} clubs in {stats['states']} states; feed {size:,} bytes"
     )
+    breeds = feed["rankings"]["breeds"]
+    if breeds is not None:
+        print(f"By breed: {len(breeds)} breeds over {stats['trials_by_breed']} trials"
+              + (f"; {stats['trials_not_by_breed']} trials left out, posted without a full list of stakes"
+                 if stats["trials_not_by_breed"] else ""))
     return 0
 
 
