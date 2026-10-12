@@ -211,7 +211,7 @@ const ORGS = {
       [ptsLabel(dog.cr_points), 'CR points'],
       [dog.titled && dog.titled.wrch ? 'WRCh' : `${ptsLabel(wraWrchPoints(dog) || 0)} / 15`, 'WRCh points'],
     ],
-    streams: [['meets', 'Last three adult meets']],
+    streams: [['meets', 'Last three meets']],
     browse: [
       ['rank_breed', 'Rank', 'num', 1],
       ['call_name', 'Call name', '', 1],
@@ -222,27 +222,30 @@ const ORGS = {
       ['cr_points', 'CR pts', 'num', -1],
       ['avg', 'Average', 'num', -1],
       ['meets_run', 'Meets', 'num', -1],
+      ['last_raced', 'Last raced', '', -1],
     ],
     meetStatus: true,
     meetCodeHeader: null,
-    statusLegend: 'C completed the meet; SCR scratched; PSCR scratched, most likely in the paddock (rule 3.2.3; WRA publishes no legend); DNF did not finish; DQ disqualified. Newest first; the report gives no dates.',
+    statusLegend: 'C completed the meet; SCR scratched; PSCR scratched, most likely in the paddock (rule 3.2.3; WRA publishes no legend); DNF did not finish; DQ disqualified. Newest first; the report gives no dates, and puppy races are not listed.',
     plainMean: true,
     averageRule: 'rule 5.2',
     ownArithmetic: true,
     dogNote: (dog) => [
       dog.dii ? 'Approved for Division II (rule 7.5.5); DII points and titles are on the DII Registrar\'s lists, not here.' : '',
-      dog.meets_run != null ? `${dog.meets_run} meet${dog.meets_run === 1 ? '' : 's'} run, puppy meets included${
+      dog.meets_run != null ? `${dog.meets_run} meet${dog.meets_run === 1 ? '' : 's'} run, puppy races included${
         dog.exempt ? '; exempt from height measurement (rule 3.2.2.5)' : ''}.` : '',
     ].filter(Boolean).join(' '),
+    // Racing this year is a last meet in the season on WRA's Meets Run by
+    // Dog page; WRA's active list (1,196) is a status, not recent racing.
     overviewTiles: (stats) => [
-      [stats.hounds_active.toLocaleString('en-US'), 'whippets on the active list'],
+      [stats.hounds_raced ?? '—', 'whippets racing this year'],
       [stats.hounds_ytd, 'with National points this year'],
       [stats.meets_this_year, 'meets verified this year'],
       [stats.wrch_this_year, 'WRCh titles earned this year'],
       [stats.titled_wrch, 'WRCh titled, all time'],
     ],
     hubTiles: (stats) => [
-      [stats.hounds_active.toLocaleString('en-US'), 'on the active list'],
+      [stats.hounds_raced ?? '—', 'whippets racing this year'],
       [stats.hounds_ytd, 'with points this year'],
       [stats.meets_this_year, 'meets this year'],
       [stats.titled_wrch, 'WRCh titled, all time'],
@@ -1470,8 +1473,9 @@ const ABOUT = {
       <p class="text-sm leading-relaxed">
         A meet's score is the race points a whippet earns there, by its place in each race, out
         of a possible 29 (rule 5.4). Its average is the mean of the completed meets among its last
-        three adult meets; with none completed, the mean of the incomplete ones, where it
-        scratched, did not finish or was disqualified; with no adult meet, 0 (rule 5.2):
+        three meets; with none completed, the mean of the incomplete ones, where it scratched,
+        did not finish or was disqualified; with no meet, 0 (rule 5.2). Puppy races are not
+        graded and never count:
       </p>
       <p class="font-mono text-sm mt-2 p-3 bg-asfa-bg2 border border-asfa-border">
         Average = (sum of the completed meets) ÷ (number of completed meets)
@@ -1481,7 +1485,7 @@ const ABOUT = {
         <strong>C</strong> 4 to 9.9, <strong>D</strong> below 4 (rule 5.2). A whippet drops one
         grade for each year in which it has not completed a meet, so a grade can sit below its
         average's band. <strong>F</strong>, which the rule book does not define, appears only on
-        whippets with no adult meet on record; a first-time entrant races as a D.
+        whippets that have not yet raced outside puppy races; a first-time entrant races as a D.
       </p>
       <p class="text-sm leading-relaxed mt-2">
         This site recomputes every average from the three meets the report lists and shows the
@@ -1509,9 +1513,10 @@ const ABOUT = {
         carry the points and titles of NAWRA, which merged into the WRA in 2017.
       </p>`,
     cannot: [
-      `<li><strong>No meet dates.</strong> The report lists a whippet's last three adult meets as
-          scores and completion codes, newest first, with no dates or clubs, so these pages cannot
-          say when a whippet last raced.</li>`,
+      `<li><strong>Few meet dates.</strong> The report lists a whippet's last three meets as scores
+          and completion codes, newest first, with no dates or clubs. The one date these pages
+          have is a whippet's last meet, from WRA's Meets Run by Dog page, which lists only the
+          whippets that raced in the last two years.</li>`,
       `<li><strong>No race numbers.</strong> WRA issues none, so the call name is the key: a
           whippet's page address is built from it.</li>`,
       `<li><strong>No sex.</strong> Neither list gives it, and the WRChX needs it (50 points for a
@@ -1526,7 +1531,7 @@ const ABOUT = {
           report's own figures.</li>`;
       },
       `<li><strong>Division II and puppy racing are not covered.</strong> DII points and titles are
-          on the DII Registrar's lists (rule 7.5.5), and puppy meets are not on the report.</li>`,
+          on the DII Registrar's lists (rule 7.5.5), and puppy races are not on the report.</li>`,
     ],
     source: (feed) => `
       <p class="text-sm leading-relaxed">
@@ -1535,7 +1540,7 @@ const ABOUT = {
         as two reports, the active list and the inactive list, stamped with the date the Registrar
         last updated them. Together they list every whippet registered, with its grade and
         average, its CR, WRCh and National points, and, on the active list, the scores and
-        completion codes of its last three adult meets. Beside them the Registrar keeps the
+        completion codes of its last three meets, puppy races aside. Beside them the Registrar keeps the
         <a href="${esc(feed.records_url)}" class="lnk" target="_blank" rel="noopener noreferrer">Whippet Point Records</a>,
         which WRA's own help sheet names as the correct record of points and titles. The
         arithmetic follows the
@@ -1546,7 +1551,10 @@ const ABOUT = {
         <li><strong>Career standings</strong> rank lifetime National points (the "N Pts L/T" column) across every whippet registered.</li>
         <li><strong>Titles and title points</strong> are the Point Records': the report's CR column reads 0 once a whippet has 15 WRCh points, and the help sheet calls the report's WRCh points wrong. Each row of the Point Records is matched to the report by call name, with the registered name and owner to confirm it.</li>
         <li><strong>Meets this year</strong> counts the meets marked verified on WRA's <a href="${ORGS.wra.calendar}" class="lnk" target="_blank" rel="noopener noreferrer">meet list</a>.</li>
-        <li><strong>Active</strong> means WRA's own active list. Test records and duplicate records in WRA's database are left out.</li>
+        <li><strong>Racing this year</strong> counts the whippets whose last meet, on WRA's <a href="${esc(feed.meets_run_url)}" class="lnk" target="_blank" rel="noopener noreferrer">Meets Run by Dog</a> page${
+          feed.meets_run_date ? ` as read on ${formatDate(feed.meets_run_date)}` : ''}, falls in ${feed.season}, puppy races included. The same page gives each whippet's <strong>last raced</strong> date.</li>
+        <li><strong>Active</strong> means WRA's own active list, a status WRA keeps, not recent racing: ${feed.stats.hounds_active.toLocaleString('en-US')} whippets, ${
+          feed.stats.raced_two_years != null ? `${feed.stats.raced_two_years} of them raced in the last two years` : 'many of them not raced in years'}. Test records and duplicate records in WRA's database are left out.</li>
       </ul>`,
     disclaimer: `
       <p class="text-sm leading-relaxed">

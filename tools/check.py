@@ -1180,6 +1180,10 @@ RACING = {
         "expected_sections": None,
         "id_pattern": r"^[a-z0-9]+(?:-[a-z0-9]+)*$",
         "undated_meets": True,
+        # The last meet per dog comes from WRA's Meets Run by Dog page, kept
+        # in data/wra/meets-run.json; racing this year is a last meet in the
+        # season.
+        "last_raced_file": "data/wra/meets-run.json",
         "undecoded_share": 1.0,
     },
     "notra-whippets": {
@@ -1429,7 +1433,34 @@ def check_racing(check: Checker, org: str) -> None:
     # last_raced is the newest listed meet's date, or None when a meet from
     # the same year or later carries only an undated code (AOK9's 2025-S67):
     # the pages then show that year instead of an older date.
+    last_raced_file = spec.get("last_raced_file")
+    page: dict[str, str] = {}
+    if last_raced_file:
+        run_path = ROOT / last_raced_file
+        check.expect(run_path.exists(), f"{label}: {last_raced_file} missing")
+        if run_path.exists():
+            run = json.loads(run_path.read_text(encoding="utf-8"))
+            page = {r["call_name"]: r["last_meet"] for r in run["rows"]}
+            by_call = {row["call_name"]: row for row in rows}
+            check.expect(len(page) == len(run["rows"]), f"{label}: {last_raced_file} repeats a call name")
+            check.expect(all(re.fullmatch(r"\d{4}-\d{2}-\d{2}", when) and when <= run["fetched"]
+                             for when in page.values()),
+                         f"{label}: a last meet in {last_raced_file} is malformed or after its fetch")
+            check.expect(all(name in by_call and by_call[name]["active"] for name in page),
+                         f"{label}: {last_raced_file} names a dog not on the active list")
+            check.expect(feed.get("meets_run_date") == run["fetched"]
+                         and feed.get("meets_run_unmatched") == [],
+                         f"{label}: the feed's Meets Run by Dog date or join disagrees with the file")
+            check.expect(stats.get("raced_two_years") == len(page),
+                         f"{label}: stats.raced_two_years is not the dogs on the Meets Run page")
+            body = run_path.read_text(encoding="utf-8")
+            check.expect(not re.search(r"[\w.+-]+@[\w-]+\.[\w.]+|\(\d{3}\)\s*\d{3}-\d{4}", body),
+                         f"{label}: {last_raced_file} carries contact details")
     for row in rows:
+        if last_raced_file:
+            check.expect(row["last_raced"] == page.get(row["call_name"]),
+                         f"{label}: {row['id']} last_raced {row['last_raced']} is not its Meets Run date")
+            continue
         listed = [meet for stream in spec["meet_streams"] for meet in row[stream]]
         dated = [meet[2] for meet in listed if meet[2]]
         undated_years = [meet[1] for meet in listed if meet[1] and not meet[2]]
@@ -1440,12 +1471,18 @@ def check_racing(check: Checker, org: str) -> None:
                      f"{label}: {row['id']} last_raced {row['last_raced']} "
                      f"!= {expected} from its listed meets")
     if spec.get("undated_meets"):
-        # WRA's report dates no meet, so nobody can be counted as racing
-        # this year from it; the feed says so with None, never a guess.
-        check.expect(stats["hounds_raced"] is None and stats["breeds_raced"] is None,
-                     f"{label}: hounds or breeds raced counted from undated meets")
-        check.expect(stats["hounds_ytd"] <= stats["hounds_active"],
-                     f"{label}: points {stats['hounds_ytd']} / active {stats['hounds_active']} out of order")
+        # WRA's report dates no meet: racing this year is a last meet in the
+        # season on the Meets Run by Dog page, and every dog with points this
+        # year must have one.
+        raced = [row for row in rows if (row["last_raced"] or "").startswith(str(season))]
+        check.expect(stats["hounds_raced"] == len(raced) and stats["breeds_raced"] == (1 if raced else 0),
+                     f"{label}: stats.hounds_raced {stats['hounds_raced']} vs {len(raced)} re-counted")
+        check.expect(all((row["last_raced"] or "").startswith(str(season))
+                         for row in rows if (row["ytd"] or 0) > 0),
+                     f"{label}: a dog with points this year has no meet this year on the Meets Run page")
+        check.expect(stats["hounds_ytd"] <= stats["hounds_raced"] <= stats["hounds_active"],
+                     f"{label}: points {stats['hounds_ytd']} / raced {stats['hounds_raced']} / "
+                     f"active {stats['hounds_active']} are out of order")
     else:
         raced = [row for row in rows
                  if any(meet[1] == season for stream in spec["meet_streams"] for meet in row[stream])]

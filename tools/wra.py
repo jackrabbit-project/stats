@@ -19,11 +19,18 @@ WRCh points from the Point Records, joined by call name and confirmed by the
 registered name or the owner. The Point Records fold NAWRA's titles into the
 same columns (RCh with WRCh, SRCh with WRChX) since the 2017 merger.
 
+The report dates no meet. WRA's "Meets Run by Dog" page lists every dog
+on the active list that has run within the last two years, puppy races
+included, with the date of its last meet; it is kept apart from the
+snapshots in data/wra/meets-run.json, because it moves with every meet
+while the report may not, and it gives the site "racing this year" and each
+dog's last raced date.
+
 This script archives a parsed snapshot under data/wra/snapshots/ whenever
 the reports or the Point Records change, then rebuilds data/wra.json (the
 dogs on WRA's active list) and data/wra-registry.json (every dog) from all
 snapshots. The raw downloads stay out of git (data/wra/raw/). The site
-publishes WRA's records at the WRA's invitation.
+publishes WRA's records at the WRA's request.
 
 Usage:
     python tools/wra.py                    # fetch, archive if changed, rebuild
@@ -35,10 +42,12 @@ from __future__ import annotations
 
 import argparse
 import io
+import json
 import re
 import sys
+import time
 from collections import Counter
-from datetime import date
+from datetime import date, datetime, timezone
 
 import requests
 from bs4 import BeautifulSoup
@@ -55,12 +64,16 @@ ACTIVE_URL = f"{SITE_URL}/GradingGuide.cfm?rptType=3&dogStatus=1"
 INACTIVE_URL = f"{SITE_URL}/GradingGuide.cfm?rptType=S&dogStatus=0"
 RECORDS_URL = f"{SITE_URL}/Records/GradingGuide.pdf"
 MEETS_URL = f"{SITE_URL}/MeetListDisplay.cfm"
+MEETS_RUN_URL = f"{SITE_URL}/DogMeetsRun.cfm"
 REPORTS_PAGE = f"{SITE_URL}/ReportList.cfm"
 RULES_URL = f"{SITE_URL}/Rules/2026Rules/2026-WRA-Rule-Book.pdf"
 RAW_DIR = DATA / "wra" / "raw"
 SNAPSHOT_DIR = DATA / "wra" / "snapshots"
 FEED = DATA / "wra.json"
 REGISTRY = DATA / "wra-registry.json"
+MEETS_RUN_FILE = DATA / "wra" / "meets-run.json"
+MEETS_RUN_HEADERS = ["Registered Name", "Call Name", "Total Meets Run", "Passport", "Last Meet"]
+RAW_FILES = ("active.html", "inactive.html", "records.pdf", "meets.html", "meets_run.html")
 
 BREED = "Whippet"
 ACTIVE_HEADERS = [
@@ -99,11 +112,16 @@ REGISTRY_COLUMNS = [
 # ------------------------------------------------------------------- fetch
 
 def fetch_all() -> dict[str, bytes]:
-    """The four documents, one request each: about 4 MB a week."""
+    """The five documents, one request each, a couple of seconds apart:
+    about 4 MB a week."""
     RAW_DIR.mkdir(parents=True, exist_ok=True)
     files = {}
-    for name, url in (("active.html", ACTIVE_URL), ("inactive.html", INACTIVE_URL),
-                      ("records.pdf", RECORDS_URL), ("meets.html", MEETS_URL)):
+    for index, (name, url) in enumerate((
+            ("active.html", ACTIVE_URL), ("inactive.html", INACTIVE_URL),
+            ("records.pdf", RECORDS_URL), ("meets.html", MEETS_URL),
+            ("meets_run.html", MEETS_RUN_URL))):
+        if index:
+            time.sleep(2)
         data = fetch_bytes(url, timeout=120)
         (RAW_DIR / name).write_bytes(data)
         files[name] = data
@@ -312,6 +330,64 @@ def parse_meets(html: str, season: int, stamp: str) -> list[str]:
         if int(year) == season and marks and when <= stamp:
             dates.append(when)
     return sorted(dates)
+
+
+def parse_meets_run(html: str) -> list[dict]:
+    """WRA's "Meets Run by Dog" page: every dog on the active list that has
+    run within the last two years, puppy races included, with the count and
+    the date of its last meet. Only names, counts and dates are kept."""
+    soup = BeautifulSoup(html, "html5lib")
+    table = None
+    for candidate in soup.find_all("table"):
+        first = candidate.find("tr")
+        heads = [_clean(cell.get_text(" ")) for cell in first.find_all(["td", "th"])] if first else []
+        if heads and heads[0].startswith("Registered Name") and any(h.startswith("Last Meet") for h in heads):
+            table = candidate
+            break
+    if table is None:
+        raise RacingParseError("Meets Run by Dog: the table is missing")
+    header, *body = table.find_all("tr")
+    heads = [_clean(cell.get_text(" ")) for cell in header.find_all(["td", "th"])]
+    if len(heads) != len(MEETS_RUN_HEADERS) or not all(
+            head.startswith(want) for head, want in zip(heads, MEETS_RUN_HEADERS)):
+        raise RacingParseError(f"Meets Run by Dog: the columns changed: {heads}")
+    rows = []
+    for tr in body:
+        cells = [_clean(cell.get_text(" ")) for cell in tr.find_all("td")]
+        if not any(cells):
+            continue
+        if len(cells) != len(MEETS_RUN_HEADERS):
+            raise RacingParseError(f"Meets Run by Dog: a row of {len(cells)} cells: {cells[:2]}")
+        registered, call, meets, _passport, last = cells
+        match = re.fullmatch(r"(\d{1,2})-(\d{1,2})-(\d{4})", last)
+        if not call or not meets.isdigit() or not match:
+            raise RacingParseError(f"Meets Run by Dog: {call!r} reads {meets!r} / {last!r}")
+        month, day, year = (int(part) for part in match.groups())
+        if registered.endswith(DII_SUFFIX):
+            registered = registered[: -len(DII_SUFFIX)].rstrip()
+        rows.append({"call_name": call, "registered_name": registered, "meets": int(meets),
+                     "last_meet": date(year, month, day).isoformat()})
+    if not rows:
+        raise RacingParseError("Meets Run by Dog: no dogs listed")
+    repeated = [name for name, n in Counter(row["call_name"] for row in rows).items() if n > 1]
+    if repeated:
+        raise RacingParseError(f"Meets Run by Dog lists a call name twice: {repeated[:5]}")
+    return sorted(rows, key=lambda row: (row["call_name"].lower(), row["call_name"]))
+
+
+def save_meets_run(rows: list[dict], fetched: str, force: bool = False) -> None:
+    """Keep the page in data/wra/meets-run.json, rewritten only when a row
+    changes (the fetch date alone is not a change)."""
+    if MEETS_RUN_FILE.exists() and not force:
+        old = json.loads(MEETS_RUN_FILE.read_text(encoding="utf-8"))
+        if old.get("rows") == rows:
+            print(f"Meets Run by Dog unchanged since {old.get('fetched')}")
+            return
+    write_json(MEETS_RUN_FILE, {"source_url": MEETS_RUN_URL, "fetched": fetched,
+                                "latest_meet": max(row["last_meet"] for row in rows),
+                                "rows": rows})
+    print(f"Meets Run by Dog {fetched}: {len(rows)} dogs, latest meet "
+          f"{max(row['last_meet'] for row in rows)}")
 
 
 # ----------------------------------------------------------- the join
@@ -541,11 +617,18 @@ def derive(snapshot: dict) -> list[dict]:
     return dogs
 
 
-def build(snapshots: list[dict]) -> tuple[dict, dict]:
+def build(snapshots: list[dict], meets_run: dict | None = None) -> tuple[dict, dict]:
     current = snapshots[-1]
     previous = snapshots[-2] if len(snapshots) > 1 else None
     season = current["season"]
     dogs = derive(current)
+    # The last meet each dog ran, from WRA's Meets Run by Dog page (dogs on
+    # the active list that ran within two years), joined by call name as
+    # written, the key the report and the page share.
+    last_meet = {row["call_name"]: row["last_meet"] for row in (meets_run or {}).get("rows", [])}
+    for dog in dogs:
+        dog["last_raced"] = last_meet.get(dog["call_name"])
+    meets_run_unmatched = sorted(set(last_meet) - {dog["call_name"] for dog in dogs})
     prior_dogs = derive(previous) if previous else None
     movement = build_movement(dogs, prior_dogs, previous["guide_date"] if previous else None,
                               ["avg", "cr", "lftm", "ytd"], titles_of)
@@ -577,8 +660,13 @@ def build(snapshots: list[dict]) -> tuple[dict, dict]:
         "hounds_dropped": len(current["dropped"]),
         "hounds_active": len(active),
         "hounds_ytd": sum((dog["ytd"] or 0) > 0 for dog in dogs),
-        "hounds_raced": None,          # the report dates no meets
-        "breeds_raced": None,
+        # Racing this year: a last meet in the season on WRA's Meets Run by Dog
+        # page (puppy races included); None when the page has never been read.
+        "hounds_raced": (sum((dog["last_raced"] or "").startswith(this_year) for dog in dogs)
+                         if meets_run else None),
+        "breeds_raced": ((1 if any((dog["last_raced"] or "").startswith(this_year) for dog in dogs) else 0)
+                         if meets_run else None),
+        "raced_two_years": sum(bool(dog["last_raced"]) for dog in dogs) if meets_run else None,
         "hounds_dii": sum(dog["dii"] for dog in active),
         "grades_active": dict(sorted(grades.items(), key=lambda kv: str(kv[0]))),
         "titled_cr": sum(dog["titled"]["cr"] > 0 for dog in dogs),
@@ -643,13 +731,19 @@ def build(snapshots: list[dict]) -> tuple[dict, dict]:
         "meet_columns": ["code", "year", "date", "score", "complete", "status", "read"],
         "dq_columns": ["code", "date"],
         "unmatched_records": current["records"]["unmatched_active"],
+        "meets_run_url": MEETS_RUN_URL,
+        "meets_run_date": meets_run["fetched"] if meets_run else None,
+        "meets_run_unmatched": meets_run_unmatched,
         "notes": [
             "Standings, grades, averages, CR points and national points are the WRA "
             "grading guide report's; titles and WRCh points are the Registrar's "
             "Whippet Point Records, which WRA's help sheet names as the record.",
-            "The report lists each dog's last three adult meets as scores and "
-            "completion codes (C completed; SCR, PSCR, DNF, DQ incomplete), newest "
-            "first, with no dates; last_raced is therefore unknown.",
+            "The report lists each dog's last three meets (puppy races are left "
+            "out) as scores and completion codes (C completed; SCR, PSCR, DNF, DQ "
+            "incomplete), newest first, with no dates. last_raced is the dog's last "
+            "meet on WRA's Meets Run by Dog page, which lists the dogs on the "
+            "active list that ran within two years, puppy races included; "
+            "stats.hounds_raced counts those whose last meet falls in the season.",
             "avg is recomputed per rule 5.2 (the mean of the completed meets, else "
             "of the incomplete ones, else 0); avg_matches flags the Registrar's figure "
             "where it differs, and the published figure is the one shown.",
@@ -684,13 +778,17 @@ def main() -> int:
     if not args.offline:
         try:
             if args.raw:
-                files = {name: (RAW_DIR / name).read_bytes()
-                         for name in ("active.html", "inactive.html", "records.pdf", "meets.html")}
+                files = {name: (RAW_DIR / name).read_bytes() for name in RAW_FILES}
+                stamp = (RAW_DIR / "meets_run.html").stat().st_mtime
+                fetched = datetime.fromtimestamp(stamp, timezone.utc).date().isoformat()
             else:
                 files = fetch_all()
+                fetched = today()
             snapshot = parse_all(files)
             snapshot = redate_if_label_stale(SNAPSHOT_DIR, snapshot, today())
             write_snapshot_if_changed(SNAPSHOT_DIR, snapshot, force=args.force)
+            save_meets_run(parse_meets_run(files["meets_run.html"].decode("utf-8", "replace")),
+                           fetched, force=args.force)
         except requests.RequestException as error:
             if not list(SNAPSHOT_DIR.glob("*.json")):
                 print(f"Could not fetch from WRA and no snapshot exists: {error}", file=sys.stderr)
@@ -699,7 +797,9 @@ def main() -> int:
                   file=sys.stderr)
 
     snapshots = load_snapshots(SNAPSHOT_DIR)
-    feed, registry = build(snapshots)
+    meets_run = (json.loads(MEETS_RUN_FILE.read_text(encoding="utf-8"))
+                 if MEETS_RUN_FILE.exists() else None)
+    feed, registry = build(snapshots, meets_run)
     feed_bytes = write_json(FEED, feed)
     registry_bytes = write_json(REGISTRY, registry)
     stats = feed["stats"]
@@ -711,7 +811,8 @@ def main() -> int:
         f"{stats['hounds_dropped']} test or duplicate records dropped; Point Records matched "
         f"{stats['records_matched']:,} of {stats['records_rows']:,} rows, "
         f"{stats['records_unmatched_active']} active dogs without one; average agreement "
-        f"{stats['wave_agreement']:.1%}"
+        f"{stats['wave_agreement']:.1%}; racing this year {stats['hounds_raced']} "
+        f"(Meets Run by Dog {feed['meets_run_date']})"
     )
     print(f"Wrote {FEED.name} ({feed_bytes:,} bytes) and {REGISTRY.name} ({registry_bytes:,} bytes)")
     return 0
