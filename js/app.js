@@ -172,9 +172,24 @@ const asfaKennels = new WeakMap();
 function asfaOwners(dog, season) {
   if (!asfaKennels.has(season)) asfaKennels.set(season, new Set((season.owners || []).map((owner) => owner.key)));
   const kennels = asfaKennels.get(season);
-  return linkOwners(dog.owner_raw, (dog.owners || []).map((owner) => ({
-    name: owner.name, href: kennels.has(owner.entity) ? ownerUrl(owner.entity) : null,
-  })));
+  return linkSlashOwners(dog.owner_raw, dog.owners || [],
+    (owner) => (kennels.has(owner.entity) ? ownerUrl(owner.entity) : null));
+}
+
+/** Owners printed with "/" between them, as ASFA's standings and the
+    racing guides print them: every printed name links to the kennel of the
+    owner it names, matched by name or else by surname, so a couple or a
+    repeated surname the parser folded into one owner ("E.Kominek/S.Kominek",
+    "Kominek/Kominek") links in full. */
+function linkSlashOwners(raw, owners, hrefOf) {
+  const surname = (name) => name.slice(name.lastIndexOf('.') + 1).trim().toLowerCase();
+  const parts = (raw || '').split('/').map((part) => part.trim()).filter(Boolean);
+  return linkOwners(raw, parts.map((part) => {
+    const owner = owners.find((o) => o.name === part)
+      || owners.find((o) => o.name.toLowerCase() === part.toLowerCase())
+      || owners.find((o) => surname(o.name) === surname(part));
+    return { name: part, href: owner ? hrefOf(owner) : null };
+  }));
 }
 
 function breedUrl(slug) {

@@ -362,10 +362,10 @@ function racingKennels(org, feed) {
     program lists for that owner and breed. */
 function racingOwners(org, dog) {
   const kennels = KENNELS[org] || new Set();
-  return linkOwners(dog.owner_raw, (dog.owners || []).map((owner) => {
+  return linkSlashOwners(dog.owner_raw, dog.owners || [], (owner) => {
     const key = `${owner.key}|${dog.breed_slug}`;
-    return { name: owner.name, href: kennels.has(key) ? racingOwnerUrl(org, key) : null };
-  }));
+    return kennels.has(key) ? racingOwnerUrl(org, key) : null;
+  });
 }
 
 function racingOwnerUrl(org, key) {
@@ -1793,10 +1793,6 @@ function renderRacingDog(org, feed, main, singles = null) {
          on <strong>${ptsLabel(dog.ytd)}</strong> ${spec.seasonLabel}.`
       : `No ${spec.seasonLabel} yet${dog.last_raced || dog.last_year ? `; last listed meet ${dog.last_raced ? formatDateShort(dog.last_raced) : dog.last_year}` : ''}.`;
 
-    const ownersLine = dog.owners && dog.owners.length
-      ? dog.owners.map((owner) => `<a href="${racingOwnerUrl(org, `${owner.key}|${dog.breed_slug}`)}" class="lnk">${esc(owner.name)}</a>`).join(', ')
-      : esc(dog.owner_raw);
-
     const titleProgress = spec.titleProgress ? spec.titleProgress(dog, feed) : [
       ...spec.champion.map(([field, label, name, need, rule]) => progressBar(
         rule ? rule.value(dog) : dog[field], need, `${label} · ${name}`,
@@ -1901,7 +1897,7 @@ function renderRacingDog(org, feed, main, singles = null) {
                 idNote(dog) ? ` <span class="text-xs">(${idNote(dog)})</span>` : ''}`}
               ${fromRegistry ? ' · <span class="badge badge-flat">inactive</span>' : ''}
             </p>
-            <p class="text-sm mt-1">Owned by ${ownersLine}</p>
+            <p class="text-sm mt-1">Owned by ${racingOwners(org, dog)}</p>
             ${spec.dogNote && spec.dogNote(dog) ? `<p class="text-xs text-asfa-text/65 mt-1">${spec.dogNote(dog)}</p>` : ''}
             ${dog.note ? `<p class="text-xs text-asfa-text/65 mt-1">Registrar's note: ${esc(dog.note)}</p>` : ''}
             ${movementLine ? `<p class="text-sm mt-2">${movementCell(dog)} <span class="text-asfa-text/70">${esc(movementLine)}</span></p>` : ''}
