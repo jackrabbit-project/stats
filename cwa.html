@@ -75,6 +75,12 @@
       const lastRaced = (w) => (w.last_raced ? shortDate(w.last_raced) : w.year_last_run ? String(w.year_last_run)
         : w.never_raced ? 'not yet' : '—');
       const prThrough = (w) => (w.on === 'current' && stats.pr_as_of ? ` through ${formatDate(stats.pr_as_of)}` : '');
+      // Owners as the guide prints them, split at each "/". Each links to its
+      // kennel: Browse filtered to that owner, with the archived guide loaded
+      // when the link comes from an archived whippet.
+      const ownersOf = (w) => (w.owner_raw || '').split('/').map((part) => part.trim()).filter(Boolean);
+      const ownerUrl = (owner, archive) =>
+        `cwa.html?owner=${encodeURIComponent(owner)}${archive ? '&archive=1' : ''}#browse`;
 
       document.title = 'CWA whippet racing — Gazehound Stats';
 
@@ -222,7 +228,9 @@
                 ${badges ? `<p class="text-xs text-asfa-text/70 mt-1">CWA titles on record: ${badges}</p>` : ''}
                 <p class="text-sm text-asfa-text/70 mt-1">Whippet${w.cwa_no ? ` · CWA No. <span class="font-mono text-xs">${esc(w.cwa_no)}</span>` : ''}${
                   w.on === 'archive' ? ' · <span class="badge badge-flat">archived guide</span>' : ''}</p>
-                ${w.owner_raw ? `<p class="text-sm mt-1">Owned by ${esc(w.owner_raw)}</p>` : ''}
+                ${w.owner_raw ? `<p class="text-sm mt-1">Owned by ${ownersOf(w).length
+                  ? ownersOf(w).map((owner) => `<a href="${ownerUrl(owner, w.on === 'archive')}" class="lnk">${esc(owner)}</a>`).join(' / ')
+                  : esc(w.owner_raw)}</p>` : ''}
                 <p class="text-xs text-asfa-text/65 mt-1">${where}${shared}</p>
               </div>
             </div>
@@ -535,7 +543,6 @@
         if (key === 'last_raced') return w.last_raced || (w.year_last_run ? String(w.year_last_run) : null);
         return w[key];
       };
-      const ownersOf = (w) => (w.owner_raw || '').split('/').map((part) => part.trim()).filter(Boolean);
       let rowsShown = whippets;
       let showArchive = false;
       let showAllRows = false;
@@ -606,6 +613,11 @@
           if (showArchive) {
             showArchive = false;
             rowsShown = whippets;
+            const url = new URL(window.location.href);
+            if (url.searchParams.has('archive')) {
+              url.searchParams.delete('archive');
+              history.replaceState(null, '', url);
+            }
             paintToggle();
             paintBrowse();
             return;
@@ -624,6 +636,8 @@
       }
       paintToggle();
       paintBrowse();
+      // An archived whippet's owner link asks for the archive, so the kennel is not empty.
+      if (param('archive') === '1') document.getElementById('archive-button').click();
       window.addEventListener('beforeprint', () => { if (!showAllRows) { showAllRows = true; paintBrowse(); } });
 
       /* ----- kennels: owners on the current guide */
