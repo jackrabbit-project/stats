@@ -189,7 +189,7 @@
           [s.titles_this_year, 'titles earned this year'],
           [s.arx_total.toLocaleString('en-US'), 'ARX titles, all time'],
           [s.trp_total.toLocaleString('en-US'), 'TRP titles, all time'],
-          [s.all_time_listed, 'on the all-time racing list'],
+          [s.dpc_total.toLocaleString('en-US'), 'DPC titles, all time'],
         ]) + (s.leader ? `<p class="text-sm text-asfa-text/70 mt-3">Leading the racing standings: <span class="font-semibold text-asfa-green">${esc(s.leader.call_name)}</span>, ${ptsLabel(s.leader.points)} NARX points.</p>` : '');
       }
       const betaBadge = '<span class="badge badge-flat ml-2 align-middle font-mono text-[10px] uppercase tracking-widest">Beta</span>';

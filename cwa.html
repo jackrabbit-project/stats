@@ -120,7 +120,6 @@
         [n(stats.arx_total), 'ARX titles, all time'],
         [n(stats.trp_total), 'TRP titles, all time'],
         [n(stats.dpc_total), 'DPC titles, all time'],
-        [n(stats.all_time_listed), 'on the all-time racing list'],
       ];
 
       const TABS = [['overview', 'Overview'], ['standings', 'Standings'], ['alltime', 'All-time'], ['titles', 'Titles'], ['about', 'About']];
@@ -139,7 +138,7 @@
 
         <section id="overview" class="space-y-8">
           ${dogCard}
-          <section id="tiles" class="grid grid-cols-2 md:grid-cols-5 gap-3">
+          <section id="tiles" class="grid grid-cols-2 md:grid-cols-4 gap-3">
             ${tiles.map(([value, label]) => `<div class="tile"><div class="tile-value">${value}</div><div class="tile-label">${label}</div></div>`).join('')}
           </section>
           <section class="grid grid-cols-1 md:grid-cols-3 gap-6">
