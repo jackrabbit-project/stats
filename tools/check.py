@@ -18,6 +18,7 @@ import argparse
 import json
 import re
 import sys
+from collections import Counter
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -87,15 +88,19 @@ def main() -> int:
     args = parser.parse_args()
     only = [org for org in args.only.split(",") if org]
     skip = {org for org in args.skip.split(",") if org}
-    unknown = sorted((set(only) | skip) - set(RACING))
+    known = [*RACING, "cwa"]
+    unknown = sorted((set(only) | skip) - set(known))
     if unknown:
-        print(f"Unknown racing program(s): {', '.join(unknown)}; "
-              f"known: {', '.join(RACING)}", file=sys.stderr)
+        print(f"Unknown program(s): {', '.join(unknown)}; "
+              f"known: {', '.join(known)}", file=sys.stderr)
         return 2
     if only:
         check = Checker()
         for org in only:
-            check_racing(check, org)
+            if org == "cwa":
+                check_cwa(check)
+            else:
+                check_racing(check, org)
         return check.report()
 
     if not SEASON.exists():
@@ -387,6 +392,8 @@ def main() -> int:
         if org not in skip:
             check_racing(check, org)
     check_singles(check)
+    if "cwa" not in skip:
+        check_cwa(check)
     return check.report()
 
 
@@ -1738,6 +1745,138 @@ def check_racing(check: Checker, org: str) -> None:
              r"\b\d{2,5}\s+\w+\s+(?:Ave|Avenue|St|Street|Rd|Road|Dr|Drive|Ln|Lane)\b"),
         ):
             found = re.findall(pattern, body, re.IGNORECASE)
+            check.expect(not found, f"{label}: {path.name} contains a {name}: {found[:2]}")
+
+
+def _competition_places(points: list[float]) -> list[int]:
+    """Places for a list already sorted by points, high first: ties share a
+    place and the next place skips (CWA's own rule for its standings)."""
+    places, last, place = [], None, 0
+    for position, value in enumerate(points, 1):
+        if value != last:
+            last, place = value, position
+        places.append(place)
+    return places
+
+
+def check_cwa(check: Checker) -> None:
+    """data/cwa.json against the newest snapshot under data/cwa/snapshots:
+    the standings as CWA charts them (places by its tie rule, each chart's
+    own date), the all-time list with sex from CWA's dog and bitch lists,
+    and every title row, ineligible ones flagged and left out of the counts."""
+    import datetime as dt
+
+    feed_path = ROOT / "data" / "cwa.json"
+    snapshot_dir = ROOT / "data" / "cwa" / "snapshots"
+    check.expect(feed_path.exists(), "CWA: data/cwa.json missing; run tools/cwa.py")
+    if not feed_path.exists():
+        return
+    feed = json.loads(feed_path.read_text(encoding="utf-8"))
+    stats = feed["stats"]
+    label = "CWA"
+    check.expect(feed["snapshots"] == sorted(path.stem for path in snapshot_dir.glob("*.json")),
+                 f"{label}: feed.snapshots does not list the archived snapshots")
+    snapshot_path = snapshot_dir / f"{feed['guide_date']}.json"
+    check.expect(snapshot_path.exists(), f"{label}: snapshot {snapshot_path.name} missing")
+    if not snapshot_path.exists():
+        return
+    snap = json.loads(snapshot_path.read_text(encoding="utf-8"))
+    season = snap["season"]
+    dogs = feed["dogs"]
+    ids = [dog["id"] for dog in dogs]
+    check.expect(len(set(ids)) == len(ids), f"{label}: a whippet id repeats")
+    check.expect(all(re.fullmatch(r"[a-z0-9]+(?:-[a-z0-9]+)*", dog_id) for dog_id in ids),
+                 f"{label}: a whippet id is not a slug")
+    id_set = set(ids)
+    used: set[str] = set()
+
+    # 1. Standings: CWA's rows, in place order, places by its tie rule.
+    check.expect(set(feed["standings"]) == {"racing", "high_combined"},
+                 f"{label}: standings carry {sorted(feed['standings'])}, not racing and High Combined")
+    for kind, chart in feed["standings"].items():
+        kept = snap["standings"][kind]
+        rows = chart["rows"]
+        check.expect([{k: v for k, v in row.items() if k != "dog"} for row in rows] == kept["rows"],
+                     f"{label}: {kind} rows differ from the snapshot")
+        points = [row["points"] for row in rows]
+        check.expect(points == sorted(points, reverse=True), f"{label}: {kind} is not in points order")
+        check.expect([row["place"] for row in rows] == _competition_places(points),
+                     f"{label}: {kind} places break CWA's tie rule")
+        check.expect(chart["as_of"] == kept["as_of"] and chart["as_of"] <= feed["guide_date"]
+                     and chart["as_of"].startswith(str(season)),
+                     f"{label}: {kind} date {chart['as_of']} is off")
+        for row in rows:
+            check.expect(row["dog"] in id_set, f"{label}: {kind} row {row['call_name']} has no whippet")
+            used.add(row["dog"])
+    check.expect(feed["guide_date"] == max(chart["as_of"] for chart in feed["standings"].values()),
+                 f"{label}: the guide date is not the newest chart's date")
+    racing = feed["standings"]["racing"]["rows"]
+    top = min(racing, key=lambda row: (row["place"], row["call_name"])) if racing else None
+    check.expect(stats["leader"] == ({"dog": top["dog"], "call_name": top["call_name"], "points": top["points"]}
+                                     if top else None), f"{label}: the leader is not racing's first place")
+    check.expect(stats["racing_listed"] == len(racing)
+                 and stats["high_combined_listed"] == len(feed["standings"]["high_combined"]["rows"]),
+                 f"{label}: standings counts disagree")
+
+    # 2. All-time: the whole list, and each whippet's sex from CWA's own
+    #    dog and bitch lists.
+    listed = snap["all_time"]
+    rows = feed["all_time"]["rows"]
+    check.expect([{k: row[k] for k in ("place", "name", "owners", "points")} for row in rows]
+                 == listed["all"]["rows"], f"{label}: the all-time rows differ from the snapshot")
+    dog_names = {row["name"] for row in listed["dogs"]["rows"]}
+    bitch_names = {row["name"] for row in listed["bitches"]["rows"]}
+    check.expect(not (dog_names & bitch_names), f"{label}: a whippet is on both the dog and bitch lists")
+    for row in rows:
+        expected = "dog" if row["name"] in dog_names else "bitch" if row["name"] in bitch_names else None
+        check.expect(row["sex"] in (expected, None) and (expected is None or row["sex"] == expected),
+                     f"{label}: {row['name']} sex {row['sex']} vs the lists' {expected}")
+        check.expect(row["dog"] in id_set, f"{label}: all-time row {row['name']} has no whippet")
+        used.add(row["dog"])
+    points = [row["points"] for row in rows]
+    check.expect(points == sorted(points, reverse=True) and all(p >= 50 for p in points),
+                 f"{label}: the all-time list is out of order or under 50 points")
+    check.expect(stats["all_time_listed"] == len(rows), f"{label}: stats.all_time_listed is wrong")
+
+    # 3. Titles: every row of every sheet, unpacked by the feed's own columns.
+    columns = feed["title_columns"]
+    titles = [dict(zip(columns, row)) for row in feed["titles"]]
+    from_snapshot = Counter((code, row["title"], row["name"], row["earned"], row["year"], row["status"])
+                            for code, sheet in snap["titles"].items() for row in sheet["rows"])
+    in_feed = Counter((row["base"], row["title"], row["name"], row["earned"], row["year"], row["status"])
+                      for row in titles)
+    check.expect(from_snapshot == in_feed, f"{label}: title rows differ from the snapshot")
+    today = dt.date.today().isoformat()
+    for row in titles:
+        check.expect(row["status"] in (None, "ineligible"), f"{label}: unknown status {row['status']}")
+        check.expect(row["earned"] is None or (row["earned"] <= today and row["earned"][:4] == str(row["year"])),
+                     f"{label}: {row['base']} {row['name']} earned {row['earned']} / {row['year']}")
+        check.expect(row["year"] is None or 1991 <= row["year"] <= season,
+                     f"{label}: {row['base']} {row['name']} year {row['year']} out of range")
+        check.expect(row["title"].startswith(row["base"]) or (row["base"] == "HCX" and row["title"].startswith("HCX")),
+                     f"{label}: level {row['title']} under {row['base']}")
+        check.expect(0 <= row["dog"] < len(dogs), f"{label}: a title row points past the whippets")
+        if 0 <= row["dog"] < len(dogs):
+            used.add(dogs[row["dog"]]["id"])
+    awarded = [row for row in titles if row["status"] is None]
+    check.expect(stats["titles_total"] == len(awarded)
+                 and stats["titles_ineligible"] == len(titles) - len(awarded),
+                 f"{label}: title totals disagree")
+    this_year = Counter(row["base"] for row in awarded if row["year"] == season)
+    check.expect(stats["titles_this_year"] == sum(this_year.values())
+                 and stats["titles_this_year_by_base"] == dict(this_year),
+                 f"{label}: titles this year disagree")
+    for code, key in (("ARX", "arx_total"), ("TRP", "trp_total"), ("DPC", "dpc_total")):
+        check.expect(stats[key] == sum(row["base"] == code for row in awarded), f"{label}: stats.{key} is wrong")
+    check.expect(used == id_set, f"{label}: {len(id_set - used)} whippets listed nowhere")
+    check.expect(stats["whippets"] == len(dogs), f"{label}: stats.whippets is wrong")
+
+    # 4. Nothing personal beyond names: CWA's pages carry a contact address.
+    for path in (feed_path, snapshot_path):
+        body = path.read_text(encoding="utf-8")
+        for name, pattern in (("email address", r"[\w.+-]+@[\w-]+\.[\w.]+"),
+                              ("phone number", r"\(\d{3}\)\s*\d{3}-\d{4}")):
+            found = re.findall(pattern, body)
             check.expect(not found, f"{label}: {path.name} contains a {name}: {found[:2]}")
 
 

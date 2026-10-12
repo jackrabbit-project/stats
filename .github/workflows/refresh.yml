@@ -84,6 +84,21 @@ jobs:
           git checkout -- data/notra-whippets.json data/notra-whippets-registry.json data/notra-whippets/
           git clean -fdq -- data/notra-whippets/
 
+      - name: Refresh CWA's standings and titles (Whippet racing, beta)
+        continue-on-error: true
+        run: python tools/cwa.py
+
+      - name: Verify the CWA data
+        id: check_cwa
+        continue-on-error: true
+        run: python tools/check.py --only cwa
+
+      - name: Hold back the CWA data if it failed its checks
+        if: steps.check_cwa.outcome == 'failure'
+        run: |
+          git checkout -- data/cwa.json data/cwa/
+          git clean -fdq -- data/cwa/
+
       - name: Refresh the AKC lure coursing entries
         # Collected from AKC's Event Search and each event's results page;
         # when AKC cannot be reached the feed is rebuilt from the newest
@@ -98,7 +113,7 @@ jobs:
           python tools/events.py
           python tools/build.py
           python tools/titles.py
-          python tools/check.py --skip wra,notra-whippets
+          python tools/check.py --skip wra,notra-whippets,cwa
 
       - name: Commit if anything changed
         run: |
@@ -131,6 +146,9 @@ jobs:
           if echo "$CHANGED" | grep -q '^data/wra/meets-run.json$'; then
             PARTS+=("WRA meets run $(python -c "import json;print(json.load(open('data/wra/meets-run.json'))['latest_meet'])")")
           fi
+          if echo "$CHANGED" | grep -q '^data/cwa/snapshots/'; then
+            PARTS+=("CWA standings $(python -c "import json;print(json.load(open('data/cwa.json'))['guide_date'])")")
+          fi
           if echo "$CHANGED" | grep -q '^data/notra-whippets/snapshots/'; then
             PARTS+=("NOTRA Whippet guide $(python -c "import json;print(json.load(open('data/notra-whippets.json'))['guide_date'])")")
           fi
@@ -144,7 +162,7 @@ jobs:
           git push
 
       - name: Flag whippet data held back
-        if: steps.check_wra.outcome == 'failure' || steps.check_notra_whippets.outcome == 'failure'
+        if: steps.check_wra.outcome == 'failure' || steps.check_notra_whippets.outcome == 'failure' || steps.check_cwa.outcome == 'failure'
         run: |
-          echo "::error title=Whippet data held back::A whippet guide failed its checks and was not published this week. The other programs updated as usual. See the Verify step for the failures."
+          echo "::error title=Whippet data held back::A whippet body's data failed its checks and was not published this week. The other programs updated as usual. See the Verify steps for the failures."
           exit 1

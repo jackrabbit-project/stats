@@ -266,7 +266,7 @@ const ORGS = {
     careerOf: (dog) => dog.lftm || 0,
     noCard: true,
     hubSub: 'Straight racing',
-    hubLine: 'WRA straight racing · NOTRA oval racing',
+    hubLine: 'WRA · NOTRA Whippets · CWA',
     coverageWord: 'guide',
   },
   /* NOTRA's Whippet guide (NOTRA Rules, February 2025): its own layout and

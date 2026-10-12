@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#F7F5EF">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#1B1917">
+  <title>CWA whippet racing — Gazehound Stats</title>
+  <meta name="description" content="Continental Whippet Alliance racing and High Combined standings, the all-time top race whippets and every CWA title holder, searchable by whippet. Unofficial; CWA's own records govern.">
+  <link rel="canonical" href="https://stats.gazehound.io/cwa.html">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Gazehound Stats">
+  <meta property="og:title" content="CWA whippet racing — Gazehound Stats">
+  <meta property="og:description" content="Continental Whippet Alliance racing and High Combined standings, the all-time top race whippets and every CWA title holder. Unofficial; CWA's own records govern.">
+  <meta property="og:url" content="https://stats.gazehound.io/cwa.html">
+  <meta property="og:image" content="https://stats.gazehound.io/assets/og.png?v=4">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="preload" href="assets/fonts/fraunces-latin-var.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/plex-mono-400.woff2" as="font" type="font/woff2" crossorigin>
+  <script src="js/theme.js?v=20260823"></script>
+  <link rel="stylesheet" href="css/app.css?v=20261011h">
+  <link rel="icon" href="assets/favicon.ico?v=4" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png?v=4">
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png?v=4">
+</head>
+<body class="min-h-screen flex flex-col">
+  <header id="site-header"></header>
+  <main id="main" class="flex-1 max-w-6xl mx-auto w-full px-4 py-6 space-y-8"></main>
+  <footer id="site-footer" class="bg-asfa-navy text-white py-8"></footer>
+
+  <script src="js/app.js?v=20261011h"></script>
+  <script>
+    /* CWA in the Whippet racing section (beta). CWA publishes no grading
+       guide: these are its own lists (this year's racing and High Combined
+       standings, the all-time top race whippets, every title holder), shown
+       as CWA prints them and grouped by whippet for the search. Rendered
+       from data/cwa.json, built by tools/cwa.py. */
+    pageFeed('cwa.html', 'cwa', 'data/cwa.json', render);
+
+    function render(feed) {
+      const main = document.getElementById('main');
+      const { stats } = feed;
+      const n = (v) => (v == null ? '—' : Number(v).toLocaleString('en-US'));
+      const pts = (v) => (v == null ? '—' : String(Math.round(v * 100) / 100));
+      const shortDate = (iso) => new Date(`${iso}T00:00:00Z`).toLocaleDateString('en-US',
+        { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
+      const when = (row) => (row.earned ? shortDate(row.earned) : row.year ? String(row.year) : '—');
+      const external = (href, text) =>
+        `<a href="${esc(href)}" class="lnk" target="_blank" rel="noopener noreferrer">${text}</a>`;
+      const dogs = feed.dogs;
+      const byId = new Map(dogs.map((dog) => [dog.id, dog]));
+      const titles = feed.titles.map((row) => {
+        const entry = Object.fromEntries(feed.title_columns.map((col, i) => [col, row[i]]));
+        return { ...entry, dog: dogs[entry.dog].id };
+      });
+      const DUAL = ['DPC', 'DPCX', 'HC', 'HCX'];
+      const titleBadge = (row) => `<span class="badge ${DUAL.includes(row.base) ? 'badge-t-lcm' : 'badge-t-tcp'} normal-case"
+        title="${esc(feed.title_names[row.base] || row.base)}">${esc(row.title)}</span>${
+        row.status === 'ineligible' ? ' <span class="badge badge-flat" title="CWA lists this whippet as ineligible for the title">ineligible</span>' : ''}`;
+      const dogLink = (id, text) => `<a href="cwa.html?dog=${encodeURIComponent(id)}" class="lnk font-semibold">${esc(text)}</a>`;
+      const racing = feed.standings.racing;
+      const hc = feed.standings.high_combined;
+      const chartNote = (chart) => `As of ${formatDate(chart.as_of)}${chart.meets ? `, after ${chart.meets} race meets` : ''}; ties share a place.`;
+
+      document.title = 'CWA whippet racing — Gazehound Stats';
+
+      /* ----- one whippet, when the search sends one */
+      const wanted = byId.get(param('dog') || '');
+      const dogCard = (() => {
+        if (!wanted) return '';
+        const mine = titles.filter((row) => row.dog === wanted.id)
+          .sort((a, b) => (a.year || 0) - (b.year || 0) || (a.earned || '').localeCompare(b.earned || ''));
+        const r = racing.rows.find((row) => row.dog === wanted.id);
+        const h = hc.rows.find((row) => row.dog === wanted.id);
+        const a = feed.all_time.rows.find((row) => row.dog === wanted.id);
+        const lines = [
+          r ? `Racing standings: <strong>#${r.place}</strong> on ${pts(r.points)} NARX points, as of ${formatDate(racing.as_of)}.` : '',
+          h ? `High Combined: <strong>#${h.place}</strong> on ${pts(h.points)} wins, as of ${formatDate(hc.as_of)}.` : '',
+          a ? `All-time top race whippets: <strong>#${a.place}</strong> on ${pts(a.points)} NARX points, ${feed.all_time.period}.` : '',
+        ].filter(Boolean);
+        return `
+          <section class="card" id="whippet">
+            <p class="text-xs text-asfa-text/60"><a href="cwa.html" class="lnk">CWA</a> › one whippet</p>
+            <h2 class="font-display text-3xl text-asfa-text leading-tight mt-1">${esc(wanted.call_name || wanted.name)}</h2>
+            ${wanted.call_name ? `<p class="text-asfa-text/85">${esc(wanted.name)}</p>` : ''}
+            ${lines.length ? `<div class="text-sm mt-3 space-y-1">${lines.map((line) => `<p>${line}</p>`).join('')}</div>` : ''}
+            ${mine.length ? `
+            <div class="tbl-wrap mt-4"><table class="tbl">
+              <thead><tr><th scope="col">Title</th><th scope="col">Earned</th><th scope="col">Name as the list prints it</th></tr></thead>
+              <tbody>${mine.map((row) => `
+                <tr><td class="whitespace-nowrap">${titleBadge(row)}</td><td class="whitespace-nowrap">${when(row)}</td>
+                    <td class="text-asfa-text/80">${esc(row.name)}</td></tr>`).join('')}</tbody>
+            </table></div>` : '<p class="text-sm text-asfa-text/70 mt-3">No CWA titles listed.</p>'}
+            <p class="text-xs text-asfa-text/60 mt-3">Gathered from CWA's lists by the registered name without its titles; each list prints the name as it stood when CWA last edited it.</p>
+          </section>`;
+      })();
+
+      /* ----- tables */
+      const standingsTable = (chart, unit, full) => `
+        <div class="tbl-wrap"><table class="tbl">
+          <thead><tr><th scope="col" class="num">Place</th><th scope="col">Whippet</th>${
+            full ? '<th scope="col">Registered name</th><th scope="col">Owners</th>' : ''}<th scope="col" class="num">${unit}</th></tr></thead>
+          <tbody>${chart.rows.map((row) => `
+            <tr${wanted && row.dog === wanted.id ? ' class="bg-asfa-bg2"' : ''}>
+              <td class="num font-semibold">${row.place}</td>
+              <td>${dogLink(row.dog, row.call_name)}</td>
+              ${full ? `<td class="text-asfa-text/80">${esc(row.registered_name)}</td><td class="text-asfa-text/80">${esc(row.owners)}</td>` : ''}
+              <td class="num font-semibold text-asfa-accent">${pts(row.points)}</td>
+            </tr>`).join('')}</tbody>
+        </table></div>`;
+
+      const awarded = titles.filter((row) => !row.status);
+      const newest = awarded.filter((row) => row.earned).slice(0, 10);
+      const years = [...new Set(titles.map((row) => row.year).filter(Boolean))].sort((a, b) => b - a);
+      const bases = Object.keys(feed.title_names);
+      const tiles = [
+        [n(stats.titles_this_year), `titles earned in ${stats.season}`],
+        [n(stats.arx_total), 'ARX titles, all time'],
+        [n(stats.trp_total), 'TRP titles, all time'],
+        [n(stats.dpc_total), 'DPC titles, all time'],
+        [n(stats.all_time_listed), 'on the all-time racing list'],
+      ];
+
+      const TABS = [['overview', 'Overview'], ['standings', 'Standings'], ['alltime', 'All-time'], ['titles', 'Titles'], ['about', 'About']];
+      main.innerHTML = `
+        <div>
+          <h1 class="font-display text-3xl text-asfa-text">CWA whippet racing</h1>
+          <p class="text-sm text-asfa-text/70 mt-1">
+            Standings, the all-time top race whippets and every title holder, as published by the
+            Continental Whippet Alliance at ${external(feed.site_url, 'continentalwhippetalliance.com')}.
+            CWA races and shows whippets; these pages cover its racing and its High Combined awards.
+          </p>
+        </div>
+        <nav class="flex flex-wrap gap-2 no-print subtabs-whippet" aria-label="CWA pages" id="sub-tabs">
+          ${TABS.map(([id, label]) => `<a href="#${id}" class="tab" data-tab="${id}">${label}</a>`).join('')}
+        </nav>
+
+        <section id="overview" class="space-y-8">
+          ${dogCard}
+          <section id="tiles" class="grid grid-cols-2 md:grid-cols-5 gap-3">
+            ${tiles.map(([value, label]) => `<div class="tile"><div class="tile-value">${value}</div><div class="tile-label">${label}</div></div>`).join('')}
+          </section>
+          <section class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="card">
+              <h2 class="card-title">Racing standings</h2>
+              <p class="text-xs text-asfa-text/60 mb-3">NARX points this year. ${chartNote(racing)}</p>
+              ${standingsTable(racing, 'Points', false)}
+              <a href="#standings" class="lnk text-sm inline-block mt-3">Owners and registered names →</a>
+            </div>
+            <div class="card">
+              <h2 class="card-title">High Combined</h2>
+              <p class="text-xs text-asfa-text/60 mb-3">High Combined wins this year, racing and conformation placements together. ${chartNote(hc)}</p>
+              ${standingsTable(hc, 'Wins', false)}
+            </div>
+            <div class="card">
+              <h2 class="card-title">Newest titles</h2>
+              <p class="text-xs text-asfa-text/60 mb-3">The latest dated titles on CWA's title lists.</p>
+              <div class="tbl-wrap"><table class="tbl"><tbody>${newest.map((row) => `
+                <tr><td class="whitespace-nowrap">${titleBadge(row)}</td>
+                    <td>${dogLink(row.dog, byId.get(row.dog).name)}</td>
+                    <td class="num whitespace-nowrap text-asfa-text/70">${shortDate(row.earned)}</td></tr>`).join('')}</tbody></table></div>
+              <a href="cwa.html?year=${stats.season}#titles" class="lnk text-sm inline-block mt-3">Every title earned in ${stats.season} →</a>
+            </div>
+          </section>
+        </section>
+
+        <section id="standings" class="space-y-6">
+          <div class="card">
+            <h2 class="card-title">Racing standings, ${stats.season}</h2>
+            <p class="text-xs text-asfa-text/60 mb-3">Ranked by NARX points, CWA's national racing points. ${chartNote(racing)}
+              CWA lists its top 10 during the season and its top 20 at year end.</p>
+            ${standingsTable(racing, 'NARX points', true)}
+          </div>
+          <div class="card">
+            <h2 class="card-title">High Combined standings, ${stats.season}</h2>
+            <p class="text-xs text-asfa-text/60 mb-3">Ranked by High Combined wins, which count racing and conformation placements together. ${chartNote(hc)}</p>
+            ${standingsTable(hc, 'HC wins', true)}
+          </div>
+          <p class="text-xs text-asfa-text/60">CWA's conformation standings are on its ${external(feed.standings_url, `${stats.season} standings page`)}; this site covers coursing and racing.</p>
+        </section>
+
+        <section id="alltime" class="space-y-6">
+          <div class="card">
+            <h2 class="card-title">All-time top race whippets</h2>
+            <p class="text-xs text-asfa-text/60 mb-3">${esc(feed.all_time.criteria)}, ${esc(feed.all_time.period)}, in CWA's order. Dog or bitch from CWA's own two lists.</p>
+            <div class="flex flex-wrap gap-2 mb-3 no-print" id="alltime-filter">
+              ${[['', 'All'], ['dog', 'Dogs'], ['bitch', 'Bitches']].map(([value, label], i) =>
+                `<button type="button" class="chip text-sm ${i ? '' : 'chip-selected'}" data-sex="${value}" aria-pressed="${i ? 'false' : 'true'}">${label}</button>`).join('')}
+            </div>
+            <div id="alltime-table"></div>
+          </div>
+        </section>
+
+        <section id="titles" class="space-y-6">
+          <div class="card">
+            <h2 class="card-title">CWA titles</h2>
+            <p class="text-xs text-asfa-text/60 mb-3">Every holder on CWA's title lists, newest first, the name as each list prints it. What each title means is under About.</p>
+            <div class="grid sm:grid-cols-3 gap-3 mb-3 no-print">
+              <label class="block"><span class="text-xs text-asfa-text/70">Title</span>
+                <select id="title-filter" class="select w-full px-3 py-2">
+                  <option value="">All titles</option>
+                  ${bases.map((code) => `<option value="${code}">${code} · ${esc(feed.title_names[code])}</option>`).join('')}
+                </select></label>
+              <label class="block"><span class="text-xs text-asfa-text/70">Year</span>
+                <select id="year-filter" class="select w-full px-3 py-2">
+                  <option value="">All years</option>
+                  ${years.map((year) => `<option value="${year}">${year}</option>`).join('')}
+                </select></label>
+              <label class="block"><span class="text-xs text-asfa-text/70">Whippet</span>
+                <input id="name-filter" type="search" autocomplete="off" placeholder="Part of a registered name" class="w-full field px-3 py-2"></label>
+            </div>
+            <p class="text-sm text-asfa-text/70 mb-2" id="titles-count"></p>
+            <div id="titles-table"></div>
+          </div>
+        </section>
+
+        <section id="about" class="space-y-6">
+          <section class="card">
+            <h2 class="card-title">Standings</h2>
+            <p class="text-sm leading-relaxed">
+              CWA's racing standings rank whippets by <strong>NARX points</strong>, its national racing
+              points, earned at each meet. Its <strong>High Combined</strong> standings rank whippets by
+              High Combined wins, an award that puts a whippet's racing and conformation placements
+              together. Whippets with the same total share a place, and the next place is skipped.
+              Each list carries its own date: CWA updates them through the season, and the racing list
+              can trail the High Combined one. CWA's conformation standings are left out here.
+            </p>
+          </section>
+          <section class="card">
+            <h2 class="card-title">Titles</h2>
+            <ul class="text-sm leading-relaxed space-y-2">
+              <li><strong>ARX</strong>, Award of Racing Excellence: 15 ARX points, which go to whippets placing in the top half of a meet's finishers. ARX points stop at the title.</li>
+              <li><strong>NARX</strong>, National Award of Racing Excellence: 15 NARX points, with a further level at each 15 more: NARX2 at 30, NARX3 at 45, NARX4 at 60.</li>
+              <li><strong>SRA</strong>, Superior Racing Award: an ARX and 75 NARX points, replacing the NARX4; SRA2 at 150, SRA3 at 225.</li>
+              <li><strong>TRP</strong>, Title of Racing Proficiency: 10 CWA race meets completed, all four heats, with no disqualification or did-not-finish. Puppy races do not count.</li>
+              <li><strong>TRPX</strong>, Title of Racing Proficiency Excellent: 25 such meets. CWA no longer offers it.</li>
+              <li><strong>DPC</strong>, Dual Purpose Champion: a TRP plus an AKC or CKC bench championship, or 15 points in CWA conformation.</li>
+              <li><strong>DPCX</strong>, Dual Purpose Champion Excellent: the same conformation requirement with an ARX instead of a TRP. CWA calls it its highest award.</li>
+              <li><strong>HC</strong>, High Combined: 5 High Combined wins. <strong>HCX</strong>, High Combined Excellent: 10, with a further level at each 5 more.</li>
+            </ul>
+          </section>
+          <section class="card">
+            <h2 class="card-title">What these lists cannot tell you</h2>
+            <ul class="text-sm space-y-3">
+              <li><strong>There is no record meet by meet.</strong> CWA publishes standings and titles, not a grading guide: no meets, averages or grades for a whippet.</li>
+              <li><strong>Names carry titles.</strong> Each list prints a whippet's registered name with the titles it held when the list was last edited, so the same whippet can read differently from list to list. These pages bring a whippet's rows together by its name without the titles; two whippets with the same registered name would be counted as one.</li>
+              <li><strong>Ineligible rows.</strong> ${n(stats.titles_ineligible)} rows on CWA's lists are marked ineligible. They are shown with that mark and left out of the title counts.</li>
+            </ul>
+          </section>
+          <section class="card">
+            <h2 class="card-title">Where the numbers come from</h2>
+            <p class="text-sm leading-relaxed">
+              The standings are the charts on CWA's ${external(feed.standings_url, `${stats.season} standings page`)},
+              each read from the data behind it. The all-time list is CWA's ${external(feed.all_time_url, 'all-time racing')}
+              sheet, with its separate lists of dogs and bitches. The titles are the sheets linked from CWA's
+              ${external(feed.titles_url, 'titles page')}, one per title. They are read once a week; a copy of each
+              month's standings is archived by date. The whole method, code included, is on
+              <a href="https://github.com/jackrabbit-project/stats" class="lnk" target="_blank" rel="noopener noreferrer">GitHub</a>.
+            </p>
+          </section>
+          <section class="card" id="disclaimer">
+            <h2 class="card-title">Disclaimer</h2>
+            <p class="text-sm leading-relaxed">
+              These pages are an independent, unofficial project. They are not a CWA publication,
+              service, or software, and they are not endorsed by the Continental Whippet Alliance.
+              CWA's name is used only to identify the source of the standings, lists and title records
+              cited here. Those are CWA's work and remain its property; they are reproduced with
+              attribution and links to the originals. Wherever this site and CWA's own records
+              disagree, <strong>CWA's records govern</strong>, and questions about a whippet's record go
+              to CWA's Statistician, not here.
+            </p>
+            <p class="text-sm mt-3">Corrections: <a href="mailto:info@gazehound.io" class="lnk">info@gazehound.io</a></p>
+          </section>
+        </section>`;
+
+      /* ----- all-time: all, dogs or bitches */
+      const allTimeTable = document.getElementById('alltime-table');
+      function paintAllTime(sex) {
+        const rows = feed.all_time.rows.filter((row) => !sex || row.sex === sex);
+        allTimeTable.innerHTML = `
+          <div class="tbl-wrap"><table class="tbl">
+            <thead><tr><th scope="col" class="num">Place</th><th scope="col">Whippet</th><th scope="col">Owners</th>
+              <th scope="col">Dog or bitch</th><th scope="col" class="num">NARX points</th></tr></thead>
+            <tbody>${rows.map((row) => `
+              <tr${wanted && row.dog === wanted.id ? ' class="bg-asfa-bg2"' : ''}>
+                <td class="num font-semibold">${row.place}</td>
+                <td>${dogLink(row.dog, row.name)}</td>
+                <td class="text-asfa-text/80">${esc(row.owners)}</td>
+                <td>${row.sex === 'dog' ? 'Dog' : row.sex === 'bitch' ? 'Bitch' : '—'}</td>
+                <td class="num font-semibold text-asfa-accent">${pts(row.points)}</td>
+              </tr>`).join('')}</tbody>
+          </table></div>`;
+      }
+      document.querySelectorAll('#alltime-filter button').forEach((button) => {
+        button.addEventListener('click', () => {
+          document.querySelectorAll('#alltime-filter button').forEach((other) => {
+            const on = other === button;
+            other.classList.toggle('chip-selected', on);
+            other.setAttribute('aria-pressed', on ? 'true' : 'false');
+          });
+          paintAllTime(button.dataset.sex);
+        });
+      });
+      paintAllTime('');
+
+      /* ----- titles: by title, year and part of a name */
+      const titleFilter = document.getElementById('title-filter');
+      const yearFilter = document.getElementById('year-filter');
+      const nameFilter = document.getElementById('name-filter');
+      const titlesTable = document.getElementById('titles-table');
+      const titlesCount = document.getElementById('titles-count');
+      if (bases.includes(param('title') || '')) titleFilter.value = param('title');
+      if (years.includes(Number(param('year')))) yearFilter.value = param('year');
+      let showAll = false;
+      function paintTitles() {
+        const base = titleFilter.value;
+        const year = Number(yearFilter.value) || null;
+        const needle = nameFilter.value.trim().toLowerCase();
+        const rows = titles.filter((row) => (!base || row.base === base) && (!year || row.year === year)
+          && (!needle || row.name.toLowerCase().includes(needle)));
+        const shown = showAll ? rows : rows.slice(0, 100);
+        titlesCount.textContent = `${n(rows.length)} of ${n(titles.length)} rows${
+          rows.length > shown.length ? `, the newest ${shown.length} shown` : ''}.`;
+        titlesTable.innerHTML = rows.length ? `
+          <div class="tbl-wrap"><table class="tbl">
+            <thead><tr><th scope="col">Earned</th><th scope="col">Title</th><th scope="col">Whippet</th><th scope="col">Owners</th></tr></thead>
+            <tbody>${shown.map((row) => `
+              <tr>
+                <td class="whitespace-nowrap">${when(row)}</td>
+                <td class="whitespace-nowrap">${titleBadge(row)}</td>
+                <td>${dogLink(row.dog, row.name)}</td>
+                <td class="text-asfa-text/80">${row.owners ? esc(row.owners) : '—'}</td>
+              </tr>`).join('')}</tbody>
+          </table></div>
+          ${rows.length > shown.length ? `<p class="text-sm mt-3 no-print"><button type="button" id="titles-all" class="lnk">Show all ${n(rows.length)}</button></p>` : ''}`
+          : '<p class="text-sm text-asfa-text/70">No title matches those choices.</p>';
+        const more = document.getElementById('titles-all');
+        if (more) more.addEventListener('click', () => { showAll = true; paintTitles(); });
+      }
+      [titleFilter, yearFilter].forEach((el) => el.addEventListener('change', () => { showAll = false; paintTitles(); }));
+      nameFilter.addEventListener('input', () => { showAll = false; paintTitles(); });
+      window.addEventListener('beforeprint', () => { showAll = true; paintTitles(); });
+      paintTitles();
+
+      /* ----- tabs, by the hash, as on the other whippet pages */
+      const ids = TABS.map(([id]) => id);
+      function showTab() {
+        const asked = location.hash.slice(1);
+        const tab = ids.includes(asked) ? asked : 'overview';
+        ids.forEach((id) => document.getElementById(id).classList.toggle('hidden', id !== tab));
+        document.querySelectorAll('#sub-tabs a[data-tab]').forEach((link) => {
+          const on = link.dataset.tab === tab;
+          link.classList.toggle('tab-active', on);
+          if (on) link.setAttribute('aria-current', 'page');
+          else link.removeAttribute('aria-current');
+        });
+        setTimeout(() => window.scrollTo({ top: 0, behavior: 'instant' }), 0);
+      }
+      showTab();
+      window.addEventListener('hashchange', showTab);
+      if (typeof fitTables === 'function') fitTables(main);
+    }
+  </script>
+</body>
+</html>

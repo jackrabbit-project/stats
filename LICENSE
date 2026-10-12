@@ -73,20 +73,27 @@ the following, which are included under separate terms:
    WRA's request. That material remains the property of the WRA; the WRA's
    own records are authoritative wherever the two disagree.
 
+7. CWA DATA — "data/cwa.json" and the archived snapshots under "data/cwa/"
+   are derived from the standings, the all-time racing lists and the title
+   lists published by the Continental Whippet Alliance (CWA) at
+   continentalwhippetalliance.com. That material remains the property of
+   the CWA; the CWA's own records are authoritative wherever the two
+   disagree.
+
    In each case the name and marks of ASFA, LGRA, AOK9, R.A.C.E., NOTRA, the
-   WRA and the AKC are used descriptively to identify the source. This
-   project is independent and, apart from the WRA's request noted above, is
-   not authorized, approved, or endorsed by any of them. The raw workbooks and reports the racing guides are distributed
+   WRA, the CWA and the AKC are used descriptively to identify the source.
+   This project is independent and, apart from the WRA's request noted
+   above, is not authorized, approved, or endorsed by any of them. The raw workbooks and reports the racing guides are distributed
    as are not stored in this repository.
 
-7. PHOTOGRAPHS — "assets/card-aok9.jpg" is by Susan Wilson and is reproduced
+8. PHOTOGRAPHS — "assets/card-aok9.jpg" is by Susan Wilson and is reproduced
    with credit to the photographer. "assets/card-asfa.jpg" and
    "assets/card-lgra.jpg" are the project maintainer's own. None of the
    photographs is covered by the MIT license above; they are included to
    illustrate this site and may not be reused without the photographer's
    permission.
 
-8. LOGO / ICON FILES — "assets/favicon.ico" (and its root-level copy
+9. LOGO / ICON FILES — "assets/favicon.ico" (and its root-level copy
    "favicon.ico"), "assets/favicon-16x16.png", "assets/favicon-32x32.png",
    "assets/apple-touch-icon.png", "assets/jackrabbit-icon-40.png", the
    Jackrabbit mark within "assets/og.png", and the inline Jackrabbit mark
@@ -95,7 +102,7 @@ the following, which are included under separate terms:
    this project. Nothing in the MIT license above grants rights to use that
    mark for other purposes.
 
-9. WEBFONTS — the files in "assets/fonts/" are the Fraunces typeface
+10. WEBFONTS — the files in "assets/fonts/" are the Fraunces typeface
    (Copyright 2019 The Fraunces Project Authors) and the IBM Plex Mono
    typeface (Copyright 2017 IBM Corp.), each licensed under the SIL Open
    Font License, Version 1.1 (https://openfontlicense.org), not the MIT

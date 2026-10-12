@@ -423,6 +423,9 @@ function buildSearchEntries(feeds) {
         dog.rank_breed ? `${dog.breed} #${dog.rank_breed}` : dog.breed, dog.rank_all ?? 100000));
     }
   }
+  // CWA's whippets, from its standings, all-time list and title lists; each
+  // opens the CWA page on that whippet.
+  if (feeds.cwa) entries.push(...cwaSearchEntries(feeds.cwa));
   // AOK9 Singles dogs racing lately that the sprint list does not carry: a
   // dog that races only Singles is found by name and opens its Singles record.
   if (singles) {
@@ -434,6 +437,22 @@ function buildSearchEntries(feeds) {
     }
   }
   return entries;
+}
+
+/** CWA's whippets as search entries: racing standings first, then the
+    all-time list, then every other title holder. */
+function cwaSearchEntries(cwa) {
+  const points = (value) => (Number.isInteger(value) ? String(value) : String(Math.round(value * 100) / 100));
+  const racing = new Map(cwa.standings.racing.rows.map((row) => [row.dog, row]));
+  const allTime = new Map(cwa.all_time.rows.map((row) => [row.dog, row]));
+  return cwa.dogs.map((dog) => {
+    const r = racing.get(dog.id);
+    const a = allTime.get(dog.id);
+    const meta = r ? `Whippet #${r.place} · ${points(r.points)} NARX pts`
+      : a ? `Whippet · all-time #${a.place}` : 'Whippet · CWA titles';
+    return searchEntry({ id: dog.id, call_name: dog.call_name || dog.name, registered_name: dog.name, breed: 'Whippet' },
+      'CWA', `cwa.html?dog=${encodeURIComponent(dog.id)}`, meta, r ? r.place : a ? 1000 + a.place : 200000);
+  });
 }
 
 /** Dogs not racing lately: AOK9 Singles first, then the racing registries,
@@ -496,6 +515,14 @@ function searchLeaders(feeds, program, count) {
         searchEntry(dog, name, racingDogUrl(org, dog.id), `${dog.breed} · ${points(dog.ytd)} pts`, dog.rank_all))]);
     }
   }
+  if (feeds.cwa && want('CWA')) {
+    const top = feeds.cwa.standings.racing.rows.slice(0, count);
+    if (top.length) {
+      groups.push(['CWA · leading the racing standings', top.map((row) =>
+        searchEntry({ id: row.dog, call_name: row.call_name, registered_name: row.registered_name, breed: 'Whippet' },
+          'CWA', `cwa.html?dog=${encodeURIComponent(row.dog)}`, `Whippet · ${points(row.points)} NARX pts`, row.place))]);
+    }
+  }
   return groups;
 }
 
@@ -505,18 +532,29 @@ function loadSearchFeeds() {
   if (!loadSearchFeeds.promise) {
     loadSearchFeeds.promise = Promise.allSettled([
       loadSeason(), loadRacing('lgra'), loadRacing('aok9'), loadRacing('aok9-singles'), loadRacing('notra'),
-      loadRacing('wra'), loadRacing('notra-whippets'),
+      loadRacing('wra'), loadRacing('notra-whippets'), loadCwa(),
     ]).then((results) => {
-      const [asfa, lgra, aok9, singles, notra, wra, notraWhippets] = results.map((result) =>
+      const [asfa, lgra, aok9, singles, notra, wra, notraWhippets, cwa] = results.map((result) =>
         (result.status === 'fulfilled' ? result.value : null));
-      const feeds = { asfa, lgra, aok9, singles, notra, wra, 'notra-whippets': notraWhippets };
+      const feeds = { asfa, lgra, aok9, singles, notra, wra, 'notra-whippets': notraWhippets, cwa };
       return { feeds, entries: buildSearchEntries(feeds) };
     });
   }
   return loadSearchFeeds.promise;
 }
 
-const SEARCH_PROGRAMS = [['', 'All'], ['ASFA', 'ASFA'], ...RACING_PROGRAMS.map(([, name]) => [name, name])];
+const SEARCH_PROGRAMS = [['', 'All'], ['ASFA', 'ASFA'], ...RACING_PROGRAMS.map(([, name]) => [name, name]), ['CWA', 'CWA']];
+
+/** CWA's lists, fetched once per page. */
+function loadCwa() {
+  if (!loadCwa.promise) {
+    loadCwa.promise = loadJson('data/cwa.json').catch((error) => {
+      loadCwa.promise = null;
+      throw error;
+    });
+  }
+  return loadCwa.promise;
+}
 let siteSearch = null;
 
 /* The panel is built on first open and kept: it floats over the page near
@@ -760,6 +798,7 @@ const NAV_NOTRA = [
 const NAV_WHIPPETS = [
   ['wra.html', 'WRA'],
   ['notra-whippets.html', 'NOTRA Whippets'],
+  ['cwa.html', 'CWA'],
 ];
 const NAV_HUB = [
   ['index.html', 'Home'],
@@ -826,6 +865,15 @@ const SECTIONS = {
     disclaimer: 'notra-whippets.html#about',
     menu: false,
   },
+  // CWA publishes standings and title lists, not a grading guide: one page
+  // of its own (cwa.html) in the same section.
+  cwa: {
+    home: 'cwa.html', nav: NAV_WHIPPETS,
+    program: 'Whippet racing', beta: true, group: 'whippets',
+    color: 'text-asfa-whippet', line: 'border-asfa-whippet',
+    disclaimer: 'cwa.html#disclaimer', about: 'cwa.html#about',
+    menu: false,
+  },
   // AKC lure coursing entries: one page of event-level counts, not a
   // program. It wears the hub's nav and AKC's own blue, sits outside the
   // program menu, and is reached from the ASFA Regions page.
@@ -839,7 +887,7 @@ const SECTIONS = {
 };
 const PAGE_SECTIONS = {
   'index.html': 'hub', 'lgra.html': 'lgra', 'aok9.html': 'aok9', 'notra.html': 'notra', 'akc.html': 'akc',
-  'wra.html': 'wra', 'notra-whippets.html': 'notra-whippets',
+  'wra.html': 'wra', 'notra-whippets.html': 'notra-whippets', 'cwa.html': 'cwa',
 };
 
 function sectionOf(current) {
@@ -1039,6 +1087,7 @@ const FOOTER_LINKS = [
     ['globe', 'whippetracing.org, the WRA site', 'https://www.whippetracing.org'],
     ['link', 'WRA race meets', 'https://www.whippetracing.org/MeetListDisplay.cfm'],
     ['link', 'NOTRA race dates', 'https://www.notra.org/RaceDates.html'],
+    ['globe', 'continentalwhippetalliance.com, the CWA site', 'https://www.continentalwhippetalliance.com'],
   ]],
 ];
 
@@ -1080,6 +1129,18 @@ function footerSource(sectionKey, feed) {
         <p>Event entry counts compiled from the American Kennel Club's public Event Search.
           AKC's event pages are authoritative wherever they disagree with this one.</p>`;
   }
+  if (sectionKey === 'cwa') {
+    return feed ? `
+        <p>
+          Standings, the all-time list and titles reproduced from the Continental Whippet
+          Alliance at ${link(feed.site_url, 'continentalwhippetalliance.com')}: racing standings as of
+          ${formatDate(feed.stats.racing_as_of)}, High Combined as of ${formatDate(feed.stats.high_combined_as_of)},
+          titles read ${formatDate(feed.fetched)}. CWA's own records are authoritative wherever
+          they disagree with this page.
+        </p>` : `
+        <p>Standings and titles reproduced from the Continental Whippet Alliance. CWA's own
+          records are authoritative wherever they disagree with this page.</p>`;
+  }
   const racing = RACING_PROGRAMS.find(([org]) => org === sectionKey);
   if (racing) {
     const guide = racing[2];
@@ -1096,9 +1157,9 @@ function footerSource(sectionKey, feed) {
   }
   return `
         <p>
-          Figures reproduced from ASFA's Top 20 standings and the LGRA, AOK9, NOTRA and WRA
-          grading guides. Each body's own publication is authoritative wherever it
-          disagrees with this site.
+          Figures reproduced from ASFA's Top 20 standings, the LGRA, AOK9, NOTRA and WRA
+          grading guides, and CWA's standings and title lists. Each body's own publication
+          is authoritative wherever it disagrees with this site.
         </p>`;
 }
 
@@ -1220,17 +1281,18 @@ function renderChrome(feed, current, sectionKey = sectionOf(current)) {
       ? `How these numbers are built:
           <a href="about.html" class="underline hover:text-asfa-wellink">ASFA</a>
           ${RACING_PROGRAMS.map(([org, name]) =>
-            `<a href="${org}.html#about" class="underline hover:text-asfa-wellink">${name}</a>`).join('\n          ')}`
+            `<a href="${org}.html#about" class="underline hover:text-asfa-wellink">${name}</a>`).join('\n          ')}
+          <a href="cwa.html#about" class="underline hover:text-asfa-wellink">CWA</a>`
       : `<a href="${aboutHref}" class="underline hover:text-asfa-wellink">How these numbers are built</a>`;
     footer.innerHTML = `
       <div class="max-w-4xl mx-auto px-4 text-sm text-asfa-wellink/85 space-y-4">${footerLinks()}${footerSource(sectionKey, feed)}
         <p class="text-xs text-asfa-wellink/65">
-          <span class="font-semibold text-asfa-wellink/85">Unofficial fan site</span> — not an ASFA, LGRA, AOK9, NOTRA${
-            sectionKey === 'akc' ? ', WRA or AKC' : ' or WRA'} publication.
+          <span class="font-semibold text-asfa-wellink/85">Unofficial fan site</span> — not an ASFA, LGRA, AOK9, NOTRA, WRA${
+            sectionKey === 'akc' ? ', CWA or AKC' : ' or CWA'} publication.
           Not affiliated with, endorsed by, or sponsored by the American Sighthound Field
           Association, the Large Gazehound Racing Association, Racing and Coursing
           Enthusiasts (R.A.C.E.), which runs the AOK9 program, the National Oval Track
-          Racing Association, ${sectionKey === 'akc' ? 'the Whippet Racing Association, or the American Kennel Club. "AKC" and "American Kennel Club" are marks of the American Kennel Club, used here only to identify the source of the event listings.' : 'or the Whippet Racing Association.'}
+          Racing Association, the Whippet Racing Association, ${sectionKey === 'akc' ? 'the Continental Whippet Alliance, or the American Kennel Club. "AKC" and "American Kennel Club" are marks of the American Kennel Club, used here only to identify the source of the event listings.' : 'or the Continental Whippet Alliance.'}
           ${sectionKey === 'hub' ? '' : `<a href="${section.disclaimer}" class="underline hover:text-asfa-wellink whitespace-nowrap">Full disclaimer</a>`}
         </p>
         <p class="text-xs text-asfa-wellink/65 flex flex-wrap items-center justify-center gap-x-2 gap-y-1.5 text-center">
@@ -1360,14 +1422,14 @@ function pageHub(render) {
   renderChrome(null, 'index.html', 'hub');
   Promise.allSettled([
     loadSeason(), loadRacing('lgra'), loadRacing('aok9'), loadTrials(), loadRacing('aok9-singles'), loadRacing('notra'),
-    loadRacing('wra'), loadRacing('notra-whippets'),
+    loadRacing('wra'), loadRacing('notra-whippets'), loadCwa(),
   ]).then((results) => {
-    const [asfa, lgra, aok9, trials, singles, notra, wra, notraWhippets] = results.map((result) => {
+    const [asfa, lgra, aok9, trials, singles, notra, wra, notraWhippets, cwa] = results.map((result) => {
       if (result.status === 'rejected') console.warn(result.reason);
       return result.status === 'fulfilled' ? result.value : null;
     });
     try {
-      render({ asfa, lgra, aok9, trials, singles, notra, wra, notraWhippets });
+      render({ asfa, lgra, aok9, trials, singles, notra, wra, notraWhippets, cwa });
     } catch (error) {
       console.error(error);
       showFailure(

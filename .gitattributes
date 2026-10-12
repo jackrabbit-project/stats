@@ -27,5 +27,7 @@ data/aok9-singles/snapshots/*.json -diff
 data/notra/snapshots/*.json -diff
 data/wra/snapshots/*.json -diff
 data/notra-whippets/snapshots/*.json -diff
+data/cwa.json -diff
+data/cwa/snapshots/*.json -diff
 
 * text=auto
