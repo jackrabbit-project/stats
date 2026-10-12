@@ -62,6 +62,17 @@ MATCH_NOISE = {
     "sighthounds", "gazehound", "gazehounds", "hound", "hounds",
 }
 
+# Clubs whose own name differs from ASFA's club listing: the site shows the
+# name each club prints on its own premium lists (her call, 2026-10-12).
+# The match key still comes from ASFA's spelling, which is how ASFA's trial
+# results reach the club, and the listing's spelling is kept as listed_as.
+DISPLAY_NAMES = {
+    # OKIGO's premium lists, and ASFA's results, say "OKI Gazehound Organization".
+    "Ohio,Kentucky, Indiana Gazehound Organization": "OKI Gazehound Organization",
+    # SHOT's premium lists, and AKC, say "Sighthound", one word.
+    "Sight Hound Organization of Tidewater": "Sighthound Organization of Tidewater",
+}
+
 
 def find_pdf_url() -> str:
     """The listing's filename carries a date, so discover it rather than pin it."""
@@ -139,18 +150,27 @@ def extract(pdf_path: Path) -> list[dict]:
                 if not re.fullmatch(r"\d{1,2}", region_raw):
                     raise SystemExit(f"{name!r}: region is not a number: {region_raw!r}")
 
-                clubs.append({
-                    "name": name,
-                    "slug": slugify(name),
+                shown = DISPLAY_NAMES.get(name, name)
+                club = {
+                    "name": shown,
+                    "slug": slugify(shown),
                     "initials": initials,
                     "affiliation": affiliation,
                     "affiliation_label": AFFILIATION.get(affiliation, affiliation),
                     "region": int(region_raw),
                     "match_key": match_key(name),
-                })
+                }
+                if shown != name:
+                    club["listed_as"] = name
+                clubs.append(club)
 
     if not clubs:
         raise SystemExit("No club rows extracted; the PDF layout changed.")
+    listed = {club.get("listed_as", club["name"]) for club in clubs}
+    for spelling in DISPLAY_NAMES:
+        if spelling not in listed:
+            print(f"Note: ASFA's listing no longer spells a club {spelling!r}; "
+                  f"its display name in DISPLAY_NAMES is unused.")
 
     # Two clubs collapsing to one match key would silently misfile a trial's
     # entries into the wrong region. Refuse rather than pick.

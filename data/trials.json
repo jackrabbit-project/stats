@@ -1,7 +1,7 @@
 {
   "season": 2026,
   "as_of": "2026-09-13",
-  "generated": "2026-10-11",
+  "generated": "2026-10-12",
   "source_url": "https://www.asfa.org/trial/index0111.html",
   "months": [
     "2026-01",
@@ -363,8 +363,8 @@
       "rank": 11
     },
     {
-      "club": "Ohio,Kentucky, Indiana Gazehound Organization",
-      "slug": "ohio-kentucky-indiana-gazehound-organization",
+      "club": "OKI Gazehound Organization",
+      "slug": "oki-gazehound-organization",
       "initials": "OKIGO",
       "region": 6,
       "trials": 2,
@@ -506,8 +506,8 @@
       "rank": 22
     },
     {
-      "club": "Sight Hound Organization of Tidewater",
-      "slug": "sight-hound-organization-of-tidewater",
+      "club": "Sighthound Organization of Tidewater",
+      "slug": "sighthound-organization-of-tidewater",
       "initials": "SHOT",
       "region": 8,
       "trials": 2,
@@ -1940,8 +1940,8 @@
         "Sloughi": 1
       },
       "results_url": "https://www.asfa.org/trial/index0426.html#R5",
-      "club": "Sight Hound Organization of Tidewater",
-      "club_slug": "sight-hound-organization-of-tidewater",
+      "club": "Sighthound Organization of Tidewater",
+      "club_slug": "sighthound-organization-of-tidewater",
       "region": 8,
       "initials": "SHOT"
     },
@@ -2057,8 +2057,8 @@
         "Sloughi": 1
       },
       "results_url": "https://www.asfa.org/trial/index0426.html#R9",
-      "club": "Sight Hound Organization of Tidewater",
-      "club_slug": "sight-hound-organization-of-tidewater",
+      "club": "Sighthound Organization of Tidewater",
+      "club_slug": "sighthound-organization-of-tidewater",
       "region": 8,
       "initials": "SHOT"
     },
@@ -4470,8 +4470,8 @@
         "Pharaoh Hound": 1
       },
       "results_url": "https://www.asfa.org/trial/index0926.html#R16",
-      "club": "Ohio,Kentucky, Indiana Gazehound Organization",
-      "club_slug": "ohio-kentucky-indiana-gazehound-organization",
+      "club": "OKI Gazehound Organization",
+      "club_slug": "oki-gazehound-organization",
       "region": 6,
       "initials": "OKIGO"
     },
@@ -4560,8 +4560,8 @@
         "Rhodesian Ridgeback": 1
       },
       "results_url": "https://www.asfa.org/trial/index0926.html#R19",
-      "club": "Ohio,Kentucky, Indiana Gazehound Organization",
-      "club_slug": "ohio-kentucky-indiana-gazehound-organization",
+      "club": "OKI Gazehound Organization",
+      "club_slug": "oki-gazehound-organization",
       "region": 6,
       "initials": "OKIGO"
     }

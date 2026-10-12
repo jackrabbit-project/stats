@@ -1,7 +1,7 @@
 {
   "source_url": "https://www.asfa.org/clubs/2026.10-08 Club updates.pdf",
   "source_file": "2026.10-08-Club-updates.pdf",
-  "generated": "2026-10-11",
+  "generated": "2026-10-12",
   "note": "Club name, region, initials and affiliation only. The source PDF also lists liaison names, addresses, phone numbers and email addresses; those are deliberately not extracted or stored.",
   "clubs": [
     {
@@ -356,13 +356,14 @@
       "match_key": "california northern whippet"
     },
     {
-      "name": "Ohio,Kentucky, Indiana Gazehound Organization",
-      "slug": "ohio-kentucky-indiana-gazehound-organization",
+      "name": "OKI Gazehound Organization",
+      "slug": "oki-gazehound-organization",
       "initials": "OKIGO",
       "affiliation": "M",
       "affiliation_label": "Member",
       "region": 6,
-      "match_key": "indiana kentucky ohio"
+      "match_key": "indiana kentucky ohio",
+      "listed_as": "Ohio,Kentucky, Indiana Gazehound Organization"
     },
     {
       "name": "Oklahoma Racing and Coursing Association",
@@ -455,13 +456,14 @@
       "match_key": "ibizan sierra slopes"
     },
     {
-      "name": "Sight Hound Organization of Tidewater",
-      "slug": "sight-hound-organization-of-tidewater",
+      "name": "Sighthound Organization of Tidewater",
+      "slug": "sighthound-organization-of-tidewater",
       "initials": "SHOT",
       "affiliation": "M",
       "affiliation_label": "Member",
       "region": 8,
-      "match_key": "sight tidewater"
+      "match_key": "sight tidewater",
+      "listed_as": "Sight Hound Organization of Tidewater"
     },
     {
       "name": "Silken Windhounds for Endurance, Perf. & Training",
