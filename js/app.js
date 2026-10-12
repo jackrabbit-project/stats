@@ -146,6 +146,37 @@ function ownerUrl(key) {
   return `kennels.html?owner=${encodeURIComponent(key)}`;
 }
 
+/** An owner line as the source prints it, with each owner's name a link
+    to its kennel where there is one (href null keeps a name plain). The
+    names are wrapped where they stand in the line, so its own separators
+    stay; a name the line does not carry as given falls back to the names
+    joined by commas. */
+function linkOwners(raw, owners) {
+  const text = raw || '';
+  if (!owners || !owners.some((owner) => owner.href)) return esc(text);
+  const link = ({ name, href }) => (href ? `<a href="${esc(href)}" class="lnk">${esc(name)}</a>` : esc(name));
+  let html = '';
+  let at = 0;
+  for (const owner of owners) {
+    const index = text.indexOf(owner.name, at);
+    if (index < 0) return owners.map(link).join(', ');
+    html += esc(text.slice(at, index)) + link(owner);
+    at = index + owner.name.length;
+  }
+  return html + esc(text.slice(at));
+}
+
+/** An ASFA hound's owners as the standings print them, each linked to its
+    kennel on the Kennels page. */
+const asfaKennels = new WeakMap();
+function asfaOwners(dog, season) {
+  if (!asfaKennels.has(season)) asfaKennels.set(season, new Set((season.owners || []).map((owner) => owner.key)));
+  const kennels = asfaKennels.get(season);
+  return linkOwners(dog.owner_raw, (dog.owners || []).map((owner) => ({
+    name: owner.name, href: kennels.has(owner.entity) ? ownerUrl(owner.entity) : null,
+  })));
+}
+
 function breedUrl(slug) {
   return `browse.html?breed=${encodeURIComponent(slug)}`;
 }

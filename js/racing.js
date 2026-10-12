@@ -350,6 +350,24 @@ function racingBreedUrl(org, slug) {
   return `${org}.html?breed=${encodeURIComponent(slug)}#browse`;
 }
 
+/* Each program's kennels by key ("surname|breed"), set when its page
+   renders, so an owner links only to a kennel its Kennels tab can open. */
+const KENNELS = {};
+function racingKennels(org, feed) {
+  if (feed && feed.owners) KENNELS[org] = new Set(feed.owners.map((owner) => owner.key));
+  return KENNELS[org] || new Set();
+}
+
+/** A dog's owners as its guide prints them, each linked to the kennel the
+    program lists for that owner and breed. */
+function racingOwners(org, dog) {
+  const kennels = KENNELS[org] || new Set();
+  return linkOwners(dog.owner_raw, (dog.owners || []).map((owner) => {
+    const key = `${owner.key}|${dog.breed_slug}`;
+    return { name: owner.name, href: kennels.has(key) ? racingOwnerUrl(org, key) : null };
+  }));
+}
+
 function racingOwnerUrl(org, key) {
   return `${org}.html?owner=${encodeURIComponent(key)}#kennels`;
 }
@@ -752,6 +770,7 @@ function sortRows(rows, columns, sort) {
 /* ----------------------------------------------------------- overview page */
 
 function renderRacingOverview(org, feed, main, singles = null) {
+  racingKennels(org, feed);
   const spec = ORGS[org];
   const season = feed.season;
   const stats = feed.stats;
@@ -881,7 +900,7 @@ function renderRacingOverview(org, feed, main, singles = null) {
               <td class="num font-semibold">${dog.rank_all}</td>
               <td><a href="${racingDogUrl(org, dog.id)}" class="lnk font-semibold">${esc(dog.call_name)}</a></td>
               <td class="text-asfa-text/80">${esc(dog.registered_name)}</td>
-              <td class="text-asfa-text/80">${esc(dog.owner_raw)}</td>
+              <td class="text-asfa-text/80">${racingOwners(org, dog)}</td>
               <td class="num font-semibold text-asfa-accent">${ptsLabel(dog.ytd)}</td>
               <td class="num">${waveLabel(dog[waveKey])} ${gradeBadge(dog[gradeKey])}</td>
             </tr>`).join('')}</tbody>
@@ -1081,7 +1100,8 @@ function renderRacingOverview(org, feed, main, singles = null) {
                 dog.active === false ? ' <span class="badge badge-flat">inactive</span>' : ''}${
                 singlesIds.has(dog.id) ? ` <a href="${racingDogUrl(org, dog.id)}#singles" class="badge badge-flat" title="Also races Singles">Singles</a>` : ''}</td>`;
               if (key === 'breed') return `<td><a href="${racingBreedUrl(org, dog.breed_slug)}" class="lnk">${esc(dog.breed)}</a></td>`;
-              if (key === 'registered_name' || key === 'owner_raw') return `<td class="text-asfa-text/80">${esc(dog[key])}</td>`;
+              if (key === 'registered_name') return `<td class="text-asfa-text/80">${esc(dog[key])}</td>`;
+              if (key === 'owner_raw') return `<td class="text-asfa-text/80">${racingOwners(org, dog)}</td>`;
               if (key === 'last_raced') return `<td class="whitespace-nowrap">${dog.last_raced ? formatDateShort(dog.last_raced) : (dog.last_year ? dog.last_year : '—')}</td>`;
               if (key === 'rank_breed') return `<td class="num font-semibold">${dog.rank_breed ?? '—'}</td>`;
               const waveSpec = spec.waves.find(([f]) => f === key);
@@ -1724,6 +1744,7 @@ function aboutRacing(org, feed, singles = null) {
 /* --------------------------------------------------------------- dog page */
 
 function renderRacingDog(org, feed, main, singles = null) {
+  racingKennels(org, feed);
   const spec = ORGS[org];
   const id = param('id');
   const active = feed.dogs.find((dog) => dog.id === id);
@@ -1935,7 +1956,7 @@ function renderRacingDog(org, feed, main, singles = null) {
             <tr class="${other.id === dog.id ? 'bg-asfa-bg2 font-semibold' : ''}">
               <td class="num">${other.rank_breed}</td>
               <td>${other.id === dog.id ? esc(other.call_name) : `<a href="${racingDogUrl(org, other.id)}" class="lnk">${esc(other.call_name)}</a>`}</td>
-              <td class="text-asfa-text/80">${esc(other.owner_raw)}</td>
+              <td class="text-asfa-text/80">${racingOwners(org, other)}</td>
               <td class="num">${ptsLabel(other.ytd)}</td>
               <td class="num">${waveLabel(other[waveField])} ${gradeBadge(other[gradeField])}</td>
             </tr>`).join('')}</tbody>
@@ -2208,7 +2229,7 @@ function singlesCards(sdog, sfeed) {
         <tbody>${mates.map((d) => `
           <tr>
             <td><a href="${racingDogUrl('aok9', d.id)}" class="lnk font-semibold">${esc(d.call_name)}</a></td>
-            <td class="text-asfa-text/80">${esc(d.owner_raw)}</td>
+            <td class="text-asfa-text/80">${racingOwners('aok9', d)}</td>
             <td class="num">${averageLabel(d)}</td>
             <td class="num">${pbLabel(d)}</td>
             <td class="whitespace-nowrap">${singlesRecentFastest(sfeed, d)}</td>
@@ -2254,7 +2275,7 @@ function renderSinglesDog(sdog, sfeed, main) {
             · <span class="badge badge-flat">Singles</span>${sdog.active ? '' : ' <span class="badge badge-flat">inactive</span>'}
           </p>
           ${numberNote ? `<p class="text-xs text-asfa-text/65 mt-1">${numberNote}</p>` : ''}
-          <p class="text-sm mt-1">Owned by ${esc(sdog.owner_raw)}</p>
+          <p class="text-sm mt-1">Owned by ${racingOwners('aok9', sdog)}</p>
           ${sdog.note ? `<p class="text-xs text-asfa-text/65 mt-1">Registrar's note: ${esc(sdog.note)}</p>` : ''}
           <p class="text-sm text-asfa-text/70 mt-2">Races Singles: alone on the track, timed, and placed against the other dogs of its division at each meet.</p>
         </div>
@@ -2457,7 +2478,7 @@ function renderSinglesTab(sfeed, container) {
           <tr class="${d.active ? '' : 'text-asfa-text/60'}">
             <td><a href="${racingDogUrl('aok9', d.id)}${d.sprint_racing ? '#singles' : ''}" class="lnk font-semibold">${esc(d.call_name)}</a></td>
             <td class="text-asfa-text/80">${esc(d.registered_name)}</td>
-            <td class="text-asfa-text/80">${esc(d.owner_raw)}</td>
+            <td class="text-asfa-text/80">${racingOwners('aok9', d)}</td>
             <td class="num">${averageLabel(d)}</td>
             <td class="num">${pbLabel(d)}</td>
             <td class="whitespace-nowrap">${singlesRecentFastest(sfeed, d)}</td>

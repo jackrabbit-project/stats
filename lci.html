@@ -30,7 +30,7 @@
   <main id="main" class="flex-1 max-w-6xl mx-auto w-full px-4 py-6 space-y-6"></main>
   <footer id="site-footer" class="bg-asfa-navy text-white py-8"></footer>
 
-  <script src="js/app.js?v=20261011k"></script>
+  <script src="js/app.js?v=20261012a"></script>
   <script>
     page('lci.html', (season) => {
       const main = document.getElementById('main');
@@ -121,7 +121,7 @@
                       <td class="num font-semibold">${dog.rank}</td>
                       <td><a href="${dogUrl(dog.id)}" class="lnk font-semibold">${esc(dog.call_name)}</a></td>
                       <td class="text-asfa-text/80">${esc(dog.registered_name)}</td>
-                      <td class="text-asfa-text/80">${esc(dog.owner_raw)}</td>
+                      <td class="text-asfa-text/80">${asfaOwners(dog, season)}</td>
                       <td class="num">${dog.region ?? '—'}</td>
                       <td class="num font-semibold">${dog.points}</td>
                       <td class="text-xs text-asfa-accent">${lciTitles.map(esc).join(' ') || '—'}</td>

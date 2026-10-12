@@ -30,7 +30,7 @@
   <main id="main" class="flex-1 max-w-5xl mx-auto w-full px-4 py-6 space-y-6"></main>
   <footer id="site-footer" class="bg-asfa-navy text-white py-8"></footer>
 
-  <script src="js/app.js?v=20261011k"></script>
+  <script src="js/app.js?v=20261012a"></script>
   <script>
     page('titles.html', (season) => {
       const main = document.getElementById('main');
@@ -87,6 +87,33 @@
         const hound = (row) => row.dog_id
           ? `<a href="${dogUrl(row.dog_id)}" class="lnk font-semibold">${esc(row.call_name)}</a>`
           : `<span class="font-semibold">${esc(row.call_name)}</span>`;
+
+        // The titles listing prints owners in full ("Cindy & John Antonik");
+        // kennels come from the standings ("C.& J.Antonik"). A name links to a
+        // kennel only when the hound is ranked and its surname matches one of
+        // the hound's standings owners. "Cindy & John Antonik" is one owner
+        // (first names sharing a surname); "Ann Lee & Bo Ng" is two.
+        const rankedDogs = new Map(season.dogs.map((dog) => [dog.id, dog]));
+        const surname = (text) => {
+          const words = text.match(/[A-Za-z][A-Za-z'-]*/g) || [];
+          return (words[words.length - 1] || '').toLowerCase();
+        };
+        const owners = (row) => {
+          const dog = row.dog_id ? rankedDogs.get(row.dog_id) : null;
+          if (!dog || !row.owners_raw) return esc(row.owners_raw || '');
+          const kennels = new Map(dog.owners.map((owner) =>
+            [surname(owner.name.slice(owner.name.lastIndexOf('.') + 1)), owner.entity]));
+          const named = [];
+          row.owners_raw.split(',').forEach((segment) => {
+            const parts = segment.split(/&|\band\b/).map((part) => part.trim()).filter(Boolean);
+            const couple = parts.length > 1 && parts.slice(0, -1).every((part) => !/\s/.test(part));
+            (couple ? [segment.trim()] : parts).forEach((name) => {
+              const entity = kennels.get(surname(name));
+              named.push({ name, href: entity ? ownerUrl(entity) : null });
+            });
+          });
+          return linkOwners(row.owners_raw, named);
+        };
 
         const columns = [
           ['date', 'Date'],
@@ -170,7 +197,7 @@
                     <td>${hound(row)}</td>
                     <td class="text-asfa-text/80">${esc(row.registered_name)}</td>
                     <td>${esc(row.section)}</td>
-                    <td class="text-asfa-text/80">${esc(row.owners_raw)}</td>
+                    <td class="text-asfa-text/80">${owners(row)}</td>
                   </tr>`).join('')}
               </tbody>
             </table></div>`;

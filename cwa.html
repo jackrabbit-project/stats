@@ -30,8 +30,8 @@
   <main id="main" class="flex-1 max-w-6xl mx-auto w-full px-4 py-6 space-y-8"></main>
   <footer id="site-footer" class="bg-asfa-navy text-white py-8"></footer>
 
-  <script src="js/app.js?v=20261011k"></script>
-  <script src="js/racing.js?v=20261011j"></script>
+  <script src="js/app.js?v=20261012a"></script>
+  <script src="js/racing.js?v=20261012a"></script>
   <script>
     /* CWA in the Whippet racing section (beta). The whippets are CWA's
        grading guides, keyed by CWA number: the current guide in
@@ -81,6 +81,15 @@
       const ownersOf = (w) => (w.owner_raw || '').split('/').map((part) => part.trim()).filter(Boolean);
       const ownerUrl = (owner, archive) =>
         `cwa.html?owner=${encodeURIComponent(owner)}${archive ? '&archive=1' : ''}#browse`;
+      // A whippet's owners as its guide prints them, each a link to its kennel.
+      const guideOwners = (w) => linkOwners(w.owner_raw,
+        ownersOf(w).map((name) => ({ name, href: ownerUrl(name, w.on === 'archive') })));
+      // An owner on one of CWA's lists links straight to its kennel when the
+      // current guide carries the name; otherwise the kennel opens with the
+      // archived guide loaded.
+      const currentOwners = new Set(whippets.flatMap(ownersOf));
+      const listOwners = (text) => linkOwners(text, (text || '').split('/').map((part) => part.trim()).filter(Boolean)
+        .map((name) => ({ name, href: ownerUrl(name, !currentOwners.has(name)) })));
 
       document.title = 'CWA whippet racing — Gazehound Stats';
 
@@ -228,9 +237,7 @@
                 ${badges ? `<p class="text-xs text-asfa-text/70 mt-1">CWA titles on record: ${badges}</p>` : ''}
                 <p class="text-sm text-asfa-text/70 mt-1">Whippet${w.cwa_no ? ` · CWA No. <span class="font-mono text-xs">${esc(w.cwa_no)}</span>` : ''}${
                   w.on === 'archive' ? ' · <span class="badge badge-flat">archived guide</span>' : ''}</p>
-                ${w.owner_raw ? `<p class="text-sm mt-1">Owned by ${ownersOf(w).length
-                  ? ownersOf(w).map((owner) => `<a href="${ownerUrl(owner, w.on === 'archive')}" class="lnk">${esc(owner)}</a>`).join(' / ')
-                  : esc(w.owner_raw)}</p>` : ''}
+                ${w.owner_raw ? `<p class="text-sm mt-1">Owned by ${guideOwners(w)}</p>` : ''}
                 <p class="text-xs text-asfa-text/65 mt-1">${where}${shared}</p>
               </div>
             </div>
@@ -323,7 +330,7 @@
             <tr>
               <td class="num font-semibold">${row.place}</td>
               <td>${dogLink(row.dog, row.call_name)}</td>
-              ${full ? `<td class="text-asfa-text/80">${esc(row.registered_name)}</td><td class="text-asfa-text/80">${esc(row.owners)}</td>` : ''}
+              ${full ? `<td class="text-asfa-text/80">${esc(row.registered_name)}</td><td class="text-asfa-text/80">${listOwners(row.owners)}</td>` : ''}
               <td class="num font-semibold text-asfa-accent">${ptsLabel(row.points)}</td>
             </tr>`).join('')}</tbody>
         </table></div>`;
@@ -576,7 +583,7 @@
               <tr class="${w.on === 'current' ? '' : 'text-asfa-text/70'}">
                 <td>${dogLink(w.id, callName(w))}${w.on === 'archive' ? ' <span class="badge badge-flat">archived</span>' : ''}</td>
                 <td class="text-asfa-text/80">${esc(w.registered_name || w.name)}</td>
-                <td class="text-asfa-text/80">${esc(w.owner_raw || '')}</td>
+                <td class="text-asfa-text/80">${guideOwners(w)}</td>
                 <td>${gradeOf(w)}</td>
                 <td class="num">${waveLabel(w.avg)}</td>
                 <td class="num">${w.arx_status ? '<span class="badge badge-t-tcp">ARX</span>' : ptsLabel(w.arx_points)}</td>
@@ -587,7 +594,9 @@
               </tr>`).join('')}</tbody>
           </table></div>
           ${shown.length < matched.length ? `<p class="text-sm mt-3 no-print"><button type="button" id="browse-all" class="lnk">Show all ${n(matched.length)}</button></p>` : ''}`
-          : '<p class="text-sm text-asfa-text/70 py-3">No whippet matches.</p>';
+          : `<p class="text-sm text-asfa-text/70 py-3">${ownerFilter && showArchive && !browseSearch.value.trim()
+            ? `No whippet on CWA's grading guides lists ${esc(ownerFilter)} as an owner; CWA's lists may spell the name another way.`
+            : 'No whippet matches.'}</p>`;
         wireSort(browseTable, BROWSE, sort, paintBrowse);
         const clear = document.getElementById('owner-clear');
         if (clear) {
@@ -636,8 +645,11 @@
       }
       paintToggle();
       paintBrowse();
-      // An archived whippet's owner link asks for the archive, so the kennel is not empty.
-      if (param('archive') === '1') document.getElementById('archive-button').click();
+      // An archived whippet's owner link asks for the archive, and so does an
+      // owner the current guide does not carry, so the kennel is not empty.
+      if (param('archive') === '1' || (ownerFilter && !currentOwners.has(ownerFilter))) {
+        document.getElementById('archive-button').click();
+      }
       window.addEventListener('beforeprint', () => { if (!showAllRows) { showAllRows = true; paintBrowse(); } });
 
       /* ----- kennels: owners on the current guide */
@@ -684,7 +696,7 @@
               <tr>
                 <td class="num font-semibold">${row.place}</td>
                 <td>${dogLink(row.dog, row.name)}</td>
-                <td class="text-asfa-text/80">${esc(row.owners)}</td>
+                <td class="text-asfa-text/80">${listOwners(row.owners)}</td>
                 <td>${row.sex === 'dog' ? 'Dog' : row.sex === 'bitch' ? 'Bitch' : '—'}</td>
                 <td class="num font-semibold text-asfa-accent">${ptsLabel(row.points)}</td>
               </tr>`).join('')}</tbody>
@@ -729,7 +741,7 @@
                 <td class="whitespace-nowrap">${when(row)}</td>
                 <td class="whitespace-nowrap">${titleBadge(row)}</td>
                 <td>${dogLink(row.dog, row.name)}</td>
-                <td class="text-asfa-text/80">${row.owners ? esc(row.owners) : '—'}</td>
+                <td class="text-asfa-text/80">${row.owners ? listOwners(row.owners) : '—'}</td>
               </tr>`).join('')}</tbody>
           </table></div>
           ${rows.length > shown.length ? `<p class="text-sm mt-3 no-print"><button type="button" id="titles-all" class="lnk">Show all ${n(rows.length)}</button></p>` : ''}`

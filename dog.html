@@ -28,7 +28,7 @@
   <main id="main" class="flex-1 max-w-5xl mx-auto w-full px-4 py-6 space-y-6"></main>
   <footer id="site-footer" class="bg-asfa-navy text-white py-8"></footer>
 
-  <script src="js/app.js?v=20261011k"></script>
+  <script src="js/app.js?v=20261012a"></script>
   <script src="js/card.js?v=20260924k"></script>
   <script>
     page('dog.html', (season) => {
@@ -228,7 +228,7 @@
                   <td>${other.id === dog.id
                     ? esc(other.call_name)
                     : `<a href="${dogUrl(other.id)}" class="lnk">${esc(other.call_name)}</a>`}</td>
-                  <td class="text-asfa-text/80">${esc(other.owner_raw)}</td>
+                  <td class="text-asfa-text/80">${asfaOwners(other, season)}</td>
                   <td class="num">${other.points}</td>
                   ${dog.is_breed
                     ? `<td class="num">${other.bob}</td><td class="num">${other.bif}</td>`
