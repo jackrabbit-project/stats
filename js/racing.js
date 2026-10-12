@@ -240,7 +240,7 @@ const ORGS = {
     overviewTiles: (stats) => [
       [stats.hounds_raced ?? '—', 'whippets racing this year'],
       [stats.hounds_ytd, 'with National points this year'],
-      [stats.meets_this_year, 'meets verified this year'],
+      [stats.meets_this_year, 'meets this year'],
       [stats.wrch_this_year, 'WRCh titles earned this year'],
       [stats.titled_wrch, 'WRCh titled, all time'],
     ],

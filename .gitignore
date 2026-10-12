@@ -32,6 +32,9 @@ data/notra/raw/
 # under data/notra-whippets/snapshots and data/wra/snapshots are the archive.
 data/notra-whippets/raw/
 data/wra/raw/
+# CWA's pages, chart data and title sheets as downloaded; its pages carry a
+# contact address. data/cwa/snapshots is the archive.
+data/cwa/raw/
 # The AKC collections under data/akc/raw/ ARE committed: they hold club
 # names, cities and entry counts only, and check.py greps them for anything
 # else.
