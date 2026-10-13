@@ -1208,6 +1208,9 @@ RACING = {
         # completed meets, SOR after six legs.
         "waves": ["wave"],
         "meet_streams": ["meets"],
+        # Meets are dated, not coded: the code is the date cell as typed, and
+        # one meet can be typed two ways (1/3/2026 and 3/1/2026, March 1).
+        "dated_meets": True,
         "champion": [
             ("titled_orc", "orc", lambda row: (row["orc"] or 0) >= 12),
             ("titled_jor", "jor", lambda row: (row["jor"] or 0) >= 4),
@@ -1658,7 +1661,7 @@ def check_racing(check: Checker, org: str) -> None:
                 check.expect(spec.get("earliest_year", 1995) <= year <= season,
                              f"{label}: meet {code} year {year} out of range")
                 if year == season:
-                    this_year.add(code)
+                    this_year.add(when if spec.get("dated_meets") and when else code)
                 if org == "lgra":
                     match = re.match(r"^([A-Z]{1,2})(\d{1,3})", code)
                     check.expect(bool(match) and LGRA_YEARS.get(match.group(1)) == year,

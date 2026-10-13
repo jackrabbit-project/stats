@@ -1844,8 +1844,9 @@ function renderRacingDog(org, feed, main, singles = null) {
           </table></div>${spec.statusLegend ? `
           <p class="text-xs text-asfa-text/65 mt-2">${spec.statusLegend}</p>` : ''}${meets.some((m) => m.read) ? `
           <p class="text-xs text-asfa-text/65 mt-2">${meets.filter((m) => m.read).map((m) =>
-            `<span class="font-mono">${esc(m.code)}</span> is read as ${formatDateShort(m.date)}`).join('; ')}:
-            the cell falls after the guide's own date, so its day and month are taken the other way round.</p>` : ''}` : `<p class="text-sm text-asfa-text/70">No meets listed.</p>`}
+            `<span class="font-mono">${esc(m.code)}</span> is read as ${formatDateShort(m.date)}: ${m.read === 'order'
+              ? 'the guide lists meets newest first, and only that reading keeps them in order'
+              : "the cell falls after the guide's own date, so its day and month are taken the other way round"}.`).join(' ')}</p>` : ''}` : `<p class="text-sm text-asfa-text/70">No meets listed.</p>`}
         </section>`;
     }).join('');
 

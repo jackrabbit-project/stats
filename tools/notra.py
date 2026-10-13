@@ -351,6 +351,36 @@ def swap_day_month(iso: str) -> str | None:
     return date(year, day, month).isoformat()
 
 
+def order_dates(meets: list[dict], guide_date: str) -> list[dict]:
+    """The guide lists a hound's meets newest first. A date that reads either
+    way round (1/3/2026: January 3 or March 1) and sits out of that order is
+    read the other way round when that single change, and no other, puts the
+    row back in order: 1/3/2026 listed above 8/2/2026 (February 8) is March 1.
+    Rows the guide itself lists out of order (a Saturday after its Sunday)
+    stay as written."""
+    def in_order(dates: list[str | None]) -> bool:
+        known = [when for when in dates if when]
+        return all(newer >= older for newer, older in zip(known, known[1:]))
+
+    dates = [meet["date"] for meet in meets]
+    if in_order(dates):
+        return meets
+    fixes = []
+    for index, meet in enumerate(meets):
+        if not meet["date"] or meet["read"]:
+            continue
+        other = swap_day_month(meet["date"])
+        if not other or other == meet["date"] or not (
+                EARLIEST_MEET_YEAR <= int(other[:4]) and other <= guide_date):
+            continue
+        if in_order(dates[:index] + [other] + dates[index + 1:]):
+            fixes.append((index, other))
+    if len(fixes) == 1:
+        index, other = fixes[0]
+        meets[index] = {**meets[index], "date": other, "year": int(other[:4]), "read": "order"}
+    return meets
+
+
 def parse_faults(text: str) -> dict | None:
     """The DQ/OC/DNF column: three counts, disqualifications, off-course runs
     and did-not-finishes, as "0/1/2"."""
@@ -400,8 +430,8 @@ def derive(snapshot: dict) -> list[dict]:
                     "status": meet["status"],
                     "read": read,
                 })
-            dog["meets"] = meets
-            dog["last_raced"] = last_raced(meets)
+            dog["meets"] = order_dates(meets, guide_date)
+            dog["last_raced"] = last_raced(dog["meets"])
             dog["faults"] = parse_faults(dog.pop("faults_raw"))
 
             computed = wave([(m["score"], m["complete"]) for m in meets])
@@ -575,8 +605,12 @@ def build(snapshots: list[dict]) -> tuple[dict, dict]:
             "Meets are dated rather than coded; code is the date cell as written. "
             "A date cell that falls after the guide itself is read with day and "
             "month the other way round when that lands it inside the guide "
-            "(12/4/2026 as April 12, read = day/month); a date the recorder "
-            "mistyped (5/24/2206) is kept as written and counts as undated. FTE "
+            "(12/4/2026 as April 12, read = day/month). The guide lists a hound's "
+            "meets newest first, so a date that reads either way round and sits out "
+            "of that order is read the other way round when that single change puts "
+            "the row back in order (1/3/2026 above February 8 is March 1, read = "
+            "order). A date the recorder mistyped (5/24/2206) is kept as written "
+            "and counts as undated. FTE "
             "and PEND rows are hounds without a race number yet; they keep those "
             "labels as their ids, numbered -2, -3 in sheet order.",
         ],
