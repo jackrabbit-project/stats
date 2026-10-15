@@ -5,8 +5,8 @@
  "season": 2026,
  "standings_kind": "Mid-Year",
  "source_url": "https://www.continentalwhippetalliance.com/2026-toptens",
- "sha256": "e43108e2168782bdb28982e5cdcd69ec9d4d9157813601b359d802c1751157b8",
- "fetched": "2026-10-11",
+ "sha256": "7550c691f52e351d25a4f95c31b47409869415017d4ae32c52ab27dcf4204906",
+ "fetched": "2026-10-15",
  "standings": {
   "high_combined": {
    "label": "2026 High Combined Standings as of 9/30/2026 (42 Race Meets)",
@@ -25775,6 +25775,29 @@
      "completed_meets": 35
     },
     {
+     "cwa_no": "3851",
+     "call_name": "Jasper",
+     "registered_name": "GCH Solidago Karasar Folie A Deux",
+     "owner_raw": "Mundy / LoPinto",
+     "grade": "FTE",
+     "avg": 0.0,
+     "dpc_points": null,
+     "dpc_status": "CH",
+     "hc": null,
+     "arx_points": null,
+     "arx_status": null,
+     "narx": null,
+     "trp_meets": null,
+     "trp_status": null,
+     "dq": null,
+     "dq_date": null,
+     "meets": [],
+     "pr_points": 0.0,
+     "year_last_run": null,
+     "never_raced": true,
+     "completed_meets": null
+    },
+    {
      "cwa_no": "3791",
      "call_name": "Jefé",
      "registered_name": "CH Snow Hill Cherche’ Candy Man At Elidas",
@@ -27195,45 +27218,6 @@
      "completed_meets": 35
     },
     {
-     "cwa_no": "3619",
-     "call_name": "Mimic",
-     "registered_name": "CanCH SaeSi Lejend Copycat",
-     "owner_raw": "Magee",
-     "grade": "B",
-     "avg": 10.16666667,
-     "dpc_points": null,
-     "dpc_status": "CH",
-     "hc": null,
-     "arx_points": null,
-     "arx_status": null,
-     "narx": null,
-     "trp_meets": 3.0,
-     "trp_status": null,
-     "dq": null,
-     "dq_date": null,
-     "meets": [
-      [
-       "2025-10-25",
-       "GA",
-       9.0
-      ],
-      [
-       "2025-08-31",
-       "WI",
-       8.0
-      ],
-      [
-       "2025-05-24",
-       "WI",
-       13.5
-      ]
-     ],
-     "pr_points": 30.5,
-     "year_last_run": 2025,
-     "never_raced": false,
-     "completed_meets": null
-    },
-    {
      "cwa_no": "3828",
      "call_name": "Mimic - B",
      "registered_name": "Curve's Hot Sauce Committee",
@@ -27269,6 +27253,45 @@
      ],
      "pr_points": 0.0,
      "year_last_run": 2026,
+     "never_raced": false,
+     "completed_meets": null
+    },
+    {
+     "cwa_no": "3619",
+     "call_name": "Mimic - M",
+     "registered_name": "CanCH SaeSi Lejend Copycat",
+     "owner_raw": "Magee",
+     "grade": "B",
+     "avg": 10.16666667,
+     "dpc_points": null,
+     "dpc_status": "CH",
+     "hc": null,
+     "arx_points": null,
+     "arx_status": null,
+     "narx": null,
+     "trp_meets": 3.0,
+     "trp_status": null,
+     "dq": null,
+     "dq_date": null,
+     "meets": [
+      [
+       "2025-10-25",
+       "GA",
+       9.0
+      ],
+      [
+       "2025-08-31",
+       "WI",
+       8.0
+      ],
+      [
+       "2025-05-24",
+       "WI",
+       13.5
+      ]
+     ],
+     "pr_points": 30.5,
+     "year_last_run": 2025,
      "never_raced": false,
      "completed_meets": null
     },
@@ -32663,6 +32686,29 @@
      "pr_points": 1016.25,
      "year_last_run": 2026,
      "never_raced": false,
+     "completed_meets": null
+    },
+    {
+     "cwa_no": "3850",
+     "call_name": "Wonder",
+     "registered_name": "CH Snow Hill Superstition",
+     "owner_raw": "Lonnstrom",
+     "grade": "FTE",
+     "avg": 0.0,
+     "dpc_points": null,
+     "dpc_status": "CH",
+     "hc": null,
+     "arx_points": null,
+     "arx_status": null,
+     "narx": null,
+     "trp_meets": null,
+     "trp_status": null,
+     "dq": null,
+     "dq_date": null,
+     "meets": [],
+     "pr_points": 0.0,
+     "year_last_run": null,
+     "never_raced": true,
      "completed_meets": null
     },
     {
