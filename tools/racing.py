@@ -27,6 +27,7 @@ import json
 import re
 from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
+from urllib.parse import unquote
 
 import requests
 
@@ -452,7 +453,9 @@ def _content(snapshot: dict) -> str:
 
 def redate_if_label_stale(snapshot_dir: Path, snapshot: dict, seen: str) -> dict:
     """AOK9 dates its sheets only by an "updated M/D/YY" label on its
-    documents page, and revises a sheet without always moving the label:
+    documents page (repeated in each sheet's own title, which is read
+    instead when the page is out of reach), and revises a sheet without
+    always moving the label:
     both sheets changed between September 28 and October 2, 2026 while the
     page still read "updated 9/9/26". A sheet whose label is no newer than
     the newest snapshot keeps that snapshot's date when it says the same,
@@ -469,7 +472,7 @@ def redate_if_label_stale(snapshot_dir: Path, snapshot: dict, seen: str) -> dict
         guide_date, source = kept["guide_date"], kept["guide_date_source"]
     else:
         guide_date, source = max(seen, kept["guide_date"]), "seen"
-        print(f"The sheet changed but its page label still reads {snapshot['guide_date']}; "
+        print(f"The sheet changed but its label still reads {snapshot['guide_date']}; "
               f"dating it {guide_date}, the day it was first seen.")
     return {**snapshot, "guide_date": guide_date, "guide_date_source": source,
             "season": int(guide_date[:4])}
@@ -642,6 +645,21 @@ def fetch_text(url: str, user_agent: str = USER_AGENT, timeout: int = 30) -> str
     response = requests.get(url, headers={"User-Agent": user_agent}, timeout=timeout)
     response.raise_for_status()
     return response.text
+
+
+def fetch_download(url: str, user_agent: str = USER_AGENT,
+                   timeout: int = 60) -> tuple[bytes, str]:
+    """A file and the name it is served under. Google's export names the
+    file after the sheet's title, spelled out in full only in the header's
+    filename* form ("AOK9 Sprint Grading Guide - updated 10/9/26.xlsx")."""
+    response = requests.get(url, headers={"User-Agent": user_agent}, timeout=timeout)
+    response.raise_for_status()
+    header = response.headers.get("Content-Disposition", "")
+    match = re.search(r"filename\*=UTF-8''([^;]+)", header, re.IGNORECASE)
+    if match:
+        return response.content, unquote(match.group(1).strip())
+    match = re.search(r'filename="([^"]*)"', header)
+    return response.content, match.group(1) if match else ""
 
 
 def slug(text: str) -> str:

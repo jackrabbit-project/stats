@@ -23,7 +23,9 @@ in the sprint registry, so a dog that races both keeps one page. Where the
 sprint guide writes titles after the registered name the Singles records give
 the same dog bare, the dog takes the sprint guide's name; see
 sprint_titles_added. A changed sheet under an unmoved "updated" label is dated
-by the day it was first seen, as in tools/aok9.py.
+by the day it was first seen, and while the documents page is out of reach the
+label is read from the sheet's own title ("AOK9 Singles Records - updated
+10/9/26"), both as in tools/aok9.py.
 
 Usage:
     python tools/aok9_singles.py                    # fetch, archive if changed, rebuild
@@ -45,11 +47,13 @@ from pathlib import Path
 
 import requests
 
-from aok9 import EXPORT_USER_AGENT, LINK_PAGE, SITE_URL, UPDATED_RE, find_header_row
+from aok9 import (
+    EXPORT_USER_AGENT, LINK_PAGE, SITE_URL, UPDATED_RE, find_header_row, title_date,
+)
 from names import split_titles
 from racing import (
     DATA, RacingParseError, breed_display, cell_num, cell_str, decode_aok9_meet,
-    decode_or_keep, derive_identity, fetch_bytes, file_raw, last_raced, fetch_text,
+    decode_or_keep, derive_identity, fetch_download, file_raw, last_raced, fetch_text,
     load_snapshots, parse_id, redate_if_label_stale, section_header, sha256, slug,
     super_level, today, write_json, write_snapshot_if_changed,
 )
@@ -146,20 +150,31 @@ def find_guide_date(html: str) -> date:
     return date(year, month, day)
 
 
-def fetch() -> tuple[Path, date]:
+def fetch() -> tuple[Path, date, str]:
+    """The sheet, its date, and where the date was read ("page" or "title"),
+    as in tools/aok9.py."""
     RAW_DIR.mkdir(parents=True, exist_ok=True)
-    guide_date = find_guide_date(fetch_text(LINK_PAGE))
-    raw = fetch_bytes(EXPORT_URL, user_agent=EXPORT_USER_AGENT)
+    try:
+        guide_date, source = find_guide_date(fetch_text(LINK_PAGE)), "page"
+    except requests.RequestException as error:
+        print(f"Could not read the documents page ({error}); dating the Singles "
+              f"records by their title.", file=sys.stderr)
+        guide_date, source = None, "title"
+    raw, name = fetch_download(EXPORT_URL, user_agent=EXPORT_USER_AGENT)
     if not raw.startswith(b"PK"):
         raise RacingParseError(
             "The export did not return a workbook (no zip signature); Google "
             "may have answered with a sign-in page."
         )
+    if guide_date is None:
+        guide_date = title_date(name, "Singles records")
     # Filed under its date once the date is settled (file_raw).
     target = RAW_DIR / "fetched.xlsx"
     target.write_bytes(raw)
-    print(f"Fetched the Singles records labelled updated {guide_date}  {len(raw):,} bytes")
-    return target, guide_date
+    where = "beside their link" if source == "page" else "in their title"
+    print(f"Fetched the Singles records labelled updated {guide_date} {where}  "
+          f"{len(raw):,} bytes")
+    return target, guide_date, source
 
 
 # ------------------------------------------------------------------- parse
@@ -611,7 +626,8 @@ def main() -> int:
     parser.add_argument("--file", type=Path,
                         help="parse this workbook instead of fetching (needs --date)")
     parser.add_argument("--date", type=date.fromisoformat,
-                        help="the records' date, when it cannot be read from the link page")
+                        help="the records' date, when neither the link page nor the "
+                             "sheet's title gives it")
     parser.add_argument("--offline", action="store_true",
                         help="rebuild the feed from archived snapshots without fetching")
     parser.add_argument("--seen", type=lambda text: date.fromisoformat(text).isoformat(),
@@ -631,12 +647,11 @@ def main() -> int:
                     parser.error("--file needs --date, the sheet has no date cell of its own")
                 path, guide_date, source = args.file, args.date, "cli"
             else:
-                path, guide_date = fetch()
-                source = "page"
+                path, guide_date, source = fetch()
                 if args.date:
                     guide_date, source = args.date, "cli"
             snapshot = parse_workbook(path, guide_date, source)
-            if source == "page":
+            if source in ("page", "title"):
                 snapshot = redate_if_label_stale(SNAPSHOT_DIR, snapshot, args.seen or today())
             if not args.file:
                 file_raw(path, snapshot)

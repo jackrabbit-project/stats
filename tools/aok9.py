@@ -12,6 +12,12 @@ AOK9 does not always move the label when it re-issues the sheet; a changed
 sheet under an unmoved label is dated by the day it was first seen (see
 racing.redate_if_label_stale).
 
+The sheet's own title repeats the label ("AOK9 Sprint Grading Guide - updated
+10/9/26"), and Google names the download after it. As of October 15, 2026 the
+documents page answers scripts with Cloudflare's "Verify you are human" check;
+while the page is out of reach, the guide is dated by its title
+(guide_date_source "title") and everything else works as before.
+
 Usage:
     python tools/aok9.py                    # fetch, archive if changed, rebuild
     python tools/aok9.py --force            # archive even if unchanged
@@ -35,7 +41,7 @@ from racing import (
     DATA, RacingParseError, breed_display, build_movement, build_owners,
     cell_num, cell_str, compact_registry, cumulative_titles, decode_aok9_meet,
     decode_or_keep, last_raced,
-    derive_identity, fetch_bytes, fetch_text, file_raw, grade, section_header,
+    derive_identity, fetch_download, fetch_text, file_raw, grade, section_header,
     load_snapshots, parse_id, rank_by, read_rows_xlsx, redate_if_label_stale,
     sha256, slug, super_level, today, wave, write_json, write_snapshot_if_changed,
 )
@@ -125,21 +131,47 @@ def find_guide_date(html: str) -> date:
     return date(year, month, day)
 
 
-def fetch() -> tuple[Path, date]:
+def title_date(name: str, what: str) -> date:
+    """The "updated 10/9/26" in a sheet's title, as Google names the
+    download ("AOK9 Sprint Grading Guide - updated 10/9/26.xlsx")."""
+    match = UPDATED_RE.search(name)
+    if not match:
+        raise RacingParseError(
+            f"The documents page is out of reach and the {what} title carries no "
+            f"'updated M/D/YY' ({name or 'no file name'!r}); pass --file and --date"
+        )
+    month, day, year = (int(part) for part in match.groups())
+    if year < 100:
+        year += 2000
+    return date(year, month, day)
+
+
+def fetch() -> tuple[Path, date, str]:
+    """The sheet, its date, and where the date was read: beside the link on
+    the documents page ("page"), or in the sheet's title ("title") while the
+    page is out of reach."""
     RAW_DIR.mkdir(parents=True, exist_ok=True)
-    guide_date = find_guide_date(fetch_text(LINK_PAGE))
-    raw = fetch_bytes(EXPORT_URL, user_agent=EXPORT_USER_AGENT)
+    try:
+        guide_date, source = find_guide_date(fetch_text(LINK_PAGE)), "page"
+    except requests.RequestException as error:
+        print(f"Could not read the documents page ({error}); dating the sprint "
+              f"guide by its title.", file=sys.stderr)
+        guide_date, source = None, "title"
+    raw, name = fetch_download(EXPORT_URL, user_agent=EXPORT_USER_AGENT)
     if not raw.startswith(b"PK"):
         raise RacingParseError(
             "The export did not return a workbook (no zip signature); Google "
             "may have answered with a sign-in page."
         )
+    if guide_date is None:
+        guide_date = title_date(name, "sprint guide")
     # Filed under its date once the date is settled (file_raw): the label
     # alone may belong to an earlier sheet.
     target = RAW_DIR / "fetched.xlsx"
     target.write_bytes(raw)
-    print(f"Fetched the sprint guide labelled updated {guide_date}  {len(raw):,} bytes")
-    return target, guide_date
+    where = "beside its link" if source == "page" else "in its title"
+    print(f"Fetched the sprint guide labelled updated {guide_date} {where}  {len(raw):,} bytes")
+    return target, guide_date, source
 
 
 # ------------------------------------------------------------------- parse
@@ -525,7 +557,8 @@ def main() -> int:
     parser.add_argument("--file", type=Path,
                         help="parse this workbook instead of fetching (needs --date)")
     parser.add_argument("--date", type=date.fromisoformat,
-                        help="the guide's date, when it cannot be read from the link page")
+                        help="the guide's date, when neither the link page nor the "
+                             "sheet's title gives it")
     parser.add_argument("--offline", action="store_true",
                         help="rebuild the feed from archived snapshots without fetching")
     parser.add_argument("--seen", type=lambda text: date.fromisoformat(text).isoformat(),
@@ -540,12 +573,11 @@ def main() -> int:
                     parser.error("--file needs --date, the guide has no date cell of its own")
                 path, guide_date, source = args.file, args.date, "cli"
             else:
-                path, guide_date = fetch()
-                source = "page"
+                path, guide_date, source = fetch()
                 if args.date:
                     guide_date, source = args.date, "cli"
             snapshot = parse_workbook(path, guide_date, source)
-            if source == "page":
+            if source in ("page", "title"):
                 snapshot = redate_if_label_stale(SNAPSHOT_DIR, snapshot, args.seen or today())
             if not args.file:
                 file_raw(path, snapshot)
