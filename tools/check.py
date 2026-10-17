@@ -1273,8 +1273,10 @@ RACING = {
         "owner_best": "wave",
         "wave_rule": "recorder",
         "wave_agreement": 0.95,
+        # The October 14, 2026 guide added 6847 Swirl-S at the foot of the
+        # sheet with a WAVE of 8 and a blank grade cell.
         "grades": {"field": "grade", "bands": [(15.2, "A"), (11, "B"), (7.6, "C")], "floor": "D",
-                   "min_share": 0.99, "round": 2},
+                   "min_share": 0.99, "round": 2, "ungraded_max": 2},
         "expected_sections": None,
         "id_pattern": r"^\d+$",
         "undecoded_share": 0.03,
@@ -1632,9 +1634,14 @@ def check_racing(check: Checker, org: str) -> None:
             check.expect(agree >= grades["min_share"] * len(banded),
                          f"{label}: grades follow the bands for only {agree} of {len(banded)}")
             allowed = {"A", "B", "C", "D", *grades.get("extra", ())}
-            check.expect(all(row[field] in allowed or (row[field] is None and row[wave_field] is None)
-                             for row in scope),
-                         f"{label}: a grade outside {sorted(allowed)}, or a grade without a figure")
+            check.expect(all(row[field] in allowed or row[field] is None for row in scope),
+                         f"{label}: a grade outside {sorted(allowed)}")
+            # A figure the officer left ungraded stays blank, as printed; more
+            # than a few would mean the grade column was misread.
+            ungraded = [row["id"] for row in scope
+                        if row[field] is None and row[wave_field] is not None]
+            check.expect(len(ungraded) <= grades.get("ungraded_max", 0),
+                         f"{label}: {len(ungraded)} with a {wave_field} but no grade: {ungraded[:5]}")
         else:
             grade_field = {"wave": "grade", "bwave": "bgrade", "mwave": "mgrade"}[wave_field]
             for row in rows:
