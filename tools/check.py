@@ -980,7 +980,7 @@ def check_akc(check: Checker) -> None:
                 f"akc {label} ranking {name}: feed {g}, re-derived {w}",
             )
 
-    # Competitors by breed, re-derived from each trial's stakes in the
+    # Starters by breed, re-derived from each trial's stakes in the
     # collection: a trial's stakes add up to its competitors, and a breed's
     # figures are its starters over the trials it ran in.
     raw_events = collection["events"]

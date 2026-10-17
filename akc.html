@@ -55,7 +55,7 @@
         : '<span class="badge badge-flat">Not yet</span>');
 
       const { trials, clubs, states } = feed.rankings;
-      // Competitors by breed: null for a collection made before AKC's stakes were kept.
+      // Starters by breed: null for a collection made before AKC's stakes were kept.
       const breedTable = feed.rankings.breeds && feed.rankings.breeds.length ? feed.rankings.breeds : null;
       const unrankedStates = states.filter((s) => s.rank == null);
       const unrankedClubs = clubs.filter((c) => c.rank == null);
@@ -123,12 +123,12 @@
 
         ${breedTable ? `
         <section class="card" id="breeds">
-          <h2 class="card-title">Competitors by breed</h2>
-          <p class="text-xs text-asfa-text/55 mb-2">Each breed's Open, Specials and Veterans stakes at the trials with results posted, ranked on competitors.</p>
+          <h2 class="card-title">Starters by breed</h2>
+          <p class="text-xs text-asfa-text/55 mb-2">Each breed's Open, Specials and Veterans stakes at the trials with results posted, ranked on starters. A hound counts once in every trial it runs, so a hound that ran six trials counts six times.</p>
           <div class="tbl-wrap"><table class="tbl">
             <thead><tr>
               <th scope="col" class="num">#</th><th scope="col">Breed</th>
-              <th scope="col" class="num">Trials</th><th scope="col" class="num">Competitors</th>
+              <th scope="col" class="num">Trials</th><th scope="col" class="num">Starters</th>
               <th scope="col" class="num">Avg</th><th scope="col" class="num">Largest</th>
             </tr></thead>
             <tbody>
@@ -234,8 +234,8 @@
             <li>Trial entries are the Open, Specials and Veterans stakes. Test entries are the Junior Courser
               and Qualified Courser tests.</li>
             <li>Competitors are the hounds that actually ran; entries include those that scratched.</li>
-            <li>Competitors by breed are read from the stakes in each trial's posted results: the hounds that
-              started in each breed's Open, Specials and Veterans stakes.</li>
+            <li>Starters by breed are read from the stakes in each trial's posted results: the hounds that
+              started in each breed's Open, Specials and Veterans stakes, counted once in every trial they ran.</li>
             <li>A blank count means no test (or no trial) was held, or that AKC had not yet posted the
               event's results.</li>
             <li>Coursing Ability Tests and Fast CAT are not included.</li>

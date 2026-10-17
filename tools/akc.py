@@ -246,7 +246,7 @@ def build(collection: dict, source_file: str, digest: str) -> dict:
     for state in states:
         del state["states"]
 
-    # Competitors by breed: a breed's Open, Special and Veteran starters at
+    # Starters by breed: a breed's Open, Special and Veteran starters at
     # each posted trial, together, over the trials it ran in. None for a
     # collection made before the stakes were kept.
     breeds = None
