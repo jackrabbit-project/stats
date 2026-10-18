@@ -818,7 +818,7 @@ function initSiteSearch(trigger) {
 
 const NAV_ASFA = [
   ['asfa.html', 'Overview'],
-  ['browse.html', 'Browse'],
+  ['browse.html', 'Standings'],
   ['leaders.html', 'Leaders'],
   ['kennels.html', 'Kennels'],
   ['regions.html', 'Regions'],
