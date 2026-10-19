@@ -1,0 +1,9710 @@
+{
+ "collected": "2026-10-19",
+ "period": {
+  "start": "2026-01-01",
+  "end": "2026-10-19"
+ },
+ "source": {
+  "name": "AKC Event Search",
+  "url": "https://webapps.akc.org/event-search/#/results",
+  "search": "https://webapps.akc.org/event-search/api/search/events",
+  "event_url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number={number}"
+ },
+ "events": [
+  {
+   "date": "2026-01-03",
+   "day": "Sat",
+   "club": "Sunshine State Rhodesian Ridgeback Club",
+   "city": "Weirsdale",
+   "state": "FL",
+   "event_number": "2026702901",
+   "event_type": "LCTR/LCTS",
+   "scope": "All-breed",
+   "specialty": false,
+   "trial_entries": 35,
+   "trial_competitors": 34,
+   "test_entries": 12,
+   "test_competitors": 12,
+   "total_entries": 47,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026702901",
+   "trial_stakes": [
+    [
+     "Open",
+     "Cirneco dell'Etna",
+     1
+    ],
+    [
+     "Open",
+     "Ibizan Hound",
+     4
+    ],
+    [
+     "Open",
+     "Rhodesian Ridgeback",
+     1
+    ],
+    [
+     "Open",
+     "Saluki",
+     1
+    ],
+    [
+     "Open",
+     "Whippet",
+     4
+    ],
+    [
+     "Special",
+     "Afghan Hound",
+     1
+    ],
+    [
+     "Special",
+     "Cirneco dell'Etna",
+     5
+    ],
+    [
+     "Special",
+     "Ibizan Hound",
+     5
+    ],
+    [
+     "Special",
+     "Rhodesian Ridgeback",
+     3
+    ],
+    [
+     "Special",
+     "Saluki",
+     2
+    ],
+    [
+     "Special",
+     "Whippet",
+     3
+    ],
+    [
+     "Veteran",
+     "Ibizan Hound",
+     4
+    ]
+   ]
+  },
+  {
+   "date": "2026-01-04",
+   "day": "Sun",
+   "club": "Sunshine State Rhodesian Ridgeback Club",
+   "city": "Weirsdale",
+   "state": "FL",
+   "event_number": "2026702902",
+   "event_type": "LCTR/LCTS",
+   "scope": "All-breed",
+   "specialty": false,
+   "trial_entries": 41,
+   "trial_competitors": 37,
+   "test_entries": 2,
+   "test_competitors": 2,
+   "total_entries": 43,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026702902",
+   "trial_stakes": [
+    [
+     "Open",
+     "Cirneco dell'Etna",
+     2
+    ],
+    [
+     "Open",
+     "Ibizan Hound",
+     5
+    ],
+    [
+     "Open",
+     "Rhodesian Ridgeback",
+     4
+    ],
+    [
+     "Open",
+     "Whippet",
+     4
+    ],
+    [
+     "Special",
+     "Afghan Hound",
+     1
+    ],
+    [
+     "Special",
+     "Cirneco dell'Etna",
+     5
+    ],
+    [
+     "Special",
+     "Ibizan Hound",
+     5
+    ],
+    [
+     "Special",
+     "Pharaoh Hound",
+     1
+    ],
+    [
+     "Special",
+     "Rhodesian Ridgeback",
+     3
+    ],
+    [
+     "Special",
+     "Whippet",
+     3
+    ],
+    [
+     "Veteran",
+     "Ibizan Hound",
+     4
+    ]
+   ]
+  },
+  {
+   "date": "2026-01-10",
+   "day": "Sat",
+   "club": "Northern California Whippet Fanciers Association",
+   "city": "Elverta",
+   "state": "CA",
+   "event_number": "2026264102",
+   "event_type": "LCTR/LCTS",
+   "scope": "All-breed",
+   "specialty": false,
+   "trial_entries": 59,
+   "trial_competitors": 59,
+   "test_entries": 14,
+   "test_competitors": 14,
+   "total_entries": 73,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026264102",
+   "trial_stakes": [
+    [
+     "Open",
+     "Basenji",
+     6
+    ],
+    [
+     "Open",
+     "Borzoi",
+     4
+    ],
+    [
+     "Open",
+     "Greyhound",
+     4
+    ],
+    [
+     "Open",
+     "Ibizan Hound",
+     3
+    ],
+    [
+     "Open",
+     "Rhodesian Ridgeback",
+     2
+    ],
+    [
+     "Open",
+     "Saluki",
+     7
+    ],
+    [
+     "Open",
+     "Whippet",
+     13
+    ],
+    [
+     "Open",
+     "Whippet",
+     12
+    ],
+    [
+     "Special",
+     "Afghan Hound",
+     2
+    ],
+    [
+     "Special",
+     "Whippet",
+     6
+    ]
+   ]
+  },
+  {
+   "date": "2026-01-11",
+   "day": "Sun",
+   "club": "Northern California Whippet Fanciers Association",
+   "city": "Elverta",
+   "state": "CA",
+   "event_number": "2026264101",
+   "event_type": "LCTR/LCTS",
+   "scope": "All-breed",
+   "specialty": false,
+   "trial_entries": 61,
+   "trial_competitors": 61,
+   "test_entries": 8,
+   "test_competitors": 8,
+   "total_entries": 69,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026264101",
+   "trial_stakes": [
+    [
+     "Open",
+     "Afghan Hound",
+     2
+    ],
+    [
+     "Open",
+     "Basenji",
+     5
+    ],
+    [
+     "Open",
+     "Borzoi",
+     3
+    ],
+    [
+     "Open",
+     "Greyhound",
+     5
+    ],
+    [
+     "Open",
+     "Ibizan Hound",
+     3
+    ],
+    [
+     "Open",
+     "Saluki",
+     4
+    ],
+    [
+     "Open",
+     "Scottish Deerhound",
+     2
+    ],
+    [
+     "Open",
+     "Whippet",
+     14
+    ],
+    [
+     "Open",
+     "Whippet",
+     13
+    ],
+    [
+     "Special",
+     "Basenji",
+     1
+    ],
+    [
+     "Special",
+     "Whippet",
+     8
+    ],
+    [
+     "Veteran",
+     "Basenji",
+     1
+    ]
+   ]
+  },
+  {
+   "date": "2026-01-17",
+   "day": "Sat",
+   "club": "Afghan Hound Club of Dallas",
+   "city": "Celina",
+   "state": "TX",
+   "event_number": "2026073806",
+   "event_type": "LCTR/LCTS",
+   "scope": "All-breed",
+   "specialty": false,
+   "trial_entries": 24,
+   "trial_competitors": 23,
+   "test_entries": 5,
+   "test_competitors": 5,
+   "total_entries": 29,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026073806",
+   "trial_stakes": [
+    [
+     "Open",
+     "Afghan Hound",
+     2
+    ],
+    [
+     "Open",
+     "Basenji",
+     3
+    ],
+    [
+     "Open",
+     "Ibizan Hound",
+     1
+    ],
+    [
+     "Open",
+     "Rhodesian Ridgeback",
+     5
+    ],
+    [
+     "Open",
+     "Whippet",
+     6
+    ],
+    [
+     "Special",
+     "Rhodesian Ridgeback",
+     4
+    ],
+    [
+     "Special",
+     "Whippet",
+     2
+    ]
+   ]
+  },
+  {
+   "date": "2026-01-17",
+   "day": "Sat",
+   "club": "Desert Fun Bunch Sighthound Club",
+   "city": "Black Canyon City",
+   "state": "AZ",
+   "event_number": "2026572902",
+   "event_type": "LCTR/LCTS",
+   "scope": "All-breed",
+   "specialty": false,
+   "trial_entries": 41,
+   "trial_competitors": 41,
+   "test_entries": 2,
+   "test_competitors": 2,
+   "total_entries": 43,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026572902",
+   "trial_stakes": [
+    [
+     "Open",
+     "Borzoi",
+     4
+    ],
+    [
+     "Open",
+     "Ibizan Hound",
+     2
+    ],
+    [
+     "Open",
+     "Rhodesian Ridgeback",
+     7
+    ],
+    [
+     "Open",
+     "Whippet",
+     6
+    ],
+    [
+     "Special",
+     "Borzoi",
+     2
+    ],
+    [
+     "Special",
+     "Ibizan Hound",
+     4
+    ],
+    [
+     "Special",
+     "Pharaoh Hound",
+     3
+    ],
+    [
+     "Special",
+     "Rhodesian Ridgeback",
+     7
+    ],
+    [
+     "Special",
+     "Whippet",
+     3
+    ],
+    [
+     "Veteran",
+     "Rhodesian Ridgeback",
+     1
+    ],
+    [
+     "Veteran",
+     "Whippet",
+     2
+    ]
+   ]
+  },
+  {
+   "date": "2026-01-18",
+   "day": "Sun",
+   "club": "Desert Fun Bunch Sighthound Club",
+   "city": "Black Canyon City",
+   "state": "AZ",
+   "event_number": "2026572901",
+   "event_type": "LCTR/LCTS",
+   "scope": "All-breed",
+   "specialty": false,
+   "trial_entries": 39,
+   "trial_competitors": 39,
+   "test_entries": 4,
+   "test_competitors": 4,
+   "total_entries": 43,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026572901",
+   "trial_stakes": [
+    [
+     "Open",
+     "Borzoi",
+     5
+    ],
+    [
+     "Open",
+     "Ibizan Hound",
+     2
+    ],
+    [
+     "Open",
+     "Rhodesian Ridgeback",
+     6
+    ],
+    [
+     "Open",
+     "Whippet",
+     6
+    ],
+    [
+     "Special",
+     "Borzoi",
+     2
+    ],
+    [
+     "Special",
+     "Ibizan Hound",
+     4
+    ],
+    [
+     "Special",
+     "Pharaoh Hound",
+     3
+    ],
+    [
+     "Special",
+     "Rhodesian Ridgeback",
+     5
+    ],
+    [
+     "Special",
+     "Whippet",
+     3
+    ],
+    [
+     "Veteran",
+     "Rhodesian Ridgeback",
+     1
+    ],
+    [
+     "Veteran",
+     "Whippet",
+     2
+    ]
+   ]
+  },
+  {
+   "date": "2026-01-18",
+   "day": "Sun",
+   "club": "North Texas Saluki Club",
+   "city": "Celina",
+   "state": "TX",
+   "event_number": "2026679804",
+   "event_type": "LCTR/LCTS",
+   "scope": "All-breed",
+   "specialty": false,
+   "trial_entries": 19,
+   "trial_competitors": 18,
+   "test_entries": 4,
+   "test_competitors": 4,
+   "total_entries": 23,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026679804",
+   "trial_stakes": [
+    [
+     "Open",
+     "Basenji",
+     2
+    ],
+    [
+     "Open",
+     "Ibizan Hound",
+     1
+    ],
+    [
+     "Open",
+     "Rhodesian Ridgeback",
+     5
+    ],
+    [
+     "Open",
+     "Whippet",
+     5
+    ],
+    [
+     "Special",
+     "Rhodesian Ridgeback",
+     4
+    ],
+    [
+     "Special",
+     "Whippet",
+     1
+    ]
+   ]
+  },
+  {
+   "date": "2026-02-07",
+   "day": "Sat",
+   "club": "Sunshine State Rhodesian Ridgeback Club",
+   "city": "High Springs",
+   "state": "FL",
+   "event_number": "2026702925",
+   "event_type": "LCTR/LCTS",
+   "scope": "All-breed",
+   "specialty": false,
+   "trial_entries": 41,
+   "trial_competitors": 41,
+   "test_entries": 9,
+   "test_competitors": 9,
+   "total_entries": 50,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026702925",
+   "trial_stakes": [
+    [
+     "Open",
+     "Cirneco dell'Etna",
+     2
+    ],
+    [
+     "Open",
+     "Ibizan Hound",
+     2
+    ],
+    [
+     "Open",
+     "Pharaoh Hound",
+     2
+    ],
+    [
+     "Open",
+     "Rhodesian Ridgeback",
+     4
+    ],
+    [
+     "Open",
+     "Saluki",
+     1
+    ],
+    [
+     "Open",
+     "Whippet",
+     3
+    ],
+    [
+     "Special",
+     "Afghan Hound",
+     2
+    ],
+    [
+     "Special",
+     "Cirneco dell'Etna",
+     5
+    ],
+    [
+     "Special",
+     "Ibizan Hound",
+     1
+    ],
+    [
+     "Special",
+     "Rhodesian Ridgeback",
+     6
+    ],
+    [
+     "Special",
+     "Saluki",
+     3
+    ],
+    [
+     "Special",
+     "Whippet",
+     5
+    ],
+    [
+     "Veteran",
+     "Ibizan Hound",
+     4
+    ],
+    [
+     "Veteran",
+     "Rhodesian Ridgeback",
+     1
+    ]
+   ]
+  },
+  {
+   "date": "2026-02-08",
+   "day": "Sun",
+   "club": "Sunshine State Rhodesian Ridgeback Club",
+   "city": "High Springs",
+   "state": "FL",
+   "event_number": "2026702926",
+   "event_type": "LCTR/LCTS",
+   "scope": "All-breed",
+   "specialty": false,
+   "trial_entries": 50,
+   "trial_competitors": 50,
+   "test_entries": 3,
+   "test_competitors": 3,
+   "total_entries": 53,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026702926",
+   "trial_stakes": [
+    [
+     "Open",
+     "Cirneco dell'Etna",
+     2
+    ],
+    [
+     "Open",
+     "Ibizan Hound",
+     2
+    ],
+    [
+     "Open",
+     "Pharaoh Hound",
+     3
+    ],
+    [
+     "Open",
+     "Rhodesian Ridgeback",
+     4
+    ],
+    [
+     "Open",
+     "Saluki",
+     1
+    ],
+    [
+     "Open",
+     "Whippet",
+     5
+    ],
+    [
+     "Special",
+     "Afghan Hound",
+     2
+    ],
+    [
+     "Special",
+     "Cirneco dell'Etna",
+     5
+    ],
+    [
+     "Special",
+     "Ibizan Hound",
+     2
+    ],
+    [
+     "Special",
+     "Pharaoh Hound",
+     3
+    ],
+    [
+     "Special",
+     "Rhodesian Ridgeback",
+     8
+    ],
+    [
+     "Special",
+     "Saluki",
+     4
+    ],
+    [
+     "Special",
+     "Whippet",
+     5
+    ],
+    [
+     "Veteran",
+     "Ibizan Hound",
+     4
+    ]
+   ]
+  },
+  {
+   "date": "2026-02-14",
+   "day": "Sat",
+   "club": "Orange Coast Rhodesian Ridgeback Club",
+   "city": "Chino",
+   "state": "CA",
+   "event_number": "2026281101",
+   "event_type": "LCTR/LCTS",
+   "scope": "All-breed",
+   "specialty": false,
+   "trial_entries": 24,
+   "trial_competitors": 24,
+   "test_entries": 4,
+   "test_competitors": 4,
+   "total_entries": 28,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026281101",
+   "trial_stakes": [
+    [
+     "Open",
+     "Basenji",
+     1
+    ],
+    [
+     "Open",
+     "Borzoi",
+     1
+    ],
+    [
+     "Open",
+     "Rhodesian Ridgeback",
+     5
+    ],
+    [
+     "Open",
+     "Saluki",
+     1
+    ],
+    [
+     "Open",
+     "Whippet",
+     2
+    ],
+    [
+     "Special",
+     "Ibizan Hound",
+     3
+    ],
+    [
+     "Special",
+     "Rhodesian Ridgeback",
+     7
+    ],
+    [
+     "Special",
+     "Whippet",
+     1
+    ],
+    [
+     "Veteran",
+     "Basenji",
+     1
+    ],
+    [
+     "Veteran",
+     "Pharaoh Hound",
+     1
+    ],
+    [
+     "Veteran",
+     "Rhodesian Ridgeback",
+     1
+    ]
+   ]
+  },
+  {
+   "date": "2026-02-15",
+   "day": "Sun",
+   "club": "Orange Coast Rhodesian Ridgeback Club",
+   "city": "Chino",
+   "state": "CA",
+   "event_number": "2026281102",
+   "event_type": "LCTR/LCTS",
+   "scope": "All-breed",
+   "specialty": false,
+   "trial_entries": 19,
+   "trial_competitors": 19,
+   "test_entries": 4,
+   "test_competitors": 4,
+   "total_entries": 23,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026281102",
+   "trial_stakes": [
+    [
+     "Open",
+     "Rhodesian Ridgeback",
+     3
+    ],
+    [
+     "Open",
+     "Whippet",
+     2
+    ],
+    [
+     "Special",
+     "Ibizan Hound",
+     3
+    ],
+    [
+     "Special",
+     "Rhodesian Ridgeback",
+     8
+    ],
+    [
+     "Special",
+     "Whippet",
+     2
+    ],
+    [
+     "Veteran",
+     "Pharaoh Hound",
+     1
+    ]
+   ]
+  },
+  {
+   "date": "2026-02-21",
+   "day": "Sat",
+   "club": "Greater Ocala-Gainesville Lure Coursing Association",
+   "city": "Brooksville",
+   "state": "FL",
+   "event_number": "2026258601",
+   "event_type": "LCTR/LCTS",
+   "scope": "All-breed",
+   "specialty": false,
+   "trial_entries": 52,
+   "trial_competitors": 51,
+   "test_entries": 4,
+   "test_competitors": 4,
+   "total_entries": 56,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026258601",
+   "trial_stakes": [
+    [
+     "Open",
+     "Greyhound",
+     2
+    ],
+    [
+     "Open",
+     "Ibizan Hound",
+     4
+    ],
+    [
+     "Open",
+     "Pharaoh Hound",
+     2
+    ],
+    [
+     "Open",
+     "Rhodesian Ridgeback",
+     3
+    ],
+    [
+     "Open",
+     "Saluki",
+     2
+    ],
+    [
+     "Open",
+     "Whippet",
+     9
+    ],
+    [
+     "Special",
+     "Afghan Hound",
+     1
+    ],
+    [
+     "Special",
+     "Ibizan Hound",
+     4
+    ],
+    [
+     "Special",
+     "Pharaoh Hound",
+     2
+    ],
+    [
+     "Special",
+     "Rhodesian Ridgeback",
+     3
+    ],
+    [
+     "Special",
+     "Saluki",
+     4
+    ],
+    [
+     "Special",
+     "Whippet",
+     6
+    ],
+    [
+     "Veteran",
+     "Ibizan Hound",
+     2
+    ],
+    [
+     "Veteran",
+     "Rhodesian Ridgeback",
+     1
+    ],
+    [
+     "Veteran",
+     "Saluki",
+     3
+    ],
+    [
+     "Veteran",
+     "Whippet",
+     3
+    ]
+   ]
+  },
+  {
+   "date": "2026-02-21",
+   "day": "Sat",
+   "club": "Desert Fun Bunch Sighthound Club",
+   "city": "Tonopah",
+   "state": "AZ",
+   "event_number": "2026572909",
+   "event_type": "LCTR/LCTS",
+   "scope": "All-breed",
+   "specialty": false,
+   "trial_entries": 54,
+   "trial_competitors": 54,
+   "test_entries": 8,
+   "test_competitors": 8,
+   "total_entries": 62,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026572909",
+   "trial_stakes": [
+    [
+     "Open",
+     "Basenji",
+     5
+    ],
+    [
+     "Open",
+     "Borzoi",
+     8
+    ],
+    [
+     "Open",
+     "Greyhound",
+     4
+    ],
+    [
+     "Open",
+     "Ibizan Hound",
+     2
+    ],
+    [
+     "Open",
+     "Rhodesian Ridgeback",
+     8
+    ],
+    [
+     "Open",
+     "Saluki",
+     1
+    ],
+    [
+     "Open",
+     "Whippet",
+     5
+    ],
+    [
+     "Open",
+     "Portuguese Podengo",
+     1
+    ],
+    [
+     "Special",
+     "Borzoi",
+     2
+    ],
+    [
+     "Special",
+     "Ibizan Hound",
+     5
+    ],
+    [
+     "Special",
+     "Pharaoh Hound",
+     2
+    ],
+    [
+     "Special",
+     "Rhodesian Ridgeback",
+     3
+    ],
+    [
+     "Special",
+     "Whippet",
+     3
+    ],
+    [
+     "Veteran",
+     "Whippet",
+     5
+    ]
+   ]
+  },
+  {
+   "date": "2026-02-22",
+   "day": "Sun",
+   "club": "Greater Ocala-Gainesville Lure Coursing Association",
+   "city": "Brooksville",
+   "state": "FL",
+   "event_number": "2026258602",
+   "event_type": "LCTR/LCTS",
+   "scope": "All-breed",
+   "specialty": false,
+   "trial_entries": 42,
+   "trial_competitors": 42,
+   "test_entries": 1,
+   "test_competitors": 1,
+   "total_entries": 43,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026258602",
+   "trial_stakes": [
+    [
+     "Open",
+     "Greyhound",
+     2
+    ],
+    [
+     "Open",
+     "Ibizan Hound",
+     5
+    ],
+    [
+     "Open",
+     "Pharaoh Hound",
+     4
+    ],
+    [
+     "Open",
+     "Rhodesian Ridgeback",
+     2
+    ],
+    [
+     "Open",
+     "Saluki",
+     2
+    ],
+    [
+     "Open",
+     "Whippet",
+     6
+    ],
+    [
+     "Special",
+     "Afghan Hound",
+     2
+    ],
+    [
+     "Special",
+     "Ibizan Hound",
+     4
+    ],
+    [
+     "Special",
+     "Pharaoh Hound",
+     2
+    ],
+    [
+     "Special",
+     "Rhodesian Ridgeback",
+     1
+    ],
+    [
+     "Special",
+     "Saluki",
+     3
+    ],
+    [
+     "Special",
+     "Whippet",
+     4
+    ],
+    [
+     "Veteran",
+     "Rhodesian Ridgeback",
+     1
+    ],
+    [
+     "Veteran",
+     "Saluki",
+     3
+    ],
+    [
+     "Veteran",
+     "Whippet",
+     1
+    ]
+   ]
+  },
+  {
+   "date": "2026-02-22",
+   "day": "Sun",
+   "club": "Desert Fun Bunch Sighthound Club",
+   "city": "Tonopah",
+   "state": "AZ",
+   "event_number": "2026572910",
+   "event_type": "LCTR/LCTS",
+   "scope": "All-breed",
+   "specialty": false,
+   "trial_entries": 48,
+   "trial_competitors": 48,
+   "test_entries": 3,
+   "test_competitors": 3,
+   "total_entries": 51,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026572910",
+   "trial_stakes": [
+    [
+     "Open",
+     "Basenji",
+     4
+    ],
+    [
+     "Open",
+     "Borzoi",
+     7
+    ],
+    [
+     "Open",
+     "Greyhound",
+     4
+    ],
+    [
+     "Open",
+     "Ibizan Hound",
+     2
+    ],
+    [
+     "Open",
+     "Rhodesian Ridgeback",
+     7
+    ],
+    [
+     "Open",
+     "Whippet",
+     3
+    ],
+    [
+     "Special",
+     "Borzoi",
+     3
+    ],
+    [
+     "Special",
+     "Ibizan Hound",
+     5
+    ],
+    [
+     "Special",
+     "Pharaoh Hound",
+     2
+    ],
+    [
+     "Special",
+     "Rhodesian Ridgeback",
+     3
+    ],
+    [
+     "Special",
+     "Whippet",
+     3
+    ],
+    [
+     "Veteran",
+     "Whippet",
+     5
+    ]
+   ]
+  },
+  {
+   "date": "2026-02-28",
+   "day": "Sat",
+   "club": "Alamo Area Whippet Club",
+   "city": "Angleton",
+   "state": "TX",
+   "event_number": "2026249901",
+   "event_type": "LCTR/LCTS",
+   "scope": "All-breed",
+   "specialty": false,
+   "trial_entries": 42,
+   "trial_competitors": 42,
+   "test_entries": 10,
+   "test_competitors": 10,
+   "total_entries": 52,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026249901",
+   "trial_stakes": [
+    [
+     "Open",
+     "Afghan Hound",
+     3
+    ],
+    [
+     "Open",
+     "Basenji",
+     1
+    ],
+    [
+     "Open",
+     "Ibizan Hound",
+     2
+    ],
+    [
+     "Open",
+     "Pharaoh Hound",
+     2
+    ],
+    [
+     "Open",
+     "Whippet",
+     11
+    ],
+    [
+     "Open",
+     "Whippet",
+     11
+    ],
+    [
+     "Special",
+     "Greyhound",
+     2
+    ],
+    [
+     "Special",
+     "Ibizan Hound",
+     2
+    ],
+    [
+     "Special",
+     "Pharaoh Hound",
+     1
+    ],
+    [
+     "Special",
+     "Whippet",
+     6
+    ],
+    [
+     "Veteran",
+     "Whippet",
+     1
+    ]
+   ]
+  },
+  {
+   "date": "2026-03-01",
+   "day": "Sun",
+   "club": "Northern California Irish Wolfhound Club",
+   "city": "Fairfield",
+   "state": "CA",
+   "event_number": "2026074601",
+   "event_type": "LCTR/LCTS",
+   "scope": "All-breed",
+   "specialty": false,
+   "trial_entries": 37,
+   "trial_competitors": 37,
+   "test_entries": 4,
+   "test_competitors": 4,
+   "total_entries": 41,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026074601",
+   "trial_stakes": [
+    [
+     "Open",
+     "Basenji",
+     5
+    ],
+    [
+     "Open",
+     "Ibizan Hound",
+     2
+    ],
+    [
+     "Open",
+     "Pharaoh Hound",
+     4
+    ],
+    [
+     "Open",
+     "Rhodesian Ridgeback",
+     2
+    ],
+    [
+     "Open",
+     "Saluki",
+     3
+    ],
+    [
+     "Open",
+     "Scottish Deerhound",
+     2
+    ],
+    [
+     "Open",
+     "Whippet",
+     11
+    ],
+    [
+     "Special",
+     "Afghan Hound",
+     1
+    ],
+    [
+     "Special",
+     "Basenji",
+     1
+    ],
+    [
+     "Special",
+     "Pharaoh Hound",
+     1
+    ],
+    [
+     "Special",
+     "Whippet",
+     3
+    ],
+    [
+     "Veteran",
+     "Basenji",
+     1
+    ],
+    [
+     "Veteran",
+     "Whippet",
+     1
+    ]
+   ]
+  },
+  {
+   "date": "2026-03-01",
+   "day": "Sun",
+   "club": "Alamo Area Whippet Club",
+   "city": "Angleton",
+   "state": "TX",
+   "event_number": "2026249902",
+   "event_type": "LCTR/LCTS",
+   "scope": "All-breed",
+   "specialty": false,
+   "trial_entries": 31,
+   "trial_competitors": 31,
+   "test_entries": 2,
+   "test_competitors": 2,
+   "total_entries": 33,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026249902",
+   "trial_stakes": [
+    [
+     "Open",
+     "Afghan Hound",
+     3
+    ],
+    [
+     "Open",
+     "Basenji",
+     2
+    ],
+    [
+     "Open",
+     "Ibizan Hound",
+     2
+    ],
+    [
+     "Open",
+     "Pharaoh Hound",
+     2
+    ],
+    [
+     "Open",
+     "Whippet",
+     15
+    ],
+    [
+     "Special",
+     "Whippet",
+     6
+    ],
+    [
+     "Veteran",
+     "Whippet",
+     1
+    ]
+   ]
+  },
+  {
+   "date": "2026-03-07",
+   "day": "Sat",
+   "club": "Evergreen Basenji Club",
+   "city": "Roy",
+   "state": "WA",
+   "event_number": "2026184303",
+   "event_type": "LCTR/LCTS",
+   "scope": "All-breed",
+   "specialty": false,
+   "trial_entries": 49,
+   "trial_competitors": 49,
+   "test_entries": 18,
+   "test_competitors": 18,
+   "total_entries": 67,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026184303",
+   "trial_stakes": [
+    [
+     "Open",
+     "Afghan Hound",
+     1
+    ],
+    [
+     "Open",
+     "Basenji",
+     9
+    ],
+    [
+     "Open",
+     "Borzoi",
+     1
+    ],
+    [
+     "Open",
+     "Greyhound",
+     1
+    ],
+    [
+     "Open",
+     "Ibizan Hound",
+     5
+    ],
+    [
+     "Open",
+     "Rhodesian Ridgeback",
+     1
+    ],
+    [
+     "Open",
+     "Saluki",
+     1
+    ],
+    [
+     "Open",
+     "Whippet",
+     3
+    ],
+    [
+     "Open",
+     "Italian Greyhound",
+     8
+    ],
+    [
+     "Special",
+     "Basenji",
+     8
+    ],
+    [
+     "Special",
+     "Greyhound",
+     2
+    ],
+    [
+     "Special",
+     "Ibizan Hound",
+     2
+    ],
+    [
+     "Special",
+     "Pharaoh Hound",
+     1
+    ],
+    [
+     "Special",
+     "Italian Greyhound",
+     1
+    ],
+    [
+     "Veteran",
+     "Basenji",
+     3
+    ],
+    [
+     "Veteran",
+     "Whippet",
+     1
+    ],
+    [
+     "Veteran",
+     "Italian Greyhound",
+     1
+    ]
+   ]
+  },
+  {
+   "date": "2026-03-07",
+   "day": "Sat",
+   "club": "Arizona Rhodesian Ridgeback Club",
+   "city": "Tonopah",
+   "state": "AZ",
+   "event_number": "2026627004",
+   "event_type": "LCTR/LCTS",
+   "scope": "All-breed",
+   "specialty": false,
+   "trial_entries": 31,
+   "trial_competitors": 31,
+   "test_entries": 10,
+   "test_competitors": 10,
+   "total_entries": 41,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026627004",
+   "trial_stakes": [
+    [
+     "Open",
+     "Borzoi",
+     6
+    ],
+    [
+     "Open",
+     "Ibizan Hound",
+     2
+    ],
+    [
+     "Open",
+     "Rhodesian Ridgeback",
+     6
+    ],
+    [
+     "Special",
+     "Borzoi",
+     2
+    ],
+    [
+     "Special",
+     "Ibizan Hound",
+     4
+    ],
+    [
+     "Special",
+     "Rhodesian Ridgeback",
+     7
+    ],
+    [
+     "Special",
+     "Whippet",
+     2
+    ],
+    [
+     "Veteran",
+     "Borzoi",
+     1
+    ],
+    [
+     "Veteran",
+     "Whippet",
+     1
+    ]
+   ]
+  },
+  {
+   "date": "2026-03-08",
+   "day": "Sun",
+   "club": "Evergreen Basenji Club",
+   "city": "Roy",
+   "state": "WA",
+   "event_number": "2026184304",
+   "event_type": "LCTR/LCTS",
+   "scope": "All-breed",
+   "specialty": false,
+   "trial_entries": 32,
+   "trial_competitors": 32,
+   "test_entries": 4,
+   "test_competitors": 4,
+   "total_entries": 36,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026184304",
+   "trial_stakes": [
+    [
+     "Open",
+     "Basenji",
+     7
+    ],
+    [
+     "Open",
+     "Borzoi",
+     2
+    ],
+    [
+     "Open",
+     "Ibizan Hound",
+     4
+    ],
+    [
+     "Open",
+     "Pharaoh Hound",
+     2
+    ],
+    [
+     "Open",
+     "Whippet",
+     2
+    ],
+    [
+     "Special",
+     "Basenji",
+     10
+    ],
+    [
+     "Special",
+     "Ibizan Hound",
+     1
+    ],
+    [
+     "Special",
+     "Pharaoh Hound",
+     1
+    ],
+    [
+     "Veteran",
+     "Basenji",
+     3
+    ]
+   ]
+  },
+  {
+   "date": "2026-03-08",
+   "day": "Sun",
+   "club": "Arizona Rhodesian Ridgeback Club",
+   "city": "Tonopah",
+   "state": "AZ",
+   "event_number": "2026627005",
+   "event_type": "LCTR/LCTS",
+   "scope": "All-breed",
+   "specialty": false,
+   "trial_entries": 24,
+   "trial_competitors": 24,
+   "test_entries": 4,
+   "test_competitors": 4,
+   "total_entries": 28,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026627005",
+   "trial_stakes": [
+    [
+     "Open",
+     "Borzoi",
+     6
+    ],
+    [
+     "Open",
+     "Rhodesian Ridgeback",
+     3
+    ],
+    [
+     "Open",
+     "Saluki",
+     1
+    ],
+    [
+     "Special",
+     "Borzoi",
+     2
+    ],
+    [
+     "Special",
+     "Ibizan Hound",
+     2
+    ],
+    [
+     "Special",
+     "Rhodesian Ridgeback",
+     6
+    ],
+    [
+     "Special",
+     "Whippet",
+     2
+    ],
+    [
+     "Veteran",
+     "Rhodesian Ridgeback",
+     2
+    ]
+   ]
+  },
+  {
+   "date": "2026-03-21",
+   "day": "Sat",
+   "club": "Lobo Lure Coursing Club",
+   "city": "Santa Fe",
+   "state": "NM",
+   "event_number": "2026250105",
+   "event_type": "LCTR/LCTS",
+   "scope": "All-breed",
+   "specialty": false,
+   "trial_entries": 13,
+   "trial_competitors": 13,
+   "test_entries": 5,
+   "test_competitors": 5,
+   "total_entries": 18,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026250105",
+   "trial_stakes": [
+    [
+     "Open",
+     "Borzoi",
+     3
+    ],
+    [
+     "Open",
+     "Rhodesian Ridgeback",
+     2
+    ],
+    [
+     "Open",
+     "Saluki",
+     6
+    ],
+    [
+     "Special",
+     "Saluki",
+     2
+    ]
+   ]
+  },
+  {
+   "date": "2026-03-21",
+   "day": "Sat",
+   "club": "Greater Ocala-Gainesville Lure Coursing Association",
+   "city": "Brooksville",
+   "state": "FL",
+   "event_number": "2026258603",
+   "event_type": "LCTR",
+   "scope": "All-breed",
+   "specialty": false,
+   "trial_entries": 35,
+   "trial_competitors": 35,
+   "test_entries": null,
+   "test_competitors": null,
+   "total_entries": 35,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026258603",
+   "trial_stakes": [
+    [
+     "Open",
+     "Cirneco dell'Etna",
+     2
+    ],
+    [
+     "Open",
+     "Greyhound",
+     1
+    ],
+    [
+     "Open",
+     "Rhodesian Ridgeback",
+     4
+    ],
+    [
+     "Open",
+     "Whippet",
+     9
+    ],
+    [
+     "Special",
+     "Afghan Hound",
+     1
+    ],
+    [
+     "Special",
+     "Cirneco dell'Etna",
+     4
+    ],
+    [
+     "Special",
+     "Greyhound",
+     1
+    ],
+    [
+     "Special",
+     "Ibizan Hound",
+     1
+    ],
+    [
+     "Special",
+     "Rhodesian Ridgeback",
+     6
+    ],
+    [
+     "Special",
+     "Whippet",
+     2
+    ],
+    [
+     "Veteran",
+     "Rhodesian Ridgeback",
+     1
+    ],
+    [
+     "Veteran",
+     "Whippet",
+     3
+    ]
+   ]
+  },
+  {
+   "date": "2026-03-22",
+   "day": "Sun",
+   "club": "Lobo Lure Coursing Club",
+   "city": "Santa Fe",
+   "state": "NM",
+   "event_number": "2026250106",
+   "event_type": "LCTR/LCTS",
+   "scope": "All-breed",
+   "specialty": false,
+   "trial_entries": 11,
+   "trial_competitors": 10,
+   "test_entries": 3,
+   "test_competitors": 3,
+   "total_entries": 14,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026250106",
+   "trial_stakes": [
+    [
+     "Open",
+     "Borzoi",
+     2
+    ],
+    [
+     "Open",
+     "Rhodesian Ridgeback",
+     2
+    ],
+    [
+     "Open",
+     "Saluki",
+     5
+    ],
+    [
+     "Special",
+     "Saluki",
+     1
+    ]
+   ]
+  },
+  {
+   "date": "2026-03-22",
+   "day": "Sun",
+   "club": "Greater Ocala-Gainesville Lure Coursing Association",
+   "city": "Brooksville",
+   "state": "FL",
+   "event_number": "2026258604",
+   "event_type": "LCTR/LCTS",
+   "scope": "All-breed",
+   "specialty": false,
+   "trial_entries": 47,
+   "trial_competitors": 43,
+   "test_entries": 7,
+   "test_competitors": 7,
+   "total_entries": 54,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026258604",
+   "trial_stakes": [
+    [
+     "Open",
+     "Cirneco dell'Etna",
+     2
+    ],
+    [
+     "Open",
+     "Greyhound",
+     1
+    ],
+    [
+     "Open",
+     "Ibizan Hound",
+     3
+    ],
+    [
+     "Open",
+     "Rhodesian Ridgeback",
+     5
+    ],
+    [
+     "Open",
+     "Whippet",
+     11
+    ],
+    [
+     "Special",
+     "Afghan Hound",
+     2
+    ],
+    [
+     "Special",
+     "Cirneco dell'Etna",
+     4
+    ],
+    [
+     "Special",
+     "Greyhound",
+     1
+    ],
+    [
+     "Special",
+     "Ibizan Hound",
+     3
+    ],
+    [
+     "Special",
+     "Rhodesian Ridgeback",
+     6
+    ],
+    [
+     "Special",
+     "Whippet",
+     2
+    ],
+    [
+     "Veteran",
+     "Rhodesian Ridgeback",
+     1
+    ],
+    [
+     "Veteran",
+     "Whippet",
+     2
+    ]
+   ]
+  },
+  {
+   "date": "2026-03-28",
+   "day": "Sat",
+   "club": "Midwest Borzoi Club",
+   "city": "Lima",
+   "state": "OH",
+   "event_number": "2026058402",
+   "event_type": "LCTR/LCTS",
+   "scope": "All-breed",
+   "specialty": false,
+   "trial_entries": 64,
+   "trial_competitors": 64,
+   "test_entries": 15,
+   "test_competitors": 14,
+   "total_entries": 79,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026058402",
+   "trial_stakes": [
+    [
+     "Open",
+     "Borzoi",
+     16
+    ],
+    [
+     "Open",
+     "Greyhound",
+     1
+    ],
+    [
+     "Open",
+     "Pharaoh Hound",
+     1
+    ],
+    [
+     "Open",
+     "Whippet",
+     20
+    ],
+    [
+     "Open",
+     "Italian Greyhound",
+     2
+    ],
+    [
+     "Special",
+     "Basenji",
+     3
+    ],
+    [
+     "Special",
+     "Borzoi",
+     2
+    ],
+    [
+     "Special",
+     "Greyhound",
+     3
+    ],
+    [
+     "Special",
+     "Rhodesian Ridgeback",
+     2
+    ],
+    [
+     "Special",
+     "Whippet",
+     3
+    ],
+    [
+     "Veteran",
+     "Basenji",
+     1
+    ],
+    [
+     "Veteran",
+     "Greyhound",
+     3
+    ],
+    [
+     "Veteran",
+     "Rhodesian Ridgeback",
+     2
+    ],
+    [
+     "Veteran",
+     "Whippet",
+     4
+    ],
+    [
+     "Veteran",
+     "Italian Greyhound",
+     1
+    ]
+   ]
+  },
+  {
+   "date": "2026-03-28",
+   "day": "Sat",
+   "club": "Afghan Hound Club of Austin",
+   "city": "Florence",
+   "state": "TX",
+   "event_number": "2026169402",
+   "event_type": "LCTR/LCTS",
+   "scope": "All-breed",
+   "specialty": false,
+   "trial_entries": 52,
+   "trial_competitors": 51,
+   "test_entries": 9,
+   "test_competitors": 8,
+   "total_entries": 61,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026169402",
+   "trial_stakes": [
+    [
+     "Open",
+     "Afghan Hound",
+     5
+    ],
+    [
+     "Open",
+     "Basenji",
+     5
+    ],
+    [
+     "Open",
+     "Ibizan Hound",
+     1
+    ],
+    [
+     "Open",
+     "Pharaoh Hound",
+     2
+    ],
+    [
+     "Open",
+     "Rhodesian Ridgeback",
+     5
+    ],
+    [
+     "Open",
+     "Whippet",
+     15
+    ],
+    [
+     "Special",
+     "Afghan Hound",
+     2
+    ],
+    [
+     "Special",
+     "Ibizan Hound",
+     3
+    ],
+    [
+     "Special",
+     "Rhodesian Ridgeback",
+     3
+    ],
+    [
+     "Special",
+     "Whippet",
+     5
+    ],
+    [
+     "Veteran",
+     "Ibizan Hound",
+     1
+    ],
+    [
+     "Veteran",
+     "Rhodesian Ridgeback",
+     2
+    ],
+    [
+     "Veteran",
+     "Whippet",
+     2
+    ]
+   ]
+  },
+  {
+   "date": "2026-03-28",
+   "day": "Sat",
+   "club": "Sierra Slopes Ibizan Hounds",
+   "city": "Elverta",
+   "state": "CA",
+   "event_number": "2026268703",
+   "event_type": "LCTR/LCTS",
+   "scope": "All-breed",
+   "specialty": false,
+   "trial_entries": 43,
+   "trial_competitors": 43,
+   "test_entries": 7,
+   "test_competitors": 7,
+   "total_entries": 50,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026268703",
+   "trial_stakes": [
+    [
+     "Open",
+     "Basenji",
+     4
+    ],
+    [
+     "Open",
+     "Ibizan Hound",
+     6
+    ],
+    [
+     "Open",
+     "Pharaoh Hound",
+     4
+    ],
+    [
+     "Open",
+     "Saluki",
+     3
+    ],
+    [
+     "Open",
+     "Scottish Deerhound",
+     2
+    ],
+    [
+     "Open",
+     "Whippet",
+     7
+    ],
+    [
+     "Special",
+     "Basenji",
+     1
+    ],
+    [
+     "Special",
+     "Ibizan Hound",
+     2
+    ],
+    [
+     "Special",
+     "Pharaoh Hound",
+     1
+    ],
+    [
+     "Special",
+     "Saluki",
+     1
+    ],
+    [
+     "Special",
+     "Whippet",
+     3
+    ],
+    [
+     "Veteran",
+     "Ibizan Hound",
+     2
+    ],
+    [
+     "Veteran",
+     "Whippet",
+     7
+    ]
+   ]
+  },
+  {
+   "date": "2026-03-28",
+   "day": "Sat",
+   "club": "Northwest Rhodesian Ridgeback Club",
+   "city": "Ethel",
+   "state": "WA",
+   "event_number": "2026686303",
+   "event_type": "LCTR/LCTS",
+   "scope": "All-breed",
+   "specialty": false,
+   "trial_entries": 37,
+   "trial_competitors": 37,
+   "test_entries": 5,
+   "test_competitors": 4,
+   "total_entries": 42,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026686303",
+   "trial_stakes": [
+    [
+     "Open",
+     "Afghan Hound",
+     1
+    ],
+    [
+     "Open",
+     "Basenji",
+     5
+    ],
+    [
+     "Open",
+     "Cirneco dell'Etna",
+     1
+    ],
+    [
+     "Open",
+     "Greyhound",
+     2
+    ],
+    [
+     "Open",
+     "Pharaoh Hound",
+     4
+    ],
+    [
+     "Open",
+     "Rhodesian Ridgeback",
+     3
+    ],
+    [
+     "Open",
+     "Saluki",
+     1
+    ],
+    [
+     "Open",
+     "Whippet",
+     2
+    ],
+    [
+     "Special",
+     "Afghan Hound",
+     1
+    ],
+    [
+     "Special",
+     "Basenji",
+     2
+    ],
+    [
+     "Special",
+     "Cirneco dell'Etna",
+     2
+    ],
+    [
+     "Special",
+     "Greyhound",
+     2
+    ],
+    [
+     "Special",
+     "Pharaoh Hound",
+     5
+    ],
+    [
+     "Special",
+     "Whippet",
+     1
+    ],
+    [
+     "Veteran",
+     "Basenji",
+     3
+    ],
+    [
+     "Veteran",
+     "Rhodesian Ridgeback",
+     1
+    ],
+    [
+     "Veteran",
+     "Whippet",
+     1
+    ]
+   ]
+  },
+  {
+   "date": "2026-03-28",
+   "day": "Sat",
+   "club": "Sunshine State Rhodesian Ridgeback Club",
+   "city": "Weirsdale",
+   "state": "FL",
+   "event_number": "2026702927",
+   "event_type": "LCTR/LCTS",
+   "scope": "All-breed",
+   "specialty": false,
+   "trial_entries": 39,
+   "trial_competitors": 38,
+   "test_entries": 4,
+   "test_competitors": 4,
+   "total_entries": 43,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026702927",
+   "trial_stakes": null
+  },
+  {
+   "date": "2026-03-29",
+   "day": "Sun",
+   "club": "Midwest Borzoi Club",
+   "city": "Lima",
+   "state": "OH",
+   "event_number": "2026058403",
+   "event_type": "LCTR/LCTS",
+   "scope": "All-breed",
+   "specialty": false,
+   "trial_entries": 67,
+   "trial_competitors": 64,
+   "test_entries": 14,
+   "test_competitors": 14,
+   "total_entries": 81,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026058403",
+   "trial_stakes": [
+    [
+     "Open",
+     "Afghan Hound",
+     2
+    ],
+    [
+     "Open",
+     "Borzoi",
+     13
+    ],
+    [
+     "Open",
+     "Pharaoh Hound",
+     1
+    ],
+    [
+     "Open",
+     "Whippet",
+     21
+    ],
+    [
+     "Open",
+     "Italian Greyhound",
+     1
+    ],
+    [
+     "Special",
+     "Basenji",
+     2
+    ],
+    [
+     "Special",
+     "Borzoi",
+     2
+    ],
+    [
+     "Special",
+     "Greyhound",
+     5
+    ],
+    [
+     "Special",
+     "Pharaoh Hound",
+     1
+    ],
+    [
+     "Special",
+     "Rhodesian Ridgeback",
+     2
+    ],
+    [
+     "Special",
+     "Whippet",
+     4
+    ],
+    [
+     "Special",
+     "Italian Greyhound",
+     1
+    ],
+    [
+     "Veteran",
+     "Basenji",
+     1
+    ],
+    [
+     "Veteran",
+     "Rhodesian Ridgeback",
+     2
+    ],
+    [
+     "Veteran",
+     "Saluki",
+     1
+    ],
+    [
+     "Veteran",
+     "Whippet",
+     4
+    ],
+    [
+     "Veteran",
+     "Italian Greyhound",
+     1
+    ]
+   ]
+  },
+  {
+   "date": "2026-03-29",
+   "day": "Sun",
+   "club": "Afghan Hound Club of Austin",
+   "city": "Florence",
+   "state": "TX",
+   "event_number": "2026169401",
+   "event_type": "LCTR/LCTS",
+   "scope": "All-breed",
+   "specialty": false,
+   "trial_entries": 52,
+   "trial_competitors": 47,
+   "test_entries": 4,
+   "test_competitors": 3,
+   "total_entries": 56,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026169401",
+   "trial_stakes": [
+    [
+     "Open",
+     "Afghan Hound",
+     5
+    ],
+    [
+     "Open",
+     "Basenji",
+     4
+    ],
+    [
+     "Open",
+     "Ibizan Hound",
+     1
+    ],
+    [
+     "Open",
+     "Pharaoh Hound",
+     1
+    ],
+    [
+     "Open",
+     "Rhodesian Ridgeback",
+     4
+    ],
+    [
+     "Open",
+     "Whippet",
+     12
+    ],
+    [
+     "Special",
+     "Ibizan Hound",
+     3
+    ],
+    [
+     "Special",
+     "Rhodesian Ridgeback",
+     4
+    ],
+    [
+     "Special",
+     "Whippet",
+     5
+    ],
+    [
+     "Veteran",
+     "Afghan Hound",
+     2
+    ],
+    [
+     "Veteran",
+     "Ibizan Hound",
+     1
+    ],
+    [
+     "Veteran",
+     "Rhodesian Ridgeback",
+     2
+    ],
+    [
+     "Veteran",
+     "Whippet",
+     3
+    ]
+   ]
+  },
+  {
+   "date": "2026-03-29",
+   "day": "Sun",
+   "club": "Sierra Slopes Ibizan Hounds",
+   "city": "Elverta",
+   "state": "CA",
+   "event_number": "2026268704",
+   "event_type": "LCTR/LCTS",
+   "scope": "All-breed",
+   "specialty": false,
+   "trial_entries": 49,
+   "trial_competitors": 48,
+   "test_entries": 8,
+   "test_competitors": 7,
+   "total_entries": 57,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026268704",
+   "trial_stakes": [
+    [
+     "Open",
+     "Basenji",
+     1
+    ],
+    [
+     "Open",
+     "Ibizan Hound",
+     3
+    ],
+    [
+     "Open",
+     "Pharaoh Hound",
+     5
+    ],
+    [
+     "Open",
+     "Rhodesian Ridgeback",
+     2
+    ],
+    [
+     "Open",
+     "Saluki",
+     6
+    ],
+    [
+     "Open",
+     "Whippet",
+     12
+    ],
+    [
+     "Special",
+     "Afghan Hound",
+     1
+    ],
+    [
+     "Special",
+     "Basenji",
+     1
+    ],
+    [
+     "Special",
+     "Ibizan Hound",
+     2
+    ],
+    [
+     "Special",
+     "Pharaoh Hound",
+     1
+    ],
+    [
+     "Special",
+     "Saluki",
+     1
+    ],
+    [
+     "Special",
+     "Whippet",
+     3
+    ],
+    [
+     "Veteran",
+     "Azawakh",
+     1
+    ],
+    [
+     "Veteran",
+     "Ibizan Hound",
+     1
+    ],
+    [
+     "Veteran",
+     "Rhodesian Ridgeback",
+     1
+    ],
+    [
+     "Veteran",
+     "Whippet",
+     7
+    ]
+   ]
+  },
+  {
+   "date": "2026-03-29",
+   "day": "Sun",
+   "club": "Northwest Rhodesian Ridgeback Club",
+   "city": "Ethel",
+   "state": "WA",
+   "event_number": "2026686304",
+   "event_type": "LCTR/LCTS",
+   "scope": "All-breed",
+   "specialty": false,
+   "trial_entries": 33,
+   "trial_competitors": 32,
+   "test_entries": 3,
+   "test_competitors": 3,
+   "total_entries": 36,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026686304",
+   "trial_stakes": [
+    [
+     "Open",
+     "Basenji",
+     4
+    ],
+    [
+     "Open",
+     "Greyhound",
+     2
+    ],
+    [
+     "Open",
+     "Pharaoh Hound",
+     4
+    ],
+    [
+     "Open",
+     "Rhodesian Ridgeback",
+     2
+    ],
+    [
+     "Open",
+     "Whippet",
+     3
+    ],
+    [
+     "Special",
+     "Basenji",
+     3
+    ],
+    [
+     "Special",
+     "Cirneco dell'Etna",
+     2
+    ],
+    [
+     "Special",
+     "Greyhound",
+     1
+    ],
+    [
+     "Special",
+     "Pharaoh Hound",
+     6
+    ],
+    [
+     "Special",
+     "Saluki",
+     2
+    ],
+    [
+     "Special",
+     "Whippet",
+     1
+    ],
+    [
+     "Veteran",
+     "Basenji",
+     2
+    ]
+   ]
+  },
+  {
+   "date": "2026-03-29",
+   "day": "Sun",
+   "club": "Sunshine State Rhodesian Ridgeback Club",
+   "city": "Weirsdale",
+   "state": "FL",
+   "event_number": "2026702928",
+   "event_type": "LCTR/LCTS",
+   "scope": "All-breed",
+   "specialty": false,
+   "trial_entries": 38,
+   "trial_competitors": 36,
+   "test_entries": 0,
+   "test_competitors": 0,
+   "total_entries": 38,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026702928",
+   "trial_stakes": null
+  },
+  {
+   "date": "2026-04-04",
+   "day": "Sat",
+   "club": "Iowa Coursing Association",
+   "city": "Des Moines",
+   "state": "IA",
+   "event_number": "2026259701",
+   "event_type": "LCTR",
+   "scope": "All-breed",
+   "specialty": false,
+   "trial_entries": 36,
+   "trial_competitors": 36,
+   "test_entries": null,
+   "test_competitors": null,
+   "total_entries": 36,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026259701",
+   "trial_stakes": [
+    [
+     "Open",
+     "Borzoi",
+     4
+    ],
+    [
+     "Open",
+     "Ibizan Hound",
+     1
+    ],
+    [
+     "Open",
+     "Rhodesian Ridgeback",
+     7
+    ],
+    [
+     "Open",
+     "Saluki",
+     2
+    ],
+    [
+     "Open",
+     "Whippet",
+     10
+    ],
+    [
+     "Special",
+     "Basenji",
+     5
+    ],
+    [
+     "Special",
+     "Borzoi",
+     1
+    ],
+    [
+     "Special",
+     "Ibizan Hound",
+     4
+    ],
+    [
+     "Special",
+     "Saluki",
+     1
+    ],
+    [
+     "Special",
+     "Whippet",
+     1
+    ]
+   ]
+  },
+  {
+   "date": "2026-04-04",
+   "day": "Sat",
+   "club": "Irish Wolfhound Association of the Garden State",
+   "city": "Somerset",
+   "state": "NJ",
+   "event_number": "2026283907",
+   "event_type": "LCTR/LCTS",
+   "scope": "All-breed",
+   "specialty": false,
+   "trial_entries": 18,
+   "trial_competitors": 18,
+   "test_entries": 8,
+   "test_competitors": 8,
+   "total_entries": 26,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026283907",
+   "trial_stakes": [
+    [
+     "Open",
+     "Borzoi",
+     3
+    ],
+    [
+     "Open",
+     "Greyhound",
+     1
+    ],
+    [
+     "Open",
+     "Ibizan Hound",
+     1
+    ],
+    [
+     "Open",
+     "Pharaoh Hound",
+     1
+    ],
+    [
+     "Open",
+     "Saluki",
+     2
+    ],
+    [
+     "Open",
+     "Whippet",
+     3
+    ],
+    [
+     "Special",
+     "Pharaoh Hound",
+     1
+    ],
+    [
+     "Special",
+     "Rhodesian Ridgeback",
+     1
+    ],
+    [
+     "Special",
+     "Whippet",
+     2
+    ],
+    [
+     "Veteran",
+     "Borzoi",
+     1
+    ],
+    [
+     "Veteran",
+     "Whippet",
+     2
+    ]
+   ]
+  },
+  {
+   "date": "2026-04-05",
+   "day": "Sun",
+   "club": "Irish Wolfhound Association of the Garden State",
+   "city": "Somerset",
+   "state": "NJ",
+   "event_number": "2026283908",
+   "event_type": "LCTR/LCTS",
+   "scope": "All-breed",
+   "specialty": false,
+   "trial_entries": 13,
+   "trial_competitors": 13,
+   "test_entries": 2,
+   "test_competitors": 2,
+   "total_entries": 15,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026283908",
+   "trial_stakes": [
+    [
+     "Open",
+     "Ibizan Hound",
+     1
+    ],
+    [
+     "Open",
+     "Pharaoh Hound",
+     1
+    ],
+    [
+     "Open",
+     "Whippet",
+     3
+    ],
+    [
+     "Special",
+     "Basenji",
+     3
+    ],
+    [
+     "Special",
+     "Rhodesian Ridgeback",
+     1
+    ],
+    [
+     "Special",
+     "Whippet",
+     2
+    ],
+    [
+     "Veteran",
+     "Whippet",
+     2
+    ]
+   ]
+  },
+  {
+   "date": "2026-04-09",
+   "day": "Thu",
+   "club": "Orange Coast Rhodesian Ridgeback Club",
+   "city": "Chino",
+   "state": "CA",
+   "event_number": "2026281106",
+   "event_type": "LCTR",
+   "scope": "All-breed",
+   "specialty": false,
+   "trial_entries": 36,
+   "trial_competitors": 35,
+   "test_entries": null,
+   "test_competitors": null,
+   "total_entries": 36,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026281106",
+   "trial_stakes": [
+    [
+     "Open",
+     "Afghan Hound",
+     2
+    ],
+    [
+     "Open",
+     "Basenji",
+     2
+    ],
+    [
+     "Open",
+     "Irish Wolfhound",
+     2
+    ],
+    [
+     "Open",
+     "Rhodesian Ridgeback",
+     4
+    ],
+    [
+     "Open",
+     "Saluki",
+     3
+    ],
+    [
+     "Open",
+     "Whippet",
+     1
+    ],
+    [
+     "Open",
+     "Italian Greyhound",
+     1
+    ],
+    [
+     "Special",
+     "Ibizan Hound",
+     3
+    ],
+    [
+     "Special",
+     "Rhodesian Ridgeback",
+     10
+    ],
+    [
+     "Special",
+     "Whippet",
+     4
+    ],
+    [
+     "Veteran",
+     "Basenji",
+     1
+    ],
+    [
+     "Veteran",
+     "Pharaoh Hound",
+     1
+    ],
+    [
+     "Veteran",
+     "Whippet",
+     1
+    ]
+   ]
+  },
+  {
+   "date": "2026-04-11",
+   "day": "Sat",
+   "club": "OKI Gazehound Association of Ohio",
+   "city": "Fairborn",
+   "state": "OH",
+   "event_number": "2026265201",
+   "event_type": "LCTR/LCTS",
+   "scope": "All-breed",
+   "specialty": false,
+   "trial_entries": 52,
+   "trial_competitors": 51,
+   "test_entries": 13,
+   "test_competitors": 13,
+   "total_entries": 65,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026265201",
+   "trial_stakes": [
+    [
+     "Open",
+     "Basenji",
+     1
+    ],
+    [
+     "Open",
+     "Borzoi",
+     6
+    ],
+    [
+     "Open",
+     "Ibizan Hound",
+     2
+    ],
+    [
+     "Open",
+     "Rhodesian Ridgeback",
+     1
+    ],
+    [
+     "Open",
+     "Scottish Deerhound",
+     2
+    ],
+    [
+     "Open",
+     "Whippet",
+     21
+    ],
+    [
+     "Special",
+     "Basenji",
+     3
+    ],
+    [
+     "Special",
+     "Borzoi",
+     2
+    ],
+    [
+     "Special",
+     "Pharaoh Hound",
+     1
+    ],
+    [
+     "Special",
+     "Rhodesian Ridgeback",
+     2
+    ],
+    [
+     "Special",
+     "Saluki",
+     2
+    ],
+    [
+     "Special",
+     "Scottish Deerhound",
+     1
+    ],
+    [
+     "Special",
+     "Whippet",
+     3
+    ],
+    [
+     "Veteran",
+     "Basenji",
+     2
+    ],
+    [
+     "Veteran",
+     "Whippet",
+     2
+    ]
+   ]
+  },
+  {
+   "date": "2026-04-11",
+   "day": "Sat",
+   "club": "Greater Valley Forge Rhodesian Ridgeback Club, Inc.",
+   "city": "Somerset",
+   "state": "NJ",
+   "event_number": "2026288901",
+   "event_type": "LCTR/LCTS",
+   "scope": "All-breed",
+   "specialty": false,
+   "trial_entries": 27,
+   "trial_competitors": 26,
+   "test_entries": 9,
+   "test_competitors": 9,
+   "total_entries": 36,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026288901",
+   "trial_stakes": [
+    [
+     "Open",
+     "Borzoi",
+     1
+    ],
+    [
+     "Open",
+     "Greyhound",
+     1
+    ],
+    [
+     "Open",
+     "Ibizan Hound",
+     1
+    ],
+    [
+     "Open",
+     "Pharaoh Hound",
+     2
+    ],
+    [
+     "Open",
+     "Rhodesian Ridgeback",
+     6
+    ],
+    [
+     "Open",
+     "Saluki",
+     2
+    ],
+    [
+     "Open",
+     "Scottish Deerhound",
+     1
+    ],
+    [
+     "Open",
+     "Whippet",
+     4
+    ],
+    [
+     "Special",
+     "Pharaoh Hound",
+     1
+    ],
+    [
+     "Special",
+     "Rhodesian Ridgeback",
+     1
+    ],
+    [
+     "Special",
+     "Whippet",
+     2
+    ],
+    [
+     "Veteran",
+     "Rhodesian Ridgeback",
+     3
+    ],
+    [
+     "Veteran",
+     "Whippet",
+     1
+    ]
+   ]
+  },
+  {
+   "date": "2026-04-11",
+   "day": "Sat",
+   "club": "Trinity Valley Rhodesian Ridgeback Club of Texas",
+   "city": "Ponder",
+   "state": "TX",
+   "event_number": "2026295406",
+   "event_type": "LCTR/LCTS",
+   "scope": "All-breed",
+   "specialty": false,
+   "trial_entries": 37,
+   "trial_competitors": 37,
+   "test_entries": 9,
+   "test_competitors": 9,
+   "total_entries": 46,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026295406",
+   "trial_stakes": [
+    [
+     "Open",
+     "Afghan Hound",
+     4
+    ],
+    [
+     "Open",
+     "Ibizan Hound",
+     4
+    ],
+    [
+     "Open",
+     "Rhodesian Ridgeback",
+     6
+    ],
+    [
+     "Open",
+     "Whippet",
+     8
+    ],
+    [
+     "Special",
+     "Afghan Hound",
+     1
+    ],
+    [
+     "Special",
+     "Ibizan Hound",
+     3
+    ],
+    [
+     "Special",
+     "Rhodesian Ridgeback",
+     4
+    ],
+    [
+     "Special",
+     "Whippet",
+     4
+    ],
+    [
+     "Veteran",
+     "Afghan Hound",
+     1
+    ],
+    [
+     "Veteran",
+     "Rhodesian Ridgeback",
+     2
+    ]
+   ]
+  },
+  {
+   "date": "2026-04-12",
+   "day": "Sun",
+   "club": "American Whippet Club, Inc.",
+   "city": "Pasco",
+   "state": "WA",
+   "event_number": "2026074707",
+   "event_type": "LCTR",
+   "scope": "Whippet specialty",
+   "specialty": true,
+   "trial_entries": 77,
+   "trial_competitors": 74,
+   "test_entries": null,
+   "test_competitors": null,
+   "total_entries": 77,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026074707",
+   "trial_stakes": [
+    [
+     "Open",
+     "Whippet",
+     12
+    ],
+    [
+     "Open",
+     "Whippet",
+     12
+    ],
+    [
+     "Open",
+     "Whippet",
+     11
+    ],
+    [
+     "Open",
+     "Whippet",
+     11
+    ],
+    [
+     "Special",
+     "Whippet",
+     18
+    ],
+    [
+     "Veteran",
+     "Whippet",
+     10
+    ]
+   ]
+  },
+  {
+   "date": "2026-04-12",
+   "day": "Sun",
+   "club": "OKI Gazehound Association of Ohio",
+   "city": "Fairborn",
+   "state": "OH",
+   "event_number": "2026265202",
+   "event_type": "LCTR/LCTS",
+   "scope": "All-breed",
+   "specialty": false,
+   "trial_entries": 46,
+   "trial_competitors": 44,
+   "test_entries": 3,
+   "test_competitors": 3,
+   "total_entries": 49,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026265202",
+   "trial_stakes": [
+    [
+     "Open",
+     "Afghan Hound",
+     3
+    ],
+    [
+     "Open",
+     "Basenji",
+     3
+    ],
+    [
+     "Open",
+     "Borzoi",
+     3
+    ],
+    [
+     "Open",
+     "Rhodesian Ridgeback",
+     1
+    ],
+    [
+     "Open",
+     "Scottish Deerhound",
+     2
+    ],
+    [
+     "Open",
+     "Whippet",
+     18
+    ],
+    [
+     "Special",
+     "Basenji",
+     3
+    ],
+    [
+     "Special",
+     "Rhodesian Ridgeback",
+     1
+    ],
+    [
+     "Special",
+     "Saluki",
+     2
+    ],
+    [
+     "Special",
+     "Scottish Deerhound",
+     1
+    ],
+    [
+     "Special",
+     "Whippet",
+     3
+    ],
+    [
+     "Veteran",
+     "Basenji",
+     2
+    ],
+    [
+     "Veteran",
+     "Whippet",
+     2
+    ]
+   ]
+  },
+  {
+   "date": "2026-04-12",
+   "day": "Sun",
+   "club": "Greater Valley Forge Rhodesian Ridgeback Club, Inc.",
+   "city": "Somerset",
+   "state": "NJ",
+   "event_number": "2026288902",
+   "event_type": "LCTR/LCTS",
+   "scope": "All-breed",
+   "specialty": false,
+   "trial_entries": 31,
+   "trial_competitors": 30,
+   "test_entries": 6,
+   "test_competitors": 6,
+   "total_entries": 37,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026288902",
+   "trial_stakes": [
+    [
+     "Open",
+     "Borzoi",
+     1
+    ],
+    [
+     "Open",
+     "Pharaoh Hound",
+     2
+    ],
+    [
+     "Open",
+     "Rhodesian Ridgeback",
+     8
+    ],
+    [
+     "Open",
+     "Saluki",
+     2
+    ],
+    [
+     "Open",
+     "Whippet",
+     4
+    ],
+    [
+     "Open",
+     "Italian Greyhound",
+     0
+    ],
+    [
+     "Special",
+     "Pharaoh Hound",
+     1
+    ],
+    [
+     "Special",
+     "Rhodesian Ridgeback",
+     5
+    ],
+    [
+     "Special",
+     "Whippet",
+     3
+    ],
+    [
+     "Veteran",
+     "Rhodesian Ridgeback",
+     4
+    ]
+   ]
+  },
+  {
+   "date": "2026-04-12",
+   "day": "Sun",
+   "club": "Trinity Valley Rhodesian Ridgeback Club of Texas",
+   "city": "Ponder",
+   "state": "TX",
+   "event_number": "2026295407",
+   "event_type": "LCTR/LCTS",
+   "scope": "All-breed",
+   "specialty": false,
+   "trial_entries": 40,
+   "trial_competitors": 40,
+   "test_entries": 3,
+   "test_competitors": 3,
+   "total_entries": 43,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026295407",
+   "trial_stakes": [
+    [
+     "Open",
+     "Afghan Hound",
+     3
+    ],
+    [
+     "Open",
+     "Ibizan Hound",
+     4
+    ],
+    [
+     "Open",
+     "Rhodesian Ridgeback",
+     8
+    ],
+    [
+     "Open",
+     "Whippet",
+     8
+    ],
+    [
+     "Special",
+     "Afghan Hound",
+     1
+    ],
+    [
+     "Special",
+     "Ibizan Hound",
+     3
+    ],
+    [
+     "Special",
+     "Rhodesian Ridgeback",
+     6
+    ],
+    [
+     "Special",
+     "Whippet",
+     3
+    ],
+    [
+     "Veteran",
+     "Afghan Hound",
+     1
+    ],
+    [
+     "Veteran",
+     "Rhodesian Ridgeback",
+     3
+    ]
+   ]
+  },
+  {
+   "date": "2026-04-18",
+   "day": "Sat",
+   "club": "Utah Sighthound Racing and Coursing Club",
+   "city": "South Jordan",
+   "state": "UT",
+   "event_number": "2026271203",
+   "event_type": "LCTR/LCTS",
+   "scope": "All-breed",
+   "specialty": false,
+   "trial_entries": 15,
+   "trial_competitors": 15,
+   "test_entries": 1,
+   "test_competitors": 1,
+   "total_entries": 16,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026271203",
+   "trial_stakes": [
+    [
+     "Open",
+     "Basenji",
+     5
+    ],
+    [
+     "Open",
+     "Borzoi",
+     1
+    ],
+    [
+     "Open",
+     "Saluki",
+     2
+    ],
+    [
+     "Open",
+     "Whippet",
+     2
+    ],
+    [
+     "Special",
+     "Basenji",
+     1
+    ],
+    [
+     "Special",
+     "Pharaoh Hound",
+     1
+    ],
+    [
+     "Special",
+     "Rhodesian Ridgeback",
+     1
+    ],
+    [
+     "Special",
+     "Whippet",
+     1
+    ],
+    [
+     "Veteran",
+     "Pharaoh Hound",
+     1
+    ]
+   ]
+  },
+  {
+   "date": "2026-04-18",
+   "day": "Sat",
+   "club": "Western Washington Hound Association",
+   "city": "Ethel",
+   "state": "WA",
+   "event_number": "2026325804",
+   "event_type": "LCTR/LCTS",
+   "scope": "All-breed",
+   "specialty": false,
+   "trial_entries": 42,
+   "trial_competitors": 40,
+   "test_entries": 6,
+   "test_competitors": 6,
+   "total_entries": 48,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026325804",
+   "trial_stakes": [
+    [
+     "Open",
+     "Basenji",
+     4
+    ],
+    [
+     "Open",
+     "Greyhound",
+     1
+    ],
+    [
+     "Open",
+     "Ibizan Hound",
+     5
+    ],
+    [
+     "Open",
+     "Rhodesian Ridgeback",
+     2
+    ],
+    [
+     "Open",
+     "Whippet",
+     3
+    ],
+    [
+     "Open",
+     "Italian Greyhound",
+     2
+    ],
+    [
+     "Special",
+     "Basenji",
+     5
+    ],
+    [
+     "Special",
+     "Cirneco dell'Etna",
+     1
+    ],
+    [
+     "Special",
+     "Greyhound",
+     1
+    ],
+    [
+     "Special",
+     "Pharaoh Hound",
+     3
+    ],
+    [
+     "Special",
+     "Rhodesian Ridgeback",
+     2
+    ],
+    [
+     "Special",
+     "Saluki",
+     2
+    ],
+    [
+     "Special",
+     "Italian Greyhound",
+     5
+    ],
+    [
+     "Veteran",
+     "Basenji",
+     2
+    ],
+    [
+     "Veteran",
+     "Ibizan Hound",
+     1
+    ],
+    [
+     "Veteran",
+     "Rhodesian Ridgeback",
+     1
+    ]
+   ]
+  },
+  {
+   "date": "2026-04-19",
+   "day": "Sun",
+   "club": "Utah Sighthound Racing and Coursing Club",
+   "city": "South Jordan",
+   "state": "UT",
+   "event_number": "2026271204",
+   "event_type": "LCTR/LCTS",
+   "scope": "All-breed",
+   "specialty": false,
+   "trial_entries": 12,
+   "trial_competitors": 12,
+   "test_entries": 4,
+   "test_competitors": 4,
+   "total_entries": 16,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026271204",
+   "trial_stakes": [
+    [
+     "Open",
+     "Basenji",
+     4
+    ],
+    [
+     "Open",
+     "Borzoi",
+     1
+    ],
+    [
+     "Open",
+     "Whippet",
+     3
+    ],
+    [
+     "Special",
+     "Basenji",
+     1
+    ],
+    [
+     "Special",
+     "Pharaoh Hound",
+     1
+    ],
+    [
+     "Special",
+     "Rhodesian Ridgeback",
+     1
+    ],
+    [
+     "Veteran",
+     "Pharaoh Hound",
+     1
+    ]
+   ]
+  },
+  {
+   "date": "2026-04-19",
+   "day": "Sun",
+   "club": "Western Washington Hound Association",
+   "city": "Ethel",
+   "state": "WA",
+   "event_number": "2026325805",
+   "event_type": "LCTR/LCTS",
+   "scope": "All-breed",
+   "specialty": false,
+   "trial_entries": 36,
+   "trial_competitors": 35,
+   "test_entries": 4,
+   "test_competitors": 4,
+   "total_entries": 40,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026325805",
+   "trial_stakes": [
+    [
+     "Open",
+     "Basenji",
+     4
+    ],
+    [
+     "Open",
+     "Greyhound",
+     1
+    ],
+    [
+     "Open",
+     "Ibizan Hound",
+     4
+    ],
+    [
+     "Open",
+     "Rhodesian Ridgeback",
+     1
+    ],
+    [
+     "Open",
+     "Whippet",
+     2
+    ],
+    [
+     "Open",
+     "Italian Greyhound",
+     2
+    ],
+    [
+     "Special",
+     "Basenji",
+     5
+    ],
+    [
+     "Special",
+     "Ibizan Hound",
+     1
+    ],
+    [
+     "Special",
+     "Pharaoh Hound",
+     2
+    ],
+    [
+     "Special",
+     "Rhodesian Ridgeback",
+     1
+    ],
+    [
+     "Special",
+     "Saluki",
+     2
+    ],
+    [
+     "Special",
+     "Italian Greyhound",
+     5
+    ],
+    [
+     "Veteran",
+     "Basenji",
+     2
+    ],
+    [
+     "Veteran",
+     "Ibizan Hound",
+     1
+    ],
+    [
+     "Veteran",
+     "Rhodesian Ridgeback",
+     1
+    ],
+    [
+     "Veteran",
+     "Whippet",
+     1
+    ]
+   ]
+  },
+  {
+   "date": "2026-04-25",
+   "day": "Sat",
+   "club": "Minnesota Coursing Association",
+   "city": "Farmington",
+   "state": "MN",
+   "event_number": "2026262902",
+   "event_type": "LCTR/LCTS",
+   "scope": "All-breed",
+   "specialty": false,
+   "trial_entries": 20,
+   "trial_competitors": 20,
+   "test_entries": 5,
+   "test_competitors": 5,
+   "total_entries": 25,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026262902",
+   "trial_stakes": [
+    [
+     "Open",
+     "Afghan Hound",
+     2
+    ],
+    [
+     "Open",
+     "Borzoi",
+     5
+    ],
+    [
+     "Open",
+     "Rhodesian Ridgeback",
+     6
+    ],
+    [
+     "Open",
+     "Whippet",
+     4
+    ],
+    [
+     "Special",
+     "Rhodesian Ridgeback",
+     2
+    ],
+    [
+     "Special",
+     "Whippet",
+     1
+    ]
+   ]
+  },
+  {
+   "date": "2026-04-26",
+   "day": "Sun",
+   "club": "Minnesota Coursing Association",
+   "city": "Farmington",
+   "state": "MN",
+   "event_number": "2026262901",
+   "event_type": "LCTR/LCTS",
+   "scope": "All-breed",
+   "specialty": false,
+   "trial_entries": 18,
+   "trial_competitors": 18,
+   "test_entries": 7,
+   "test_competitors": 5,
+   "total_entries": 25,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026262901",
+   "trial_stakes": [
+    [
+     "Open",
+     "Afghan Hound",
+     2
+    ],
+    [
+     "Open",
+     "Borzoi",
+     3
+    ],
+    [
+     "Open",
+     "Rhodesian Ridgeback",
+     5
+    ],
+    [
+     "Open",
+     "Whippet",
+     6
+    ],
+    [
+     "Special",
+     "Rhodesian Ridgeback",
+     2
+    ]
+   ]
+  },
+  {
+   "date": "2026-05-02",
+   "day": "Sat",
+   "club": "Lehigh Valley Coursing Club",
+   "city": "Lambertville",
+   "state": "NJ",
+   "event_number": "2026671102",
+   "event_type": "LCTR/LCTS",
+   "scope": "All-breed",
+   "specialty": false,
+   "trial_entries": 26,
+   "trial_competitors": 26,
+   "test_entries": 2,
+   "test_competitors": 2,
+   "total_entries": 28,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026671102",
+   "trial_stakes": [
+    [
+     "Open",
+     "Borzoi",
+     1
+    ],
+    [
+     "Open",
+     "Greyhound",
+     3
+    ],
+    [
+     "Open",
+     "Pharaoh Hound",
+     1
+    ],
+    [
+     "Open",
+     "Rhodesian Ridgeback",
+     1
+    ],
+    [
+     "Open",
+     "Saluki",
+     3
+    ],
+    [
+     "Open",
+     "Whippet",
+     2
+    ],
+    [
+     "Open",
+     "Italian Greyhound",
+     5
+    ],
+    [
+     "Special",
+     "Basenji",
+     1
+    ],
+    [
+     "Special",
+     "Pharaoh Hound",
+     1
+    ],
+    [
+     "Special",
+     "Rhodesian Ridgeback",
+     1
+    ],
+    [
+     "Special",
+     "Whippet",
+     1
+    ],
+    [
+     "Special",
+     "Italian Greyhound",
+     1
+    ],
+    [
+     "Veteran",
+     "Rhodesian Ridgeback",
+     3
+    ],
+    [
+     "Veteran",
+     "Whippet",
+     2
+    ]
+   ]
+  },
+  {
+   "date": "2026-05-02",
+   "day": "Sat",
+   "club": "Gulf Coast Hound Club",
+   "city": "Semmes",
+   "state": "AL",
+   "event_number": "2026719404",
+   "event_type": "LCTR/LCTS",
+   "scope": "All-breed",
+   "specialty": false,
+   "trial_entries": 16,
+   "trial_competitors": 16,
+   "test_entries": 7,
+   "test_competitors": 7,
+   "total_entries": 23,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026719404",
+   "trial_stakes": [
+    [
+     "Open",
+     "Afghan Hound",
+     2
+    ],
+    [
+     "Open",
+     "Borzoi",
+     4
+    ],
+    [
+     "Open",
+     "Whippet",
+     5
+    ],
+    [
+     "Special",
+     "Afghan Hound",
+     1
+    ],
+    [
+     "Special",
+     "Whippet",
+     4
+    ]
+   ]
+  },
+  {
+   "date": "2026-05-03",
+   "day": "Sun",
+   "club": "Lehigh Valley Coursing Club",
+   "city": "Lambertville",
+   "state": "NJ",
+   "event_number": "2026671101",
+   "event_type": "LCTR/LCTS",
+   "scope": "All-breed",
+   "specialty": false,
+   "trial_entries": 24,
+   "trial_competitors": 24,
+   "test_entries": 2,
+   "test_competitors": 2,
+   "total_entries": 26,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026671101",
+   "trial_stakes": [
+    [
+     "Open",
+     "Ibizan Hound",
+     1
+    ],
+    [
+     "Open",
+     "Rhodesian Ridgeback",
+     5
+    ],
+    [
+     "Open",
+     "Saluki",
+     4
+    ],
+    [
+     "Open",
+     "Whippet",
+     3
+    ],
+    [
+     "Open",
+     "Italian Greyhound",
+     3
+    ],
+    [
+     "Special",
+     "Basenji",
+     1
+    ],
+    [
+     "Special",
+     "Rhodesian Ridgeback",
+     2
+    ],
+    [
+     "Veteran",
+     "Rhodesian Ridgeback",
+     3
+    ],
+    [
+     "Veteran",
+     "Whippet",
+     2
+    ]
+   ]
+  },
+  {
+   "date": "2026-05-03",
+   "day": "Sun",
+   "club": "Gulf Coast Hound Club",
+   "city": "Semmes",
+   "state": "AL",
+   "event_number": "2026719405",
+   "event_type": "LCTR/LCTS",
+   "scope": "All-breed",
+   "specialty": false,
+   "trial_entries": 16,
+   "trial_competitors": 16,
+   "test_entries": 9,
+   "test_competitors": 9,
+   "total_entries": 25,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026719405",
+   "trial_stakes": [
+    [
+     "Open",
+     "Afghan Hound",
+     1
+    ],
+    [
+     "Open",
+     "Borzoi",
+     4
+    ],
+    [
+     "Open",
+     "Rhodesian Ridgeback",
+     1
+    ],
+    [
+     "Open",
+     "Whippet",
+     5
+    ],
+    [
+     "Special",
+     "Afghan Hound",
+     1
+    ],
+    [
+     "Special",
+     "Whippet",
+     4
+    ]
+   ]
+  },
+  {
+   "date": "2026-05-09",
+   "day": "Sat",
+   "club": "Scottish Deerhound Club of America, Inc.",
+   "city": "Rockwood",
+   "state": "PA",
+   "event_number": "2026135815",
+   "event_type": "LCTR/LCTS",
+   "scope": "Scottish Deerhound specialty",
+   "specialty": true,
+   "trial_entries": 13,
+   "trial_competitors": 13,
+   "test_entries": 4,
+   "test_competitors": 4,
+   "total_entries": 17,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026135815",
+   "trial_stakes": [
+    [
+     "Open",
+     "Scottish Deerhound",
+     7
+    ],
+    [
+     "Special",
+     "Scottish Deerhound",
+     3
+    ],
+    [
+     "Veteran",
+     "Scottish Deerhound",
+     3
+    ]
+   ]
+  },
+  {
+   "date": "2026-05-09",
+   "day": "Sat",
+   "club": "Evergreen Basenji Club",
+   "city": "Roy",
+   "state": "WA",
+   "event_number": "2026184308",
+   "event_type": "LCTR/LCTS",
+   "scope": "Basenji specialty",
+   "specialty": true,
+   "trial_entries": 21,
+   "trial_competitors": 21,
+   "test_entries": 7,
+   "test_competitors": 7,
+   "total_entries": 28,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026184308",
+   "trial_stakes": [
+    [
+     "Open",
+     "Basenji",
+     4
+    ],
+    [
+     "Special",
+     "Basenji",
+     6
+    ],
+    [
+     "Special",
+     "Basenji",
+     7
+    ],
+    [
+     "Veteran",
+     "Basenji",
+     4
+    ]
+   ]
+  },
+  {
+   "date": "2026-05-09",
+   "day": "Sat",
+   "club": "Rocky Mountain Hound Association of Colorado",
+   "city": "Peyton",
+   "state": "CO",
+   "event_number": "2026653405",
+   "event_type": "LCTR/LCTS",
+   "scope": "All-breed",
+   "specialty": false,
+   "trial_entries": 25,
+   "trial_competitors": 24,
+   "test_entries": 8,
+   "test_competitors": 8,
+   "total_entries": 33,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026653405",
+   "trial_stakes": [
+    [
+     "Open",
+     "Greyhound",
+     5
+    ],
+    [
+     "Open",
+     "Irish Wolfhound",
+     2
+    ],
+    [
+     "Open",
+     "Rhodesian Ridgeback",
+     2
+    ],
+    [
+     "Open",
+     "Whippet",
+     9
+    ],
+    [
+     "Special",
+     "Greyhound",
+     1
+    ],
+    [
+     "Special",
+     "Rhodesian Ridgeback",
+     1
+    ],
+    [
+     "Veteran",
+     "Greyhound",
+     1
+    ],
+    [
+     "Veteran",
+     "Rhodesian Ridgeback",
+     1
+    ],
+    [
+     "Veteran",
+     "Whippet",
+     2
+    ]
+   ]
+  },
+  {
+   "date": "2026-05-09",
+   "day": "Sat",
+   "club": "Oklahoma Racing and Coursing Association",
+   "city": "Vinita",
+   "state": "OK",
+   "event_number": "2026717507",
+   "event_type": "LCTR",
+   "scope": "All-breed",
+   "specialty": false,
+   "trial_entries": 16,
+   "trial_competitors": 16,
+   "test_entries": null,
+   "test_competitors": null,
+   "total_entries": 16,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026717507",
+   "trial_stakes": [
+    [
+     "Open",
+     "Basenji",
+     2
+    ],
+    [
+     "Open",
+     "Rhodesian Ridgeback",
+     2
+    ],
+    [
+     "Open",
+     "Whippet",
+     5
+    ],
+    [
+     "Special",
+     "Basenji",
+     4
+    ],
+    [
+     "Special",
+     "Whippet",
+     3
+    ]
+   ]
+  },
+  {
+   "date": "2026-05-10",
+   "day": "Sun",
+   "club": "Borzoi Club of America, Inc.",
+   "city": "Weeping Water",
+   "state": "NE",
+   "event_number": "2026116701",
+   "event_type": "LCTR/LCTS",
+   "scope": "Borzoi specialty",
+   "specialty": true,
+   "trial_entries": 35,
+   "trial_competitors": 33,
+   "test_entries": 8,
+   "test_competitors": 7,
+   "total_entries": 43,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026116701",
+   "trial_stakes": [
+    [
+     "Open",
+     "Borzoi",
+     10
+    ],
+    [
+     "Open",
+     "Borzoi",
+     10
+    ],
+    [
+     "Special",
+     "Borzoi",
+     12
+    ],
+    [
+     "Veteran",
+     "Borzoi",
+     1
+    ]
+   ]
+  },
+  {
+   "date": "2026-05-10",
+   "day": "Sun",
+   "club": "Borzoi Club of America, Inc.",
+   "city": "Weeping Water",
+   "state": "NE",
+   "event_number": "2026116702",
+   "event_type": "LCTS",
+   "scope": "Borzoi specialty",
+   "specialty": true,
+   "trial_entries": null,
+   "trial_competitors": null,
+   "test_entries": 6,
+   "test_competitors": 6,
+   "total_entries": 6,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026116702",
+   "trial_stakes": []
+  },
+  {
+   "date": "2026-05-10",
+   "day": "Sun",
+   "club": "Evergreen Basenji Club",
+   "city": "Roy",
+   "state": "WA",
+   "event_number": "2026184307",
+   "event_type": "LCTR/LCTS",
+   "scope": "All-breed",
+   "specialty": false,
+   "trial_entries": 44,
+   "trial_competitors": 44,
+   "test_entries": 10,
+   "test_competitors": 10,
+   "total_entries": 54,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026184307",
+   "trial_stakes": [
+    [
+     "Open",
+     "Afghan Hound",
+     3
+    ],
+    [
+     "Open",
+     "Basenji",
+     4
+    ],
+    [
+     "Open",
+     "Rhodesian Ridgeback",
+     2
+    ],
+    [
+     "Open",
+     "Whippet",
+     5
+    ],
+    [
+     "Open",
+     "Italian Greyhound",
+     5
+    ],
+    [
+     "Special",
+     "Afghan Hound",
+     1
+    ],
+    [
+     "Special",
+     "Basenji",
+     8
+    ],
+    [
+     "Special",
+     "Pharaoh Hound",
+     5
+    ],
+    [
+     "Special",
+     "Whippet",
+     1
+    ],
+    [
+     "Special",
+     "Italian Greyhound",
+     7
+    ],
+    [
+     "Veteran",
+     "Basenji",
+     3
+    ]
+   ]
+  },
+  {
+   "date": "2026-05-10",
+   "day": "Sun",
+   "club": "Rocky Mountain Hound Association of Colorado",
+   "city": "Peyton",
+   "state": "CO",
+   "event_number": "2026653406",
+   "event_type": "LCTR/LCTS",
+   "scope": "All-breed",
+   "specialty": false,
+   "trial_entries": 15,
+   "trial_competitors": 15,
+   "test_entries": 7,
+   "test_competitors": 7,
+   "total_entries": 22,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026653406",
+   "trial_stakes": [
+    [
+     "Open",
+     "Irish Wolfhound",
+     2
+    ],
+    [
+     "Open",
+     "Rhodesian Ridgeback",
+     4
+    ],
+    [
+     "Open",
+     "Whippet",
+     7
+    ],
+    [
+     "Special",
+     "Rhodesian Ridgeback",
+     1
+    ],
+    [
+     "Veteran",
+     "Whippet",
+     1
+    ]
+   ]
+  },
+  {
+   "date": "2026-05-10",
+   "day": "Sun",
+   "club": "Oklahoma Racing and Coursing Association",
+   "city": "Vinita",
+   "state": "OK",
+   "event_number": "2026717508",
+   "event_type": "LCTR",
+   "scope": "All-breed",
+   "specialty": false,
+   "trial_entries": 11,
+   "trial_competitors": 11,
+   "test_entries": null,
+   "test_competitors": null,
+   "total_entries": 11,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026717508",
+   "trial_stakes": [
+    [
+     "Open",
+     "Basenji",
+     2
+    ],
+    [
+     "Open",
+     "Saluki",
+     1
+    ],
+    [
+     "Open",
+     "Whippet",
+     2
+    ],
+    [
+     "Special",
+     "Basenji",
+     4
+    ],
+    [
+     "Special",
+     "Whippet",
+     2
+    ]
+   ]
+  },
+  {
+   "date": "2026-05-16",
+   "day": "Sat",
+   "club": "Chintimini Kennel Club, Inc.",
+   "city": "Cottage Grove",
+   "state": "OR",
+   "event_number": "2026098813",
+   "event_type": "LCTR/LCTS",
+   "scope": "All-breed",
+   "specialty": false,
+   "trial_entries": 13,
+   "trial_competitors": 13,
+   "test_entries": 6,
+   "test_competitors": 6,
+   "total_entries": 19,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026098813",
+   "trial_stakes": [
+    [
+     "Open",
+     "Basenji",
+     1
+    ],
+    [
+     "Open",
+     "Whippet",
+     5
+    ],
+    [
+     "Special",
+     "Basenji",
+     4
+    ],
+    [
+     "Special",
+     "Pharaoh Hound",
+     1
+    ],
+    [
+     "Special",
+     "Rhodesian Ridgeback",
+     1
+    ],
+    [
+     "Special",
+     "Saluki",
+     1
+    ]
+   ]
+  },
+  {
+   "date": "2026-05-16",
+   "day": "Sat",
+   "club": "Sighthound Organization of Tidewater",
+   "city": "Dendron",
+   "state": "VA",
+   "event_number": "2026268801",
+   "event_type": "LCTR/LCTS",
+   "scope": "All-breed",
+   "specialty": false,
+   "trial_entries": 42,
+   "trial_competitors": 40,
+   "test_entries": 9,
+   "test_competitors": 9,
+   "total_entries": 51,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026268801",
+   "trial_stakes": [
+    [
+     "Open",
+     "Afghan Hound",
+     1
+    ],
+    [
+     "Open",
+     "Borzoi",
+     4
+    ],
+    [
+     "Open",
+     "Greyhound",
+     2
+    ],
+    [
+     "Open",
+     "Rhodesian Ridgeback",
+     1
+    ],
+    [
+     "Open",
+     "Whippet",
+     16
+    ],
+    [
+     "Special",
+     "Afghan Hound",
+     1
+    ],
+    [
+     "Special",
+     "Cirneco dell'Etna",
+     1
+    ],
+    [
+     "Special",
+     "Pharaoh Hound",
+     1
+    ],
+    [
+     "Special",
+     "Rhodesian Ridgeback",
+     5
+    ],
+    [
+     "Special",
+     "Whippet",
+     6
+    ],
+    [
+     "Veteran",
+     "Whippet",
+     2
+    ]
+   ]
+  },
+  {
+   "date": "2026-05-16",
+   "day": "Sat",
+   "club": "Trinity Valley Rhodesian Ridgeback Club of Texas",
+   "city": "McKinney",
+   "state": "TX",
+   "event_number": "2026295410",
+   "event_type": "LCTR/LCTS",
+   "scope": "All-breed",
+   "specialty": false,
+   "trial_entries": 73,
+   "trial_competitors": 73,
+   "test_entries": 4,
+   "test_competitors": 4,
+   "total_entries": 77,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026295410",
+   "trial_stakes": [
+    [
+     "Open",
+     "Afghan Hound",
+     3
+    ],
+    [
+     "Open",
+     "Basenji",
+     5
+    ],
+    [
+     "Open",
+     "Borzoi",
+     1
+    ],
+    [
+     "Open",
+     "Ibizan Hound",
+     2
+    ],
+    [
+     "Open",
+     "Pharaoh Hound",
+     1
+    ],
+    [
+     "Open",
+     "Rhodesian Ridgeback",
+     6
+    ],
+    [
+     "Open",
+     "Whippet",
+     13
+    ],
+    [
+     "Open",
+     "Whippet",
+     12
+    ],
+    [
+     "Special",
+     "Afghan Hound",
+     2
+    ],
+    [
+     "Special",
+     "Ibizan Hound",
+     3
+    ],
+    [
+     "Special",
+     "Rhodesian Ridgeback",
+     8
+    ],
+    [
+     "Special",
+     "Whippet",
+     14
+    ],
+    [
+     "Veteran",
+     "Afghan Hound",
+     1
+    ],
+    [
+     "Veteran",
+     "Rhodesian Ridgeback",
+     2
+    ]
+   ]
+  },
+  {
+   "date": "2026-05-16",
+   "day": "Sat",
+   "club": "Gazehounds of New England Lure Coursing Club",
+   "city": "Waterford",
+   "state": "CT",
+   "event_number": "2026571801",
+   "event_type": "LCTR/LCTS",
+   "scope": "All-breed",
+   "specialty": false,
+   "trial_entries": 54,
+   "trial_competitors": 51,
+   "test_entries": 9,
+   "test_competitors": 9,
+   "total_entries": 63,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026571801",
+   "trial_stakes": [
+    [
+     "Open",
+     "Afghan Hound",
+     4
+    ],
+    [
+     "Open",
+     "Azawakh",
+     1
+    ],
+    [
+     "Open",
+     "Borzoi",
+     3
+    ],
+    [
+     "Open",
+     "Greyhound",
+     3
+    ],
+    [
+     "Open",
+     "Pharaoh Hound",
+     1
+    ],
+    [
+     "Open",
+     "Rhodesian Ridgeback",
+     2
+    ],
+    [
+     "Open",
+     "Saluki",
+     5
+    ],
+    [
+     "Open",
+     "Whippet",
+     12
+    ],
+    [
+     "Special",
+     "Basenji",
+     2
+    ],
+    [
+     "Special",
+     "Rhodesian Ridgeback",
+     1
+    ],
+    [
+     "Special",
+     "Saluki",
+     2
+    ],
+    [
+     "Special",
+     "Whippet",
+     4
+    ],
+    [
+     "Veteran",
+     "Basenji",
+     3
+    ],
+    [
+     "Veteran",
+     "Rhodesian Ridgeback",
+     2
+    ],
+    [
+     "Veteran",
+     "Saluki",
+     1
+    ],
+    [
+     "Veteran",
+     "Whippet",
+     5
+    ]
+   ]
+  },
+  {
+   "date": "2026-05-16",
+   "day": "Sat",
+   "club": "Southern California Ibizan Hound Club",
+   "city": "Helena",
+   "state": "MT",
+   "event_number": "2026694017",
+   "event_type": "LCTR/LCTS",
+   "scope": "All-breed",
+   "specialty": false,
+   "trial_entries": 8,
+   "trial_competitors": 8,
+   "test_entries": 7,
+   "test_competitors": 6,
+   "total_entries": 15,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026694017",
+   "trial_stakes": [
+    [
+     "Open",
+     "Ibizan Hound",
+     6
+    ],
+    [
+     "Special",
+     "Borzoi",
+     1
+    ],
+    [
+     "Veteran",
+     "Ibizan Hound",
+     1
+    ]
+   ]
+  },
+  {
+   "date": "2026-05-17",
+   "day": "Sun",
+   "club": "Chintimini Kennel Club, Inc.",
+   "city": "Cottage Grove",
+   "state": "OR",
+   "event_number": "2026098814",
+   "event_type": "LCTR/LCTS",
+   "scope": "All-breed",
+   "specialty": false,
+   "trial_entries": 19,
+   "trial_competitors": 19,
+   "test_entries": 9,
+   "test_competitors": 9,
+   "total_entries": 28,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026098814",
+   "trial_stakes": [
+    [
+     "Open",
+     "Basenji",
+     1
+    ],
+    [
+     "Open",
+     "Whippet",
+     3
+    ],
+    [
+     "Special",
+     "Basenji",
+     4
+    ],
+    [
+     "Special",
+     "Cirneco dell'Etna",
+     2
+    ],
+    [
+     "Special",
+     "Pharaoh Hound",
+     6
+    ],
+    [
+     "Special",
+     "Rhodesian Ridgeback",
+     1
+    ],
+    [
+     "Special",
+     "Saluki",
+     1
+    ],
+    [
+     "Veteran",
+     "Whippet",
+     1
+    ]
+   ]
+  },
+  {
+   "date": "2026-05-17",
+   "day": "Sun",
+   "club": "Greyhound Club of America",
+   "city": "Hyde Park",
+   "state": "UT",
+   "event_number": "2026192511",
+   "event_type": "LCTR/LCTS",
+   "scope": "Greyhound specialty",
+   "specialty": true,
+   "trial_entries": 20,
+   "trial_competitors": 20,
+   "test_entries": 0,
+   "test_competitors": 0,
+   "total_entries": 20,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026192511",
+   "trial_stakes": [
+    [
+     "Open",
+     "Greyhound",
+     7
+    ],
+    [
+     "Special",
+     "Greyhound",
+     7
+    ],
+    [
+     "Veteran",
+     "Greyhound",
+     6
+    ]
+   ]
+  },
+  {
+   "date": "2026-05-17",
+   "day": "Sun",
+   "club": "Sighthound Organization of Tidewater",
+   "city": "Dendron",
+   "state": "VA",
+   "event_number": "2026268802",
+   "event_type": "LCTR/LCTS",
+   "scope": "All-breed",
+   "specialty": false,
+   "trial_entries": 21,
+   "trial_competitors": 18,
+   "test_entries": 5,
+   "test_competitors": 5,
+   "total_entries": 26,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026268802",
+   "trial_stakes": [
+    [
+     "Open",
+     "Rhodesian Ridgeback",
+     1
+    ],
+    [
+     "Open",
+     "Saluki",
+     1
+    ],
+    [
+     "Open",
+     "Whippet",
+     9
+    ],
+    [
+     "Special",
+     "Rhodesian Ridgeback",
+     3
+    ],
+    [
+     "Special",
+     "Whippet",
+     3
+    ],
+    [
+     "Veteran",
+     "Whippet",
+     1
+    ]
+   ]
+  },
+  {
+   "date": "2026-05-17",
+   "day": "Sun",
+   "club": "Utah Sighthound Racing and Coursing Club",
+   "city": "Hyde Park",
+   "state": "UT",
+   "event_number": "2026271222",
+   "event_type": "LCTR",
+   "scope": "All-breed",
+   "specialty": false,
+   "trial_entries": 7,
+   "trial_competitors": 6,
+   "test_entries": null,
+   "test_competitors": null,
+   "total_entries": 7,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026271222",
+   "trial_stakes": [
+    [
+     "Open",
+     "Pharaoh Hound",
+     1
+    ],
+    [
+     "Open",
+     "Whippet",
+     2
+    ],
+    [
+     "Special",
+     "Pharaoh Hound",
+     1
+    ],
+    [
+     "Special",
+     "Whippet",
+     1
+    ],
+    [
+     "Veteran",
+     "Pharaoh Hound",
+     1
+    ]
+   ]
+  },
+  {
+   "date": "2026-05-17",
+   "day": "Sun",
+   "club": "Trinity Valley Rhodesian Ridgeback Club of Texas",
+   "city": "McKinney",
+   "state": "TX",
+   "event_number": "2026295411",
+   "event_type": "LCTR/LCTS",
+   "scope": "All-breed",
+   "specialty": false,
+   "trial_entries": 63,
+   "trial_competitors": 63,
+   "test_entries": 1,
+   "test_competitors": 1,
+   "total_entries": 64,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026295411",
+   "trial_stakes": [
+    [
+     "Open",
+     "Afghan Hound",
+     2
+    ],
+    [
+     "Open",
+     "Basenji",
+     4
+    ],
+    [
+     "Open",
+     "Borzoi",
+     1
+    ],
+    [
+     "Open",
+     "Ibizan Hound",
+     1
+    ],
+    [
+     "Open",
+     "Pharaoh Hound",
+     1
+    ],
+    [
+     "Open",
+     "Rhodesian Ridgeback",
+     6
+    ],
+    [
+     "Open",
+     "Whippet",
+     11
+    ],
+    [
+     "Open",
+     "Whippet",
+     11
+    ],
+    [
+     "Special",
+     "Afghan Hound",
+     1
+    ],
+    [
+     "Special",
+     "Ibizan Hound",
+     4
+    ],
+    [
+     "Special",
+     "Rhodesian Ridgeback",
+     8
+    ],
+    [
+     "Special",
+     "Whippet",
+     11
+    ],
+    [
+     "Veteran",
+     "Rhodesian Ridgeback",
+     2
+    ]
+   ]
+  },
+  {
+   "date": "2026-05-17",
+   "day": "Sun",
+   "club": "Gazehounds of New England Lure Coursing Club",
+   "city": "Waterford",
+   "state": "CT",
+   "event_number": "2026571802",
+   "event_type": "LCTR/LCTS",
+   "scope": "All-breed",
+   "specialty": false,
+   "trial_entries": 39,
+   "trial_competitors": 39,
+   "test_entries": 7,
+   "test_competitors": 7,
+   "total_entries": 46,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026571802",
+   "trial_stakes": [
+    [
+     "Open",
+     "Azawakh",
+     2
+    ],
+    [
+     "Open",
+     "Borzoi",
+     1
+    ],
+    [
+     "Open",
+     "Pharaoh Hound",
+     1
+    ],
+    [
+     "Open",
+     "Saluki",
+     3
+    ],
+    [
+     "Open",
+     "Whippet",
+     12
+    ],
+    [
+     "Special",
+     "Basenji",
+     2
+    ],
+    [
+     "Special",
+     "Rhodesian Ridgeback",
+     2
+    ],
+    [
+     "Special",
+     "Saluki",
+     1
+    ],
+    [
+     "Special",
+     "Whippet",
+     4
+    ],
+    [
+     "Veteran",
+     "Basenji",
+     3
+    ],
+    [
+     "Veteran",
+     "Rhodesian Ridgeback",
+     3
+    ],
+    [
+     "Veteran",
+     "Whippet",
+     5
+    ]
+   ]
+  },
+  {
+   "date": "2026-05-17",
+   "day": "Sun",
+   "club": "Southern California Ibizan Hound Club",
+   "city": "Helena",
+   "state": "MT",
+   "event_number": "2026694018",
+   "event_type": "LCTR/LCTS",
+   "scope": "All-breed",
+   "specialty": false,
+   "trial_entries": 11,
+   "trial_competitors": 11,
+   "test_entries": 2,
+   "test_competitors": 2,
+   "total_entries": 13,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026694018",
+   "trial_stakes": [
+    [
+     "Open",
+     "Ibizan Hound",
+     6
+    ],
+    [
+     "Open",
+     "Whippet",
+     3
+    ],
+    [
+     "Special",
+     "Borzoi",
+     1
+    ],
+    [
+     "Veteran",
+     "Ibizan Hound",
+     1
+    ]
+   ]
+  },
+  {
+   "date": "2026-05-23",
+   "day": "Sat",
+   "club": "Iowa Coursing Association",
+   "city": "Cedar Falls",
+   "state": "IA",
+   "event_number": "2026259702",
+   "event_type": "LCTR/LCTS",
+   "scope": "All-breed",
+   "specialty": false,
+   "trial_entries": 43,
+   "trial_competitors": 35,
+   "test_entries": 0,
+   "test_competitors": 0,
+   "total_entries": 43,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026259702",
+   "trial_stakes": [
+    [
+     "Open",
+     "Afghan Hound",
+     2
+    ],
+    [
+     "Open",
+     "Borzoi",
+     1
+    ],
+    [
+     "Open",
+     "Greyhound",
+     4
+    ],
+    [
+     "Open",
+     "Ibizan Hound",
+     4
+    ],
+    [
+     "Open",
+     "Saluki",
+     2
+    ],
+    [
+     "Open",
+     "Whippet",
+     9
+    ],
+    [
+     "Special",
+     "Borzoi",
+     2
+    ],
+    [
+     "Special",
+     "Greyhound",
+     1
+    ],
+    [
+     "Special",
+     "Ibizan Hound",
+     6
+    ],
+    [
+     "Special",
+     "Saluki",
+     1
+    ],
+    [
+     "Special",
+     "Whippet",
+     2
+    ],
+    [
+     "Veteran",
+     "Greyhound",
+     1
+    ]
+   ]
+  },
+  {
+   "date": "2026-05-23",
+   "day": "Sat",
+   "club": "Mason Dixon Ibizan Hound Club",
+   "city": "Hanover",
+   "state": "PA",
+   "event_number": "2026260911",
+   "event_type": "LCTR/LCTS",
+   "scope": "All-breed",
+   "specialty": false,
+   "trial_entries": 35,
+   "trial_competitors": 34,
+   "test_entries": 7,
+   "test_competitors": 7,
+   "total_entries": 42,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026260911",
+   "trial_stakes": [
+    [
+     "Open",
+     "Borzoi",
+     8
+    ],
+    [
+     "Open",
+     "Greyhound",
+     1
+    ],
+    [
+     "Open",
+     "Pharaoh Hound",
+     1
+    ],
+    [
+     "Open",
+     "Rhodesian Ridgeback",
+     1
+    ],
+    [
+     "Open",
+     "Saluki",
+     1
+    ],
+    [
+     "Open",
+     "Whippet",
+     11
+    ],
+    [
+     "Special",
+     "Borzoi",
+     1
+    ],
+    [
+     "Special",
+     "Pharaoh Hound",
+     1
+    ],
+    [
+     "Special",
+     "Rhodesian Ridgeback",
+     3
+    ],
+    [
+     "Special",
+     "Whippet",
+     2
+    ],
+    [
+     "Veteran",
+     "Rhodesian Ridgeback",
+     2
+    ],
+    [
+     "Veteran",
+     "Whippet",
+     2
+    ]
+   ]
+  },
+  {
+   "date": "2026-05-24",
+   "day": "Sun",
+   "club": "Iowa Coursing Association",
+   "city": "Cedar Falls",
+   "state": "IA",
+   "event_number": "2026259703",
+   "event_type": "LCTR/LCTS",
+   "scope": "All-breed",
+   "specialty": false,
+   "trial_entries": 41,
+   "trial_competitors": 37,
+   "test_entries": 1,
+   "test_competitors": 1,
+   "total_entries": 42,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026259703",
+   "trial_stakes": [
+    [
+     "Open",
+     "Afghan Hound",
+     2
+    ],
+    [
+     "Open",
+     "Borzoi",
+     1
+    ],
+    [
+     "Open",
+     "Greyhound",
+     5
+    ],
+    [
+     "Open",
+     "Ibizan Hound",
+     2
+    ],
+    [
+     "Open",
+     "Saluki",
+     1
+    ],
+    [
+     "Open",
+     "Whippet",
+     8
+    ],
+    [
+     "Special",
+     "Basenji",
+     2
+    ],
+    [
+     "Special",
+     "Borzoi",
+     2
+    ],
+    [
+     "Special",
+     "Greyhound",
+     1
+    ],
+    [
+     "Special",
+     "Ibizan Hound",
+     6
+    ],
+    [
+     "Special",
+     "Saluki",
+     1
+    ],
+    [
+     "Special",
+     "Whippet",
+     2
+    ],
+    [
+     "Veteran",
+     "Greyhound",
+     1
+    ],
+    [
+     "Veteran",
+     "Ibizan Hound",
+     2
+    ],
+    [
+     "Veteran",
+     "Pharaoh Hound",
+     1
+    ]
+   ]
+  },
+  {
+   "date": "2026-05-24",
+   "day": "Sun",
+   "club": "Mason Dixon Ibizan Hound Club",
+   "city": "Hanover",
+   "state": "PA",
+   "event_number": "2026260912",
+   "event_type": "LCTR/LCTS",
+   "scope": "All-breed",
+   "specialty": false,
+   "trial_entries": 35,
+   "trial_competitors": 32,
+   "test_entries": 2,
+   "test_competitors": 2,
+   "total_entries": 37,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026260912",
+   "trial_stakes": [
+    [
+     "Open",
+     "Borzoi",
+     5
+    ],
+    [
+     "Open",
+     "Pharaoh Hound",
+     1
+    ],
+    [
+     "Open",
+     "Rhodesian Ridgeback",
+     2
+    ],
+    [
+     "Open",
+     "Saluki",
+     1
+    ],
+    [
+     "Open",
+     "Whippet",
+     10
+    ],
+    [
+     "Special",
+     "Borzoi",
+     1
+    ],
+    [
+     "Special",
+     "Pharaoh Hound",
+     1
+    ],
+    [
+     "Special",
+     "Rhodesian Ridgeback",
+     3
+    ],
+    [
+     "Special",
+     "Whippet",
+     2
+    ],
+    [
+     "Special",
+     "Italian Greyhound",
+     1
+    ],
+    [
+     "Veteran",
+     "Rhodesian Ridgeback",
+     1
+    ],
+    [
+     "Veteran",
+     "Whippet",
+     2
+    ],
+    [
+     "Veteran",
+     "Italian Greyhound",
+     2
+    ]
+   ]
+  },
+  {
+   "date": "2026-05-25",
+   "day": "Mon",
+   "club": "Mason Dixon Ibizan Hound Club",
+   "city": "Hanover",
+   "state": "PA",
+   "event_number": "2026260913",
+   "event_type": "LCTR/LCTS",
+   "scope": "All-breed",
+   "specialty": false,
+   "trial_entries": 34,
+   "trial_competitors": 34,
+   "test_entries": 5,
+   "test_competitors": 5,
+   "total_entries": 39,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026260913",
+   "trial_stakes": [
+    [
+     "Open",
+     "Borzoi",
+     7
+    ],
+    [
+     "Open",
+     "Pharaoh Hound",
+     1
+    ],
+    [
+     "Open",
+     "Rhodesian Ridgeback",
+     3
+    ],
+    [
+     "Open",
+     "Saluki",
+     1
+    ],
+    [
+     "Open",
+     "Whippet",
+     7
+    ],
+    [
+     "Open",
+     "Italian Greyhound",
+     1
+    ],
+    [
+     "Special",
+     "Borzoi",
+     2
+    ],
+    [
+     "Special",
+     "Rhodesian Ridgeback",
+     3
+    ],
+    [
+     "Special",
+     "Whippet",
+     4
+    ],
+    [
+     "Special",
+     "Italian Greyhound",
+     1
+    ],
+    [
+     "Veteran",
+     "Whippet",
+     2
+    ],
+    [
+     "Veteran",
+     "Italian Greyhound",
+     2
+    ]
+   ]
+  },
+  {
+   "date": "2026-05-30",
+   "day": "Sat",
+   "club": "California Coursing Association",
+   "city": "Chino",
+   "state": "CA",
+   "event_number": "2026251405",
+   "event_type": "LCTR/LCTS",
+   "scope": "All-breed",
+   "specialty": false,
+   "trial_entries": 22,
+   "trial_competitors": 22,
+   "test_entries": 7,
+   "test_competitors": 7,
+   "total_entries": 29,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026251405",
+   "trial_stakes": [
+    [
+     "Open",
+     "Basenji",
+     4
+    ],
+    [
+     "Open",
+     "Borzoi",
+     1
+    ],
+    [
+     "Open",
+     "Greyhound",
+     1
+    ],
+    [
+     "Open",
+     "Rhodesian Ridgeback",
+     2
+    ],
+    [
+     "Open",
+     "Whippet",
+     2
+    ],
+    [
+     "Open",
+     "Italian Greyhound",
+     1
+    ],
+    [
+     "Special",
+     "Ibizan Hound",
+     3
+    ],
+    [
+     "Special",
+     "Rhodesian Ridgeback",
+     6
+    ],
+    [
+     "Special",
+     "Whippet",
+     1
+    ],
+    [
+     "Veteran",
+     "Pharaoh Hound",
+     1
+    ]
+   ]
+  },
+  {
+   "date": "2026-05-30",
+   "day": "Sat",
+   "club": "Alaska Hound Group Association",
+   "city": "Palmer",
+   "state": "AK",
+   "event_number": "2026659304",
+   "event_type": "LCTR/LCTS",
+   "scope": "All-breed",
+   "specialty": false,
+   "trial_entries": 6,
+   "trial_competitors": 6,
+   "test_entries": 5,
+   "test_competitors": 5,
+   "total_entries": 11,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026659304",
+   "trial_stakes": [
+    [
+     "Open",
+     "Borzoi",
+     2
+    ],
+    [
+     "Open",
+     "Saluki",
+     1
+    ],
+    [
+     "Open",
+     "Whippet",
+     1
+    ],
+    [
+     "Open",
+     "Italian Greyhound",
+     2
+    ]
+   ]
+  },
+  {
+   "date": "2026-05-31",
+   "day": "Sun",
+   "club": "California Coursing Association",
+   "city": "Chino",
+   "state": "CA",
+   "event_number": "2026251406",
+   "event_type": "LCTR/LCTS",
+   "scope": "All-breed",
+   "specialty": false,
+   "trial_entries": 22,
+   "trial_competitors": 22,
+   "test_entries": 3,
+   "test_competitors": 3,
+   "total_entries": 25,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026251406",
+   "trial_stakes": [
+    [
+     "Open",
+     "Afghan Hound",
+     1
+    ],
+    [
+     "Open",
+     "Basenji",
+     4
+    ],
+    [
+     "Open",
+     "Rhodesian Ridgeback",
+     3
+    ],
+    [
+     "Open",
+     "Whippet",
+     2
+    ],
+    [
+     "Open",
+     "Italian Greyhound",
+     1
+    ],
+    [
+     "Special",
+     "Ibizan Hound",
+     3
+    ],
+    [
+     "Special",
+     "Rhodesian Ridgeback",
+     7
+    ],
+    [
+     "Veteran",
+     "Pharaoh Hound",
+     1
+    ]
+   ]
+  },
+  {
+   "date": "2026-05-31",
+   "day": "Sun",
+   "club": "Alaska Hound Group Association",
+   "city": "Palmer",
+   "state": "AK",
+   "event_number": "2026659306",
+   "event_type": "LCTR/LCTS",
+   "scope": "All-breed",
+   "specialty": false,
+   "trial_entries": 8,
+   "trial_competitors": 8,
+   "test_entries": 0,
+   "test_competitors": 0,
+   "total_entries": 8,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026659306",
+   "trial_stakes": [
+    [
+     "Open",
+     "Borzoi",
+     2
+    ],
+    [
+     "Open",
+     "Saluki",
+     1
+    ],
+    [
+     "Open",
+     "Whippet",
+     2
+    ],
+    [
+     "Open",
+     "Italian Greyhound",
+     3
+    ]
+   ]
+  },
+  {
+   "date": "2026-06-06",
+   "day": "Sat",
+   "club": "Michigan Gazehound Association",
+   "city": "Bellevue",
+   "state": "MI",
+   "event_number": "2026261009",
+   "event_type": "LCTR/LCTS",
+   "scope": "All-breed",
+   "specialty": false,
+   "trial_entries": 53,
+   "trial_competitors": 50,
+   "test_entries": 16,
+   "test_competitors": 16,
+   "total_entries": 69,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026261009",
+   "trial_stakes": [
+    [
+     "Open",
+     "Basenji",
+     5
+    ],
+    [
+     "Open",
+     "Ibizan Hound",
+     2
+    ],
+    [
+     "Open",
+     "Rhodesian Ridgeback",
+     4
+    ],
+    [
+     "Open",
+     "Whippet",
+     16
+    ],
+    [
+     "Open",
+     "Italian Greyhound",
+     1
+    ],
+    [
+     "Special",
+     "Basenji",
+     8
+    ],
+    [
+     "Special",
+     "Greyhound",
+     2
+    ],
+    [
+     "Special",
+     "Rhodesian Ridgeback",
+     2
+    ],
+    [
+     "Special",
+     "Whippet",
+     3
+    ],
+    [
+     "Special",
+     "Italian Greyhound",
+     1
+    ],
+    [
+     "Veteran",
+     "Basenji",
+     3
+    ],
+    [
+     "Veteran",
+     "Whippet",
+     3
+    ]
+   ]
+  },
+  {
+   "date": "2026-06-06",
+   "day": "Sat",
+   "club": "Lehigh Valley Coursing Club",
+   "city": "Lambertville",
+   "state": "NJ",
+   "event_number": "2026671103",
+   "event_type": "LCTR/LCTS",
+   "scope": "All-breed",
+   "specialty": false,
+   "trial_entries": 22,
+   "trial_competitors": 22,
+   "test_entries": 5,
+   "test_competitors": 5,
+   "total_entries": 27,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026671103",
+   "trial_stakes": [
+    [
+     "Open",
+     "Borzoi",
+     3
+    ],
+    [
+     "Open",
+     "Rhodesian Ridgeback",
+     2
+    ],
+    [
+     "Open",
+     "Saluki",
+     2
+    ],
+    [
+     "Open",
+     "Whippet",
+     4
+    ],
+    [
+     "Open",
+     "Italian Greyhound",
+     4
+    ],
+    [
+     "Special",
+     "Pharaoh Hound",
+     1
+    ],
+    [
+     "Special",
+     "Whippet",
+     2
+    ],
+    [
+     "Veteran",
+     "Rhodesian Ridgeback",
+     1
+    ],
+    [
+     "Veteran",
+     "Whippet",
+     3
+    ]
+   ]
+  },
+  {
+   "date": "2026-06-06",
+   "day": "Sat",
+   "club": "Northwest Rhodesian Ridgeback Club",
+   "city": "Ethel",
+   "state": "WA",
+   "event_number": "2026686312",
+   "event_type": "LCTR/LCTS",
+   "scope": "All-breed",
+   "specialty": false,
+   "trial_entries": 38,
+   "trial_competitors": 38,
+   "test_entries": 9,
+   "test_competitors": 9,
+   "total_entries": 47,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026686312",
+   "trial_stakes": [
+    [
+     "Open",
+     "Basenji",
+     5
+    ],
+    [
+     "Open",
+     "Pharaoh Hound",
+     3
+    ],
+    [
+     "Open",
+     "Rhodesian Ridgeback",
+     5
+    ],
+    [
+     "Open",
+     "Saluki",
+     1
+    ],
+    [
+     "Open",
+     "Whippet",
+     4
+    ],
+    [
+     "Special",
+     "Basenji",
+     6
+    ],
+    [
+     "Special",
+     "Cirneco dell'Etna",
+     1
+    ],
+    [
+     "Special",
+     "Ibizan Hound",
+     1
+    ],
+    [
+     "Special",
+     "Pharaoh Hound",
+     6
+    ],
+    [
+     "Special",
+     "Rhodesian Ridgeback",
+     2
+    ],
+    [
+     "Special",
+     "Saluki",
+     1
+    ],
+    [
+     "Veteran",
+     "Basenji",
+     2
+    ],
+    [
+     "Veteran",
+     "Pharaoh Hound",
+     1
+    ]
+   ]
+  },
+  {
+   "date": "2026-06-07",
+   "day": "Sun",
+   "club": "Michigan Gazehound Association",
+   "city": "Bellevue",
+   "state": "MI",
+   "event_number": "2026261010",
+   "event_type": "LCTR/LCTS",
+   "scope": "All-breed",
+   "specialty": false,
+   "trial_entries": 62,
+   "trial_competitors": 56,
+   "test_entries": 4,
+   "test_competitors": 4,
+   "total_entries": 66,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026261010",
+   "trial_stakes": [
+    [
+     "Open",
+     "Afghan Hound",
+     3
+    ],
+    [
+     "Open",
+     "Basenji",
+     5
+    ],
+    [
+     "Open",
+     "Greyhound",
+     0
+    ],
+    [
+     "Open",
+     "Ibizan Hound",
+     3
+    ],
+    [
+     "Open",
+     "Rhodesian Ridgeback",
+     4
+    ],
+    [
+     "Open",
+     "Whippet",
+     16
+    ],
+    [
+     "Open",
+     "Italian Greyhound",
+     1
+    ],
+    [
+     "Special",
+     "Basenji",
+     8
+    ],
+    [
+     "Special",
+     "Greyhound",
+     2
+    ],
+    [
+     "Special",
+     "Ibizan Hound",
+     1
+    ],
+    [
+     "Special",
+     "Rhodesian Ridgeback",
+     2
+    ],
+    [
+     "Special",
+     "Whippet",
+     4
+    ],
+    [
+     "Special",
+     "Italian Greyhound",
+     1
+    ],
+    [
+     "Veteran",
+     "Basenji",
+     3
+    ],
+    [
+     "Veteran",
+     "Whippet",
+     3
+    ]
+   ]
+  },
+  {
+   "date": "2026-06-07",
+   "day": "Sun",
+   "club": "Lehigh Valley Coursing Club",
+   "city": "Lambertville",
+   "state": "NJ",
+   "event_number": "2026671104",
+   "event_type": "LCTR/LCTS",
+   "scope": "All-breed",
+   "specialty": false,
+   "trial_entries": 22,
+   "trial_competitors": 21,
+   "test_entries": 2,
+   "test_competitors": 2,
+   "total_entries": 24,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026671104",
+   "trial_stakes": [
+    [
+     "Open",
+     "Borzoi",
+     3
+    ],
+    [
+     "Open",
+     "Rhodesian Ridgeback",
+     3
+    ],
+    [
+     "Open",
+     "Saluki",
+     2
+    ],
+    [
+     "Open",
+     "Whippet",
+     2
+    ],
+    [
+     "Open",
+     "Italian Greyhound",
+     4
+    ],
+    [
+     "Special",
+     "Pharaoh Hound",
+     1
+    ],
+    [
+     "Special",
+     "Rhodesian Ridgeback",
+     1
+    ],
+    [
+     "Special",
+     "Whippet",
+     2
+    ],
+    [
+     "Veteran",
+     "Rhodesian Ridgeback",
+     1
+    ],
+    [
+     "Veteran",
+     "Whippet",
+     2
+    ]
+   ]
+  },
+  {
+   "date": "2026-06-07",
+   "day": "Sun",
+   "club": "Northwest Rhodesian Ridgeback Club",
+   "city": "Ethel",
+   "state": "WA",
+   "event_number": "2026686313",
+   "event_type": "LCTR/LCTS",
+   "scope": "All-breed",
+   "specialty": false,
+   "trial_entries": 37,
+   "trial_competitors": 36,
+   "test_entries": 6,
+   "test_competitors": 6,
+   "total_entries": 43,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026686313",
+   "trial_stakes": [
+    [
+     "Open",
+     "Afghan Hound",
+     1
+    ],
+    [
+     "Open",
+     "Basenji",
+     3
+    ],
+    [
+     "Open",
+     "Pharaoh Hound",
+     2
+    ],
+    [
+     "Open",
+     "Rhodesian Ridgeback",
+     5
+    ],
+    [
+     "Open",
+     "Saluki",
+     1
+    ],
+    [
+     "Open",
+     "Whippet",
+     4
+    ],
+    [
+     "Special",
+     "Basenji",
+     6
+    ],
+    [
+     "Special",
+     "Cirneco dell'Etna",
+     1
+    ],
+    [
+     "Special",
+     "Ibizan Hound",
+     1
+    ],
+    [
+     "Special",
+     "Pharaoh Hound",
+     7
+    ],
+    [
+     "Special",
+     "Rhodesian Ridgeback",
+     1
+    ],
+    [
+     "Special",
+     "Saluki",
+     1
+    ],
+    [
+     "Special",
+     "Whippet",
+     1
+    ],
+    [
+     "Veteran",
+     "Basenji",
+     1
+    ],
+    [
+     "Veteran",
+     "Pharaoh Hound",
+     1
+    ]
+   ]
+  },
+  {
+   "date": "2026-06-13",
+   "day": "Sat",
+   "club": "Tortoise and Hare Lurecoursers Club",
+   "city": "Littlestown",
+   "state": "PA",
+   "event_number": "2026500901",
+   "event_type": "LCTR/LCTS",
+   "scope": "All-breed",
+   "specialty": false,
+   "trial_entries": 20,
+   "trial_competitors": 20,
+   "test_entries": 7,
+   "test_competitors": 7,
+   "total_entries": 27,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026500901",
+   "trial_stakes": [
+    [
+     "Open",
+     "Borzoi",
+     3
+    ],
+    [
+     "Open",
+     "Pharaoh Hound",
+     1
+    ],
+    [
+     "Open",
+     "Rhodesian Ridgeback",
+     2
+    ],
+    [
+     "Open",
+     "Whippet",
+     3
+    ],
+    [
+     "Special",
+     "Borzoi",
+     1
+    ],
+    [
+     "Special",
+     "Ibizan Hound",
+     1
+    ],
+    [
+     "Special",
+     "Pharaoh Hound",
+     2
+    ],
+    [
+     "Special",
+     "Whippet",
+     4
+    ],
+    [
+     "Veteran",
+     "Ibizan Hound",
+     1
+    ],
+    [
+     "Veteran",
+     "Whippet",
+     2
+    ]
+   ]
+  },
+  {
+   "date": "2026-06-14",
+   "day": "Sun",
+   "club": "Tortoise and Hare Lurecoursers Club",
+   "city": "Littlestown",
+   "state": "PA",
+   "event_number": "2026500902",
+   "event_type": "LCTR/LCTS",
+   "scope": "All-breed",
+   "specialty": false,
+   "trial_entries": 13,
+   "trial_competitors": 13,
+   "test_entries": 3,
+   "test_competitors": 3,
+   "total_entries": 16,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026500902",
+   "trial_stakes": [
+    [
+     "Open",
+     "Rhodesian Ridgeback",
+     1
+    ],
+    [
+     "Open",
+     "Whippet",
+     4
+    ],
+    [
+     "Special",
+     "Ibizan Hound",
+     1
+    ],
+    [
+     "Special",
+     "Whippet",
+     4
+    ],
+    [
+     "Veteran",
+     "Ibizan Hound",
+     1
+    ],
+    [
+     "Veteran",
+     "Whippet",
+     2
+    ]
+   ]
+  },
+  {
+   "date": "2026-06-20",
+   "day": "Sat",
+   "club": "Midwest Coursing Club of Wisconsin",
+   "city": "Caledonia",
+   "state": "WI",
+   "event_number": "2026262501",
+   "event_type": "LCTR/LCTS",
+   "scope": "All-breed",
+   "specialty": false,
+   "trial_entries": 14,
+   "trial_competitors": 14,
+   "test_entries": 10,
+   "test_competitors": 10,
+   "total_entries": 24,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026262501",
+   "trial_stakes": [
+    [
+     "Open",
+     "Borzoi",
+     5
+    ],
+    [
+     "Open",
+     "Rhodesian Ridgeback",
+     1
+    ],
+    [
+     "Open",
+     "Saluki",
+     1
+    ],
+    [
+     "Special",
+     "Basenji",
+     1
+    ],
+    [
+     "Special",
+     "Saluki",
+     2
+    ],
+    [
+     "Veteran",
+     "Basenji",
+     3
+    ],
+    [
+     "Veteran",
+     "Saluki",
+     1
+    ]
+   ]
+  },
+  {
+   "date": "2026-06-20",
+   "day": "Sat",
+   "club": "Western Washington Whippet Association",
+   "city": "Monroe",
+   "state": "WA",
+   "event_number": "2026411307",
+   "event_type": "LCTR/LCTS",
+   "scope": "All-breed",
+   "specialty": false,
+   "trial_entries": 33,
+   "trial_competitors": 33,
+   "test_entries": 4,
+   "test_competitors": 4,
+   "total_entries": 37,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026411307",
+   "trial_stakes": [
+    [
+     "Open",
+     "Afghan Hound",
+     4
+    ],
+    [
+     "Open",
+     "Basenji",
+     2
+    ],
+    [
+     "Open",
+     "Cirneco dell'Etna",
+     1
+    ],
+    [
+     "Open",
+     "Pharaoh Hound",
+     2
+    ],
+    [
+     "Open",
+     "Whippet",
+     6
+    ],
+    [
+     "Open",
+     "Italian Greyhound",
+     6
+    ],
+    [
+     "Special",
+     "Afghan Hound",
+     1
+    ],
+    [
+     "Special",
+     "Ibizan Hound",
+     1
+    ],
+    [
+     "Special",
+     "Whippet",
+     2
+    ],
+    [
+     "Special",
+     "Italian Greyhound",
+     6
+    ],
+    [
+     "Veteran",
+     "Basenji",
+     1
+    ],
+    [
+     "Veteran",
+     "Italian Greyhound",
+     1
+    ]
+   ]
+  },
+  {
+   "date": "2026-06-21",
+   "day": "Sun",
+   "club": "Midwest Coursing Club of Wisconsin",
+   "city": "Caledonia",
+   "state": "WI",
+   "event_number": "2026262502",
+   "event_type": "LCTR/LCTS",
+   "scope": "All-breed",
+   "specialty": false,
+   "trial_entries": 11,
+   "trial_competitors": 11,
+   "test_entries": 10,
+   "test_competitors": 10,
+   "total_entries": 21,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026262502",
+   "trial_stakes": [
+    [
+     "Open",
+     "Rhodesian Ridgeback",
+     1
+    ],
+    [
+     "Open",
+     "Saluki",
+     1
+    ],
+    [
+     "Open",
+     "Scottish Deerhound",
+     2
+    ],
+    [
+     "Special",
+     "Basenji",
+     1
+    ],
+    [
+     "Special",
+     "Saluki",
+     2
+    ],
+    [
+     "Veteran",
+     "Basenji",
+     3
+    ],
+    [
+     "Veteran",
+     "Saluki",
+     1
+    ]
+   ]
+  },
+  {
+   "date": "2026-06-21",
+   "day": "Sun",
+   "club": "Western Washington Whippet Association",
+   "city": "Monroe",
+   "state": "WA",
+   "event_number": "2026411308",
+   "event_type": "LCTR/LCTS",
+   "scope": "All-breed",
+   "specialty": false,
+   "trial_entries": 31,
+   "trial_competitors": 29,
+   "test_entries": 2,
+   "test_competitors": 2,
+   "total_entries": 33,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026411308",
+   "trial_stakes": [
+    [
+     "Open",
+     "Afghan Hound",
+     4
+    ],
+    [
+     "Open",
+     "Basenji",
+     2
+    ],
+    [
+     "Open",
+     "Cirneco dell'Etna",
+     1
+    ],
+    [
+     "Open",
+     "Pharaoh Hound",
+     2
+    ],
+    [
+     "Open",
+     "Whippet",
+     2
+    ],
+    [
+     "Open",
+     "Italian Greyhound",
+     6
+    ],
+    [
+     "Special",
+     "Afghan Hound",
+     1
+    ],
+    [
+     "Special",
+     "Basenji",
+     1
+    ],
+    [
+     "Special",
+     "Whippet",
+     2
+    ],
+    [
+     "Special",
+     "Italian Greyhound",
+     7
+    ],
+    [
+     "Veteran",
+     "Afghan Hound",
+     1
+    ],
+    [
+     "Veteran",
+     "Italian Greyhound",
+     0
+    ]
+   ]
+  },
+  {
+   "date": "2026-06-26",
+   "day": "Fri",
+   "club": "Basenji Club of America, Inc.",
+   "city": "Williamston",
+   "state": "MI",
+   "event_number": "2026000702",
+   "event_type": "LCTR",
+   "scope": "Basenji specialty",
+   "specialty": true,
+   "trial_entries": 17,
+   "trial_competitors": 16,
+   "test_entries": null,
+   "test_competitors": null,
+   "total_entries": 17,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026000702",
+   "trial_stakes": [
+    [
+     "Open",
+     "Basenji",
+     4
+    ],
+    [
+     "Special",
+     "Basenji",
+     7
+    ],
+    [
+     "Veteran",
+     "Basenji",
+     5
+    ]
+   ]
+  },
+  {
+   "date": "2026-06-26",
+   "day": "Fri",
+   "club": "American Whippet Club, Inc.",
+   "city": "Williamston",
+   "state": "MI",
+   "event_number": "2026074710",
+   "event_type": "LCTR",
+   "scope": "Whippet specialty",
+   "specialty": true,
+   "trial_entries": 37,
+   "trial_competitors": 37,
+   "test_entries": null,
+   "test_competitors": null,
+   "total_entries": 37,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026074710",
+   "trial_stakes": [
+    [
+     "Open",
+     "Whippet",
+     24
+    ],
+    [
+     "Special",
+     "Whippet",
+     10
+    ],
+    [
+     "Veteran",
+     "Whippet",
+     3
+    ]
+   ]
+  },
+  {
+   "date": "2026-06-26",
+   "day": "Fri",
+   "club": "Michigan Gazehound Association",
+   "city": "Williamston",
+   "state": "MI",
+   "event_number": "2026261011",
+   "event_type": "LCTS",
+   "scope": "All-breed",
+   "specialty": false,
+   "trial_entries": null,
+   "trial_competitors": null,
+   "test_entries": 11,
+   "test_competitors": 8,
+   "total_entries": 11,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026261011",
+   "trial_stakes": []
+  },
+  {
+   "date": "2026-06-26",
+   "day": "Fri",
+   "club": "Ibizan Hound Club of the United States",
+   "city": "Williamston",
+   "state": "MI",
+   "event_number": "2026291602",
+   "event_type": "LCTR",
+   "scope": "Ibizan Hound specialty",
+   "specialty": true,
+   "trial_entries": 13,
+   "trial_competitors": 13,
+   "test_entries": null,
+   "test_competitors": null,
+   "total_entries": 13,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026291602",
+   "trial_stakes": [
+    [
+     "Open",
+     "Ibizan Hound",
+     6
+    ],
+    [
+     "Special",
+     "Ibizan Hound",
+     6
+    ],
+    [
+     "Veteran",
+     "Ibizan Hound",
+     1
+    ]
+   ]
+  },
+  {
+   "date": "2026-06-27",
+   "day": "Sat",
+   "club": "Michigan Gazehound Association",
+   "city": "Williamston",
+   "state": "MI",
+   "event_number": "2026261012",
+   "event_type": "LCTR/LCTS",
+   "scope": "All-breed",
+   "specialty": false,
+   "trial_entries": 72,
+   "trial_competitors": 69,
+   "test_entries": 6,
+   "test_competitors": 6,
+   "total_entries": 78,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026261012",
+   "trial_stakes": [
+    [
+     "Open",
+     "Basenji",
+     8
+    ],
+    [
+     "Open",
+     "Greyhound",
+     1
+    ],
+    [
+     "Open",
+     "Ibizan Hound",
+     4
+    ],
+    [
+     "Open",
+     "Rhodesian Ridgeback",
+     2
+    ],
+    [
+     "Open",
+     "Saluki",
+     1
+    ],
+    [
+     "Open",
+     "Whippet",
+     20
+    ],
+    [
+     "Open",
+     "Italian Greyhound",
+     1
+    ],
+    [
+     "Special",
+     "Basenji",
+     7
+    ],
+    [
+     "Special",
+     "Greyhound",
+     4
+    ],
+    [
+     "Special",
+     "Ibizan Hound",
+     6
+    ],
+    [
+     "Special",
+     "Rhodesian Ridgeback",
+     1
+    ],
+    [
+     "Special",
+     "Whippet",
+     7
+    ],
+    [
+     "Veteran",
+     "Basenji",
+     3
+    ],
+    [
+     "Veteran",
+     "Greyhound",
+     1
+    ],
+    [
+     "Veteran",
+     "Whippet",
+     2
+    ],
+    [
+     "Veteran",
+     "Italian Greyhound",
+     1
+    ]
+   ]
+  },
+  {
+   "date": "2026-06-27",
+   "day": "Sat",
+   "club": "Irish Wolfhound Association of Lake Erie",
+   "city": "Fredonia",
+   "state": "NY",
+   "event_number": "2026761222",
+   "event_type": "LCTR/LCTS",
+   "scope": "All-breed",
+   "specialty": false,
+   "trial_entries": 9,
+   "trial_competitors": 9,
+   "test_entries": 3,
+   "test_competitors": 3,
+   "total_entries": 12,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026761222",
+   "trial_stakes": [
+    [
+     "Open",
+     "Irish Wolfhound",
+     2
+    ],
+    [
+     "Open",
+     "Whippet",
+     1
+    ],
+    [
+     "Special",
+     "Irish Wolfhound",
+     1
+    ],
+    [
+     "Special",
+     "Rhodesian Ridgeback",
+     3
+    ],
+    [
+     "Veteran",
+     "Irish Wolfhound",
+     1
+    ],
+    [
+     "Veteran",
+     "Whippet",
+     1
+    ]
+   ]
+  },
+  {
+   "date": "2026-06-28",
+   "day": "Sun",
+   "club": "Michigan Gazehound Association",
+   "city": "Williamston",
+   "state": "MI",
+   "event_number": "2026261013",
+   "event_type": "LCTR/LCTS",
+   "scope": "All-breed",
+   "specialty": false,
+   "trial_entries": 77,
+   "trial_competitors": 61,
+   "test_entries": 2,
+   "test_competitors": 2,
+   "total_entries": 79,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026261013",
+   "trial_stakes": [
+    [
+     "Open",
+     "Basenji",
+     4
+    ],
+    [
+     "Open",
+     "Ibizan Hound",
+     4
+    ],
+    [
+     "Open",
+     "Rhodesian Ridgeback",
+     3
+    ],
+    [
+     "Open",
+     "Saluki",
+     1
+    ],
+    [
+     "Open",
+     "Whippet",
+     19
+    ],
+    [
+     "Open",
+     "Italian Greyhound",
+     1
+    ],
+    [
+     "Special",
+     "Afghan Hound",
+     1
+    ],
+    [
+     "Special",
+     "Basenji",
+     6
+    ],
+    [
+     "Special",
+     "Greyhound",
+     3
+    ],
+    [
+     "Special",
+     "Ibizan Hound",
+     5
+    ],
+    [
+     "Special",
+     "Rhodesian Ridgeback",
+     3
+    ],
+    [
+     "Special",
+     "Whippet",
+     4
+    ],
+    [
+     "Special",
+     "Italian Greyhound",
+     1
+    ],
+    [
+     "Veteran",
+     "Basenji",
+     2
+    ],
+    [
+     "Veteran",
+     "Greyhound",
+     1
+    ],
+    [
+     "Veteran",
+     "Whippet",
+     3
+    ]
+   ]
+  },
+  {
+   "date": "2026-06-28",
+   "day": "Sun",
+   "club": "Irish Wolfhound Association of Lake Erie",
+   "city": "Fredonia",
+   "state": "NY",
+   "event_number": "2026761223",
+   "event_type": "LCTR/LCTS",
+   "scope": "All-breed",
+   "specialty": false,
+   "trial_entries": 7,
+   "trial_competitors": 6,
+   "test_entries": 1,
+   "test_competitors": 1,
+   "total_entries": 8,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026761223",
+   "trial_stakes": [
+    [
+     "Open",
+     "Irish Wolfhound",
+     3
+    ],
+    [
+     "Open",
+     "Whippet",
+     1
+    ],
+    [
+     "Special",
+     "Irish Wolfhound",
+     1
+    ],
+    [
+     "Veteran",
+     "Irish Wolfhound",
+     1
+    ]
+   ]
+  },
+  {
+   "date": "2026-07-04",
+   "day": "Sat",
+   "club": "Minnesota Coursing Association",
+   "city": "Farmington",
+   "state": "MN",
+   "event_number": "2026262907",
+   "event_type": "LCTR/LCTS",
+   "scope": "All-breed",
+   "specialty": false,
+   "trial_entries": 36,
+   "trial_competitors": 34,
+   "test_entries": 10,
+   "test_competitors": 8,
+   "total_entries": 46,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026262907",
+   "trial_stakes": [
+    [
+     "Open",
+     "Afghan Hound",
+     2
+    ],
+    [
+     "Open",
+     "Ibizan Hound",
+     1
+    ],
+    [
+     "Open",
+     "Rhodesian Ridgeback",
+     4
+    ],
+    [
+     "Open",
+     "Saluki",
+     1
+    ],
+    [
+     "Open",
+     "Whippet",
+     10
+    ],
+    [
+     "Open",
+     "Silken Windhound",
+     2
+    ],
+    [
+     "Special",
+     "Basenji",
+     1
+    ],
+    [
+     "Special",
+     "Ibizan Hound",
+     3
+    ],
+    [
+     "Special",
+     "Rhodesian Ridgeback",
+     2
+    ],
+    [
+     "Special",
+     "Whippet",
+     1
+    ],
+    [
+     "Veteran",
+     "Basenji",
+     3
+    ],
+    [
+     "Veteran",
+     "Ibizan Hound",
+     4
+    ]
+   ]
+  },
+  {
+   "date": "2026-07-05",
+   "day": "Sun",
+   "club": "Minnesota Coursing Association",
+   "city": "Farmington",
+   "state": "MN",
+   "event_number": "2026262908",
+   "event_type": "LCTR/LCTS",
+   "scope": "All-breed",
+   "specialty": false,
+   "trial_entries": 38,
+   "trial_competitors": 34,
+   "test_entries": 6,
+   "test_competitors": 6,
+   "total_entries": 44,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026262908",
+   "trial_stakes": [
+    [
+     "Open",
+     "Afghan Hound",
+     2
+    ],
+    [
+     "Open",
+     "Greyhound",
+     1
+    ],
+    [
+     "Open",
+     "Ibizan Hound",
+     1
+    ],
+    [
+     "Open",
+     "Rhodesian Ridgeback",
+     5
+    ],
+    [
+     "Open",
+     "Saluki",
+     1
+    ],
+    [
+     "Open",
+     "Whippet",
+     9
+    ],
+    [
+     "Open",
+     "Silken Windhound",
+     1
+    ],
+    [
+     "Special",
+     "Basenji",
+     1
+    ],
+    [
+     "Special",
+     "Ibizan Hound",
+     3
+    ],
+    [
+     "Special",
+     "Rhodesian Ridgeback",
+     3
+    ],
+    [
+     "Special",
+     "Whippet",
+     1
+    ],
+    [
+     "Veteran",
+     "Basenji",
+     3
+    ],
+    [
+     "Veteran",
+     "Ibizan Hound",
+     3
+    ]
+   ]
+  },
+  {
+   "date": "2026-07-11",
+   "day": "Sat",
+   "club": "Northwest Rhodesian Ridgeback Club",
+   "city": "Duvall",
+   "state": "WA",
+   "event_number": "2026686314",
+   "event_type": "LCTR/LCTS",
+   "scope": "All-breed",
+   "specialty": false,
+   "trial_entries": 32,
+   "trial_competitors": 32,
+   "test_entries": 9,
+   "test_competitors": 9,
+   "total_entries": 41,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026686314",
+   "trial_stakes": [
+    [
+     "Open",
+     "Afghan Hound",
+     3
+    ],
+    [
+     "Open",
+     "Basenji",
+     1
+    ],
+    [
+     "Open",
+     "Ibizan Hound",
+     2
+    ],
+    [
+     "Open",
+     "Pharaoh Hound",
+     1
+    ],
+    [
+     "Open",
+     "Rhodesian Ridgeback",
+     5
+    ],
+    [
+     "Open",
+     "Whippet",
+     5
+    ],
+    [
+     "Open",
+     "Silken Windhound",
+     1
+    ],
+    [
+     "Special",
+     "Afghan Hound",
+     1
+    ],
+    [
+     "Special",
+     "Basenji",
+     4
+    ],
+    [
+     "Special",
+     "Greyhound",
+     2
+    ],
+    [
+     "Special",
+     "Ibizan Hound",
+     1
+    ],
+    [
+     "Special",
+     "Whippet",
+     2
+    ],
+    [
+     "Veteran",
+     "Afghan Hound",
+     1
+    ],
+    [
+     "Veteran",
+     "Basenji",
+     1
+    ],
+    [
+     "Veteran",
+     "Rhodesian Ridgeback",
+     1
+    ],
+    [
+     "Veteran",
+     "Silken Windhound",
+     1
+    ]
+   ]
+  },
+  {
+   "date": "2026-07-12",
+   "day": "Sun",
+   "club": "Pharaoh Hound Club of America",
+   "city": "Bennett",
+   "state": "CO",
+   "event_number": "2026283602",
+   "event_type": "LCTR/LCTS",
+   "scope": "Pharaoh Hound specialty",
+   "specialty": true,
+   "trial_entries": 26,
+   "trial_competitors": 24,
+   "test_entries": 0,
+   "test_competitors": 0,
+   "total_entries": 26,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026283602",
+   "trial_stakes": [
+    [
+     "Open",
+     "Pharaoh Hound",
+     6
+    ],
+    [
+     "Special",
+     "Pharaoh Hound",
+     6
+    ],
+    [
+     "Special",
+     "Pharaoh Hound",
+     6
+    ],
+    [
+     "Veteran",
+     "Pharaoh Hound",
+     6
+    ]
+   ]
+  },
+  {
+   "date": "2026-07-12",
+   "day": "Sun",
+   "club": "Northwest Rhodesian Ridgeback Club",
+   "city": "Duvall",
+   "state": "WA",
+   "event_number": "2026686315",
+   "event_type": "LCTR/LCTS",
+   "scope": "All-breed",
+   "specialty": false,
+   "trial_entries": 30,
+   "trial_competitors": 30,
+   "test_entries": 7,
+   "test_competitors": 7,
+   "total_entries": 37,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026686315",
+   "trial_stakes": [
+    [
+     "Open",
+     "Afghan Hound",
+     1
+    ],
+    [
+     "Open",
+     "Basenji",
+     2
+    ],
+    [
+     "Open",
+     "Cirneco dell'Etna",
+     1
+    ],
+    [
+     "Open",
+     "Greyhound",
+     1
+    ],
+    [
+     "Open",
+     "Ibizan Hound",
+     2
+    ],
+    [
+     "Open",
+     "Pharaoh Hound",
+     1
+    ],
+    [
+     "Open",
+     "Rhodesian Ridgeback",
+     6
+    ],
+    [
+     "Open",
+     "Whippet",
+     4
+    ],
+    [
+     "Special",
+     "Afghan Hound",
+     1
+    ],
+    [
+     "Special",
+     "Basenji",
+     4
+    ],
+    [
+     "Special",
+     "Greyhound",
+     2
+    ],
+    [
+     "Special",
+     "Ibizan Hound",
+     2
+    ],
+    [
+     "Special",
+     "Whippet",
+     2
+    ],
+    [
+     "Veteran",
+     "Basenji",
+     1
+    ]
+   ]
+  },
+  {
+   "date": "2026-07-17",
+   "day": "Fri",
+   "club": "Alaska Hound Group Association",
+   "city": "Palmer",
+   "state": "AK",
+   "event_number": "2026659326",
+   "event_type": "LCTR/LCTS",
+   "scope": "All-breed",
+   "specialty": false,
+   "trial_entries": 9,
+   "trial_competitors": 9,
+   "test_entries": 1,
+   "test_competitors": 1,
+   "total_entries": 10,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026659326",
+   "trial_stakes": null
+  },
+  {
+   "date": "2026-07-18",
+   "day": "Sat",
+   "club": "Alaska Hound Group Association",
+   "city": "Palmer",
+   "state": "AK",
+   "event_number": "2026659310",
+   "event_type": "LCTR/LCTS",
+   "scope": "All-breed",
+   "specialty": false,
+   "trial_entries": 10,
+   "trial_competitors": 10,
+   "test_entries": 0,
+   "test_competitors": 0,
+   "total_entries": 10,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026659310",
+   "trial_stakes": [
+    [
+     "Open",
+     "Greyhound",
+     2
+    ],
+    [
+     "Open",
+     "Rhodesian Ridgeback",
+     2
+    ],
+    [
+     "Open",
+     "Whippet",
+     3
+    ],
+    [
+     "Open",
+     "Italian Greyhound",
+     3
+    ]
+   ]
+  },
+  {
+   "date": "2026-07-19",
+   "day": "Sun",
+   "club": "Alaska Hound Group Association",
+   "city": "Palmer",
+   "state": "AK",
+   "event_number": "2026659311",
+   "event_type": "LCTR/LCTS",
+   "scope": "All-breed",
+   "specialty": false,
+   "trial_entries": 8,
+   "trial_competitors": 8,
+   "test_entries": 0,
+   "test_competitors": 0,
+   "total_entries": 8,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026659311",
+   "trial_stakes": [
+    [
+     "Open",
+     "Greyhound",
+     2
+    ],
+    [
+     "Open",
+     "Whippet",
+     2
+    ],
+    [
+     "Open",
+     "Italian Greyhound",
+     3
+    ],
+    [
+     "Veteran",
+     "Saluki",
+     1
+    ]
+   ]
+  },
+  {
+   "date": "2026-08-01",
+   "day": "Sat",
+   "club": "Copper State Basenji Club",
+   "city": "Lakeside",
+   "state": "AZ",
+   "event_number": "2026520602",
+   "event_type": "LCTR/LCTS",
+   "scope": "All-breed",
+   "specialty": false,
+   "trial_entries": 24,
+   "trial_competitors": 24,
+   "test_entries": 7,
+   "test_competitors": 7,
+   "total_entries": 31,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026520602",
+   "trial_stakes": [
+    [
+     "Open",
+     "Basenji",
+     4
+    ],
+    [
+     "Open",
+     "Borzoi",
+     1
+    ],
+    [
+     "Open",
+     "Rhodesian Ridgeback",
+     5
+    ],
+    [
+     "Open",
+     "Whippet",
+     2
+    ],
+    [
+     "Special",
+     "Basenji",
+     3
+    ],
+    [
+     "Special",
+     "Borzoi",
+     1
+    ],
+    [
+     "Special",
+     "Rhodesian Ridgeback",
+     4
+    ],
+    [
+     "Special",
+     "Whippet",
+     1
+    ],
+    [
+     "Veteran",
+     "Basenji",
+     3
+    ]
+   ]
+  },
+  {
+   "date": "2026-08-02",
+   "day": "Sun",
+   "club": "Copper State Basenji Club",
+   "city": "Lakeside",
+   "state": "AZ",
+   "event_number": "2026520603",
+   "event_type": "LCTR/LCTS",
+   "scope": "All-breed",
+   "specialty": false,
+   "trial_entries": 20,
+   "trial_competitors": 20,
+   "test_entries": 6,
+   "test_competitors": 6,
+   "total_entries": 26,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026520603",
+   "trial_stakes": [
+    [
+     "Open",
+     "Basenji",
+     4
+    ],
+    [
+     "Open",
+     "Rhodesian Ridgeback",
+     4
+    ],
+    [
+     "Open",
+     "Whippet",
+     3
+    ],
+    [
+     "Special",
+     "Basenji",
+     2
+    ],
+    [
+     "Special",
+     "Rhodesian Ridgeback",
+     4
+    ],
+    [
+     "Special",
+     "Whippet",
+     1
+    ],
+    [
+     "Veteran",
+     "Basenji",
+     2
+    ]
+   ]
+  },
+  {
+   "date": "2026-08-15",
+   "day": "Sat",
+   "club": "Coursing Hounds Association of Mid-Potomac",
+   "city": "Leesburg",
+   "state": "VA",
+   "event_number": "2026257607",
+   "event_type": "LCTR/LCTS",
+   "scope": "All-breed",
+   "specialty": false,
+   "trial_entries": 39,
+   "trial_competitors": 39,
+   "test_entries": 2,
+   "test_competitors": 2,
+   "total_entries": 41,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026257607",
+   "trial_stakes": [
+    [
+     "Open",
+     "Borzoi",
+     4
+    ],
+    [
+     "Open",
+     "Pharaoh Hound",
+     1
+    ],
+    [
+     "Open",
+     "Rhodesian Ridgeback",
+     4
+    ],
+    [
+     "Open",
+     "Whippet",
+     12
+    ],
+    [
+     "Special",
+     "Afghan Hound",
+     1
+    ],
+    [
+     "Special",
+     "Borzoi",
+     1
+    ],
+    [
+     "Special",
+     "Ibizan Hound",
+     2
+    ],
+    [
+     "Special",
+     "Pharaoh Hound",
+     1
+    ],
+    [
+     "Special",
+     "Rhodesian Ridgeback",
+     1
+    ],
+    [
+     "Special",
+     "Saluki",
+     1
+    ],
+    [
+     "Special",
+     "Whippet",
+     4
+    ],
+    [
+     "Special",
+     "Italian Greyhound",
+     3
+    ],
+    [
+     "Veteran",
+     "Pharaoh Hound",
+     1
+    ],
+    [
+     "Veteran",
+     "Rhodesian Ridgeback",
+     1
+    ],
+    [
+     "Veteran",
+     "Whippet",
+     2
+    ]
+   ]
+  },
+  {
+   "date": "2026-08-16",
+   "day": "Sun",
+   "club": "Coursing Hounds Association of Mid-Potomac",
+   "city": "Leesburg",
+   "state": "VA",
+   "event_number": "2026257608",
+   "event_type": "LCTR/LCTS",
+   "scope": "All-breed",
+   "specialty": false,
+   "trial_entries": 32,
+   "trial_competitors": 32,
+   "test_entries": 5,
+   "test_competitors": 5,
+   "total_entries": 37,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026257608",
+   "trial_stakes": [
+    [
+     "Open",
+     "Pharaoh Hound",
+     1
+    ],
+    [
+     "Open",
+     "Rhodesian Ridgeback",
+     2
+    ],
+    [
+     "Open",
+     "Whippet",
+     12
+    ],
+    [
+     "Special",
+     "Ibizan Hound",
+     2
+    ],
+    [
+     "Special",
+     "Rhodesian Ridgeback",
+     2
+    ],
+    [
+     "Special",
+     "Saluki",
+     1
+    ],
+    [
+     "Special",
+     "Whippet",
+     5
+    ],
+    [
+     "Special",
+     "Italian Greyhound",
+     2
+    ],
+    [
+     "Veteran",
+     "Pharaoh Hound",
+     1
+    ],
+    [
+     "Veteran",
+     "Rhodesian Ridgeback",
+     1
+    ],
+    [
+     "Veteran",
+     "Whippet",
+     3
+    ]
+   ]
+  },
+  {
+   "date": "2026-09-05",
+   "day": "Sat",
+   "club": "Gazehound Association of the Smoky Mountains",
+   "city": "Limestone",
+   "state": "TN",
+   "event_number": "2026741911",
+   "event_type": "LCTR/LCTS",
+   "scope": "All-breed",
+   "specialty": false,
+   "trial_entries": 51,
+   "trial_competitors": 50,
+   "test_entries": 3,
+   "test_competitors": 2,
+   "total_entries": 54,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026741911",
+   "trial_stakes": [
+    [
+     "Open",
+     "Borzoi",
+     6
+    ],
+    [
+     "Open",
+     "Rhodesian Ridgeback",
+     1
+    ],
+    [
+     "Open",
+     "Whippet",
+     10
+    ],
+    [
+     "Special",
+     "Afghan Hound",
+     2
+    ],
+    [
+     "Special",
+     "Basenji",
+     1
+    ],
+    [
+     "Special",
+     "Ibizan Hound",
+     2
+    ],
+    [
+     "Special",
+     "Pharaoh Hound",
+     3
+    ],
+    [
+     "Special",
+     "Rhodesian Ridgeback",
+     5
+    ],
+    [
+     "Special",
+     "Saluki",
+     1
+    ],
+    [
+     "Special",
+     "Whippet",
+     9
+    ],
+    [
+     "Veteran",
+     "Afghan Hound",
+     2
+    ],
+    [
+     "Veteran",
+     "Basenji",
+     3
+    ],
+    [
+     "Veteran",
+     "Pharaoh Hound",
+     2
+    ],
+    [
+     "Veteran",
+     "Rhodesian Ridgeback",
+     2
+    ],
+    [
+     "Veteran",
+     "Whippet",
+     1
+    ]
+   ]
+  },
+  {
+   "date": "2026-09-06",
+   "day": "Sun",
+   "club": "Gazehound Association of the Smoky Mountains",
+   "city": "Limestone",
+   "state": "TN",
+   "event_number": "2026741912",
+   "event_type": "LCTR/LCTS",
+   "scope": "All-breed",
+   "specialty": false,
+   "trial_entries": 56,
+   "trial_competitors": 56,
+   "test_entries": 3,
+   "test_competitors": 2,
+   "total_entries": 59,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026741912",
+   "trial_stakes": [
+    [
+     "Open",
+     "Afghan Hound",
+     2
+    ],
+    [
+     "Open",
+     "Borzoi",
+     7
+    ],
+    [
+     "Open",
+     "Ibizan Hound",
+     1
+    ],
+    [
+     "Open",
+     "Whippet",
+     16
+    ],
+    [
+     "Special",
+     "Basenji",
+     1
+    ],
+    [
+     "Special",
+     "Ibizan Hound",
+     2
+    ],
+    [
+     "Special",
+     "Pharaoh Hound",
+     2
+    ],
+    [
+     "Special",
+     "Rhodesian Ridgeback",
+     6
+    ],
+    [
+     "Special",
+     "Saluki",
+     1
+    ],
+    [
+     "Special",
+     "Whippet",
+     9
+    ],
+    [
+     "Veteran",
+     "Afghan Hound",
+     2
+    ],
+    [
+     "Veteran",
+     "Basenji",
+     3
+    ],
+    [
+     "Veteran",
+     "Pharaoh Hound",
+     2
+    ],
+    [
+     "Veteran",
+     "Whippet",
+     2
+    ]
+   ]
+  },
+  {
+   "date": "2026-09-07",
+   "day": "Mon",
+   "club": "Ibizan Hound Club of the United States",
+   "city": "Sorento",
+   "state": "IL",
+   "event_number": "2026291609",
+   "event_type": "LCTR/LCTS",
+   "scope": "Ibizan Hound specialty",
+   "specialty": true,
+   "trial_entries": 34,
+   "trial_competitors": 33,
+   "test_entries": 2,
+   "test_competitors": 2,
+   "total_entries": 36,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026291609",
+   "trial_stakes": [
+    [
+     "Open",
+     "Ibizan Hound",
+     6
+    ],
+    [
+     "Open",
+     "Ibizan Hound",
+     6
+    ],
+    [
+     "Special",
+     "Ibizan Hound",
+     6
+    ],
+    [
+     "Special",
+     "Ibizan Hound",
+     6
+    ],
+    [
+     "Special",
+     "Ibizan Hound",
+     6
+    ],
+    [
+     "Veteran",
+     "Ibizan Hound",
+     3
+    ]
+   ]
+  },
+  {
+   "date": "2026-09-07",
+   "day": "Mon",
+   "club": "Central Leatherstocking Area Sighthound Society",
+   "city": "Starkville",
+   "state": "NY",
+   "event_number": "2026698401",
+   "event_type": "LCTR/LCTS",
+   "scope": "All-breed",
+   "specialty": false,
+   "trial_entries": 30,
+   "trial_competitors": 30,
+   "test_entries": 0,
+   "test_competitors": 0,
+   "total_entries": 30,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026698401",
+   "trial_stakes": [
+    [
+     "Open",
+     "Azawakh",
+     2
+    ],
+    [
+     "Open",
+     "Borzoi",
+     4
+    ],
+    [
+     "Open",
+     "Greyhound",
+     1
+    ],
+    [
+     "Open",
+     "Saluki",
+     1
+    ],
+    [
+     "Open",
+     "Whippet",
+     8
+    ],
+    [
+     "Special",
+     "Basenji",
+     4
+    ],
+    [
+     "Special",
+     "Greyhound",
+     4
+    ],
+    [
+     "Special",
+     "Saluki",
+     2
+    ],
+    [
+     "Special",
+     "Whippet",
+     3
+    ],
+    [
+     "Veteran",
+     "Greyhound",
+     1
+    ]
+   ]
+  },
+  {
+   "date": "2026-09-07",
+   "day": "Mon",
+   "club": "Gazehound Association of the Smoky Mountains",
+   "city": "Limestone",
+   "state": "TN",
+   "event_number": "2026741913",
+   "event_type": "LCTR/LCTS",
+   "scope": "All-breed",
+   "specialty": false,
+   "trial_entries": 42,
+   "trial_competitors": 41,
+   "test_entries": 0,
+   "test_competitors": 0,
+   "total_entries": 42,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026741913",
+   "trial_stakes": [
+    [
+     "Open",
+     "Afghan Hound",
+     2
+    ],
+    [
+     "Open",
+     "Borzoi",
+     4
+    ],
+    [
+     "Open",
+     "Whippet",
+     9
+    ],
+    [
+     "Special",
+     "Basenji",
+     1
+    ],
+    [
+     "Special",
+     "Pharaoh Hound",
+     2
+    ],
+    [
+     "Special",
+     "Rhodesian Ridgeback",
+     3
+    ],
+    [
+     "Special",
+     "Saluki",
+     1
+    ],
+    [
+     "Special",
+     "Whippet",
+     9
+    ],
+    [
+     "Veteran",
+     "Afghan Hound",
+     2
+    ],
+    [
+     "Veteran",
+     "Basenji",
+     3
+    ],
+    [
+     "Veteran",
+     "Pharaoh Hound",
+     2
+    ],
+    [
+     "Veteran",
+     "Rhodesian Ridgeback",
+     1
+    ],
+    [
+     "Veteran",
+     "Whippet",
+     2
+    ]
+   ]
+  },
+  {
+   "date": "2026-09-12",
+   "day": "Sat",
+   "club": "Alaska Hound Group Association",
+   "city": "Palmer",
+   "state": "AK",
+   "event_number": "2026659318",
+   "event_type": "LCTR/LCTS",
+   "scope": "All-breed",
+   "specialty": false,
+   "trial_entries": 8,
+   "trial_competitors": 8,
+   "test_entries": 1,
+   "test_competitors": 1,
+   "total_entries": 9,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026659318",
+   "trial_stakes": [
+    [
+     "Open",
+     "Greyhound",
+     1
+    ],
+    [
+     "Open",
+     "Saluki",
+     2
+    ],
+    [
+     "Open",
+     "Whippet",
+     2
+    ],
+    [
+     "Open",
+     "Italian Greyhound",
+     3
+    ]
+   ]
+  },
+  {
+   "date": "2026-09-12",
+   "day": "Sat",
+   "club": "Chesapeake Bay Area Rhodesian Ridgeback Club",
+   "city": "Hanover",
+   "state": "PA",
+   "event_number": "2026724111",
+   "event_type": "LCTR/LCTS",
+   "scope": "All-breed",
+   "specialty": false,
+   "trial_entries": 31,
+   "trial_competitors": 30,
+   "test_entries": 8,
+   "test_competitors": 8,
+   "total_entries": 39,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026724111",
+   "trial_stakes": [
+    [
+     "Open",
+     "Borzoi",
+     1
+    ],
+    [
+     "Open",
+     "Pharaoh Hound",
+     2
+    ],
+    [
+     "Open",
+     "Rhodesian Ridgeback",
+     7
+    ],
+    [
+     "Open",
+     "Whippet",
+     3
+    ],
+    [
+     "Special",
+     "Basenji",
+     1
+    ],
+    [
+     "Special",
+     "Borzoi",
+     2
+    ],
+    [
+     "Special",
+     "Pharaoh Hound",
+     2
+    ],
+    [
+     "Special",
+     "Rhodesian Ridgeback",
+     5
+    ],
+    [
+     "Special",
+     "Whippet",
+     3
+    ],
+    [
+     "Veteran",
+     "Pharaoh Hound",
+     1
+    ],
+    [
+     "Veteran",
+     "Rhodesian Ridgeback",
+     3
+    ]
+   ]
+  },
+  {
+   "date": "2026-09-13",
+   "day": "Sun",
+   "club": "Alaska Hound Group Association",
+   "city": "Palmer",
+   "state": "AK",
+   "event_number": "2026659319",
+   "event_type": "LCTR/LCTS",
+   "scope": "All-breed",
+   "specialty": false,
+   "trial_entries": 7,
+   "trial_competitors": 7,
+   "test_entries": 1,
+   "test_competitors": 1,
+   "total_entries": 8,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026659319",
+   "trial_stakes": [
+    [
+     "Open",
+     "Greyhound",
+     1
+    ],
+    [
+     "Open",
+     "Saluki",
+     2
+    ],
+    [
+     "Open",
+     "Whippet",
+     1
+    ],
+    [
+     "Open",
+     "Italian Greyhound",
+     3
+    ]
+   ]
+  },
+  {
+   "date": "2026-09-13",
+   "day": "Sun",
+   "club": "Chesapeake Bay Area Rhodesian Ridgeback Club",
+   "city": "Hanover",
+   "state": "PA",
+   "event_number": "2026724112",
+   "event_type": "LCTR/LCTS",
+   "scope": "All-breed",
+   "specialty": false,
+   "trial_entries": 21,
+   "trial_competitors": 21,
+   "test_entries": 3,
+   "test_competitors": 3,
+   "total_entries": 24,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026724112",
+   "trial_stakes": [
+    [
+     "Open",
+     "Pharaoh Hound",
+     1
+    ],
+    [
+     "Open",
+     "Rhodesian Ridgeback",
+     10
+    ],
+    [
+     "Open",
+     "Whippet",
+     1
+    ],
+    [
+     "Open",
+     "Silken Windhound",
+     1
+    ],
+    [
+     "Special",
+     "Pharaoh Hound",
+     2
+    ],
+    [
+     "Special",
+     "Rhodesian Ridgeback",
+     2
+    ],
+    [
+     "Veteran",
+     "Pharaoh Hound",
+     1
+    ],
+    [
+     "Veteran",
+     "Rhodesian Ridgeback",
+     3
+    ]
+   ]
+  },
+  {
+   "date": "2026-09-19",
+   "day": "Sat",
+   "club": "Chintimini Kennel Club, Inc.",
+   "city": "Philomath",
+   "state": "OR",
+   "event_number": "2026098829",
+   "event_type": "LCTR/LCTS",
+   "scope": "All-breed",
+   "specialty": false,
+   "trial_entries": 29,
+   "trial_competitors": 29,
+   "test_entries": 5,
+   "test_competitors": 5,
+   "total_entries": 34,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026098829",
+   "trial_stakes": [
+    [
+     "Open",
+     "Borzoi",
+     3
+    ],
+    [
+     "Open",
+     "Greyhound",
+     3
+    ],
+    [
+     "Open",
+     "Pharaoh Hound",
+     1
+    ],
+    [
+     "Open",
+     "Rhodesian Ridgeback",
+     1
+    ],
+    [
+     "Open",
+     "Saluki",
+     5
+    ],
+    [
+     "Open",
+     "Whippet",
+     7
+    ],
+    [
+     "Special",
+     "Basenji",
+     2
+    ],
+    [
+     "Special",
+     "Borzoi",
+     1
+    ],
+    [
+     "Special",
+     "Pharaoh Hound",
+     2
+    ],
+    [
+     "Special",
+     "Rhodesian Ridgeback",
+     2
+    ],
+    [
+     "Veteran",
+     "Basenji",
+     1
+    ],
+    [
+     "Veteran",
+     "Saluki",
+     1
+    ]
+   ]
+  },
+  {
+   "date": "2026-09-19",
+   "day": "Sat",
+   "club": "Greater Valley Forge Rhodesian Ridgeback Club, Inc.",
+   "city": "Bridgewater",
+   "state": "NJ",
+   "event_number": "2026288909",
+   "event_type": "LCTR/LCTS",
+   "scope": "All-breed",
+   "specialty": false,
+   "trial_entries": 44,
+   "trial_competitors": 44,
+   "test_entries": 6,
+   "test_competitors": 6,
+   "total_entries": 50,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026288909",
+   "trial_stakes": [
+    [
+     "Open",
+     "Basenji",
+     1
+    ],
+    [
+     "Open",
+     "Rhodesian Ridgeback",
+     7
+    ],
+    [
+     "Open",
+     "Saluki",
+     2
+    ],
+    [
+     "Open",
+     "Whippet",
+     11
+    ],
+    [
+     "Open",
+     "Silken Windhound",
+     3
+    ],
+    [
+     "Special",
+     "Basenji",
+     2
+    ],
+    [
+     "Special",
+     "Borzoi",
+     1
+    ],
+    [
+     "Special",
+     "Rhodesian Ridgeback",
+     3
+    ],
+    [
+     "Special",
+     "Whippet",
+     7
+    ],
+    [
+     "Special",
+     "Italian Greyhound",
+     1
+    ],
+    [
+     "Veteran",
+     "Basenji",
+     1
+    ],
+    [
+     "Veteran",
+     "Rhodesian Ridgeback",
+     2
+    ],
+    [
+     "Veteran",
+     "Whippet",
+     3
+    ]
+   ]
+  },
+  {
+   "date": "2026-09-19",
+   "day": "Sat",
+   "club": "Southern California Ibizan Hound Club",
+   "city": "Chino",
+   "state": "CA",
+   "event_number": "2026694024",
+   "event_type": "LCTR",
+   "scope": "Ibizan Hound specialty",
+   "specialty": true,
+   "trial_entries": 3,
+   "trial_competitors": 3,
+   "test_entries": null,
+   "test_competitors": null,
+   "total_entries": 3,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026694024",
+   "trial_stakes": [
+    [
+     "Special",
+     "Ibizan Hound",
+     3
+    ]
+   ]
+  },
+  {
+   "date": "2026-09-20",
+   "day": "Sun",
+   "club": "Chintimini Kennel Club, Inc.",
+   "city": "Philomath",
+   "state": "OR",
+   "event_number": "2026098830",
+   "event_type": "LCTR/LCTS",
+   "scope": "All-breed",
+   "specialty": false,
+   "trial_entries": 27,
+   "trial_competitors": 27,
+   "test_entries": 1,
+   "test_competitors": 1,
+   "total_entries": 28,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026098830",
+   "trial_stakes": [
+    [
+     "Open",
+     "Borzoi",
+     4
+    ],
+    [
+     "Open",
+     "Greyhound",
+     1
+    ],
+    [
+     "Open",
+     "Rhodesian Ridgeback",
+     1
+    ],
+    [
+     "Open",
+     "Saluki",
+     4
+    ],
+    [
+     "Open",
+     "Whippet",
+     7
+    ],
+    [
+     "Special",
+     "Basenji",
+     2
+    ],
+    [
+     "Special",
+     "Borzoi",
+     1
+    ],
+    [
+     "Special",
+     "Pharaoh Hound",
+     2
+    ],
+    [
+     "Special",
+     "Rhodesian Ridgeback",
+     1
+    ],
+    [
+     "Special",
+     "Saluki",
+     1
+    ],
+    [
+     "Veteran",
+     "Basenji",
+     1
+    ],
+    [
+     "Veteran",
+     "Pharaoh Hound",
+     1
+    ],
+    [
+     "Veteran",
+     "Saluki",
+     1
+    ]
+   ]
+  },
+  {
+   "date": "2026-09-20",
+   "day": "Sun",
+   "club": "Greater Valley Forge Rhodesian Ridgeback Club, Inc.",
+   "city": "Bridgewater",
+   "state": "NJ",
+   "event_number": "2026288908",
+   "event_type": "LCTR/LCTS",
+   "scope": "All-breed",
+   "specialty": false,
+   "trial_entries": 29,
+   "trial_competitors": 29,
+   "test_entries": 5,
+   "test_competitors": 5,
+   "total_entries": 34,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026288908",
+   "trial_stakes": [
+    [
+     "Open",
+     "Basenji",
+     1
+    ],
+    [
+     "Open",
+     "Rhodesian Ridgeback",
+     5
+    ],
+    [
+     "Open",
+     "Saluki",
+     2
+    ],
+    [
+     "Open",
+     "Whippet",
+     7
+    ],
+    [
+     "Open",
+     "Silken Windhound",
+     3
+    ],
+    [
+     "Special",
+     "Basenji",
+     2
+    ],
+    [
+     "Special",
+     "Rhodesian Ridgeback",
+     4
+    ],
+    [
+     "Special",
+     "Whippet",
+     2
+    ],
+    [
+     "Veteran",
+     "Basenji",
+     1
+    ],
+    [
+     "Veteran",
+     "Rhodesian Ridgeback",
+     1
+    ],
+    [
+     "Veteran",
+     "Whippet",
+     1
+    ]
+   ]
+  },
+  {
+   "date": "2026-09-20",
+   "day": "Sun",
+   "club": "Southern California Ibizan Hound Club",
+   "city": "Chino",
+   "state": "CA",
+   "event_number": "2026694025",
+   "event_type": "LCTR",
+   "scope": "Ibizan Hound specialty",
+   "specialty": true,
+   "trial_entries": 3,
+   "trial_competitors": 3,
+   "test_entries": null,
+   "test_competitors": null,
+   "total_entries": 3,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026694025",
+   "trial_stakes": [
+    [
+     "Special",
+     "Ibizan Hound",
+     3
+    ]
+   ]
+  },
+  {
+   "date": "2026-09-26",
+   "day": "Sat",
+   "club": "Oklahoma Racing and Coursing Association",
+   "city": "Vinita",
+   "state": "OK",
+   "event_number": "2026717512",
+   "event_type": "LCTR/LCTS",
+   "scope": "All-breed",
+   "specialty": false,
+   "trial_entries": 28,
+   "trial_competitors": 28,
+   "test_entries": 13,
+   "test_competitors": 13,
+   "total_entries": 41,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026717512",
+   "trial_stakes": [
+    [
+     "Open",
+     "Borzoi",
+     7
+    ],
+    [
+     "Open",
+     "Rhodesian Ridgeback",
+     8
+    ],
+    [
+     "Open",
+     "Saluki",
+     1
+    ],
+    [
+     "Open",
+     "Whippet",
+     2
+    ],
+    [
+     "Special",
+     "Borzoi",
+     1
+    ],
+    [
+     "Special",
+     "Greyhound",
+     1
+    ],
+    [
+     "Special",
+     "Rhodesian Ridgeback",
+     5
+    ],
+    [
+     "Special",
+     "Whippet",
+     2
+    ],
+    [
+     "Veteran",
+     "Rhodesian Ridgeback",
+     1
+    ]
+   ]
+  },
+  {
+   "date": "2026-09-27",
+   "day": "Sun",
+   "club": "Oklahoma Racing and Coursing Association",
+   "city": "Vinita",
+   "state": "OK",
+   "event_number": "2026717513",
+   "event_type": "LCTR/LCTS",
+   "scope": "All-breed",
+   "specialty": false,
+   "trial_entries": 36,
+   "trial_competitors": 36,
+   "test_entries": 3,
+   "test_competitors": 3,
+   "total_entries": 39,
+   "results_posted": true,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026717513",
+   "trial_stakes": [
+    [
+     "Open",
+     "Borzoi",
+     6
+    ],
+    [
+     "Open",
+     "Greyhound",
+     4
+    ],
+    [
+     "Open",
+     "Rhodesian Ridgeback",
+     6
+    ],
+    [
+     "Open",
+     "Whippet",
+     5
+    ],
+    [
+     "Special",
+     "Borzoi",
+     1
+    ],
+    [
+     "Special",
+     "Greyhound",
+     1
+    ],
+    [
+     "Special",
+     "Rhodesian Ridgeback",
+     5
+    ],
+    [
+     "Special",
+     "Whippet",
+     4
+    ],
+    [
+     "Veteran",
+     "Greyhound",
+     1
+    ],
+    [
+     "Veteran",
+     "Rhodesian Ridgeback",
+     1
+    ],
+    [
+     "Veteran",
+     "Whippet",
+     2
+    ]
+   ]
+  },
+  {
+   "date": "2026-10-03",
+   "day": "Sat",
+   "club": "OKI Gazehound Association of Ohio",
+   "city": "Tipp City",
+   "state": "OH",
+   "event_number": "2026265203",
+   "event_type": "LCTR/LCTS",
+   "scope": null,
+   "specialty": false,
+   "trial_entries": null,
+   "trial_competitors": null,
+   "test_entries": null,
+   "test_competitors": null,
+   "total_entries": null,
+   "results_posted": false,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026265203",
+   "trial_stakes": []
+  },
+  {
+   "date": "2026-10-03",
+   "day": "Sat",
+   "club": "Orange Coast Rhodesian Ridgeback Club",
+   "city": "Chino",
+   "state": "CA",
+   "event_number": "2026281120",
+   "event_type": "LCTR/LCTS",
+   "scope": null,
+   "specialty": false,
+   "trial_entries": null,
+   "trial_competitors": null,
+   "test_entries": null,
+   "test_competitors": null,
+   "total_entries": null,
+   "results_posted": false,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026281120",
+   "trial_stakes": []
+  },
+  {
+   "date": "2026-10-03",
+   "day": "Sat",
+   "club": "Western Washington Whippet Association",
+   "city": "Roy",
+   "state": "WA",
+   "event_number": "2026411311",
+   "event_type": "LCTR/LCTS",
+   "scope": null,
+   "specialty": false,
+   "trial_entries": null,
+   "trial_competitors": null,
+   "test_entries": null,
+   "test_competitors": null,
+   "total_entries": null,
+   "results_posted": false,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026411311",
+   "trial_stakes": []
+  },
+  {
+   "date": "2026-10-03",
+   "day": "Sat",
+   "club": "Tortoise and Hare Lurecoursers Club",
+   "city": "Littlestown",
+   "state": "PA",
+   "event_number": "2026500903",
+   "event_type": "LCTR/LCTS",
+   "scope": null,
+   "specialty": false,
+   "trial_entries": null,
+   "trial_competitors": null,
+   "test_entries": null,
+   "test_competitors": null,
+   "total_entries": null,
+   "results_posted": false,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026500903",
+   "trial_stakes": []
+  },
+  {
+   "date": "2026-10-03",
+   "day": "Sat",
+   "club": "Greyhound Association of North Georgia",
+   "city": "Canon",
+   "state": "GA",
+   "event_number": "2026695609",
+   "event_type": "LCTR/LCTS",
+   "scope": null,
+   "specialty": false,
+   "trial_entries": null,
+   "trial_competitors": null,
+   "test_entries": null,
+   "test_competitors": null,
+   "total_entries": null,
+   "results_posted": false,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026695609",
+   "trial_stakes": []
+  },
+  {
+   "date": "2026-10-04",
+   "day": "Sun",
+   "club": "Basenji Club of America, Inc.",
+   "city": "Shelbyville",
+   "state": "TN",
+   "event_number": "2026000709",
+   "event_type": "LCTR/LCTS",
+   "scope": null,
+   "specialty": false,
+   "trial_entries": null,
+   "trial_competitors": null,
+   "test_entries": null,
+   "test_competitors": null,
+   "total_entries": null,
+   "results_posted": false,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026000709",
+   "trial_stakes": []
+  },
+  {
+   "date": "2026-10-04",
+   "day": "Sun",
+   "club": "OKI Gazehound Association of Ohio",
+   "city": "Tipp City",
+   "state": "OH",
+   "event_number": "2026265204",
+   "event_type": "LCTR/LCTS",
+   "scope": null,
+   "specialty": false,
+   "trial_entries": null,
+   "trial_competitors": null,
+   "test_entries": null,
+   "test_competitors": null,
+   "total_entries": null,
+   "results_posted": false,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026265204",
+   "trial_stakes": []
+  },
+  {
+   "date": "2026-10-04",
+   "day": "Sun",
+   "club": "Orange Coast Rhodesian Ridgeback Club",
+   "city": "Chino",
+   "state": "CA",
+   "event_number": "2026281121",
+   "event_type": "LCTR/LCTS",
+   "scope": null,
+   "specialty": false,
+   "trial_entries": null,
+   "trial_competitors": null,
+   "test_entries": null,
+   "test_competitors": null,
+   "total_entries": null,
+   "results_posted": false,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026281121",
+   "trial_stakes": []
+  },
+  {
+   "date": "2026-10-04",
+   "day": "Sun",
+   "club": "Western Washington Whippet Association",
+   "city": "Roy",
+   "state": "WA",
+   "event_number": "2026411312",
+   "event_type": "LCTR/LCTS",
+   "scope": null,
+   "specialty": false,
+   "trial_entries": null,
+   "trial_competitors": null,
+   "test_entries": null,
+   "test_competitors": null,
+   "total_entries": null,
+   "results_posted": false,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026411312",
+   "trial_stakes": []
+  },
+  {
+   "date": "2026-10-04",
+   "day": "Sun",
+   "club": "Tortoise and Hare Lurecoursers Club",
+   "city": "Littlestown",
+   "state": "PA",
+   "event_number": "2026500904",
+   "event_type": "LCTR/LCTS",
+   "scope": null,
+   "specialty": false,
+   "trial_entries": null,
+   "trial_competitors": null,
+   "test_entries": null,
+   "test_competitors": null,
+   "total_entries": null,
+   "results_posted": false,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026500904",
+   "trial_stakes": []
+  },
+  {
+   "date": "2026-10-04",
+   "day": "Sun",
+   "club": "Greyhound Association of North Georgia",
+   "city": "Canon",
+   "state": "GA",
+   "event_number": "2026695610",
+   "event_type": "LCTR/LCTS",
+   "scope": null,
+   "specialty": false,
+   "trial_entries": null,
+   "trial_competitors": null,
+   "test_entries": null,
+   "test_competitors": null,
+   "total_entries": null,
+   "results_posted": false,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026695610",
+   "trial_stakes": []
+  },
+  {
+   "date": "2026-10-10",
+   "day": "Sat",
+   "club": "Chintimini Kennel Club, Inc.",
+   "city": "Molalla",
+   "state": "OR",
+   "event_number": "2026098835",
+   "event_type": "LCTR/LCTS",
+   "scope": null,
+   "specialty": false,
+   "trial_entries": null,
+   "trial_competitors": null,
+   "test_entries": null,
+   "test_competitors": null,
+   "total_entries": null,
+   "results_posted": false,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026098835",
+   "trial_stakes": []
+  },
+  {
+   "date": "2026-10-10",
+   "day": "Sat",
+   "club": "Alamo Area Whippet Club",
+   "city": "Comfort",
+   "state": "TX",
+   "event_number": "2026249907",
+   "event_type": "LCTR/LCTS",
+   "scope": null,
+   "specialty": false,
+   "trial_entries": null,
+   "trial_competitors": null,
+   "test_entries": null,
+   "test_competitors": null,
+   "total_entries": null,
+   "results_posted": false,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026249907",
+   "trial_stakes": []
+  },
+  {
+   "date": "2026-10-10",
+   "day": "Sat",
+   "club": "Inland Gazehound Fanciers of Greater Spokane",
+   "city": "Newman Lake",
+   "state": "WA",
+   "event_number": "2026500114",
+   "event_type": "LCTR/LCTS",
+   "scope": null,
+   "specialty": false,
+   "trial_entries": null,
+   "trial_competitors": null,
+   "test_entries": null,
+   "test_competitors": null,
+   "total_entries": null,
+   "results_posted": false,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026500114",
+   "trial_stakes": []
+  },
+  {
+   "date": "2026-10-11",
+   "day": "Sun",
+   "club": "Midwest Borzoi Club",
+   "city": "Lima",
+   "state": "OH",
+   "event_number": "2026058411",
+   "event_type": "LCTR/LCTS",
+   "scope": null,
+   "specialty": false,
+   "trial_entries": null,
+   "trial_competitors": null,
+   "test_entries": null,
+   "test_competitors": null,
+   "total_entries": null,
+   "results_posted": false,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026058411",
+   "trial_stakes": []
+  },
+  {
+   "date": "2026-10-11",
+   "day": "Sun",
+   "club": "Midwest Borzoi Club",
+   "city": "Lima",
+   "state": "OH",
+   "event_number": "2026058412",
+   "event_type": "LCTS",
+   "scope": null,
+   "specialty": false,
+   "trial_entries": null,
+   "trial_competitors": null,
+   "test_entries": null,
+   "test_competitors": null,
+   "total_entries": null,
+   "results_posted": false,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026058412",
+   "trial_stakes": []
+  },
+  {
+   "date": "2026-10-11",
+   "day": "Sun",
+   "club": "Northern California Irish Wolfhound Club",
+   "city": "Woodland",
+   "state": "CA",
+   "event_number": "2026074605",
+   "event_type": "LCTR/LCTS",
+   "scope": null,
+   "specialty": false,
+   "trial_entries": null,
+   "trial_competitors": null,
+   "test_entries": null,
+   "test_competitors": null,
+   "total_entries": null,
+   "results_posted": false,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026074605",
+   "trial_stakes": []
+  },
+  {
+   "date": "2026-10-11",
+   "day": "Sun",
+   "club": "Chintimini Kennel Club, Inc.",
+   "city": "Molalla",
+   "state": "OR",
+   "event_number": "2026098836",
+   "event_type": "LCTR/LCTS",
+   "scope": null,
+   "specialty": false,
+   "trial_entries": null,
+   "trial_competitors": null,
+   "test_entries": null,
+   "test_competitors": null,
+   "total_entries": null,
+   "results_posted": false,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026098836",
+   "trial_stakes": []
+  },
+  {
+   "date": "2026-10-11",
+   "day": "Sun",
+   "club": "Alamo Area Whippet Club",
+   "city": "Comfort",
+   "state": "TX",
+   "event_number": "2026249908",
+   "event_type": "LCTR/LCTS",
+   "scope": null,
+   "specialty": false,
+   "trial_entries": null,
+   "trial_competitors": null,
+   "test_entries": null,
+   "test_competitors": null,
+   "total_entries": null,
+   "results_posted": false,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026249908",
+   "trial_stakes": []
+  },
+  {
+   "date": "2026-10-11",
+   "day": "Sun",
+   "club": "Inland Gazehound Fanciers of Greater Spokane",
+   "city": "Newman Lake",
+   "state": "WA",
+   "event_number": "2026500115",
+   "event_type": "LCTR/LCTS",
+   "scope": null,
+   "specialty": false,
+   "trial_entries": null,
+   "trial_competitors": null,
+   "test_entries": null,
+   "test_competitors": null,
+   "total_entries": null,
+   "results_posted": false,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026500115",
+   "trial_stakes": []
+  },
+  {
+   "date": "2026-10-17",
+   "day": "Sat",
+   "club": "Rhodesian Ridgeback Club of the United States, Inc.",
+   "city": "Lee's Summit",
+   "state": "MO",
+   "event_number": "2026194507",
+   "event_type": "LCTR",
+   "scope": null,
+   "specialty": false,
+   "trial_entries": null,
+   "trial_competitors": null,
+   "test_entries": null,
+   "test_competitors": null,
+   "total_entries": null,
+   "results_posted": false,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026194507",
+   "trial_stakes": []
+  },
+  {
+   "date": "2026-10-17",
+   "day": "Sat",
+   "club": "Greater Ocala-Gainesville Lure Coursing Association",
+   "city": "Brooksville",
+   "state": "FL",
+   "event_number": "2026258605",
+   "event_type": "LCTR/LCTS",
+   "scope": null,
+   "specialty": false,
+   "trial_entries": null,
+   "trial_competitors": null,
+   "test_entries": null,
+   "test_competitors": null,
+   "total_entries": null,
+   "results_posted": false,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026258605",
+   "trial_stakes": []
+  },
+  {
+   "date": "2026-10-17",
+   "day": "Sat",
+   "club": "Utah Sighthound Racing and Coursing Club",
+   "city": "Hyde Park",
+   "state": "UT",
+   "event_number": "2026271217",
+   "event_type": "LCTR/LCTS",
+   "scope": null,
+   "specialty": false,
+   "trial_entries": null,
+   "trial_competitors": null,
+   "test_entries": null,
+   "test_competitors": null,
+   "total_entries": null,
+   "results_posted": false,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026271217",
+   "trial_stakes": []
+  },
+  {
+   "date": "2026-10-18",
+   "day": "Sun",
+   "club": "Greater Ocala-Gainesville Lure Coursing Association",
+   "city": "Brooksville",
+   "state": "FL",
+   "event_number": "2026258606",
+   "event_type": "LCTR/LCTS",
+   "scope": null,
+   "specialty": false,
+   "trial_entries": null,
+   "trial_competitors": null,
+   "test_entries": null,
+   "test_competitors": null,
+   "total_entries": null,
+   "results_posted": false,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026258606",
+   "trial_stakes": []
+  },
+  {
+   "date": "2026-10-18",
+   "day": "Sun",
+   "club": "Utah Sighthound Racing and Coursing Club",
+   "city": "Hyde Park",
+   "state": "UT",
+   "event_number": "2026271218",
+   "event_type": "LCTR/LCTS",
+   "scope": null,
+   "specialty": false,
+   "trial_entries": null,
+   "trial_competitors": null,
+   "test_entries": null,
+   "test_competitors": null,
+   "total_entries": null,
+   "results_posted": false,
+   "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026271218",
+   "trial_stakes": []
+  }
+ ]
+}

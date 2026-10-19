@@ -5,8 +5,8 @@
  "season": 2026,
  "standings_kind": "Mid-Year",
  "source_url": "https://www.continentalwhippetalliance.com/2026-toptens",
- "sha256": "7550c691f52e351d25a4f95c31b47409869415017d4ae32c52ab27dcf4204906",
- "fetched": "2026-10-15",
+ "sha256": "687000f8b311ef245e447239199c247e2292c8b9431f205412e97d2c7f6befd5",
+ "fetched": "2026-10-19",
  "standings": {
   "high_combined": {
    "label": "2026 High Combined Standings as of 9/30/2026 (42 Race Meets)",
@@ -33005,6 +33005,29 @@
      "pr_points": 26.0,
      "year_last_run": 2025,
      "never_raced": false,
+     "completed_meets": null
+    },
+    {
+     "cwa_no": "3852",
+     "call_name": "Extra",
+     "registered_name": "DC Kalina Ableaim Extra Caffeinated",
+     "owner_raw": "Petit / Boyd",
+     "grade": "FTE",
+     "avg": 0.0,
+     "dpc_points": null,
+     "dpc_status": "CH",
+     "hc": null,
+     "arx_points": null,
+     "arx_status": null,
+     "narx": null,
+     "trp_meets": null,
+     "trp_status": null,
+     "dq": null,
+     "dq_date": null,
+     "meets": [],
+     "pr_points": 0.0,
+     "year_last_run": null,
+     "never_raced": true,
      "completed_meets": null
     }
    ],
