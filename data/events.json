@@ -124,7 +124,7 @@
   ],
   "stats": {
     "events": 124,
-    "cancelled": 7,
+    "cancelled": 8,
     "with_premium": 103
   },
   "unmatched_initials": [
@@ -1638,12 +1638,13 @@
       "initials": "LVCC",
       "specialty": false,
       "national": false,
-      "cancelled": false,
+      "cancelled": true,
       "venue": "Lambertville",
       "state": "NJ",
       "region": 8,
       "premium_url": null,
       "premium_inferred": false,
+      "cancelled_note": "Cancellation posted in the lure coursing group on Facebook, October 19, 2026; ASFA's calendar does not show it yet.",
       "club": "Lehigh Valley Coursing Club"
     },
     {

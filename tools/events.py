@@ -44,6 +44,15 @@ USER_AGENT = (
 )
 PAGE_ENCODING = "cp1252"
 
+# Cancellations reported before ASFA's calendar shows them, keyed by the
+# calendar's initials and start date, each with the note the Events page
+# prints. Applied only while the calendar still lists the trial as on; once
+# ASFA marks it cancelled the calendar is the record and the entry can go.
+REPORTED_CANCELLED = {
+    ("LVCC", "2026-10-24"): "Cancellation posted in the lure coursing group on Facebook, "
+                            "October 19, 2026; ASFA's calendar does not show it yet.",
+}
+
 MONTHS = {
     "january": 1, "february": 2, "march": 3, "april": 4, "may": 5, "june": 6,
     "july": 7, "august": 8, "september": 9, "october": 10, "november": 11,
@@ -257,6 +266,19 @@ def main() -> int:
         raise SystemExit("No event rows parsed. The page layout has changed.")
 
     share_weekend_premiums(events)
+
+    listed = {(e["initials"], e["start"]): e for e in events}
+    for key, note in REPORTED_CANCELLED.items():
+        event = listed.get(key)
+        if event is None:
+            print(f"REPORTED_CANCELLED {key}: no such row on the calendar any more; "
+                  f"the entry can go.")
+        elif event["cancelled"]:
+            print(f"REPORTED_CANCELLED {key}: ASFA's calendar now marks it cancelled; "
+                  f"the entry can go.")
+        else:
+            event["cancelled"] = True
+            event["cancelled_note"] = note
 
     names = load_club_names()
     # Rows that are not member clubs and so cannot resolve via clubs.json.

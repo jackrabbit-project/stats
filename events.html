@@ -258,6 +258,7 @@
             ${e.premium_url ? `<a href="${esc(e.premium_url)}" target="_blank" rel="noopener noreferrer"
               class="lnk text-sm whitespace-nowrap">${icon('file', 'mr-1')}Premium</a>`
               : e.cancelled ? '' : '<span class="text-xs text-asfa-text/65">no premium yet</span>'}
+            ${e.cancelled_note ? `<span class="w-full text-xs text-asfa-text/65">${esc(e.cancelled_note)}</span>` : ''}
           </li>`;
         }
 
