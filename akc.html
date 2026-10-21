@@ -149,12 +149,12 @@
             </tbody>
           </table></div>
           <p class="text-xs text-asfa-text/55 mt-3">
-            Counted from the stakes in each trial's posted results. Competitors are the hounds that ran, so a
-            trial's breeds add up to its competitors, not its entries. Trials is the number of trials where the
-            breed had at least one hound; Avg is competitors per such trial. Singles are not split by breed:
-            AKC's Singles sheets list only the placings, not every starter.${stats.trials_not_by_breed
-              ? ` ${stats.trials_not_by_breed} trial${stats.trials_not_by_breed === 1 ? ' is' : 's are'} left out: AKC's results page
-                gives ${stats.trials_not_by_breed === 1 ? 'its' : 'their'} totals without a full list of stakes.` : ''}
+            Counted from the stakes in each trial's posted results. Starters are the hounds that actually ran,
+            so a trial's breeds add up to its starters, not its entries. <span class="font-semibold">Trials</span>
+            is how many trials the breed had at least one starter in; <span class="font-semibold">Avg</span> is
+            starters per such trial. Singles starters are counted everywhere else on this page (see the Singles
+            column under All events) but can't be split by breed, because AKC's Singles sheets list only the
+            placings.
           </p>
         </section>` : ''}
 
