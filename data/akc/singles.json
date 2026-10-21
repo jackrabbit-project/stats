@@ -1,0 +1,482 @@
+{
+ "source": {
+  "name": "AKC Single Stakes Results",
+  "url": "https://www.akc.org/sports/coursing/lure-coursing/single-stakes-results/"
+ },
+ "season": 2026,
+ "read": "2026-10-21",
+ "sheets": [
+  {
+   "file": "1.17.26-Afghan-Hound-Club-of-Dallas.pdf",
+   "url": "https://www.akc.org/wp-content/uploads/2026/02/1.17.26-Afghan-Hound-Club-of-Dallas.pdf",
+   "club": "Afghan Hound Club of Dallas",
+   "event_number": "2026073806",
+   "date": "2026-01-17",
+   "starters": 3
+  },
+  {
+   "file": "1.17.26-Desert-Fun-Bunch-Sighthound-Club.pdf",
+   "url": "https://www.akc.org/wp-content/uploads/2026/02/1.17.26-Desert-Fun-Bunch-Sighthound-Club.pdf",
+   "club": "Desert Fun Bunch Sighthound Club",
+   "event_number": "2026572902",
+   "date": "2026-01-17",
+   "starters": 7
+  },
+  {
+   "file": "1.18.26-North-Texas-Saluki-Club.pdf",
+   "url": "https://www.akc.org/wp-content/uploads/2026/02/1.18.26-North-Texas-Saluki-Club.pdf",
+   "club": "North Texas Saluki Club",
+   "event_number": "2026679804",
+   "date": "2026-01-18",
+   "starters": 2
+  },
+  {
+   "file": "2.7.26-Sunshine-State-Rhodesian-Ridgeback-Club.pdf",
+   "url": "https://www.akc.org/wp-content/uploads/2026/02/2.7.26-Sunshine-State-Rhodesian-Ridgeback-Club.pdf",
+   "club": "Sunshine State Rhodesian Ridgeback Club",
+   "event_number": "2026702925",
+   "date": "2026-02-07",
+   "starters": 5
+  },
+  {
+   "file": "2.8.26-Sunshine-State-Rhodesian-Ridgeback-Club.pdf",
+   "url": "https://www.akc.org/wp-content/uploads/2026/02/2.8.26-Sunshine-State-Rhodesian-Ridgeback-Club.pdf",
+   "club": "Sunshine State Rhodesian Ridgeback Club",
+   "event_number": "2026702926",
+   "date": "2026-02-08",
+   "starters": 3
+  },
+  {
+   "file": "2.14.26-Orange-Coast-Rhodesian-Ridgeback-Club.pdf",
+   "url": "https://www.akc.org/wp-content/uploads/2026/02/2.14.26-Orange-Coast-Rhodesian-Ridgeback-Club.pdf",
+   "club": "Orange Coast Rhodesian Ridgeback Club",
+   "event_number": "2026281101",
+   "date": "2026-02-14",
+   "starters": 5
+  },
+  {
+   "file": "2.21.26-Desert-Fun-Bunch-Sighthound-Club.pdf",
+   "url": "https://www.akc.org/wp-content/uploads/2026/02/2.21.26-Desert-Fun-Bunch-Sighthound-Club.pdf",
+   "club": "Desert Fun Bunch Sighthound Club Club",
+   "event_number": "2026572909",
+   "date": "2026-02-21",
+   "starters": 6
+  },
+  {
+   "file": "2.21.26-Greater-Ocala-Gainesville-Lure-Coursing-Assoc-1.pdf",
+   "url": "https://www.akc.org/wp-content/uploads/2026/03/2.21.26-Greater-Ocala-Gainesville-Lure-Coursing-Assoc-1.pdf",
+   "club": "Greater Ocala-Gainesville Lure Coursing Assoc.",
+   "event_number": "2026258601",
+   "date": "2026-02-21",
+   "starters": 4
+  },
+  {
+   "file": "2.22.26-Desert-Fun-Bunch-Sighthound-Club.pdf",
+   "url": "https://www.akc.org/wp-content/uploads/2026/02/2.22.26-Desert-Fun-Bunch-Sighthound-Club.pdf",
+   "club": "Desert Fun Bunch Sighthound Club Club",
+   "event_number": "2026572910",
+   "date": "2026-02-22",
+   "starters": 3
+  },
+  {
+   "file": "2.22.26-Greater-Ocala-Gainesville-Lure-Coursing-Assoc-1.pdf",
+   "url": "https://www.akc.org/wp-content/uploads/2026/03/2.22.26-Greater-Ocala-Gainesville-Lure-Coursing-Assoc-1.pdf",
+   "club": "Greater Ocala-Gainesville Lure Coursing Assoc.",
+   "event_number": "2026258602",
+   "date": "2026-02-22",
+   "starters": 7
+  },
+  {
+   "file": "3.1.26-Northern-California-Irish-Wolfhound-Club.pdf",
+   "url": "https://www.akc.org/wp-content/uploads/2026/04/3.1.26-Northern-California-Irish-Wolfhound-Club.pdf",
+   "club": "Northern California Irish Wolfhound Club",
+   "event_number": "2026074601",
+   "date": "2026-03-01",
+   "starters": 4
+  },
+  {
+   "file": "3.21.26-Greater-Ocala-Gainesvilel-Lure-Coursing-Assoc.pdf",
+   "url": "https://www.akc.org/wp-content/uploads/2026/04/3.21.26-Greater-Ocala-Gainesvilel-Lure-Coursing-Assoc.pdf",
+   "club": "Greater Ocala-Gainesville Lure Coursing Assoc.",
+   "event_number": "2026258603",
+   "date": "2026-03-21",
+   "starters": 5
+  },
+  {
+   "file": "3.21.26-Lobo-Lure-Coursing-Club.pdf",
+   "url": "https://www.akc.org/wp-content/uploads/2026/04/3.21.26-Lobo-Lure-Coursing-Club.pdf",
+   "club": "Lobo Lure Coursing Club",
+   "event_number": "2026250105",
+   "date": "2026-03-21",
+   "starters": 6
+  },
+  {
+   "file": "3.22.26-Greater-Ocala-Gainesville-Lure-Coursing-Assoc.pdf",
+   "url": "https://www.akc.org/wp-content/uploads/2026/04/3.22.26-Greater-Ocala-Gainesville-Lure-Coursing-Assoc.pdf",
+   "club": "Greater Ocala-Gainesville Lure Coursing Assoc.",
+   "event_number": "2026258604",
+   "date": "2026-03-22",
+   "starters": 5
+  },
+  {
+   "file": "3.22.26-Lobo-Lure-Coursing-Club.pdf",
+   "url": "https://www.akc.org/wp-content/uploads/2026/04/3.22.26-Lobo-Lure-Coursing-Club.pdf",
+   "club": "Lobo Lure Coursing Club",
+   "event_number": "2026250106",
+   "date": "2026-03-22",
+   "starters": 8
+  },
+  {
+   "file": "3.28.26-Afghan-Hound-Club-of-Austin.pdf",
+   "url": "https://www.akc.org/wp-content/uploads/2026/04/3.28.26-Afghan-Hound-Club-of-Austin.pdf",
+   "club": "Afghan Hound Club of Austin",
+   "event_number": "2026169402",
+   "date": "2026-03-28",
+   "starters": 3
+  },
+  {
+   "file": "3.28.26-Midwest-Borzoi-Club-1.pdf",
+   "url": "https://www.akc.org/wp-content/uploads/2026/04/3.28.26-Midwest-Borzoi-Club-1.pdf",
+   "club": "Midwest Borzoi Club",
+   "event_number": "2026058402",
+   "date": "2026-03-28",
+   "starters": 2
+  },
+  {
+   "file": "3.28.26-Northwest-Rhodesian-Ridgeback-Club.pdf",
+   "url": "https://www.akc.org/wp-content/uploads/2026/04/3.28.26-Northwest-Rhodesian-Ridgeback-Club.pdf",
+   "club": "Northwest Rhodesian Ridgeback Club",
+   "event_number": "2026686303",
+   "date": "2026-03-28",
+   "starters": 8
+  },
+  {
+   "file": "3.29.26-Afghan-Hound-Club-of-Austin.pdf",
+   "url": "https://www.akc.org/wp-content/uploads/2026/04/3.29.26-Afghan-Hound-Club-of-Austin.pdf",
+   "club": "Afghan Hound Club of Austin",
+   "event_number": "2026169401",
+   "date": "2026-03-29",
+   "starters": 3
+  },
+  {
+   "file": "3.29.26-Midwest-Borzoi-Club.pdf",
+   "url": "https://www.akc.org/wp-content/uploads/2026/04/3.29.26-Midwest-Borzoi-Club.pdf",
+   "club": "Midwest Borzoi Club",
+   "event_number": "2026058403",
+   "date": "2026-03-29",
+   "starters": 5
+  },
+  {
+   "file": "3.29.26-Northwest-Rhodesian-Ridgeback-Club.pdf",
+   "url": "https://www.akc.org/wp-content/uploads/2026/04/3.29.26-Northwest-Rhodesian-Ridgeback-Club.pdf",
+   "club": "Northwest Rhodesian Ridgeback Club",
+   "event_number": "2026686304",
+   "date": "2026-03-29",
+   "starters": 7
+  },
+  {
+   "file": "3.29.26-Sierra-Slopes-Ibizan-Hounds.pdf",
+   "url": "https://www.akc.org/wp-content/uploads/2026/04/3.29.26-Sierra-Slopes-Ibizan-Hounds.pdf",
+   "club": "Siera Slopes Ibizan Hounds",
+   "event_number": "2026268704",
+   "date": "2026-03-29",
+   "starters": 5
+  },
+  {
+   "file": "4.4.26-Irish-Wolfhound-Association-of-the-Garden-State.pdf",
+   "url": "https://www.akc.org/wp-content/uploads/2026/04/4.4.26-Irish-Wolfhound-Association-of-the-Garden-State.pdf",
+   "club": "Irish Wolfhound Association of the Garden State",
+   "event_number": "2026283907",
+   "date": "2026-04-04",
+   "starters": 1
+  },
+  {
+   "file": "4.5.26-Irish-Wolfhound-Association-of-the-Garden-State.pdf",
+   "url": "https://www.akc.org/wp-content/uploads/2026/04/4.5.26-Irish-Wolfhound-Association-of-the-Garden-State.pdf",
+   "club": "Irish Wolfhound Association of the Garden State",
+   "event_number": "2026283908",
+   "date": "2026-04-05",
+   "starters": 1
+  },
+  {
+   "file": "4.11.26-Trinity-Valley-Rhodesian-Ridgeback-Club-of-Texas.pdf",
+   "url": "https://www.akc.org/wp-content/uploads/2026/05/4.11.26-Trinity-Valley-Rhodesian-Ridgeback-Club-of-Texas.pdf",
+   "club": "Trinity Valley Rhodesian Ridgeback Club of Texas",
+   "event_number": "2026295406",
+   "date": "2026-04-11",
+   "starters": 4
+  },
+  {
+   "file": "4.12.26-Greater-Valley-Forge-Rhodesian-Ridgeback-Club-Inc.pdf",
+   "url": "https://www.akc.org/wp-content/uploads/2026/05/4.12.26-Greater-Valley-Forge-Rhodesian-Ridgeback-Club-Inc.pdf",
+   "club": "Greater Valley Forge Rhodesian Ridgeback Club, Inc.",
+   "event_number": "2026288902",
+   "date": "2026-04-12",
+   "starters": 3
+  },
+  {
+   "file": "4.12.26-Trinity-Valley-Rhodesian-Ridgeback-Club-of-Texas.pdf",
+   "url": "https://www.akc.org/wp-content/uploads/2026/05/4.12.26-Trinity-Valley-Rhodesian-Ridgeback-Club-of-Texas.pdf",
+   "club": "Trinity Valley Rhodesian Ridgeback Club of Texas",
+   "event_number": "2026295407",
+   "date": "2026-04-12",
+   "starters": 1
+  },
+  {
+   "file": "4.18.26-Utah-Sighthound-Racing-and-Coursing-Club.pdf",
+   "url": "https://www.akc.org/wp-content/uploads/2026/05/4.18.26-Utah-Sighthound-Racing-and-Coursing-Club.pdf",
+   "club": "Utah Sighthound Racing and Coursing Club",
+   "event_number": "2026271203",
+   "date": "2026-04-18",
+   "starters": 2
+  },
+  {
+   "file": "4.18.26-Western-Washington-Hound-Association.pdf",
+   "url": "https://www.akc.org/wp-content/uploads/2026/05/4.18.26-Western-Washington-Hound-Association.pdf",
+   "club": "Western Washington Hound Association",
+   "event_number": "2026325804",
+   "date": "2026-04-18",
+   "starters": 5
+  },
+  {
+   "file": "4.19.26-Western-Washington-Hound-Association.pdf",
+   "url": "https://www.akc.org/wp-content/uploads/2026/05/4.19.26-Western-Washington-Hound-Association.pdf",
+   "club": "Western Washington Hound Association",
+   "event_number": "2026325805",
+   "date": "2026-04-19",
+   "starters": 3
+  },
+  {
+   "file": "4.25.26-Minnesota-Coursing-Association.pdf",
+   "url": "https://www.akc.org/wp-content/uploads/2026/05/4.25.26-Minnesota-Coursing-Association.pdf",
+   "club": "Minnesota Coursing Association",
+   "event_number": "2026262902",
+   "date": "2026-04-25",
+   "starters": 2
+  },
+  {
+   "file": "4.26.26-Minnesota-Coursing-Association.pdf",
+   "url": "https://www.akc.org/wp-content/uploads/2026/05/4.26.26-Minnesota-Coursing-Association.pdf",
+   "club": "Minnesota Coursing Association",
+   "event_number": "2026262901",
+   "date": "2026-04-26",
+   "starters": 3
+  },
+  {
+   "file": "5.2.26-Gulf-Coast-Hound-Club.pdf",
+   "url": "https://www.akc.org/wp-content/uploads/2026/05/5.2.26-Gulf-Coast-Hound-Club.pdf",
+   "club": "Gulf Coast Hound Club",
+   "event_number": "2026719404",
+   "date": "2026-05-02",
+   "starters": 2
+  },
+  {
+   "file": "5.2.26-Lehigh-Valley-Coursing-Club-1.pdf",
+   "url": "https://www.akc.org/wp-content/uploads/2026/06/5.2.26-Lehigh-Valley-Coursing-Club-1.pdf",
+   "club": "Lehigh Valley Coursing Club",
+   "event_number": "2026671102",
+   "date": "2026-05-02",
+   "starters": 2
+  },
+  {
+   "file": "5.3.26-Gulf-Coast-Hound-Club.pdf",
+   "url": "https://www.akc.org/wp-content/uploads/2026/05/5.3.26-Gulf-Coast-Hound-Club.pdf",
+   "club": "Gulf Coast Hound Club",
+   "event_number": "2026719405",
+   "date": "2026-05-03",
+   "starters": 4
+  },
+  {
+   "file": "5.3.26-Lehigh-Valley-Coursing-Club-1.pdf",
+   "url": "https://www.akc.org/wp-content/uploads/2026/06/5.3.26-Lehigh-Valley-Coursing-Club-1.pdf",
+   "club": "Lehigh Valley Coursing Club",
+   "event_number": "2026671101",
+   "date": "2026-05-03",
+   "starters": 1
+  },
+  {
+   "file": "5.9.26-Oklahoma-Racing-and-Coursing-Association.pdf",
+   "url": "https://www.akc.org/wp-content/uploads/2026/06/5.9.26-Oklahoma-Racing-and-Coursing-Association.pdf",
+   "club": "Oklahoma Racing and Coursing Association",
+   "event_number": "2026717507",
+   "date": "2026-05-09",
+   "starters": 3
+  },
+  {
+   "file": "5.9.26-Rocky-Mountain-Hound-Association-of-Colorado.pdf",
+   "url": "https://www.akc.org/wp-content/uploads/2026/06/5.9.26-Rocky-Mountain-Hound-Association-of-Colorado.pdf",
+   "club": "Rocky Mountain Hound Assoc. of Colorado",
+   "event_number": "2026653405",
+   "date": "2026-05-09",
+   "starters": 2
+  },
+  {
+   "file": "5.9.26-Scottish-Deerhound-Club-of-America.pdf",
+   "url": "https://www.akc.org/wp-content/uploads/2026/06/5.9.26-Scottish-Deerhound-Club-of-America.pdf",
+   "club": "Scottish Deerhound Club of America, Inc.",
+   "event_number": "2026135815",
+   "date": "2026-05-09",
+   "starters": 6
+  },
+  {
+   "file": "5.10.26-Rocky-Mountain-Hound-Association-of-Colorado.pdf",
+   "url": "https://www.akc.org/wp-content/uploads/2026/06/5.10.26-Rocky-Mountain-Hound-Association-of-Colorado.pdf",
+   "club": "Rocky Mountain Hound Assoc. of Colorado",
+   "event_number": "2026653406",
+   "date": "2026-05-10",
+   "starters": 2
+  },
+  {
+   "file": "5.16.26-Gazehounds-of-New-England-Lure-Coursing-Club.pdf",
+   "url": "https://www.akc.org/wp-content/uploads/2026/06/5.16.26-Gazehounds-of-New-England-Lure-Coursing-Club.pdf",
+   "club": "Gazehounds of New England Lure Coursing Club",
+   "event_number": "2026571801",
+   "date": "2026-05-16",
+   "starters": 8
+  },
+  {
+   "file": "5.16.26-Sighthound-Organization-of-Tidewater.pdf",
+   "url": "https://www.akc.org/wp-content/uploads/2026/06/5.16.26-Sighthound-Organization-of-Tidewater.pdf",
+   "club": "Sighthound Organization of Tidewater",
+   "event_number": "2026268801",
+   "date": "2026-05-16",
+   "starters": 8
+  },
+  {
+   "file": "6.6.26-Northwest-Rhodesian-Ridgeback-Club.pdf",
+   "url": "https://www.akc.org/wp-content/uploads/2026/07/6.6.26-Northwest-Rhodesian-Ridgeback-Club.pdf",
+   "club": "Northwest Rhodesian Ridgeback Club",
+   "event_number": "2026686312",
+   "date": "2026-06-06",
+   "starters": 4
+  },
+  {
+   "file": "6.7.26-Lehigh-Valley-Coursing-Club.pdf",
+   "url": "https://www.akc.org/wp-content/uploads/2026/07/6.7.26-Lehigh-Valley-Coursing-Club.pdf",
+   "club": "Lehigh Valley Coursing Club",
+   "event_number": "2026671104",
+   "date": "2026-06-07",
+   "starters": 2
+  },
+  {
+   "file": "6.7.26-Michigan-Gazehound-Association.pdf",
+   "url": "https://www.akc.org/wp-content/uploads/2026/07/6.7.26-Michigan-Gazehound-Association.pdf",
+   "club": "Michigan Gazehound Association",
+   "event_number": "2026261010",
+   "date": "2026-06-07",
+   "starters": 4
+  },
+  {
+   "file": "6.7.26-Northwest-Rhodesian-Ridgeback-Club.pdf",
+   "url": "https://www.akc.org/wp-content/uploads/2026/07/6.7.26-Northwest-Rhodesian-Ridgeback-Club.pdf",
+   "club": "Northwest Rhodesian Ridgeback Club",
+   "event_number": "2026686313",
+   "date": "2026-06-07",
+   "starters": 5
+  },
+  {
+   "file": "6.13.26-Tortoise-and-Hare-Lurecoursers-Club.pdf",
+   "url": "https://www.akc.org/wp-content/uploads/2026/07/6.13.26-Tortoise-and-Hare-Lurecoursers-Club.pdf",
+   "club": "Tortoise and Hare Lurecoursers Club",
+   "event_number": "2026500901",
+   "date": "2026-06-13",
+   "starters": 4
+  },
+  {
+   "file": "6.14.26-Tortoise-Hare-Lurecoursers-Club.pdf",
+   "url": "https://www.akc.org/wp-content/uploads/2026/07/6.14.26-Tortoise-Hare-Lurecoursers-Club.pdf",
+   "club": "Tortoise and Hare Lurecoursers Club",
+   "event_number": "2026500902",
+   "date": "2026-06-14",
+   "starters": 3
+  },
+  {
+   "file": "6.21.26-Midwest-Coursing-Club-of-Wisconsin.pdf",
+   "url": "https://www.akc.org/wp-content/uploads/2026/07/6.21.26-Midwest-Coursing-Club-of-Wisconsin.pdf",
+   "club": "Midwest Coursing Club of Wisconsin",
+   "event_number": "2026262502",
+   "date": "2026-06-21",
+   "starters": 1
+  },
+  {
+   "file": "6.21.26-Wester-Washington-Whippet-Association.pdf",
+   "url": "https://www.akc.org/wp-content/uploads/2026/07/6.21.26-Wester-Washington-Whippet-Association.pdf",
+   "club": "Western Washington Whippet Association",
+   "event_number": "2026411308",
+   "date": "2026-06-21",
+   "starters": 5
+  },
+  {
+   "file": "6.26.26-Basenji-Club-of-America-Inc.pdf",
+   "url": "https://www.akc.org/wp-content/uploads/2026/07/6.26.26-Basenji-Club-of-America-Inc.pdf",
+   "club": "Basenji Club of America, Inc.",
+   "event_number": "2026000702",
+   "date": "2026-06-26",
+   "starters": 7
+  },
+  {
+   "file": "6.26.26-American-Whippet-Club-Inc.pdf",
+   "url": "https://www.akc.org/wp-content/uploads/2026/07/6.26.26-American-Whippet-Club-Inc.pdf",
+   "club": "American Whippet Club, Inc.",
+   "event_number": "2026074710",
+   "date": "2026-06-27",
+   "starters": 15
+  },
+  {
+   "file": "6.26.26-Ibizan-Hound-Club-of-the-United-States.pdf",
+   "url": "https://www.akc.org/wp-content/uploads/2026/07/6.26.26-Ibizan-Hound-Club-of-the-United-States.pdf",
+   "club": "Ibizan Hound Club of the United States",
+   "event_number": "2026291602",
+   "date": "2026-06-27",
+   "starters": 2
+  },
+  {
+   "file": "6.27.26-Irish-Wolfhound-Association-of-Lake-Erie.pdf",
+   "url": "https://www.akc.org/wp-content/uploads/2026/07/6.27.26-Irish-Wolfhound-Association-of-Lake-Erie.pdf",
+   "club": "Irish Wolfhound Association of Lake Erie",
+   "event_number": "2026761222",
+   "date": "2026-06-27",
+   "starters": 4
+  },
+  {
+   "file": "6.27.26-Michigan-Gazehound-Association.pdf",
+   "url": "https://www.akc.org/wp-content/uploads/2026/07/6.27.26-Michigan-Gazehound-Association.pdf",
+   "club": "Michigan Gazehound Association",
+   "event_number": "2026261012",
+   "date": "2026-06-27",
+   "starters": 11
+  },
+  {
+   "file": "6.28.26-Irish-Wolfhound-Association-of-Lake-Erie.pdf",
+   "url": "https://www.akc.org/wp-content/uploads/2026/07/6.28.26-Irish-Wolfhound-Association-of-Lake-Erie.pdf",
+   "club": "Irish Wolfhound Association of Lake Erie",
+   "event_number": "2026761223",
+   "date": "2026-06-28",
+   "starters": 3
+  },
+  {
+   "file": "6.28.26-Michigan-Gazehound-Association.pdf",
+   "url": "https://www.akc.org/wp-content/uploads/2026/07/6.28.26-Michigan-Gazehound-Association.pdf",
+   "club": "Michigan Gazehound Association",
+   "event_number": "2026261013",
+   "date": "2026-06-28",
+   "starters": 12
+  },
+  {
+   "file": "7.4.26-Minnesota-Coursing-Association.pdf",
+   "url": "https://www.akc.org/wp-content/uploads/2026/07/7.4.26-Minnesota-Coursing-Association.pdf",
+   "club": "Minnesota Coursing Association",
+   "event_number": "2026262907",
+   "date": "2026-07-04",
+   "starters": 2
+  },
+  {
+   "file": "7.5.26-Minnesota-Coursing-Association.pdf",
+   "url": "https://www.akc.org/wp-content/uploads/2026/07/7.5.26-Minnesota-Coursing-Association.pdf",
+   "club": "Minnesota Coursing Association",
+   "event_number": "2026262908",
+   "date": "2026-07-05",
+   "starters": 1
+  }
+ ]
+}

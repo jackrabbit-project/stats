@@ -11,6 +11,13 @@ re-derives them from the committed collection on its own. The breed table
 counts competitors, the starters of each trial's Open, Special and Veteran
 stakes; a collection made before the stakes were kept has no breed table.
 
+AKC posts Singles stakes apart from Event Search (akc_singles.py keeps their
+counts in data/akc/singles.json). Each sheet is matched to its trial by event
+number, or else by date and club, and its starters count in every figure
+beside the trial's entries: a trial's entries are its LC trial entries plus
+its Singles starters, and the averages, largest trials and rankings follow.
+A trial whose Singles AKC has not posted counts its trial entries alone.
+
 Usage:
     python tools/akc.py                     # collect, archive if changed, rebuild
     python tools/akc.py --offline           # rebuild from the newest archived collection
@@ -23,6 +30,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import sys
 from datetime import date
 from pathlib import Path
@@ -30,6 +38,10 @@ from pathlib import Path
 import requests
 
 from akc_collect import EVENT_NUMBER_RE, RAW_DIR, SOURCE_NAME, SOURCE_URL, collect
+from akc_singles import RECORD as SINGLES_RECORD
+from akc_singles import load_record as load_singles
+from akc_singles import update as update_singles
+from akc_singles import write_record as write_singles
 from events import US_STATES
 from racing import DATA, RacingParseError, sha256, today, write_json
 
@@ -154,27 +166,80 @@ def _round(value: float | None, places: int = 3) -> float | None:
     return None if value is None else round(value, places)
 
 
-def build(collection: dict, source_file: str, digest: str) -> dict:
+def club_key(name: str | None) -> str:
+    """A club name for matching: letters only, lower case."""
+    return re.sub(r"[^a-z]", "", (name or "").lower())
+
+
+def attach_singles(events: list[dict], record: dict | None) -> tuple[dict, dict, list]:
+    """Each Singles sheet matched to an event with results posted: by the
+    event number it prints, or else by its date and the club's name. Returns
+    Singles starters and sheets by event number, and the sheets that matched
+    no posted event (kept in the feed so none goes missing unseen)."""
+    starters: dict[str, int] = {}
+    sheets: dict[str, int] = {}
+    unmatched: list[dict] = []
+    if not record:
+        return starters, sheets, unmatched
+    by_number = {e["event_number"]: e for e in events}
+    for sheet in record["sheets"]:
+        event = by_number.get(sheet["event_number"]) if sheet["event_number"] else None
+        if event is None:
+            key = club_key(sheet["club"])[:12]
+            found = [e for e in events
+                     if e["date"] == sheet["date"] and key and club_key(e["club"]).startswith(key)]
+            event = found[0] if len(found) == 1 else None
+        if event is None or not event["results_posted"]:
+            unmatched.append({k: sheet[k] for k in ("file", "date", "club", "event_number", "starters")})
+            continue
+        number = event["event_number"]
+        starters[number] = starters.get(number, 0) + sheet["starters"]
+        sheets[number] = sheets.get(number, 0) + 1
+    return starters, sheets, unmatched
+
+
+def build(collection: dict, source_file: str, digest: str, singles: dict | None = None,
+          singles_digest: str | None = None) -> dict:
     events = collection["events"]
     period = {"start": collection["period"]["start"], "end": collection["period"]["end"]}
     season = int(period["start"][:4])
+    single_starters, single_sheets, unmatched = attach_singles(events, singles)
+
+    def singles_of(e: dict) -> int | None:
+        return single_starters.get(e["event_number"])
+
+    def entries_of(e: dict) -> int | None:
+        """A trial's entries: its LC trial entries and Singles starters."""
+        if e["trial_entries"] is None and singles_of(e) is None:
+            return None
+        return (e["trial_entries"] or 0) + (singles_of(e) or 0)
 
     posted = [e for e in events if e["results_posted"]]
-    held = [e for e in posted if e["trial_entries"] is not None]
-    trial_sum = sum(e["trial_entries"] for e in held)
+    held = [e for e in posted if entries_of(e) is not None]
+    with_trial = [e for e in posted if e["trial_entries"] is not None]
+    trial_sum = sum(e["trial_entries"] or 0 for e in held)
+    singles_sum = sum(singles_of(e) or 0 for e in held)
+    test_sum = sum(e["test_entries"] or 0 for e in posted)
     stats = {
         "events": len(events),
         "with_results": len(posted),
         "without_results": len(events) - len(posted),
         "events_with_trial": len(held),
         "trial_entries": trial_sum,
+        "singles": singles_sum,
+        "singles_stakes": sum(single_sheets.values()),
+        "singles_trials": len(single_sheets),
+        "entries": trial_sum + singles_sum,
         "trial_competitors": sum(e["trial_competitors"] or 0 for e in posted),
-        "test_entries": sum(e["test_entries"] or 0 for e in posted),
+        "test_entries": test_sum,
         "test_competitors": sum(e["test_competitors"] or 0 for e in posted),
-        "total_entries": sum(e["total_entries"] or 0 for e in posted),
-        "avg_trial_entries": _round(trial_sum / len(held)) if held else None,
-        "largest_trial": max((e["trial_entries"] for e in held), default=None),
-        "smallest_trial": min((e["trial_entries"] for e in held), default=None),
+        "total_entries": trial_sum + singles_sum + test_sum,
+        "avg_entries": _round((trial_sum + singles_sum) / len(held)) if held else None,
+        # Without Singles, over the trials that posted LC trial entries.
+        "avg_trial_entries": (_round(sum(e["trial_entries"] for e in with_trial) / len(with_trial))
+                              if with_trial else None),
+        "largest_trial": max((entries_of(e) for e in held), default=None),
+        "smallest_trial": min((entries_of(e) for e in held), default=None),
         "clubs": len({e["club"] for e in events}),
         "states": len({e["state"] for e in events}),
         "specialties": sum(e["specialty"] for e in events),
@@ -187,14 +252,16 @@ def build(collection: dict, source_file: str, digest: str) -> dict:
         key = f"{year:04d}-{month:02d}"
         rows = [e for e in events if e["date"].startswith(key)]
         rows_posted = [e for e in rows if e["results_posted"]]
-        rows_held = [e for e in rows_posted if e["trial_entries"] is not None]
-        entries = sum(e["trial_entries"] for e in rows_held)
+        rows_held = [e for e in rows_posted if entries_of(e) is not None]
+        trial = sum(e["trial_entries"] or 0 for e in rows_held)
+        single = sum(singles_of(e) or 0 for e in rows_held)
         tests = sum(e["test_entries"] or 0 for e in rows_posted)
         by_month.append({
             "month": key, "label": MONTH_LABELS[month - 1],
             "events": len(rows), "with_results": len(rows_posted),
-            "trial_entries": entries, "test_entries": tests, "total_entries": entries + tests,
-            "avg_trial_entries": _round(entries / len(rows_held)) if rows_held else None,
+            "trial_entries": trial, "singles": single, "test_entries": tests,
+            "total_entries": trial + single + tests,
+            "avg_entries": _round((trial + single) / len(rows_held)) if rows_held else None,
         })
         month += 1
         if month == 13:
@@ -203,9 +270,10 @@ def build(collection: dict, source_file: str, digest: str) -> dict:
     trials = [{
         "event_number": e["event_number"], "date": e["date"], "club": e["club"], "city": e["city"],
         "state": e["state"], "scope": e["scope"], "trial_entries": e["trial_entries"],
+        "singles": singles_of(e), "entries": entries_of(e),
         "trial_competitors": e["trial_competitors"], "test_entries": e["test_entries"],
     } for e in held]
-    competition_rank(trials, "trial_entries")
+    competition_rank(trials, "entries")
     trials.sort(key=lambda t: (t["rank"], t["date"], t["event_number"]))
 
     def aggregate(key_field: str) -> list[dict]:
@@ -213,7 +281,8 @@ def build(collection: dict, source_file: str, digest: str) -> dict:
         for e in events:
             group = groups.setdefault(e[key_field], {
                 key_field: e[key_field], "events": 0, "with_results": 0, "trials": 0,
-                "trial_entries": 0, "largest_trial": None, "test_entries": 0, "states": set(),
+                "trial_entries": 0, "singles": 0, "entries": 0, "largest_trial": None,
+                "test_entries": 0, "states": set(),
             })
             group["events"] += 1
             group["states"].add(e["state"])
@@ -221,17 +290,20 @@ def build(collection: dict, source_file: str, digest: str) -> dict:
                 continue
             group["with_results"] += 1
             group["test_entries"] += e["test_entries"] or 0
-            if e["trial_entries"] is not None:
+            entries = entries_of(e)
+            if entries is not None:
                 group["trials"] += 1
-                group["trial_entries"] += e["trial_entries"]
-                group["largest_trial"] = max(group["largest_trial"] or 0, e["trial_entries"])
+                group["trial_entries"] += e["trial_entries"] or 0
+                group["singles"] += singles_of(e) or 0
+                group["entries"] += entries
+                group["largest_trial"] = max(group["largest_trial"] or 0, entries)
         rows = []
         for group in groups.values():
             group["states"] = sorted(group["states"])
-            group["avg_trial_entries"] = (
-                _round(group["trial_entries"] / group["trials"]) if group["trials"] else None)
+            group["avg_entries"] = (
+                _round(group["entries"] / group["trials"]) if group["trials"] else None)
             # Only a club or state with a posted trial has a ranking figure.
-            group["_rank_on"] = group["trial_entries"] if group["trials"] else None
+            group["_rank_on"] = group["entries"] if group["trials"] else None
             rows.append(group)
         competition_rank(rows, "_rank_on")
         for row in rows:
@@ -282,11 +354,26 @@ def build(collection: dict, source_file: str, digest: str) -> dict:
         "period": period,
         "generated": today(),
         "source": {"name": SOURCE_NAME, "url": SOURCE_URL, "file": source_file, "sha256": digest},
+        "singles_source": {
+            "name": singles["source"]["name"], "url": singles["source"]["url"],
+            "read": singles["read"], "sheets": len(singles["sheets"]),
+            "through": max((s["date"] for s in singles["sheets"]), default=None),
+            "file": SINGLES_RECORD.name, "sha256": singles_digest,
+        } if singles else None,
+        "singles_unmatched": unmatched,
         "stats": stats,
         "by_month": by_month,
         "rankings": {"trials": trials, "clubs": clubs, "states": states, "breeds": breeds},
-        # The stakes stay in the collection; the page shows them only by breed.
-        "events": [{key: value for key, value in e.items() if key != "trial_stakes"} for e in events],
+        # The stakes stay in the collection; the page shows them only by
+        # breed. Each event carries its Singles starters, its entries (LC
+        # trial entries and Singles) and a total that counts both and tests.
+        "events": [{
+            **{key: value for key, value in e.items() if key != "trial_stakes"},
+            "singles": singles_of(e),
+            "entries": entries_of(e),
+            "total_entries": ((e["trial_entries"] or 0) + (singles_of(e) or 0) + (e["test_entries"] or 0)
+                              if e["results_posted"] else None),
+        } for e in events],
     }
 
 
@@ -354,15 +441,37 @@ def main() -> int:
             source_path = archive(collection, force=args.force)
             collection = read_collection(source_path)
 
-    feed = build(collection, source_path.name, sha256(source_path.read_bytes()))
+    # Singles come from their own AKC page, read after the collection; when
+    # it cannot be read the record on file stands.
+    season = int(collection["period"]["start"][:4])
+    singles = None
+    if not args.offline and not args.file:
+        try:
+            singles = update_singles(season)
+            write_singles(singles)
+        except (requests.RequestException, RacingParseError) as error:
+            print(f"Could not read AKC's Singles results; using the record on file. {error}",
+                  file=sys.stderr)
+    if singles is None:
+        singles = load_singles()
+        if singles is not None and singles.get("season") != season:
+            singles = None
+    singles_digest = sha256(SINGLES_RECORD.read_bytes()) if singles is not None else None
+
+    feed = build(collection, source_path.name, sha256(source_path.read_bytes()),
+                 singles, singles_digest)
     size = write_json(FEED, feed)
     stats = feed["stats"]
     print(
         f"AKC entries collected {feed['collected']}: {stats['events']} events "
-        f"({stats['with_results']} with results), {stats['trial_entries']:,} LC trial entries, "
-        f"{stats['test_entries']:,} test entries, average trial {stats['avg_trial_entries']}, "
+        f"({stats['with_results']} with results), {stats['trial_entries']:,} LC trial entries "
+        f"+ {stats['singles']:,} Singles starters in {stats['singles_stakes']} stakes, "
+        f"{stats['test_entries']:,} test entries, average trial {stats['avg_entries']} "
+        f"({stats['avg_trial_entries']} without Singles), "
         f"{stats['clubs']} clubs in {stats['states']} states; feed {size:,} bytes"
     )
+    if feed["singles_unmatched"]:
+        print(f"Singles sheets matching no posted event: {feed['singles_unmatched']}")
     breeds = feed["rankings"]["breeds"]
     if breeds is not None:
         print(f"By breed: {len(breeds)} breeds over {stats['trials_by_breed']} trials"

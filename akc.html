@@ -30,7 +30,7 @@
   <main id="main" class="flex-1 max-w-6xl mx-auto w-full px-4 py-6 space-y-6"></main>
   <footer id="site-footer" class="bg-asfa-navy text-white py-8"></footer>
 
-  <script src="js/app.js?v=20261018a"></script>
+  <script src="js/app.js?v=20261021a"></script>
   <script>
     /* One page of event-level counts, apart from the programs: every AKC
        lure coursing event this year with the entries it drew, from a
@@ -55,6 +55,8 @@
         : '<span class="badge badge-flat">Not yet</span>');
 
       const { trials, clubs, states } = feed.rankings;
+      // AKC's Singles stakes, posted apart from Event Search: null before they were collected.
+      const singles = feed.singles_source;
       // Starters by breed: null for a collection made before AKC's stakes were kept.
       const breedTable = feed.rankings.breeds && feed.rankings.breeds.length ? feed.rankings.breeds : null;
       const unrankedStates = states.filter((s) => s.rank == null);
@@ -71,8 +73,10 @@
               Every AKC lure coursing event from ${formatDate(period.start)} through
               <span class="font-semibold text-asfa-akc">${formatDate(period.end)}</span>:
               ${n(stats.events)} events, ${n(stats.with_results)} with results posted, from AKC's
-              ${external(feed.source.url, 'Event Search')}. AKC does not publish lure coursing rankings
-              by hound, so there are none here: this page counts events and entries.
+              ${external(feed.source.url, 'Event Search')}${singles ? `, with the Singles stakes from AKC's
+              ${external(singles.url, 'Single Stakes Results')}, posted through ${formatDate(singles.through)}` : ''}.
+              AKC does not publish lure coursing rankings by hound, so there are none here: this page counts
+              events and entries.
             </p>
           </div>
           <a href="trials.html" class="btn shrink-0 whitespace-nowrap text-asfa-accent" title="The ASFA counterpart">ASFA trials by the numbers →</a>
@@ -81,8 +85,10 @@
         <section class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3" aria-label="Totals">
           ${[
             [n(stats.events), 'events held'],
-            [n(stats.total_entries), 'entries in all', `${n(stats.trial_entries)} trial + ${n(stats.test_entries)} test`],
-            [avg(stats.avg_trial_entries), 'trial entries per trial, average'],
+            [n(stats.total_entries), 'entries in all',
+              `${n(stats.trial_entries)} trial + ${n(stats.singles)} Singles + ${n(stats.test_entries)} test`],
+            [avg(stats.avg_entries), 'entries per trial, average',
+              singles ? `${avg(stats.avg_trial_entries)} without Singles` : ''],
             [n(stats.largest_trial), 'largest trial', '', trials[0] ? `${trials[0].club}, ${formatDate(trials[0].date)}` : ''],
             [n(stats.clubs), 'clubs holding events'],
           ].map(tile).join('')}
@@ -91,24 +97,25 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <section class="card">
             <h2 class="card-title">By month</h2>
-            <p class="text-xs text-asfa-text/55 mb-2">Entries count only events whose results AKC has posted.</p>
+            <p class="text-xs text-asfa-text/55 mb-2">Entries count only events whose results AKC has posted. Avg trial counts LC trial entries and Singles starters.</p>
             <div class="tbl-wrap"><table class="tbl">
               <thead><tr>
                 <th scope="col">Month</th><th scope="col" class="num">Events</th><th scope="col" class="num">Posted</th>
-                <th scope="col" class="num">Trial entries</th><th scope="col" class="num">Test entries</th>
+                <th scope="col" class="num">Trial entries</th><th scope="col" class="num">Singles</th><th scope="col" class="num">Test entries</th>
                 <th scope="col" class="num">Total</th><th scope="col" class="num">Avg trial</th>
               </tr></thead>
               <tbody>
                 ${feed.by_month.map((m) => `
                   <tr>
                     <td>${m.label}</td><td class="num">${m.events}</td><td class="num">${m.with_results}</td>
-                    <td class="num font-semibold">${n(m.trial_entries)}</td><td class="num">${n(m.test_entries)}</td>
-                    <td class="num">${n(m.total_entries)}</td><td class="num">${avg(m.avg_trial_entries)}</td>
+                    <td class="num font-semibold">${n(m.trial_entries)}</td><td class="num">${m.singles ? n(m.singles) : '—'}</td>
+                    <td class="num">${n(m.test_entries)}</td>
+                    <td class="num">${n(m.total_entries)}</td><td class="num">${avg(m.avg_entries)}</td>
                   </tr>`).join('')}
                 <tr class="bg-asfa-bg2 font-semibold">
                   <td>Total</td><td class="num">${stats.events}</td><td class="num">${stats.with_results}</td>
-                  <td class="num">${n(stats.trial_entries)}</td><td class="num">${n(stats.test_entries)}</td>
-                  <td class="num">${n(stats.total_entries)}</td><td class="num">${avg(stats.avg_trial_entries)}</td>
+                  <td class="num">${n(stats.trial_entries)}</td><td class="num">${n(stats.singles)}</td><td class="num">${n(stats.test_entries)}</td>
+                  <td class="num">${n(stats.total_entries)}</td><td class="num">${avg(stats.avg_entries)}</td>
                 </tr>
               </tbody>
             </table></div>
@@ -116,7 +123,7 @@
 
           <section class="card" id="states">
             <h2 class="card-title">States</h2>
-            <p class="text-xs text-asfa-text/55 mb-2">Ranked on trial entries at events with results posted. Events held counts every event in the state; With results counts the LC trials whose results AKC has posted, which the entries and averages come from.</p>
+            <p class="text-xs text-asfa-text/55 mb-2">Ranked on trial entries and Singles starters at events with results posted. Events held counts every event in the state; With results counts the LC trials whose results AKC has posted, which the entries and averages come from.</p>
             <div id="states-table"></div>
           </section>
         </div>
@@ -144,7 +151,8 @@
           <p class="text-xs text-asfa-text/55 mt-3">
             Counted from the stakes in each trial's posted results. Competitors are the hounds that ran, so a
             trial's breeds add up to its competitors, not its entries. Trials is the number of trials where the
-            breed had at least one hound; Avg is competitors per such trial.${stats.trials_not_by_breed
+            breed had at least one hound; Avg is competitors per such trial. Singles are not split by breed:
+            AKC's Singles sheets list only the placings, not every starter.${stats.trials_not_by_breed
               ? ` ${stats.trials_not_by_breed} trial${stats.trials_not_by_breed === 1 ? ' is' : 's are'} left out: AKC's results page
                 gives ${stats.trials_not_by_breed === 1 ? 'its' : 'their'} totals without a full list of stakes.` : ''}
           </p>
@@ -152,11 +160,11 @@
 
         <section class="card">
           <h2 class="card-title">Clubs</h2>
-          <p class="text-xs text-asfa-text/55 mb-2">Every club that held an AKC lure coursing event this year, ranked on trial entries at events with results posted.</p>
+          <p class="text-xs text-asfa-text/55 mb-2">Every club that held an AKC lure coursing event this year, ranked on trial entries and Singles starters at events with results posted.</p>
           <div class="tbl-wrap"><table class="tbl">
             <thead><tr>
               <th scope="col" class="num">#</th><th scope="col">Club</th><th scope="col">Where</th>
-              <th scope="col" class="num">Trials</th><th scope="col" class="num">Trial entries</th>
+              <th scope="col" class="num">Trials</th><th scope="col" class="num">Trial entries</th><th scope="col" class="num">Singles</th>
               <th scope="col" class="num">Avg</th><th scope="col" class="num">Largest</th><th scope="col" class="num">Test entries</th>
             </tr></thead>
             <tbody>
@@ -165,7 +173,8 @@
                   ${rankCell(c.rank)}<td class="font-semibold">${esc(c.club)}</td>
                   <td class="text-xs text-asfa-text/70">${c.states.join(', ')}</td>
                   <td class="num">${c.trials || '—'}</td><td class="num font-semibold text-asfa-akc">${c.trials ? n(c.trial_entries) : '—'}</td>
-                  <td class="num">${avg(c.avg_trial_entries)}</td><td class="num">${n(c.largest_trial)}</td>
+                  <td class="num">${c.singles ? n(c.singles) : '—'}</td>
+                  <td class="num">${avg(c.avg_entries)}</td><td class="num">${n(c.largest_trial)}</td>
                   <td class="num">${c.trials ? n(c.test_entries) : '—'}</td>
                 </tr>`).join('')}
             </tbody>
@@ -176,7 +185,7 @@
 
         <section class="card" id="largest">
           <h2 class="card-title">Largest trials</h2>
-          <p class="text-xs text-asfa-text/55 mb-2">Trials with results posted, by LC trial entries; tied trials share a rank.</p>
+          <p class="text-xs text-asfa-text/55 mb-2">Trials with results posted, by entries: LC trial entries and Singles starters together; tied trials share a rank.</p>
           <div id="largest-table"></div>
         </section>
 
@@ -222,7 +231,8 @@
           <div id="events-table"></div>
           <p class="text-xs text-asfa-text/55 mt-3">
             Each event number opens AKC's page for that event. Blank counts: no test held, or results
-            not yet posted by AKC.
+            not yet posted by AKC. A blank Singles count: no Singles stake, or AKC has not posted it yet.
+            Total counts trial entries, Singles and tests.
           </p>
         </section>
 
@@ -233,6 +243,14 @@
               one event number.</li>
             <li>Trial entries are the Open, Specials and Veterans stakes. Test entries are the Junior Courser
               and Qualified Courser tests.</li>
+            ${singles ? `<li>Singles are the starters in a trial's Singles stake, which AKC posts separately on its
+              ${external(singles.url, 'Single Stakes Results')} page, a month or more after the trial (so far
+              through ${formatDate(singles.through)}: ${n(stats.singles)} starters in ${n(stats.singles_stakes)} stakes).
+              Every entries figure, average, largest trial and ranking on this page counts them with the trial
+              entries; a trial whose Singles AKC has not posted counts its trial entries alone. AKC's Singles
+              sheets give starters rather than entries.${feed.singles_unmatched.length
+                ? ` ${feed.singles_unmatched.length} sheet${feed.singles_unmatched.length === 1 ? '' : 's'} could not be
+                  matched to an event with results posted and ${feed.singles_unmatched.length === 1 ? 'is' : 'are'} left out.` : ''}</li>` : ''}
             <li>Competitors are the hounds that actually ran; entries include those that scratched.</li>
             <li>Starters by breed are read from the stakes in each trial's posted results: the hounds that
               started in each breed's Open, Specials and Veterans stakes, counted once in every trial they ran.</li>
@@ -243,7 +261,8 @@
           <p class="text-sm leading-relaxed mt-4">
             Source: AKC's ${external(feed.source.url, 'Event Search')}, event type Lure Coursing Tests
             &amp; Trials, all states, one row per AKC event number, with the counts from each event's
-            results page.
+            results page${singles ? `; and AKC's ${external(singles.url, 'Single Stakes Results')}, one sheet per
+            Singles stake, of which only the club, event number, date and number of starters are kept` : ''}.
           </p>
           <p class="text-sm leading-relaxed mt-3">
             This page is an independent, unofficial compilation. It is not an AKC publication and is not
@@ -266,7 +285,7 @@
           <div class="tbl-wrap"><table class="tbl">
             <thead><tr>
               <th scope="col" class="num">#</th><th scope="col">State</th><th scope="col" class="num">Events held</th>
-              <th scope="col" class="num">With results</th><th scope="col" class="num">Trial entries</th>
+              <th scope="col" class="num">With results</th><th scope="col" class="num">Trial entries</th><th scope="col" class="num">Singles</th>
               <th scope="col" class="num">Avg</th><th scope="col" class="num">Largest</th><th scope="col" class="num">Test entries</th>
             </tr></thead>
             <tbody>
@@ -274,7 +293,8 @@
                 <tr>
                   ${rankCell(s.rank)}<td class="font-semibold">${s.state}</td><td class="num">${s.events}</td>
                   <td class="num">${s.trials || '—'}</td><td class="num font-semibold text-asfa-akc">${s.trials ? n(s.trial_entries) : '—'}</td>
-                  <td class="num">${avg(s.avg_trial_entries)}</td><td class="num">${n(s.largest_trial)}</td>
+                  <td class="num">${s.singles ? n(s.singles) : '—'}</td>
+                  <td class="num">${avg(s.avg_entries)}</td><td class="num">${n(s.largest_trial)}</td>
                   <td class="num">${s.with_results ? n(s.test_entries) : '—'}</td>
                 </tr>`).join('')}
             </tbody>
@@ -298,7 +318,8 @@
           <div class="tbl-wrap"><table class="tbl">
             <thead><tr>
               <th scope="col" class="num">#</th><th scope="col">Date</th><th scope="col">Club</th><th scope="col">Where</th>
-              <th scope="col" class="num">Trial entries</th><th scope="col" class="num">Competitors</th><th scope="col" class="num">Test entries</th>
+              <th scope="col" class="num">Entries</th><th scope="col" class="num">Trial entries</th><th scope="col" class="num">Singles</th>
+              <th scope="col" class="num">Competitors</th><th scope="col" class="num">Test entries</th>
             </tr></thead>
             <tbody>
               ${rows.map((t) => `
@@ -307,7 +328,8 @@
                   <td class="font-semibold">${esc(t.club)}${t.scope && t.scope.toLowerCase() !== 'all-breed'
                     ? ` <span class="text-xs text-asfa-text/55 font-normal">${esc(t.scope)}</span>` : ''}</td>
                   <td class="text-xs text-asfa-text/70 whitespace-nowrap">${esc(t.city)}, ${t.state}</td>
-                  <td class="num font-semibold text-asfa-akc">${n(t.trial_entries)}</td>
+                  <td class="num font-semibold text-asfa-akc">${n(t.entries)}</td>
+                  <td class="num">${n(t.trial_entries)}</td><td class="num">${n(t.singles)}</td>
                   <td class="num">${n(t.trial_competitors)}</td><td class="num">${n(t.test_entries)}</td>
                 </tr>`).join('')}
             </tbody>
@@ -343,6 +365,7 @@
         ['where', 'Where', '', 1],
         ['event_number', 'Event #', '', 1],
         ['trial_entries', 'Trial entries', 'num', -1],
+        ['singles', 'Singles', 'num', -1],
         ['trial_competitors', 'Trial competitors', 'num', -1],
         ['test_entries', 'Test entries', 'num', -1],
         ['test_competitors', 'Test competitors', 'num', -1],
@@ -391,9 +414,9 @@
         const rows = sorted(selected());
         const filtering = ['state', 'club', 'scope', 'results'].some((key) => els[key].value);
         const shown = rows.filter((e) => e.results_posted);
-        const entries = shown.reduce((sum, e) => sum + (e.trial_entries || 0), 0);
+        const entries = shown.reduce((sum, e) => sum + (e.entries || 0), 0);
         els.count.innerHTML = `Showing ${rows.length} of ${events.length} events${
-          filtering ? `, ${shown.length} with results posted and ${n(entries)} trial entries between them` : ''}.${
+          filtering ? `, ${shown.length} with results posted and ${n(entries)} entries between them, Singles included` : ''}.${
           filtering ? ' <button type="button" id="f-clear" class="lnk">Clear filters</button>' : ''}`;
         const clear = document.getElementById('f-clear');
         if (clear) clear.addEventListener('click', () => {
@@ -412,6 +435,7 @@
                   <td class="text-xs text-asfa-text/70 whitespace-nowrap">${esc(e.city)}, ${e.state}</td>
                   <td class="whitespace-nowrap">${external(e.url, e.event_number, 'lnk font-mono text-xs')}</td>
                   <td class="num font-semibold${e.results_posted ? ' text-asfa-akc' : ''}">${n(e.trial_entries)}</td>
+                  <td class="num">${n(e.singles)}</td>
                   <td class="num">${n(e.trial_competitors)}</td>
                   <td class="num">${n(e.test_entries)}</td>
                   <td class="num">${n(e.test_competitors)}</td>

@@ -31,3 +31,4 @@ data/cwa.json -diff
 data/cwa/snapshots/*.json -diff
 
 * text=auto
+data/akc/singles.json -diff eol=lf

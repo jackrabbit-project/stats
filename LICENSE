@@ -61,10 +61,11 @@ the following, which are included under separate terms:
    remains the property of NOTRA; the guides and the NOTRA Recorders' records
    are authoritative wherever the two disagree.
 
-5. AKC DATA — "data/akc.json" and the files under "data/akc/raw/" are
-   event entry counts collected from the public Event Search of The
-   American Kennel Club, Inc. (AKC) at akc.org. The listings remain AKC's;
-   AKC's event pages are authoritative wherever the two disagree.
+5. AKC DATA — "data/akc.json", the files under "data/akc/raw/" and
+   "data/akc/singles.json" are event entry counts collected from the public
+   Event Search and Single Stakes Results of The American Kennel Club, Inc.
+   (AKC) at akc.org. The listings remain AKC's; AKC's event pages are
+   authoritative wherever the two disagree.
 
 6. WRA DATA — "data/wra.json", "data/wra-registry.json" and the archived
    snapshots under "data/wra/" are derived from the grading guide reports

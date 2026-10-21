@@ -100,9 +100,10 @@ jobs:
           git clean -fdq -- data/cwa/
 
       - name: Refresh the AKC lure coursing entries
-        # Collected from AKC's Event Search and each event's results page;
-        # when AKC cannot be reached the feed is rebuilt from the newest
-        # committed collection.
+        # Collected from AKC's Event Search and each event's results page,
+        # with any new sheet on AKC's Single Stakes Results page; when AKC
+        # cannot be reached the feed is rebuilt from the newest committed
+        # collection and the Singles record on file.
         continue-on-error: true
         run: python tools/akc.py
 

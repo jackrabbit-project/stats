@@ -1183,7 +1183,9 @@ function footerSource(sectionKey, feed) {
         <p>
           Event entry counts compiled from the American Kennel Club's public
           ${link(feed.source.url, 'Event Search')}, events from ${formatDate(feed.period.start)}
-          through ${formatDate(feed.period.end)}, collected ${formatDate(feed.collected)}.
+          through ${formatDate(feed.period.end)}, collected ${formatDate(feed.collected)}${
+          feed.singles_source ? `, and its ${link(feed.singles_source.url, 'Single Stakes Results')},
+          posted through ${formatDate(feed.singles_source.through)}` : ''}.
           AKC's event pages are authoritative wherever they disagree with this one.
         </p>` : `
         <p>Event entry counts compiled from the American Kennel Club's public Event Search.

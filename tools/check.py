@@ -835,12 +835,73 @@ def check_akc(check: Checker) -> None:
         "akc: the feed's sha256 is not the committed collection's",
     )
     collection = json.loads(raw.read_text(encoding="utf-8"))
+
+    # Singles: AKC's separate Singles sheets, matched to their trials here
+    # on their own: by the event number a sheet prints, else by its date and
+    # the club's name, and only to events with results posted.
+    singles_path = ROOT / "data" / "akc" / "singles.json"
+    singles_by_event: dict[str, int] = {}
+    singles_sheets: dict[str, int] = {}
+    singles_unmatched: list[dict] = []
+    singles_source = feed.get("singles_source")
+    singles_blob = None
+    if singles_source is None:
+        check.expect(feed.get("singles_unmatched") == [], "akc: unmatched Singles without a Singles record")
+    else:
+        check.expect(singles_path.exists(), "akc: the feed names a Singles record that is not committed")
+    if singles_source is not None and singles_path.exists():
+        singles_blob = singles_path.read_bytes()
+        check.expect(hashlib.sha256(singles_blob).hexdigest() == singles_source["sha256"],
+                     "akc: the Singles record's sha256 is not the feed's")
+        record = json.loads(singles_blob.decode("utf-8"))
+        sheets = record["sheets"]
+        season = feed["season"]
+        check.expect(record.get("season") == season, f"akc: Singles record for {record.get('season')}, feed {season}")
+        check.expect(
+            (singles_source["sheets"], singles_source["through"], singles_source["read"])
+            == (len(sheets), max((s["date"] for s in sheets), default=None), record["read"]),
+            "akc: singles_source does not describe the Singles record",
+        )
+        urls = [s["url"] for s in sheets]
+        check.expect(len(set(urls)) == len(urls), "akc: a Singles sheet is listed twice")
+        check.expect(sheets == sorted(sheets, key=lambda s: (s["date"], s["file"])), "akc: Singles sheets out of date order")
+        for s in sheets:
+            check.expect(
+                set(s) == {"file", "url", "club", "event_number", "date", "starters"}
+                and re.fullmatch(r"https://www\.akc\.org/wp-content/uploads/\d{4}/\d{2}/[^/]+\.pdf", s["url"] or "") is not None
+                and s["url"].rsplit("/", 1)[-1] == s["file"]
+                and type(s["starters"]) is int and s["starters"] >= 1
+                and re.fullmatch(rf"{season}-\d\d-\d\d", s["date"] or "") is not None
+                and (s["event_number"] is None or re.fullmatch(r"20\d{8}", s["event_number"]) is not None),
+                f"akc Singles sheet {s.get('file')}: {s}",
+            )
+        raw_by_number = {r["event_number"]: r for r in collection["events"]}
+        letters = lambda text: re.sub(r"[^a-z]", "", (text or "").lower())
+        for s in sheets:
+            r = raw_by_number.get(s["event_number"]) if s["event_number"] else None
+            if r is None:
+                prefix = letters(s["club"])[:12]
+                same = [x for x in collection["events"]
+                        if x["date"] == s["date"] and prefix and letters(x["club"]).startswith(prefix)]
+                r = same[0] if len(same) == 1 else None
+            if r is None or not r["results_posted"]:
+                singles_unmatched.append({k: s[k] for k in ("file", "date", "club", "event_number", "starters")})
+                continue
+            singles_by_event[r["event_number"]] = singles_by_event.get(r["event_number"], 0) + s["starters"]
+            singles_sheets[r["event_number"]] = singles_sheets.get(r["event_number"], 0) + 1
+        check.expect(feed["singles_unmatched"] == singles_unmatched,
+                     f"akc: unmatched Singles sheets: feed {feed['singles_unmatched']}, re-derived {singles_unmatched}")
+
+    def _entries(trial, single):
+        return None if trial is None and single is None else (trial or 0) + (single or 0)
+
     rows = [{
         "date": r["date"], "day": r["day"], "club": r["club"], "city": r["city"], "state": r["state"],
         "number": r["event_number"], "scope": r["scope"],
         "trial": r["trial_entries"], "trial_c": r["trial_competitors"], "test": r["test_entries"],
         "test_c": r["test_competitors"], "total": r["total_entries"], "posted": r["results_posted"],
-        "link": r["url"],
+        "link": r["url"], "single": singles_by_event.get(r["event_number"]),
+        "entries": _entries(r["trial_entries"], singles_by_event.get(r["event_number"])),
     } for r in collection["events"]]
     events = feed["events"]
     stats = feed["stats"]
@@ -876,8 +937,12 @@ def check_akc(check: Checker) -> None:
         )
         for key, field in (("trial_entries", "trial"), ("trial_competitors", "trial_c"),
                            ("test_entries", "test"), ("test_competitors", "test_c"),
-                           ("total_entries", "total")):
-            check.expect(e[key] == row[field], f"akc {row['number']} {key}: feed {e[key]}, collection {row[field]}")
+                           ("singles", "single"), ("entries", "entries")):
+            check.expect(e[key] == row[field], f"akc {row['number']} {key}: feed {e[key]}, re-derived {row[field]}")
+        # The collection's total is trial + test; the feed's adds the Singles.
+        want_total = row["total"] + (row["single"] or 0) if row["posted"] else None
+        check.expect(e["total_entries"] == want_total,
+                     f"akc {row['number']} total_entries: feed {e['total_entries']}, re-derived {want_total}")
         check.expect(period["start"] <= e["date"] <= period["end"], f"akc {row['number']}: {e['date']} outside the period")
         check.expect(_date.fromisoformat(e["date"]).strftime("%a") == e["day"], f"akc {row['number']}: day {e['day']} is not the date's weekday")
         check.expect(e["state"] in US_STATES, f"akc {row['number']}: state {e['state']}")
@@ -888,7 +953,8 @@ def check_akc(check: Checker) -> None:
                          f"akc {row['number']}: counts on an unposted event")
         else:
             check.expect(any(e[k] is not None for k in ("trial_entries", "test_entries")), f"akc {row['number']}: posted but no counts")
-            check.expect((e["total_entries"] or 0) == (e["trial_entries"] or 0) + (e["test_entries"] or 0), f"akc {row['number']}: total is not trial + test")
+            check.expect((e["total_entries"] or 0) == (e["trial_entries"] or 0) + (e["singles"] or 0) + (e["test_entries"] or 0),
+                         f"akc {row['number']}: total is not trial + Singles + test")
             check.expect((e["trial_competitors"] or 0) <= (e["trial_entries"] or 0) and (e["test_competitors"] or 0) <= (e["test_entries"] or 0),
                          f"akc {row['number']}: more competitors than entries")
         host = re.match(r"https://([^/]+)/", e["url"])
@@ -897,25 +963,33 @@ def check_akc(check: Checker) -> None:
 
     # Totals, re-derived from the collected rows alone.
     posted = [r for r in rows if r["posted"]]
-    held = [r for r in posted if r["trial"] is not None]
+    held = [r for r in posted if r["entries"] is not None]
+    with_trial = [r for r in posted if r["trial"] is not None]
+    entries_sum = sum(r["entries"] for r in held)
+    tests_sum = sum(r["test"] or 0 for r in posted)
     want = {
         "events": len(rows), "with_results": len(posted), "without_results": len(rows) - len(posted),
         "events_with_trial": len(held),
-        "trial_entries": sum(r["trial"] for r in held),
+        "trial_entries": sum(r["trial"] or 0 for r in held),
+        "singles": sum(r["single"] or 0 for r in held),
+        "singles_stakes": sum(singles_sheets.values()),
+        "singles_trials": len(singles_sheets),
+        "entries": entries_sum,
         "trial_competitors": sum(r["trial_c"] or 0 for r in posted),
-        "test_entries": sum(r["test"] or 0 for r in posted),
+        "test_entries": tests_sum,
         "test_competitors": sum(r["test_c"] or 0 for r in posted),
-        "total_entries": sum(r["total"] or 0 for r in posted),
-        "largest_trial": max(r["trial"] for r in held) if held else None,
-        "smallest_trial": min(r["trial"] for r in held) if held else None,
+        "total_entries": entries_sum + tests_sum,
+        "largest_trial": max(r["entries"] for r in held) if held else None,
+        "smallest_trial": min(r["entries"] for r in held) if held else None,
         "clubs": len({r["club"] for r in rows}), "states": len({r["state"] for r in rows}),
         "specialties": sum(1 for r in rows if r["scope"] and r["scope"].lower() != "all-breed"),
     }
     for key, value in want.items():
         check.expect(stats.get(key) == value, f"akc stats.{key}: feed {stats.get(key)}, re-derived {value}")
-    avg = sum(r["trial"] for r in held) / len(held) if held else None
-    check.expect((avg is None and stats["avg_trial_entries"] is None) or (avg is not None and stats["avg_trial_entries"] is not None and abs(stats["avg_trial_entries"] - avg) < 0.001),
-                 f"akc stats.avg_trial_entries: feed {stats['avg_trial_entries']}, re-derived {avg}")
+    for key, avg in (("avg_entries", entries_sum / len(held) if held else None),
+                     ("avg_trial_entries", sum(r["trial"] for r in with_trial) / len(with_trial) if with_trial else None)):
+        check.expect((avg is None and stats[key] is None) or (avg is not None and stats[key] is not None and abs(stats[key] - avg) < 0.001),
+                     f"akc stats.{key}: feed {stats[key]}, re-derived {avg}")
 
     # By month, re-derived; the table must cover the period month by month.
     months = []
@@ -929,21 +1003,24 @@ def check_akc(check: Checker) -> None:
     for row in feed["by_month"]:
         in_month = [r for r in rows if r["date"].startswith(row["month"])]
         in_posted = [r for r in in_month if r["posted"]]
-        in_held = [r for r in in_posted if r["trial"] is not None]
-        entries = sum(r["trial"] for r in in_held)
+        in_held = [r for r in in_posted if r["entries"] is not None]
+        trial = sum(r["trial"] or 0 for r in in_held)
+        single = sum(r["single"] or 0 for r in in_held)
         tests = sum(r["test"] or 0 for r in in_posted)
-        mine = (len(in_month), len(in_posted), entries, tests, entries + tests)
-        theirs = (row["events"], row["with_results"], row["trial_entries"], row["test_entries"], row["total_entries"])
+        mine = (len(in_month), len(in_posted), trial, single, tests, trial + single + tests)
+        theirs = (row["events"], row["with_results"], row["trial_entries"], row["singles"],
+                  row["test_entries"], row["total_entries"])
         check.expect(mine == theirs, f"akc by_month {row['month']}: feed {theirs}, re-derived {mine}")
-        avg_m = entries / len(in_held) if in_held else None
-        check.expect((avg_m is None and row["avg_trial_entries"] is None) or (avg_m is not None and row["avg_trial_entries"] is not None and abs(avg_m - row["avg_trial_entries"]) < 0.001),
-                     f"akc by_month {row['month']} average: feed {row['avg_trial_entries']}, re-derived {avg_m}")
+        avg_m = (trial + single) / len(in_held) if in_held else None
+        check.expect((avg_m is None and row["avg_entries"] is None) or (avg_m is not None and row["avg_entries"] is not None and abs(avg_m - row["avg_entries"]) < 0.001),
+                     f"akc by_month {row['month']} average: feed {row['avg_entries']}, re-derived {avg_m}")
 
     # Rankings: trials by entries, clubs and states by their posted trial entries.
     trial_rows = [dict(r) for r in held]
-    _akc_rank(trial_rows, "trial")
-    want_trials = {(r["date"], r["club"], r["trial"]): r["_rank"] for r in trial_rows}
-    got_trials = {(t["date"], t["club"], t["trial_entries"]): t["rank"] for t in feed["rankings"]["trials"]}
+    _akc_rank(trial_rows, "entries")
+    want_trials = {(r["date"], r["club"], r["trial"], r["single"], r["entries"]): r["_rank"] for r in trial_rows}
+    got_trials = {(t["date"], t["club"], t["trial_entries"], t["singles"], t["entries"]): t["rank"]
+                  for t in feed["rankings"]["trials"]}
     check.expect(want_trials == got_trials, f"akc trial ranking differs from the re-derivation ({len(want_trials)} vs {len(got_trials)} rows)")
     ranked = [t["rank"] for t in feed["rankings"]["trials"]]
     check.expect(ranked == sorted(ranked), "akc trial ranking is not in rank order")
@@ -951,15 +1028,18 @@ def check_akc(check: Checker) -> None:
     def grouped(key):
         groups = {}
         for r in rows:
-            g = groups.setdefault(r[key], {"n": 0, "trials": 0, "entries": 0, "largest": None, "tests": 0})
+            g = groups.setdefault(r[key], {"n": 0, "trials": 0, "trial": 0, "single": 0, "entries": 0,
+                                           "largest": None, "tests": 0})
             g["n"] += 1
             if not r["posted"]:
                 continue
             g["tests"] += r["test"] or 0
-            if r["trial"] is not None:
+            if r["entries"] is not None:
                 g["trials"] += 1
-                g["entries"] += r["trial"]
-                g["largest"] = max(g["largest"] or 0, r["trial"])
+                g["trial"] += r["trial"] or 0
+                g["single"] += r["single"] or 0
+                g["entries"] += r["entries"]
+                g["largest"] = max(g["largest"] or 0, r["entries"])
         out = [{key: k, **g, "_on": g["entries"] if g["trials"] else None} for k, g in groups.items()]
         _akc_rank(out, "_on")
         return {o[key]: o for o in out}
@@ -974,9 +1054,9 @@ def check_akc(check: Checker) -> None:
                 continue
             avg_g = w["entries"] / w["trials"] if w["trials"] else None
             check.expect(
-                (g["rank"], g["trials"], g["trial_entries"], g["largest_trial"], g["test_entries"])
-                == (w["_rank"], w["trials"], w["entries"], w["largest"], w["tests"])
-                and ((avg_g is None and g["avg_trial_entries"] is None) or (avg_g is not None and g["avg_trial_entries"] is not None and abs(avg_g - g["avg_trial_entries"]) < 0.001)),
+                (g["rank"], g["trials"], g["trial_entries"], g["singles"], g["entries"], g["largest_trial"], g["test_entries"])
+                == (w["_rank"], w["trials"], w["trial"], w["single"], w["entries"], w["largest"], w["tests"])
+                and ((avg_g is None and g["avg_entries"] is None) or (avg_g is not None and g["avg_entries"] is not None and abs(avg_g - g["avg_entries"]) < 0.001)),
                 f"akc {label} ranking {name}: feed {g}, re-derived {w}",
             )
 
@@ -1047,7 +1127,10 @@ def check_akc(check: Checker) -> None:
         ("phone number", r"\(?\d{3}\)?[-. ]\d{3}[-. ]\d{4}"),
         ("street address", r"\b\d{1,5}\s+\w+\s+(St|Street|Ave|Avenue|Rd|Road|Dr|Drive|Ln|Lane|Blvd|Way|Ct|Court)\b"),
     ):
-        for name, blob in (("data/akc.json", path.read_text(encoding="utf-8")), (f"data/akc/raw/{raw.name}", raw.read_text(encoding="utf-8"))):
+        blobs = [("data/akc.json", path.read_text(encoding="utf-8")), (f"data/akc/raw/{raw.name}", raw.read_text(encoding="utf-8"))]
+        if singles_blob is not None:
+            blobs.append(("data/akc/singles.json", singles_blob.decode("utf-8")))
+        for name, blob in blobs:
             found = re.findall(pattern, blob, re.IGNORECASE)
             check.expect(not found, f"{name} contains a {label}: {found[:2]}")
 
