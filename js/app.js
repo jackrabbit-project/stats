@@ -1105,14 +1105,26 @@ function navActive(href, current, nav) {
   });
 }
 
+/** The colour of the program a hub tab leads to, as in the program menu;
+    null for Home. */
+function programColor(href) {
+  const path = href.split('#')[0];
+  const section = Object.values(SECTIONS).find((s) => s.home === path && s !== SECTIONS.hub);
+  return section ? section.color : null;
+}
+
 /* The active tab's underline takes the section's colour (rust ASFA, slate
    LGRA, moss AOK9, amber NOTRA), the same code as the subtitle and the hub
-   cards. */
+   cards. On the hub's tabs every program also writes its name in its own
+   colour, as in the program menu; Home stays neutral. */
 function paintNav(navEl, current, nav, line = 'border-asfa-accent') {
   navEl.querySelectorAll('a[href]').forEach((link) => {
     const active = navActive(link.getAttribute('href'), current, nav);
+    const color = nav === NAV_HUB ? programColor(link.getAttribute('href')) : null;
     link.className = `pill-hover shrink-0 px-2.5 py-2.5 font-mono text-xs uppercase tracking-[0.1em] border-b-2 ${
-      active ? `text-asfa-text ${line}` : 'text-asfa-muted border-transparent hover:text-asfa-text'}`;
+      active ? `${color || 'text-asfa-text'} ${line}`
+        : color ? `${color} border-transparent`
+          : 'text-asfa-muted border-transparent hover:text-asfa-text'}`;
     if (active) link.setAttribute('aria-current', 'page');
     else link.removeAttribute('aria-current');
   });
