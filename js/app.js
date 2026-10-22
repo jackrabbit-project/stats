@@ -1228,26 +1228,49 @@ function footerSource(sectionKey, feed) {
 /** The subtitle under the wordmark opens a short menu of the programs.
 
     One click switches sport from any page. Escape and a click elsewhere
-    close it; arrow keys walk the items; focus returns to the button. */
+    close it; arrow keys walk the items; focus returns to the button. With a
+    mouse or trackpad, resting on the subtitle opens the menu and leaving it
+    closes it; a click pins it open. Touch screens open it with a tap. */
 function initProgramMenu(header) {
   const button = header.querySelector('#program-menu-button');
   const menu = header.querySelector('#program-menu');
   if (!button || !menu) return;
   const items = () => [...menu.querySelectorAll('[role="menuitem"]')];
+  // True while the menu is open only because the pointer rests on it.
+  let hovered = false;
+  let closeTimer = null;
   const open = (focusIndex = 0) => {
+    clearTimeout(closeTimer);
     menu.classList.remove('hidden');
     button.setAttribute('aria-expanded', 'true');
+    hovered = focusIndex === null;
     const list = items();
-    if (list.length) list[Math.max(0, Math.min(focusIndex, list.length - 1))].focus();
+    if (focusIndex !== null && list.length) list[Math.max(0, Math.min(focusIndex, list.length - 1))].focus();
   };
   const close = (refocus = false) => {
+    clearTimeout(closeTimer);
+    hovered = false;
     menu.classList.add('hidden');
     button.setAttribute('aria-expanded', 'false');
     if (refocus) button.focus();
   };
   button.addEventListener('click', () => {
     if (menu.classList.contains('hidden')) open();
+    else if (hovered) { hovered = false; clearTimeout(closeTimer); }
     else close();
+  });
+  // The button and the menu share a wrapper; leaving it waits a beat so the
+  // pointer can cross the gap between them without the menu closing.
+  const canHover = window.matchMedia('(hover: hover) and (pointer: fine)');
+  const area = button.parentElement;
+  area.addEventListener('mouseenter', () => {
+    if (!canHover.matches) return;
+    clearTimeout(closeTimer);
+    if (menu.classList.contains('hidden')) open(null);
+  });
+  area.addEventListener('mouseleave', () => {
+    if (!canHover.matches || !hovered) return;
+    closeTimer = setTimeout(() => { if (hovered) close(); }, 250);
   });
   button.addEventListener('keydown', (event) => {
     if (event.key === 'ArrowDown') { event.preventDefault(); open(0); }
