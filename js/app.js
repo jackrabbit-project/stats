@@ -821,6 +821,7 @@ const NAV_ASFA = [
   ['browse.html', 'Standings'],
   ['leaders.html', 'Leaders'],
   ['kennels.html', 'Kennels'],
+  ['titles.html', 'Titles'],
   ['regions.html', 'Regions'],
   ['trials.html', 'Trials'],
   ['lci.html', 'LCI'],
