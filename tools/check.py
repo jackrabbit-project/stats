@@ -429,9 +429,17 @@ def check_trial_breakdowns(check: Checker, trials: dict, raw_dir: Path) -> None:
             heading = re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", html[anchor.end():anchor.end() + 1500]))
             when = date.fromisoformat(row["date"]).strftime("%b %d, %Y")
             entry = re.search(r"Entry:\s*(\d+)", heading)
+            # A trial whose flights outnumber ASFA's printed Entry counts the
+            # hounds listed and keeps the printed figure as entry_printed.
+            printed = row.get("entry_printed", row["entries"])
             check.expect(
-                when in heading and entry is not None and int(entry.group(1)) == row["entries"],
-                f"{row['results_url']}: the block's heading is not {when} with Entry {row['entries']}")
+                when in heading and entry is not None and int(entry.group(1)) == printed,
+                f"{row['results_url']}: the block's heading is not {when} with Entry {printed}")
+            if "entry_printed" in row:
+                check.expect(
+                    row["entries"] > row["entry_printed"] and row["by_program"]["absent"] == 0,
+                    f"{row['date']} {row['club_raw']}: entries {row['entries']} kept over printed "
+                    f"{row['entry_printed']} without more hounds in the flights")
 
     # Each trial's stakes add up to its program split.
     for row in rows:
@@ -555,6 +563,11 @@ def check_trials(check: Checker) -> None:
     rows = trials["trials"]
 
     # Crude count straight out of the raw HTML, independent of trials.py.
+    # Every trial has an "Entry: N" in the summary table and again atop its
+    # results block, so a page's trials are its Entry markers less its
+    # summary rows: right even where the summary table is another month's
+    # (October 2026 opened with September's), and each page's trials are
+    # the ones dated in its month.
     raw_dir = ROOT / "data" / "trials" / "raw"
     counted = 0
     for month in trials["months"]:
@@ -563,12 +576,19 @@ def check_trials(check: Checker) -> None:
             check.expect(False, f"archived page missing: {page.name}")
             continue
         html = page.read_bytes().decode("cp1252", errors="replace")
+        summary = 0
         for tr in re.findall(r"<tr\b[^>]*>(.*?)</tr>", html, re.DOTALL | re.I):
             if not re.search(r'href="#R\d[^"]*"', tr):  # typos too ("#R1-")
                 continue
             cells = re.findall(r"<td\b[^>]*>(.*?)</td>", tr, re.DOTALL | re.I)
             if len(cells) == 2 and re.search(r"Entry:\s*\d+", cells[1]):
-                counted += 1
+                summary += 1
+        flat = re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", html).replace("&nbsp;", " "))
+        blocks = len(re.findall(r"Entry:\s*\d+", flat)) - summary
+        counted += blocks
+        dated = sum(1 for r in rows if r["date"].startswith(month))
+        check.expect(blocks == dated,
+                     f"{month}: {blocks} results blocks on the archived page, {dated} trials dated that month")
     check.expect(
         counted == len(rows),
         f"trial count: raw HTML has {counted}, trials.json has {len(rows)}",

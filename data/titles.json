@@ -1,48 +1,49 @@
 {
   "season": 2026,
-  "as_of": "2026-09-17",
-  "generated": "2026-10-19",
+  "as_of": "2026-09-30",
+  "generated": "2026-10-23",
   "source_url": "https://www.asfa.org/titles/index.htm",
   "stats": {
-    "total": 133,
+    "total": 147,
     "by_program": {
-      "singles": 11,
-      "breed": 75,
-      "lci": 47
+      "singles": 12,
+      "breed": 85,
+      "lci": 50
     },
     "by_title": {
-      "TCP": 11,
-      "FCh": 58,
-      "LCC": 15,
+      "TCP": 12,
+      "FCh": 64,
+      "LCC": 17,
       "LCM": 9,
       "LCE": 3,
-      "LCI": 22,
-      "LCM2": 2,
-      "VFCh": 3,
+      "LCI": 23,
+      "LCM2": 4,
+      "VFCh": 4,
       "LCA": 6,
       "VLCM": 2,
       "VLCC": 1,
-      "LCM3": 1
+      "LCM3": 1,
+      "VLCM3": 1
     },
     "by_section": {
-      "Singles": 11,
-      "Whippet": 25,
-      "LCI Sighthound Mix": 13,
-      "Greyhound": 4,
+      "Singles": 12,
+      "Whippet": 27,
+      "LCI Sighthound Mix": 14,
+      "Greyhound": 5,
       "Ibizan Hound": 4,
       "Saluki": 4,
-      "Rhodesian Ridgeback": 6,
-      "Silken Windhound": 9,
-      "Basenji": 5,
-      "LCI Large": 22,
+      "Rhodesian Ridgeback": 10,
+      "Silken Windhound": 10,
+      "Basenji": 6,
+      "LCI Large": 23,
       "Borzoi": 8,
-      "LCI Small": 12,
+      "LCI Small": 13,
       "Italian Greyhound": 5,
       "Scottish Deerhound": 2,
-      "Pharaoh Hound": 2,
+      "Pharaoh Hound": 3,
       "Azawakh": 1
     },
-    "matched_to_profiles": 85
+    "matched_to_profiles": 96
   },
   "titles": [
     {
@@ -331,7 +332,7 @@
       "date": "2026-04-25",
       "owners_raw": "Deann Britton, Edward & Selma Kominek",
       "program": "singles",
-      "dog_id": null
+      "dog_id": "kominek-s-kipfler-at-rahwynd--singles"
     },
     {
       "section": "LCI Small",
@@ -583,7 +584,7 @@
       "date": "2026-05-09",
       "owners_raw": "Jessica Charbonneau",
       "program": "lci",
-      "dog_id": "dolly-charbonneau--lci-large"
+      "dog_id": null
     },
     {
       "section": "Singles",
@@ -775,7 +776,7 @@
       "date": "2026-05-24",
       "owners_raw": "Marie Heidebrecht",
       "program": "breed",
-      "dog_id": null
+      "dog_id": "sinbaje-s-puzzling-proposition--basenji"
     },
     {
       "section": "LCI Sighthound Mix",
@@ -787,7 +788,7 @@
       "date": "2026-05-24",
       "owners_raw": "Myra Roth",
       "program": "lci",
-      "dog_id": null
+      "dog_id": "crystal-spirit-birch-gabbro-merges-lives--lci-sighthound-mix"
     },
     {
       "section": "Whippet",
@@ -1459,7 +1460,7 @@
       "date": "2026-09-07",
       "owners_raw": "Susan Cecere & Sandra Moore",
       "program": "breed",
-      "dog_id": "avaloin-heritage-ww-mhd-search4spock--borzoi"
+      "dog_id": "avalon-heritage-ww-mhd-search4spock--borzoi"
     },
     {
       "section": "Ibizan Hound",
@@ -1520,6 +1521,18 @@
       "owners_raw": "Kaije Knls",
       "program": "breed",
       "dog_id": "kaije-s-abundance--pharaoh-hound"
+    },
+    {
+      "section": "Rhodesian Ridgeback",
+      "title": "Field Champion",
+      "title_abbr": "FCh",
+      "call_name": "Daytona",
+      "registered_name": "FC Chiastolite On The Road Again By Venus, SC",
+      "registered_raw": "FC Chiastolite On The Road Again By Venus, SC, HP64405910, B, Jan 25 2022",
+      "date": "2026-09-12",
+      "owners_raw": "Kay Straky & Rosemary Marnoch",
+      "program": "breed",
+      "dog_id": "chiastolite-on-the-road-again-by-venus--rhodesian-ridgeback"
     },
     {
       "section": "Rhodesian Ridgeback",
@@ -1640,6 +1653,162 @@
       "owners_raw": "Sue & Rich Lang",
       "program": "breed",
       "dog_id": "hyflyte-ohh-the-places-hugo--whippet"
+    },
+    {
+      "section": "Greyhound",
+      "title": "Field Champion",
+      "title_abbr": "FCh",
+      "call_name": "Pecan",
+      "registered_name": "Unbridled Majestiks Blackeyed Peacan",
+      "registered_raw": "Unbridled Majestiks Blackeyed Peacan, HP68197601, B, Feb 07 2023",
+      "date": "2026-09-18",
+      "owners_raw": "Susan Visocchi",
+      "program": "breed",
+      "dog_id": null
+    },
+    {
+      "section": "LCI Sighthound Mix",
+      "title": "Lure Chasing Instinct",
+      "title_abbr": "LCI",
+      "call_name": "Nala",
+      "registered_name": "Lady Nala Bear BCF",
+      "registered_raw": "Lady Nala Bear BCF, HP65716601, B, Mar 23 2021",
+      "date": "2026-09-19",
+      "owners_raw": "Gina & Jajonelle Dejarnette",
+      "program": "lci",
+      "dog_id": "lady-nala-bear--lci-sighthound-mix"
+    },
+    {
+      "section": "Pharaoh Hound",
+      "title": "Lure Courser Of Merit 2",
+      "title_abbr": "LCM2",
+      "call_name": "Calyber",
+      "registered_name": "GCh,DC Bazinga Journey Of Lights V Lotus LCM,MC,LCX",
+      "registered_raw": "GCh,DC Bazinga Journey Of Lights V Lotus LCM,MC,LCX, HP62667404, D, Jan 13 2021",
+      "date": "2026-09-19",
+      "owners_raw": "Darci Kunard",
+      "program": "breed",
+      "dog_id": "bazinga-journey-of-lights-v-lotus--pharaoh-hound"
+    },
+    {
+      "section": "Whippet",
+      "title": "Lure Courser Of Merit 2",
+      "title_abbr": "LCM2",
+      "call_name": "Rapper",
+      "registered_name": "Hyflyte The Show Must Go On, LCM",
+      "registered_raw": "Hyflyte The Show Must Go On, LCM, GQ4005355, D, Aug 19 2019",
+      "date": "2026-09-19",
+      "owners_raw": "Helen Ferguson, Marni Smith & Mark Mortin",
+      "program": "breed",
+      "dog_id": "hyflyte-the-show-must-go-on--whippet"
+    },
+    {
+      "section": "LCI Large",
+      "title": "Lure Chasing Champion",
+      "title_abbr": "LCC",
+      "call_name": "Dark",
+      "registered_name": "Woodwolf's When You Wish Upon A Star",
+      "registered_raw": "Woodwolf's When You Wish Upon A Star, DN79521006, D, My 01 2024",
+      "date": "2026-09-20",
+      "owners_raw": "Lizz Wilson",
+      "program": "lci",
+      "dog_id": null
+    },
+    {
+      "section": "Singles",
+      "title": "Title of Coursing Proficiency (TCP)",
+      "title_abbr": "TCP",
+      "call_name": "Matrix",
+      "registered_name": "Azharaani Saar Mountain Of The Sun",
+      "registered_raw": "Azharaani Saar Mountain Of The Sun, HP72219805, D, Dec 14 2024",
+      "date": "2026-09-20",
+      "owners_raw": "Gloria & Beryl Mitchell",
+      "program": "singles",
+      "dog_id": "azharaani-saar-mountain-of-the-sun--singles"
+    },
+    {
+      "section": "Basenji",
+      "title": "Veteran Field Champion",
+      "title_abbr": "VFCh",
+      "call_name": "Brady",
+      "registered_name": "GChB,DC Borassus 51's Comeback Kid, LCM,SC,CAA,BCAT",
+      "registered_raw": "GChB,DC Borassus 51's Comeback Kid, LCM,SC,CAA,BCAT, HP529099/01, D, Jan 10 2017",
+      "date": "2026-09-26",
+      "owners_raw": "Kathy Sanders",
+      "program": "breed",
+      "dog_id": "borassus-51-s-comeback-kid--basenji"
+    },
+    {
+      "section": "LCI Small",
+      "title": "Lure Chasing Champion",
+      "title_abbr": "LCC",
+      "call_name": "Natalie",
+      "registered_name": "Faireview Sunny LCI",
+      "registered_raw": "Faireview Sunny LCI, RN35737601, B, Dec 13 2020",
+      "date": "2026-09-26",
+      "owners_raw": "Christine Lehner",
+      "program": "lci",
+      "dog_id": null
+    },
+    {
+      "section": "Rhodesian Ridgeback",
+      "title": "Veteran Lure Courser of Merit 3",
+      "title_abbr": "VLCM3",
+      "call_name": "Enzo",
+      "registered_name": "FC Mystic Isle's Ferrari Enzo, LCM2,VLCM2,MC,LCX3,FITS,HP483702/02, d",
+      "registered_raw": "FC Mystic Isle's Ferrari Enzo, LCM2,VLCM2,MC,LCX3,FITS,HP483702/02, d, Oct 06 2014",
+      "date": "2026-09-26",
+      "owners_raw": "John Arvin & Susan Gayley",
+      "program": "breed",
+      "dog_id": "mystic-isle-s-ferrari-enzo--rhodesian-ridgeback"
+    },
+    {
+      "section": "Rhodesian Ridgeback",
+      "title": "Field Champion",
+      "title_abbr": "FCh",
+      "call_name": "Nola",
+      "registered_name": "Adriatic's Stonington's Brass Ring",
+      "registered_raw": "Adriatic's Stonington's Brass Ring, HP67484504, B, Apr 08 2023",
+      "date": "2026-09-26",
+      "owners_raw": "Brian & Katie Orsi, Carrie Ellington",
+      "program": "breed",
+      "dog_id": "adriatic-s-stonington-s-brass-ring--rhodesian-ridgeback"
+    },
+    {
+      "section": "Rhodesian Ridgeback",
+      "title": "Field Champion",
+      "title_abbr": "FCh",
+      "call_name": "Tyler",
+      "registered_name": "MACH2 PACH Khalfani's Love Is All Around, CDX RM2 RAE2 MXG MJG",
+      "registered_raw": "MACH2 PACH Khalfani's Love Is All Around, CDX RM2 RAE2 MXG MJG, HP54730/05, B, Nov 14 2017",
+      "date": "2026-09-26",
+      "owners_raw": "June & John Kuszynski",
+      "program": "breed",
+      "dog_id": "mach2-pach-khalfani-s-love-is-all-around--rhodesian-ridgeback"
+    },
+    {
+      "section": "Whippet",
+      "title": "Field Champion",
+      "title_abbr": "FCh",
+      "call_name": "Sunday",
+      "registered_name": "Sunday Bliss Gibboney",
+      "registered_raw": "Sunday Bliss Gibboney, HP69117704, B, Nov 25 2023",
+      "date": "2026-09-26",
+      "owners_raw": "Jan Craig Gibboney",
+      "program": "breed",
+      "dog_id": null
+    },
+    {
+      "section": "Silken Windhound",
+      "title": "Field Champion",
+      "title_abbr": "FCh",
+      "call_name": "Pocus",
+      "registered_name": "Greenwood Black Flame Candle",
+      "registered_raw": "Greenwood Black Flame Candle, B535921, D, Sep 30 2023",
+      "date": "2026-09-27",
+      "owners_raw": "Kaylie Peterson & Brianna Boswell",
+      "program": "breed",
+      "dog_id": null
     }
   ]
 }

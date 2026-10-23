@@ -5,8 +5,17 @@ table, one row per trial:
 
     GAZEHOUNDS OF NEW ENGLAND Jun 06, 2026 Blandford, MA Entry: 53
 
-Only that summary is read. Detailed placements sit below it and are archived
-but unused.
+Each trial's results block below repeats that heading and lists its flights,
+which give the entries by program and by stake. Two of ASFA's slips are
+handled, each with a notice in the log:
+
+- A page whose summary table belongs to another month (October 2026 opened
+  with the first rows of September's) is read from its results blocks.
+- A trial whose flights list more hounds than its Entry figure, where its
+  own results heading confirms it is the same trial, counts the hounds
+  listed and keeps ASFA's printed figure as entry_printed (Minnesota
+  Coursing Association, September 6, 2026: Entry 50, 58 hounds in the
+  flights). Any other mismatch stops the run.
 
 Entries are credited to the club's home region, taken from data/clubs.json,
 not to the region the venue sits in. Clubs travel: Borzoi Club of America is a
@@ -234,6 +243,40 @@ def parse_detail_headers(html: str) -> dict[str, tuple[str, int, str]]:
         held = date(int(year), MONTHS[month_name[:3].lower()], int(day)).isoformat()
         headers[ref] = (held, int(entry_match.group(1)), _club_words(flat[: date_match.start()]))
     return headers
+
+
+def detail_rows(html: str) -> list[dict]:
+    """A page's trials read from its results blocks instead of its summary
+    table: each block heads with the club, date, venue, Entry figure and
+    note a summary row carries, then the first stake's name and judges."""
+    rows: list[dict] = []
+    for ref, flat in detail_blocks(html):
+        date_match = DATE_RE.search(flat)
+        entry_match = ENTRY_RE.search(flat)
+        if not date_match or not entry_match or entry_match.start() < date_match.start():
+            continue
+        month_name, day, year = date_match.groups()
+        held = date(int(year), MONTHS[month_name[:3].lower()], int(day))
+        club = collapse(flat[: date_match.start()])
+        location = collapse(flat[date_match.end(): entry_match.start()]).rstrip(",")
+        # The note runs from the Entry figure to the first stake's name: the
+        # words in capitals just before the first "Judges:".
+        rest = flat[entry_match.end():]
+        judges = re.search(r"Judges?:", rest)
+        words = rest[: judges.start()].split() if judges else []
+        while words and re.fullmatch(r"[A-Z][A-Z&().'/-]*", words[-1]):
+            words.pop()
+        state_match = re.search(r",\s*([A-Za-z]{2})(?:\s+CAN)?$", location)
+        rows.append({
+            "club_raw": club,
+            "date": held.isoformat(),
+            "location": location,
+            "state": VENUE_STATES.get(location) or (state_match.group(1).upper() if state_match else None),
+            "entries": int(entry_match.group(1)),
+            "note": " ".join(words),
+            "detail_ref": ref,
+        })
+    return rows
 
 
 def _plain(text: str) -> str:
@@ -490,6 +533,17 @@ def main() -> int:
         programs = parse_program_entries(html)
         sections = parse_section_entries(html)
         headers = parse_detail_headers(html)
+        # A summary table that lists none of this month's trials while every
+        # results block is this month's belongs to another page: the blocks
+        # say which trials this page holds.
+        this_month = f"{season}-{month:02d}"
+        if (month_rows and headers
+                and not any(row["date"].startswith(this_month) for row in month_rows)
+                and all(head[0].startswith(this_month) for head in headers.values())):
+            print(f"  {this_month}: the summary table lists other months' trials "
+                  f"({month_rows[0]['date']} to {month_rows[-1]['date']}); reading the "
+                  f"{len(headers)} trials from the results blocks")
+            month_rows = detail_rows(html)
         claimed = {row["detail_ref"] for row in month_rows if row["detail_ref"] in programs}
         for row in month_rows:
             ref = row.pop("detail_ref")
@@ -513,9 +567,19 @@ def main() -> int:
                     f"{season}-{month:02d}: {row['club_raw']} has no detail block")
             ran = sum(tally.values())
             if ran > row["entries"]:
-                raise TrialParseError(
-                    f"{season}-{month:02d}: {row['club_raw']} flights sum to "
-                    f"{ran} but Entry says {row['entries']}")
+                # More hounds ran than ASFA's Entry figure says. When the
+                # block's own heading names this very trial (club, date and
+                # the same Entry), the figure is the slip: count the hounds
+                # listed and keep the printed figure. Otherwise the row and
+                # the block are not the same trial, and nothing is guessed.
+                if headers.get(ref) != (row["date"], row["entries"], _club_words(row["club_raw"])):
+                    raise TrialParseError(
+                        f"{season}-{month:02d}: {row['club_raw']} flights sum to "
+                        f"{ran} but Entry says {row['entries']}")
+                print(f"  {season}-{month:02d}: {row['club_raw']} {row['date']}: ASFA prints "
+                      f"Entry {row['entries']} but the flights list {ran} hounds; counting {ran}")
+                row["entry_printed"] = row["entries"]
+                row["entries"] = ran
             # Entered hounds missing from every flight would be entered, never
             # ran; their program is unknowable, so they are carried separately
             # rather than guessed into one.

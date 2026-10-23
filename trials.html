@@ -69,6 +69,11 @@
       const region = (r) => (r == null ? '—' : r);
       const note = (t) => (t.note ? ` <span class="text-xs text-asfa-text/55 font-normal">${esc(t.note)}</span>` : '');
       const where = (t) => esc(t.location);
+      // A trial whose flights list more hounds than ASFA's printed Entry
+      // counts the hounds listed; the asterisk carries the printed figure.
+      const entriesOf = (t) => `${n(t.entries)}${t.entry_printed != null
+        ? `<span class="text-asfa-text/55" title="ASFA's results print Entry ${t.entry_printed}; the flights list ${t.entries} hounds">*</span>` : ''}`;
+      const reprinted = trials.filter((t) => t.entry_printed != null);
       const stakeTag = (b) => (b.program === 'singles' ? 'Singles stake' : b.program === 'lci' ? 'LCI division' : '');
 
       // Largest trials: ranked on entries, ties sharing a rank as ASFA's Top 20 does.
@@ -250,7 +255,9 @@
         <section class="card">
           <div id="trials-table"></div>
           <p class="text-xs text-asfa-text/55 mt-3">
-            Each Results link opens that trial's results on ASFA's page for the month.
+            Each Results link opens that trial's results on ASFA's page for the month.${reprinted.map((t) => `
+            * ${esc(t.club)}, ${formatDate(t.date)}: ASFA's results print Entry ${t.entry_printed}, but the
+            flights list ${t.entries} hounds, the figure counted here.`).join('')}
           </p>
         </section>
 
@@ -258,7 +265,8 @@
           <h2 class="card-title">About this page</h2>
           <ul class="text-sm leading-relaxed list-disc pl-5 space-y-1">
             <li>Entries are ASFA's own Entry figure for each trial: every hound entered, in the breed stakes,
-              the Singles stake and the LCI program together.</li>
+              the Singles stake and the LCI program together. Where a trial's posted flights list more hounds
+              than its Entry figure, the hounds listed are counted, marked with an asterisk.</li>
             <li>The split into breed, Singles and LCI, and the entries by breed, are read from the flight sizes
               in each trial's posted results.</li>
             <li>Region is the club's home region in ASFA's club listing. States go by where the trial was held.</li>
@@ -322,7 +330,7 @@
                   <td class="font-semibold">${esc(t.club)}${note(t)}</td>
                   <td class="text-xs text-asfa-text/70 whitespace-nowrap">${where(t)}</td>
                   <td class="num">${region(t.region)}</td>
-                  <td class="num font-semibold text-asfa-accent">${n(t.entries)}</td>
+                  <td class="num font-semibold text-asfa-accent">${entriesOf(t)}</td>
                   <td class="num">${n(t.by_program.breed)}</td><td class="num">${n(t.by_program.singles)}</td><td class="num">${n(t.by_program.lci)}</td>
                 </tr>`).join('')}
             </tbody>
@@ -421,7 +429,7 @@
                   <td class="font-semibold">${esc(t.club)}${note(t)}</td>
                   <td class="text-xs text-asfa-text/70 whitespace-nowrap">${where(t)}</td>
                   <td class="num">${region(t.region)}</td>
-                  <td class="num font-semibold text-asfa-accent">${n(t.entries)}</td>
+                  <td class="num font-semibold text-asfa-accent">${entriesOf(t)}</td>
                   <td class="num">${n(t.by_program.breed)}</td>
                   <td class="num">${n(t.by_program.singles)}</td>
                   <td class="num">${n(t.by_program.lci)}</td>

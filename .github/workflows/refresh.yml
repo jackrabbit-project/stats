@@ -110,7 +110,13 @@ jobs:
       - name: Parse, build and verify
         run: |
           python tools/parse.py
-          python tools/trials.py
+          # When ASFA's trial results cannot be read, the last good trial
+          # data stays; standings, titles, events and racing still update.
+          if ! python tools/trials.py; then
+            echo "::warning::ASFA's trial results could not be read; keeping the last committed trial data"
+            git checkout -- data/trials.json data/trials/raw/
+            git clean -fdq -- data/trials/raw/
+          fi
           python tools/events.py
           python tools/build.py
           python tools/titles.py

@@ -1,7 +1,7 @@
 {
   "season": 2026,
-  "as_of": "2026-09-13",
-  "generated": "2026-10-19",
+  "as_of": "2026-10-04",
+  "generated": "2026-10-23",
   "source_url": "https://www.asfa.org/trial/index0111.html",
   "months": [
     "2026-01",
@@ -12,19 +12,20 @@
     "2026-06",
     "2026-07",
     "2026-08",
-    "2026-09"
+    "2026-09",
+    "2026-10"
   ],
   "region_source": "ASFA Constitution & By-Laws, rev. 08/01/2026, Article V, Section 3",
   "stats": {
-    "trials": 115,
-    "entries": 3626,
-    "clubs": 37,
+    "trials": 137,
+    "entries": 4231,
+    "clubs": 41,
     "unassigned_trials": 0,
     "unassigned_entries": 0,
     "by_program": {
-      "breed": 2368,
-      "singles": 594,
-      "lci": 664,
+      "breed": 2770,
+      "singles": 698,
+      "lci": 763,
       "absent": 0
     }
   },
@@ -163,10 +164,10 @@
     },
     {
       "region": 3,
-      "trials": 14,
-      "entries": 336,
-      "clubs": 4,
-      "average_entry": 24.0
+      "trials": 20,
+      "entries": 465,
+      "clubs": 6,
+      "average_entry": 23.2
     },
     {
       "region": 4,
@@ -177,45 +178,45 @@
     },
     {
       "region": 5,
-      "trials": 23,
-      "entries": 715,
-      "clubs": 6,
-      "average_entry": 31.1
+      "trials": 26,
+      "entries": 801,
+      "clubs": 7,
+      "average_entry": 30.8
     },
     {
       "region": 6,
-      "trials": 13,
-      "entries": 545,
+      "trials": 15,
+      "entries": 599,
       "clubs": 6,
-      "average_entry": 41.9
+      "average_entry": 39.9
     },
     {
       "region": 7,
-      "trials": 11,
-      "entries": 219,
+      "trials": 13,
+      "entries": 264,
       "clubs": 2,
-      "average_entry": 19.9
+      "average_entry": 20.3
     },
     {
       "region": 8,
-      "trials": 18,
-      "entries": 624,
+      "trials": 20,
+      "entries": 714,
       "clubs": 6,
-      "average_entry": 34.7
+      "average_entry": 35.7
     },
     {
       "region": 9,
-      "trials": 10,
-      "entries": 538,
+      "trials": 12,
+      "entries": 656,
       "clubs": 2,
-      "average_entry": 53.8
+      "average_entry": 54.7
     },
     {
       "region": 10,
-      "trials": 12,
-      "entries": 234,
-      "clubs": 4,
-      "average_entry": 19.5
+      "trials": 17,
+      "entries": 317,
+      "clubs": 5,
+      "average_entry": 18.6
     }
   ],
   "by_club": [
@@ -237,8 +238,8 @@
       "slug": "colorado-lure-coursing-association",
       "initials": "CLCA",
       "region": 3,
-      "trials": 10,
-      "entries": 249,
+      "trials": 13,
+      "entries": 324,
       "largest": 33,
       "venue": "Peyton, CO",
       "venue_count": 1,
@@ -246,17 +247,56 @@
       "rank": 2
     },
     {
+      "club": "Upper Chesapeake Bay Saluki Club",
+      "slug": "upper-chesapeake-bay-saluki-club",
+      "initials": "UCBSC",
+      "region": 8,
+      "trials": 8,
+      "entries": 286,
+      "largest": 55,
+      "venue": "Littlestown, PA",
+      "venue_count": 2,
+      "average_entry": 35.8,
+      "rank": 3
+    },
+    {
+      "club": "Iowa Coursing Association",
+      "slug": "iowa-coursing-association",
+      "initials": "ICA",
+      "region": 5,
+      "trials": 7,
+      "entries": 246,
+      "largest": 45,
+      "venue": "Cedar Falls, IA",
+      "venue_count": 2,
+      "average_entry": 35.1,
+      "rank": 4
+    },
+    {
       "club": "Minnesota Coursing Association",
       "slug": "minnesota-coursing-association",
       "initials": "MCA",
       "region": 5,
       "trials": 6,
-      "entries": 232,
-      "largest": 53,
+      "entries": 240,
+      "largest": 58,
       "venue": "Farmington, MN",
       "venue_count": 3,
-      "average_entry": 38.7,
-      "rank": 3
+      "average_entry": 40.0,
+      "rank": 5
+    },
+    {
+      "club": "Northern Azawakh Association",
+      "slug": "northern-azawakh-association",
+      "initials": "NAA",
+      "region": 9,
+      "trials": 4,
+      "entries": 224,
+      "largest": 62,
+      "venue": "Flamborough, ON CAN",
+      "venue_count": 1,
+      "average_entry": 56.0,
+      "rank": 6
     },
     {
       "club": "Silken Windhounds for Endurance, Perf. & Training",
@@ -269,20 +309,20 @@
       "venue": "Roy, WA",
       "venue_count": 3,
       "average_entry": 43.8,
-      "rank": 4
+      "rank": 7
     },
     {
-      "club": "Upper Chesapeake Bay Saluki Club",
-      "slug": "upper-chesapeake-bay-saluki-club",
-      "initials": "UCBSC",
-      "region": 8,
-      "trials": 6,
-      "entries": 196,
-      "largest": 42,
-      "venue": "Littlestown, PA",
+      "club": "Lure Enthusiasts of Georgia Sighthounds",
+      "slug": "lure-enthusiasts-of-georgia-sighthounds",
+      "initials": "LEGS",
+      "region": 7,
+      "trials": 8,
+      "entries": 194,
+      "largest": 27,
+      "venue": "Whitesburg, GA",
       "venue_count": 2,
-      "average_entry": 32.7,
-      "rank": 5
+      "average_entry": 24.2,
+      "rank": 8
     },
     {
       "club": "Greater Twin Cities Whippet Club",
@@ -295,20 +335,20 @@
       "venue": "Farmington, MN",
       "venue_count": 2,
       "average_entry": 29.7,
-      "rank": 6
+      "rank": 9
     },
     {
-      "club": "Iowa Coursing Association",
-      "slug": "iowa-coursing-association",
-      "initials": "ICA",
-      "region": 5,
-      "trials": 5,
-      "entries": 177,
-      "largest": 45,
-      "venue": "Des Moines, IA",
-      "venue_count": 2,
-      "average_entry": 35.4,
-      "rank": 7
+      "club": "Orange Coast Rhodesian Ridgeback Club",
+      "slug": "orange-coast-rhodesian-ridgeback-club",
+      "initials": "OCRRC",
+      "region": 10,
+      "trials": 10,
+      "entries": 169,
+      "largest": 37,
+      "venue": "Chino, CA",
+      "venue_count": 1,
+      "average_entry": 16.9,
+      "rank": 10
     },
     {
       "club": "Mason Dixon Ibizan Hound Club",
@@ -321,20 +361,7 @@
       "venue": "Littlestown, PA",
       "venue_count": 1,
       "average_entry": 39.5,
-      "rank": 8
-    },
-    {
-      "club": "Lure Enthusiasts of Georgia Sighthounds",
-      "slug": "lure-enthusiasts-of-georgia-sighthounds",
-      "initials": "LEGS",
-      "region": 7,
-      "trials": 6,
-      "entries": 149,
-      "largest": 27,
-      "venue": "Whitesburg, GA",
-      "venue_count": 1,
-      "average_entry": 24.8,
-      "rank": 9
+      "rank": 11
     },
     {
       "club": "Michigan Gazehound Association",
@@ -347,20 +374,20 @@
       "venue": "Rockwood, MI",
       "venue_count": 1,
       "average_entry": 73.5,
-      "rank": 10
+      "rank": 12
     },
     {
-      "club": "Orange Coast Rhodesian Ridgeback Club",
-      "slug": "orange-coast-rhodesian-ridgeback-club",
-      "initials": "OCRRC",
-      "region": 10,
+      "club": "Midwest Coursing Club",
+      "slug": "midwest-coursing-club",
+      "initials": "MWCC",
+      "region": 6,
       "trials": 6,
-      "entries": 139,
-      "largest": 37,
-      "venue": "Chino, CA",
-      "venue_count": 1,
-      "average_entry": 23.2,
-      "rank": 11
+      "entries": 133,
+      "largest": 36,
+      "venue": "Caledonia, WI",
+      "venue_count": 2,
+      "average_entry": 22.2,
+      "rank": 13
     },
     {
       "club": "OKI Gazehound Organization",
@@ -373,20 +400,7 @@
       "venue": "Fairborn, OH",
       "venue_count": 1,
       "average_entry": 65.5,
-      "rank": 12
-    },
-    {
-      "club": "Northern Azawakh Association",
-      "slug": "northern-azawakh-association",
-      "initials": "NAA",
-      "region": 9,
-      "trials": 2,
-      "entries": 106,
-      "largest": 57,
-      "venue": "Flamborough, ON CAN",
-      "venue_count": 1,
-      "average_entry": 53.0,
-      "rank": 13
+      "rank": 14
     },
     {
       "club": "St. Louis Area Sighthounds",
@@ -399,7 +413,7 @@
       "venue": "Sorento, IL",
       "venue_count": 1,
       "average_entry": 51.0,
-      "rank": 14
+      "rank": 15
     },
     {
       "club": "Coursing Hounds of the Mid-Potomac",
@@ -412,19 +426,6 @@
       "venue": "Leesburg, VA",
       "venue_count": 1,
       "average_entry": 50.5,
-      "rank": 15
-    },
-    {
-      "club": "Midwest Coursing Club",
-      "slug": "midwest-coursing-club",
-      "initials": "MWCC",
-      "region": 6,
-      "trials": 4,
-      "entries": 79,
-      "largest": 36,
-      "venue": "Caledonia, WI",
-      "venue_count": 2,
-      "average_entry": 19.8,
       "rank": 16
     },
     {
@@ -493,6 +494,19 @@
       "rank": 21
     },
     {
+      "club": "International Silken Windhound Society",
+      "slug": "international-silken-windhound-society",
+      "initials": "ISWS",
+      "region": 10,
+      "trials": 1,
+      "entries": 53,
+      "largest": 53,
+      "venue": "Falcon, CO",
+      "venue_count": 1,
+      "average_entry": 53.0,
+      "rank": 22
+    },
+    {
       "club": "Lobo Lure Coursing Club",
       "slug": "lobo-lure-coursing-club",
       "initials": "LLCC",
@@ -516,7 +530,7 @@
       "venue": "Dendron,, VA",
       "venue_count": 2,
       "average_entry": 25.5,
-      "rank": 23
+      "rank": 24
     },
     {
       "club": "California Coursing Association",
@@ -529,7 +543,7 @@
       "venue": "Chino, CA",
       "venue_count": 1,
       "average_entry": 24.0,
-      "rank": 24
+      "rank": 25
     },
     {
       "club": "Nebraska Coursing Association",
@@ -542,7 +556,7 @@
       "venue": "Omaha, NE",
       "venue_count": 1,
       "average_entry": 23.5,
-      "rank": 25
+      "rank": 26
     },
     {
       "club": "Tri-State Sighthound Club",
@@ -555,7 +569,7 @@
       "venue": "Slippery Rock, PA",
       "venue_count": 1,
       "average_entry": 23.5,
-      "rank": 25
+      "rank": 26
     },
     {
       "club": "Western Washington Whippet Association",
@@ -568,7 +582,20 @@
       "venue": "Roy, WA",
       "venue_count": 1,
       "average_entry": 44.0,
-      "rank": 27
+      "rank": 28
+    },
+    {
+      "club": "Utah Sighthounds Racing and Coursing Club",
+      "slug": "utah-sighthounds-racing-and-coursing-club",
+      "initials": "USRCC",
+      "region": 3,
+      "trials": 2,
+      "entries": 42,
+      "largest": 24,
+      "venue": "Goshen, UT",
+      "venue_count": 1,
+      "average_entry": 21.0,
+      "rank": 29
     },
     {
       "club": "Oklahoma Racing and Coursing Association",
@@ -581,7 +608,7 @@
       "venue": "Vinita, OK",
       "venue_count": 1,
       "average_entry": 18.5,
-      "rank": 28
+      "rank": 30
     },
     {
       "club": "Central Coast Association of Sighthounds",
@@ -594,7 +621,7 @@
       "venue": "Arroyo Grande,CA",
       "venue_count": 1,
       "average_entry": 33.0,
-      "rank": 29
+      "rank": 31
     },
     {
       "club": "American Whippet Club, Inc.",
@@ -607,7 +634,7 @@
       "venue": "Pasco, WA",
       "venue_count": 1,
       "average_entry": 31.0,
-      "rank": 30
+      "rank": 32
     },
     {
       "club": "Northern California Irish Wolfhound Club",
@@ -620,7 +647,7 @@
       "venue": "Fairfield, CA",
       "venue_count": 1,
       "average_entry": 23.0,
-      "rank": 31
+      "rank": 33
     },
     {
       "club": "Borzoi Club of America",
@@ -633,7 +660,7 @@
       "venue": "Weeping Water, NE",
       "venue_count": 1,
       "average_entry": 22.0,
-      "rank": 32
+      "rank": 34
     },
     {
       "club": "Silken Windhounds of California",
@@ -646,7 +673,7 @@
       "venue": "Elverta, CA",
       "venue_count": 1,
       "average_entry": 7.5,
-      "rank": 33
+      "rank": 35
     },
     {
       "club": "Desert Fun Bunch",
@@ -659,7 +686,20 @@
       "venue": "Toonopah, AZ",
       "venue_count": 3,
       "average_entry": 4.7,
-      "rank": 34
+      "rank": 36
+    },
+    {
+      "club": "Rocky Mountain Coursing Club",
+      "slug": "rocky-mountain-coursing-club",
+      "initials": "RMCC",
+      "region": 3,
+      "trials": 1,
+      "entries": 12,
+      "largest": 12,
+      "venue": "Peyton, CO",
+      "venue_count": 1,
+      "average_entry": 12.0,
+      "rank": 37
     },
     {
       "club": "Scottish Deerhound Club of America",
@@ -672,7 +712,20 @@
       "venue": "Rockwood, PA",
       "venue_count": 1,
       "average_entry": 12.0,
-      "rank": 35
+      "rank": 37
+    },
+    {
+      "club": "Basenji Club of America, Inc.",
+      "slug": "basenji-club-of-america-inc",
+      "initials": "BaCOA",
+      "region": 5,
+      "trials": 1,
+      "entries": 9,
+      "largest": 9,
+      "venue": "Shelbyville, TN",
+      "venue_count": 1,
+      "average_entry": 9.0,
+      "rank": 39
     },
     {
       "club": "Irish Wolfhound Club of America",
@@ -685,7 +738,7 @@
       "venue": "Gray Summit, MO",
       "venue_count": 1,
       "average_entry": 9.0,
-      "rank": 36
+      "rank": 39
     },
     {
       "club": "Rocky Mountain Irish Wolfhound Association",
@@ -698,7 +751,7 @@
       "venue": "Cheyenne, WY",
       "venue_count": 1,
       "average_entry": 3.0,
-      "rank": 37
+      "rank": 41
     }
   ],
   "by_month": [
@@ -793,51 +846,71 @@
     {
       "month": "2026-09",
       "label": "September",
-      "trials": 19,
-      "entries": 677,
-      "breed": 443,
-      "singles": 106,
-      "lci": 128,
+      "trials": 34,
+      "entries": 1141,
+      "breed": 741,
+      "singles": 193,
+      "lci": 207,
       "absent": 0,
-      "average_entry": 35.6
+      "average_entry": 33.6
+    },
+    {
+      "month": "2026-10",
+      "label": "October",
+      "trials": 7,
+      "entries": 141,
+      "breed": 104,
+      "singles": 17,
+      "lci": 20,
+      "absent": 0,
+      "average_entry": 20.1
     }
   ],
   "by_state": [
     {
       "state": "PA",
-      "trials": 15,
-      "entries": 484,
-      "largest": 47,
+      "trials": 17,
+      "entries": 574,
+      "largest": 55,
       "clubs": 5,
-      "average_entry": 32.3,
+      "average_entry": 33.8,
       "rank": 1
     },
     {
       "state": "MN",
       "trials": 12,
-      "entries": 410,
-      "largest": 53,
+      "entries": 418,
+      "largest": 58,
       "clubs": 2,
-      "average_entry": 34.2,
+      "average_entry": 34.8,
       "rank": 2
     },
     {
-      "state": "CA",
-      "trials": 12,
-      "entries": 258,
-      "largest": 37,
-      "clubs": 5,
-      "average_entry": 21.5,
+      "state": "CO",
+      "trials": 15,
+      "entries": 389,
+      "largest": 53,
+      "clubs": 3,
+      "average_entry": 25.9,
       "rank": 3
     },
     {
-      "state": "CO",
-      "trials": 10,
-      "entries": 249,
-      "largest": 33,
-      "clubs": 1,
-      "average_entry": 24.9,
+      "state": "IA",
+      "trials": 9,
+      "entries": 297,
+      "largest": 45,
+      "clubs": 2,
+      "average_entry": 33.0,
       "rank": 4
+    },
+    {
+      "state": "CA",
+      "trials": 16,
+      "entries": 288,
+      "largest": 37,
+      "clubs": 5,
+      "average_entry": 18.0,
+      "rank": 5
     },
     {
       "state": "WA",
@@ -846,16 +919,16 @@
       "largest": 44,
       "clubs": 3,
       "average_entry": 39.5,
-      "rank": 5
+      "rank": 6
     },
     {
-      "state": "IA",
-      "trials": 7,
-      "entries": 228,
-      "largest": 45,
-      "clubs": 2,
-      "average_entry": 32.6,
-      "rank": 6
+      "state": "ON",
+      "trials": 4,
+      "entries": 224,
+      "largest": 62,
+      "clubs": 1,
+      "average_entry": 56.0,
+      "rank": 7
     },
     {
       "state": "MA",
@@ -864,7 +937,7 @@
       "largest": 57,
       "clubs": 1,
       "average_entry": 52.5,
-      "rank": 7
+      "rank": 8
     },
     {
       "state": "OH",
@@ -873,7 +946,16 @@
       "largest": 69,
       "clubs": 2,
       "average_entry": 52.0,
-      "rank": 8
+      "rank": 9
+    },
+    {
+      "state": "GA",
+      "trials": 8,
+      "entries": 194,
+      "largest": 27,
+      "clubs": 1,
+      "average_entry": 24.2,
+      "rank": 10
     },
     {
       "state": "VA",
@@ -882,16 +964,7 @@
       "largest": 55,
       "clubs": 2,
       "average_entry": 38.0,
-      "rank": 9
-    },
-    {
-      "state": "GA",
-      "trials": 6,
-      "entries": 149,
-      "largest": 27,
-      "clubs": 1,
-      "average_entry": 24.8,
-      "rank": 10
+      "rank": 11
     },
     {
       "state": "MI",
@@ -900,7 +973,16 @@
       "largest": 79,
       "clubs": 1,
       "average_entry": 73.5,
-      "rank": 11
+      "rank": 12
+    },
+    {
+      "state": "WI",
+      "trials": 6,
+      "entries": 133,
+      "largest": 36,
+      "clubs": 1,
+      "average_entry": 22.2,
+      "rank": 13
     },
     {
       "state": "NY",
@@ -909,7 +991,7 @@
       "largest": 66,
       "clubs": 1,
       "average_entry": 65.5,
-      "rank": 12
+      "rank": 14
     },
     {
       "state": "IL",
@@ -918,16 +1000,7 @@
       "largest": 51,
       "clubs": 2,
       "average_entry": 40.0,
-      "rank": 13
-    },
-    {
-      "state": "ON",
-      "trials": 2,
-      "entries": 106,
-      "largest": 57,
-      "clubs": 1,
-      "average_entry": 53.0,
-      "rank": 14
+      "rank": 15
     },
     {
       "state": "CT",
@@ -936,24 +1009,15 @@
       "largest": 47,
       "clubs": 1,
       "average_entry": 45.5,
-      "rank": 15
-    },
-    {
-      "state": "WI",
-      "trials": 4,
-      "entries": 79,
-      "largest": 36,
-      "clubs": 1,
-      "average_entry": 19.8,
       "rank": 16
     },
     {
       "state": "TN",
-      "trials": 5,
-      "entries": 70,
+      "trials": 6,
+      "entries": 79,
       "largest": 27,
-      "clubs": 1,
-      "average_entry": 14.0,
+      "clubs": 2,
+      "average_entry": 13.2,
       "rank": 17
     },
     {
@@ -993,13 +1057,22 @@
       "rank": 21
     },
     {
+      "state": "UT",
+      "trials": 2,
+      "entries": 42,
+      "largest": 24,
+      "clubs": 1,
+      "average_entry": 21.0,
+      "rank": 22
+    },
+    {
       "state": "OK",
       "trials": 2,
       "entries": 37,
       "largest": 21,
       "clubs": 1,
       "average_entry": 18.5,
-      "rank": 22
+      "rank": 23
     },
     {
       "state": "AZ",
@@ -1008,7 +1081,7 @@
       "largest": 7,
       "clubs": 1,
       "average_entry": 4.7,
-      "rank": 23
+      "rank": 24
     },
     {
       "state": "MO",
@@ -1017,7 +1090,7 @@
       "largest": 9,
       "clubs": 1,
       "average_entry": 9.0,
-      "rank": 24
+      "rank": 25
     },
     {
       "state": "WY",
@@ -1026,7 +1099,7 @@
       "largest": 3,
       "clubs": 1,
       "average_entry": 3.0,
-      "rank": 25
+      "rank": 26
     }
   ],
   "by_breed": [
@@ -1034,148 +1107,148 @@
       "breed": "Whippet",
       "program": "breed",
       "known": true,
-      "trials": 84,
-      "entries": 716,
+      "trials": 99,
+      "entries": 795,
       "largest": 30,
-      "average_entry": 8.5,
+      "average_entry": 8.0,
       "rank": 1
     },
     {
       "breed": "Singles",
       "program": "singles",
       "known": true,
-      "trials": 109,
-      "entries": 594,
+      "trials": 126,
+      "entries": 698,
       "largest": 20,
-      "average_entry": 5.4,
+      "average_entry": 5.5,
       "rank": 2
     },
     {
       "breed": "Silken Windhound",
       "program": "breed",
       "known": true,
-      "trials": 62,
-      "entries": 353,
-      "largest": 23,
-      "average_entry": 5.7,
+      "trials": 69,
+      "entries": 411,
+      "largest": 34,
+      "average_entry": 6.0,
       "rank": 3
     },
     {
       "breed": "LCI Large",
       "program": "lci",
       "known": true,
-      "trials": 79,
-      "entries": 304,
+      "trials": 95,
+      "entries": 359,
       "largest": 13,
       "average_entry": 3.8,
       "rank": 4
     },
     {
-      "breed": "LCI Small",
-      "program": "lci",
-      "known": true,
-      "trials": 58,
-      "entries": 225,
-      "largest": 10,
-      "average_entry": 3.9,
-      "rank": 5
-    },
-    {
       "breed": "Rhodesian Ridgeback",
       "program": "breed",
       "known": true,
-      "trials": 63,
-      "entries": 208,
+      "trials": 78,
+      "entries": 263,
+      "largest": 12,
+      "average_entry": 3.4,
+      "rank": 5
+    },
+    {
+      "breed": "LCI Small",
+      "program": "lci",
+      "known": true,
+      "trials": 69,
+      "entries": 249,
       "largest": 10,
-      "average_entry": 3.3,
+      "average_entry": 3.6,
       "rank": 6
     },
     {
       "breed": "Borzoi",
       "program": "breed",
       "known": true,
-      "trials": 48,
-      "entries": 194,
+      "trials": 57,
+      "entries": 223,
       "largest": 21,
-      "average_entry": 4.0,
+      "average_entry": 3.9,
       "rank": 7
-    },
-    {
-      "breed": "Basenji",
-      "program": "breed",
-      "known": true,
-      "trials": 46,
-      "entries": 148,
-      "largest": 13,
-      "average_entry": 3.2,
-      "rank": 8
     },
     {
       "breed": "Greyhound",
       "program": "breed",
       "known": true,
-      "trials": 55,
-      "entries": 146,
+      "trials": 67,
+      "entries": 188,
       "largest": 9,
-      "average_entry": 2.7,
-      "rank": 9
+      "average_entry": 2.8,
+      "rank": 8
     },
     {
       "breed": "Saluki",
       "program": "breed",
       "known": true,
-      "trials": 59,
-      "entries": 143,
+      "trials": 70,
+      "entries": 176,
       "largest": 7,
-      "average_entry": 2.4,
+      "average_entry": 2.5,
+      "rank": 9
+    },
+    {
+      "breed": "Basenji",
+      "program": "breed",
+      "known": true,
+      "trials": 55,
+      "entries": 175,
+      "largest": 13,
+      "average_entry": 3.2,
       "rank": 10
     },
     {
       "breed": "Ibizan Hound",
       "program": "breed",
       "known": true,
-      "trials": 33,
-      "entries": 139,
+      "trials": 40,
+      "entries": 164,
       "largest": 17,
-      "average_entry": 4.2,
+      "average_entry": 4.1,
       "rank": 11
     },
     {
       "breed": "LCI Sighthound Mix",
       "program": "lci",
       "known": true,
-      "trials": 54,
-      "entries": 135,
+      "trials": 65,
+      "entries": 155,
       "largest": 9,
-      "average_entry": 2.5,
+      "average_entry": 2.4,
       "rank": 12
     },
     {
       "breed": "Pharaoh Hound",
       "program": "breed",
       "known": true,
-      "trials": 40,
-      "entries": 95,
+      "trials": 50,
+      "entries": 124,
       "largest": 5,
-      "average_entry": 2.4,
+      "average_entry": 2.5,
       "rank": 13
     },
     {
       "breed": "Italian Greyhound",
       "program": "breed",
       "known": true,
-      "trials": 16,
-      "entries": 81,
+      "trials": 18,
+      "entries": 86,
       "largest": 15,
-      "average_entry": 5.1,
+      "average_entry": 4.8,
       "rank": 14
     },
     {
       "breed": "Afghan Hound",
       "program": "breed",
       "known": true,
-      "trials": 30,
-      "entries": 48,
+      "trials": 38,
+      "entries": 61,
       "largest": 4,
       "average_entry": 1.6,
       "rank": 15
@@ -1184,10 +1257,10 @@
       "breed": "Azawakh",
       "program": "breed",
       "known": true,
-      "trials": 20,
-      "entries": 30,
+      "trials": 26,
+      "entries": 36,
       "largest": 5,
-      "average_entry": 1.5,
+      "average_entry": 1.4,
       "rank": 16
     },
     {
@@ -1204,10 +1277,10 @@
       "breed": "Irish Wolfhound",
       "program": "breed",
       "known": true,
-      "trials": 7,
-      "entries": 20,
+      "trials": 8,
+      "entries": 21,
       "largest": 9,
-      "average_entry": 2.9,
+      "average_entry": 2.6,
       "rank": 18
     },
     {
@@ -4280,10 +4353,11 @@
       "date": "2026-09-06",
       "location": "Farmington, MN",
       "state": "MN",
-      "entries": 50,
+      "entries": 58,
       "note": "The Minneapolis Cup",
+      "entry_printed": 50,
       "by_program": {
-        "breed": 28,
+        "breed": 36,
         "singles": 5,
         "lci": 17,
         "absent": 0
@@ -4291,6 +4365,7 @@
       "by_breed": {
         "Whippet": 15,
         "LCI Small": 9,
+        "Silken Windhound": 8,
         "LCI Large": 6,
         "Singles": 5,
         "Rhodesian Ridgeback": 4,
@@ -4564,6 +4639,634 @@
       "club_slug": "oki-gazehound-organization",
       "region": 6,
       "initials": "OKIGO"
+    },
+    {
+      "club_raw": "COLORADO LURE COURSING ASSOCIATION",
+      "date": "2026-09-18",
+      "location": "Peyton, CO",
+      "state": "CO",
+      "entries": 27,
+      "note": "52nd Grand National",
+      "by_program": {
+        "breed": 17,
+        "singles": 4,
+        "lci": 6,
+        "absent": 0
+      },
+      "by_breed": {
+        "Greyhound": 7,
+        "LCI Large": 4,
+        "Pharaoh Hound": 4,
+        "Singles": 4,
+        "Borzoi": 2,
+        "Whippet": 2,
+        "Afghan Hound": 1,
+        "LCI Sighthound Mix": 1,
+        "LCI Small": 1,
+        "Rhodesian Ridgeback": 1
+      },
+      "results_url": "https://www.asfa.org/trial/index0926.html#R20",
+      "club": "Colorado Lure Coursing Association",
+      "club_slug": "colorado-lure-coursing-association",
+      "region": 3,
+      "initials": "CLCA"
+    },
+    {
+      "club_raw": "COLORADO LURE COURSING ASSOCIATION",
+      "date": "2026-09-19",
+      "location": "Peyton, CO",
+      "state": "CO",
+      "entries": 23,
+      "note": "52nd Grand National",
+      "by_program": {
+        "breed": 14,
+        "singles": 3,
+        "lci": 6,
+        "absent": 0
+      },
+      "by_breed": {
+        "LCI Large": 4,
+        "Pharaoh Hound": 4,
+        "Greyhound": 3,
+        "Singles": 3,
+        "LCI Sighthound Mix": 2,
+        "Saluki": 2,
+        "Whippet": 2,
+        "Afghan Hound": 1,
+        "Azawakh": 1,
+        "Rhodesian Ridgeback": 1
+      },
+      "results_url": "https://www.asfa.org/trial/index0926.html#R21",
+      "club": "Colorado Lure Coursing Association",
+      "club_slug": "colorado-lure-coursing-association",
+      "region": 3,
+      "initials": "CLCA"
+    },
+    {
+      "club_raw": "NORTHERN AZAWAKH ASSOCIATION",
+      "date": "2026-09-19",
+      "location": "Flamborough, ON CAN",
+      "state": "ON",
+      "entries": 62,
+      "note": "10 Year Anniversary Trial",
+      "by_program": {
+        "breed": 31,
+        "singles": 19,
+        "lci": 12,
+        "absent": 0
+      },
+      "by_breed": {
+        "Singles": 19,
+        "Whippet": 15,
+        "LCI Large": 8,
+        "Greyhound": 7,
+        "Afghan Hound": 3,
+        "Basenji": 3,
+        "Ibizan Hound": 2,
+        "LCI Sighthound Mix": 2,
+        "LCI Small": 2,
+        "Rhodesian Ridgeback": 1
+      },
+      "results_url": "https://www.asfa.org/trial/index0926.html#R22",
+      "club": "Northern Azawakh Association",
+      "club_slug": "northern-azawakh-association",
+      "region": 9,
+      "initials": "NAA"
+    },
+    {
+      "club_raw": "ORANGE COAST RHODESIAN RIDGEBACK CLUB",
+      "date": "2026-09-19",
+      "location": "Chino, CA",
+      "state": "CA",
+      "entries": 6,
+      "note": "Rhodesian Ridgeback Specialty",
+      "by_program": {
+        "breed": 6,
+        "singles": 0,
+        "lci": 0,
+        "absent": 0
+      },
+      "by_breed": {
+        "Rhodesian Ridgeback": 6
+      },
+      "results_url": "https://www.asfa.org/trial/index0926.html#R23",
+      "club": "Orange Coast Rhodesian Ridgeback Club",
+      "club_slug": "orange-coast-rhodesian-ridgeback-club",
+      "region": 10,
+      "initials": "OCRRC"
+    },
+    {
+      "club_raw": "COLORADO LURE COURSING ASSOCIATION",
+      "date": "2026-09-20",
+      "location": "Peyton, CO",
+      "state": "CO",
+      "entries": 25,
+      "note": "52nd Grand National",
+      "by_program": {
+        "breed": 19,
+        "singles": 6,
+        "lci": 0,
+        "absent": 0
+      },
+      "by_breed": {
+        "Singles": 6,
+        "Whippet": 5,
+        "Greyhound": 4,
+        "Pharaoh Hound": 4,
+        "Rhodesian Ridgeback": 3,
+        "Afghan Hound": 1,
+        "Azawakh": 1,
+        "Saluki": 1
+      },
+      "results_url": "https://www.asfa.org/trial/index0926.html#R24",
+      "club": "Colorado Lure Coursing Association",
+      "club_slug": "colorado-lure-coursing-association",
+      "region": 3,
+      "initials": "CLCA"
+    },
+    {
+      "club_raw": "NORTHERN AZAWAKH ASSOCIATION",
+      "date": "2026-09-20",
+      "location": "Flamborough, ON CAN",
+      "state": "ON",
+      "entries": 56,
+      "note": "10 Year Anniversary Celebration",
+      "by_program": {
+        "breed": 31,
+        "singles": 10,
+        "lci": 15,
+        "absent": 0
+      },
+      "by_breed": {
+        "Whippet": 13,
+        "Singles": 10,
+        "LCI Large": 9,
+        "Greyhound": 7,
+        "LCI Sighthound Mix": 3,
+        "LCI Small": 3,
+        "Afghan Hound": 2,
+        "Basenji": 2,
+        "Ibizan Hound": 2,
+        "Saluki": 2,
+        "Silken Windhound": 2,
+        "Rhodesian Ridgeback": 1
+      },
+      "results_url": "https://www.asfa.org/trial/index0926.html#R25",
+      "club": "Northern Azawakh Association",
+      "club_slug": "northern-azawakh-association",
+      "region": 9,
+      "initials": "NAA"
+    },
+    {
+      "club_raw": "ORANGE COAST RHODESIAN RIDGEBACK CLUB",
+      "date": "2026-09-20",
+      "location": "Chino, CA",
+      "state": "CA",
+      "entries": 6,
+      "note": "Rhodesian Ridgeback Specialty",
+      "by_program": {
+        "breed": 6,
+        "singles": 0,
+        "lci": 0,
+        "absent": 0
+      },
+      "by_breed": {
+        "Rhodesian Ridgeback": 6
+      },
+      "results_url": "https://www.asfa.org/trial/index0926.html#R26",
+      "club": "Orange Coast Rhodesian Ridgeback Club",
+      "club_slug": "orange-coast-rhodesian-ridgeback-club",
+      "region": 10,
+      "initials": "OCRRC"
+    },
+    {
+      "club_raw": "MIDWEST COURSING CLUB",
+      "date": "2026-09-26",
+      "location": "Caledonia, WI",
+      "state": "WI",
+      "entries": 25,
+      "note": "",
+      "by_program": {
+        "breed": 16,
+        "singles": 4,
+        "lci": 5,
+        "absent": 0
+      },
+      "by_breed": {
+        "Saluki": 5,
+        "LCI Small": 4,
+        "Singles": 4,
+        "Whippet": 3,
+        "Afghan Hound": 2,
+        "Borzoi": 2,
+        "Greyhound": 2,
+        "LCI Large": 1,
+        "Pharaoh Hound": 1,
+        "Rhodesian Ridgeback": 1
+      },
+      "results_url": "https://www.asfa.org/trial/index0926.html#R27",
+      "club": "Midwest Coursing Club",
+      "club_slug": "midwest-coursing-club",
+      "region": 6,
+      "initials": "MWCC"
+    },
+    {
+      "club_raw": "ROCKY MOUNTAIN COURSING CLUB",
+      "date": "2026-09-26",
+      "location": "Peyton, CO",
+      "state": "CO",
+      "entries": 12,
+      "note": "",
+      "by_program": {
+        "breed": 9,
+        "singles": 3,
+        "lci": 0,
+        "absent": 0
+      },
+      "by_breed": {
+        "Pharaoh Hound": 3,
+        "Singles": 3,
+        "Whippet": 3,
+        "Greyhound": 2,
+        "Afghan Hound": 1
+      },
+      "results_url": "https://www.asfa.org/trial/index0926.html#R28",
+      "club": "Rocky Mountain Coursing Club",
+      "club_slug": "rocky-mountain-coursing-club",
+      "region": 3,
+      "initials": "RMCC"
+    },
+    {
+      "club_raw": "UPPER CHESAPEAKE BAY SALUKI CLUB",
+      "date": "2026-09-26",
+      "location": "Littlestown, PA",
+      "state": "PA",
+      "entries": 55,
+      "note": "Grande Prix Challenge Cup",
+      "by_program": {
+        "breed": 37,
+        "singles": 6,
+        "lci": 12,
+        "absent": 0
+      },
+      "by_breed": {
+        "Rhodesian Ridgeback": 12,
+        "Borzoi": 7,
+        "Singles": 6,
+        "LCI Small": 5,
+        "Basenji": 4,
+        "LCI Sighthound Mix": 4,
+        "Whippet": 4,
+        "Greyhound": 3,
+        "Ibizan Hound": 3,
+        "Italian Greyhound": 3,
+        "LCI Large": 3,
+        "Saluki": 1
+      },
+      "results_url": "https://www.asfa.org/trial/index0926.html#R29",
+      "club": "Upper Chesapeake Bay Saluki Club",
+      "club_slug": "upper-chesapeake-bay-saluki-club",
+      "region": 8,
+      "initials": "UCBSC"
+    },
+    {
+      "club_raw": "UTAH SIGHTHOUND RACING & COURSING CLUB",
+      "date": "2026-09-26",
+      "location": "Goshen, UT",
+      "state": "UT",
+      "entries": 24,
+      "note": "",
+      "by_program": {
+        "breed": 15,
+        "singles": 2,
+        "lci": 7,
+        "absent": 0
+      },
+      "by_breed": {
+        "LCI Large": 5,
+        "Rhodesian Ridgeback": 4,
+        "Whippet": 4,
+        "Basenji": 3,
+        "LCI Sighthound Mix": 2,
+        "Pharaoh Hound": 2,
+        "Singles": 2,
+        "Azawakh": 1,
+        "Saluki": 1
+      },
+      "results_url": "https://www.asfa.org/trial/index0926.html#R30",
+      "club": "Utah Sighthounds Racing and Coursing Club",
+      "club_slug": "utah-sighthounds-racing-and-coursing-club",
+      "region": 3,
+      "initials": "USRCC"
+    },
+    {
+      "club_raw": "INTERNATIONAL SILKEN WINDHOUND SOCIETY",
+      "date": "2026-09-27",
+      "location": "Falcon, CO",
+      "state": "CO",
+      "entries": 53,
+      "note": "Silken Windhound National Specialty",
+      "by_program": {
+        "breed": 34,
+        "singles": 19,
+        "lci": 0,
+        "absent": 0
+      },
+      "by_breed": {
+        "Silken Windhound": 34,
+        "Singles": 19
+      },
+      "results_url": "https://www.asfa.org/trial/index0926.html#R31",
+      "club": "International Silken Windhound Society",
+      "club_slug": "international-silken-windhound-society",
+      "region": 10,
+      "initials": "ISWS"
+    },
+    {
+      "club_raw": "MIDWEST COURSING CLUB",
+      "date": "2026-09-27",
+      "location": "Caledonia, WI",
+      "state": "WI",
+      "entries": 29,
+      "note": "",
+      "by_program": {
+        "breed": 18,
+        "singles": 5,
+        "lci": 6,
+        "absent": 0
+      },
+      "by_breed": {
+        "Saluki": 5,
+        "Singles": 5,
+        "LCI Large": 4,
+        "Whippet": 4,
+        "Borzoi": 3,
+        "Afghan Hound": 2,
+        "Greyhound": 2,
+        "LCI Small": 2,
+        "Pharaoh Hound": 1,
+        "Rhodesian Ridgeback": 1
+      },
+      "results_url": "https://www.asfa.org/trial/index0926.html#R32",
+      "club": "Midwest Coursing Club",
+      "club_slug": "midwest-coursing-club",
+      "region": 6,
+      "initials": "MWCC"
+    },
+    {
+      "club_raw": "UPPER CHESAPEAKE BAY SALUKI CLUB",
+      "date": "2026-09-27",
+      "location": "Littlestown, PA",
+      "state": "PA",
+      "entries": 35,
+      "note": "Grande Prix Challenge Cup",
+      "by_program": {
+        "breed": 27,
+        "singles": 4,
+        "lci": 4,
+        "absent": 0
+      },
+      "by_breed": {
+        "Rhodesian Ridgeback": 8,
+        "Borzoi": 6,
+        "Basenji": 4,
+        "Singles": 4,
+        "Ibizan Hound": 3,
+        "Whippet": 3,
+        "Italian Greyhound": 2,
+        "LCI Large": 2,
+        "LCI Small": 2,
+        "Greyhound": 1
+      },
+      "results_url": "https://www.asfa.org/trial/index0926.html#R33",
+      "club": "Upper Chesapeake Bay Saluki Club",
+      "club_slug": "upper-chesapeake-bay-saluki-club",
+      "region": 8,
+      "initials": "UCBSC"
+    },
+    {
+      "club_raw": "UTAH SIGHTHOUND RACING & COURSING CLUB",
+      "date": "2026-09-27",
+      "location": "Goshen, UT",
+      "state": "UT",
+      "entries": 18,
+      "note": "",
+      "by_program": {
+        "breed": 10,
+        "singles": 2,
+        "lci": 6,
+        "absent": 0
+      },
+      "by_breed": {
+        "LCI Large": 4,
+        "Basenji": 3,
+        "Rhodesian Ridgeback": 3,
+        "LCI Sighthound Mix": 2,
+        "Pharaoh Hound": 2,
+        "Singles": 2,
+        "Azawakh": 1,
+        "Saluki": 1
+      },
+      "results_url": "https://www.asfa.org/trial/index0926.html#R34",
+      "club": "Utah Sighthounds Racing and Coursing Club",
+      "club_slug": "utah-sighthounds-racing-and-coursing-club",
+      "region": 3,
+      "initials": "USRCC"
+    },
+    {
+      "club_raw": "IOWA COURSING ASSOCIATION, INC",
+      "date": "2026-10-03",
+      "location": "Cedar Falls, IA",
+      "state": "IA",
+      "entries": 34,
+      "note": "",
+      "by_program": {
+        "breed": 24,
+        "singles": 4,
+        "lci": 6,
+        "absent": 0
+      },
+      "by_breed": {
+        "Ibizan Hound": 7,
+        "Whippet": 7,
+        "Saluki": 6,
+        "LCI Large": 4,
+        "Singles": 4,
+        "Basenji": 2,
+        "Borzoi": 2,
+        "LCI Sighthound Mix": 1,
+        "LCI Small": 1
+      },
+      "results_url": "https://www.asfa.org/trial/index1026.html#R1",
+      "club": "Iowa Coursing Association",
+      "club_slug": "iowa-coursing-association",
+      "region": 5,
+      "initials": "ICA"
+    },
+    {
+      "club_raw": "LURE ENTHUSIASTS OF GEORGIA COURSING CLUB",
+      "date": "2026-10-03",
+      "location": "Whiteburg, GA",
+      "state": "GA",
+      "entries": 27,
+      "note": "Region 7 Invitational",
+      "by_program": {
+        "breed": 26,
+        "singles": 0,
+        "lci": 1,
+        "absent": 0
+      },
+      "by_breed": {
+        "Pharaoh Hound": 4,
+        "Rhodesian Ridgeback": 4,
+        "Saluki": 4,
+        "Whippet": 4,
+        "Greyhound": 3,
+        "Borzoi": 2,
+        "Silken Windhound": 2,
+        "Azawakh": 1,
+        "Ibizan Hound": 1,
+        "Irish Wolfhound": 1,
+        "LCI Large": 1
+      },
+      "results_url": "https://www.asfa.org/trial/index1026.html#R2",
+      "club": "Lure Enthusiasts of Georgia Sighthounds",
+      "club_slug": "lure-enthusiasts-of-georgia-sighthounds",
+      "region": 7,
+      "initials": "LEGS"
+    },
+    {
+      "club_raw": "ORANGE COAST RHODESIAN RIDGEBACK CLUB",
+      "date": "2026-10-03",
+      "location": "Chino, CA",
+      "state": "CA",
+      "entries": 9,
+      "note": "Silken Windhound Specialty with LCI Stakes",
+      "by_program": {
+        "breed": 6,
+        "singles": 0,
+        "lci": 3,
+        "absent": 0
+      },
+      "by_breed": {
+        "Silken Windhound": 6,
+        "LCI Large": 1,
+        "LCI Sighthound Mix": 1,
+        "LCI Small": 1
+      },
+      "results_url": "https://www.asfa.org/trial/index1026.html#R3",
+      "club": "Orange Coast Rhodesian Ridgeback Club",
+      "club_slug": "orange-coast-rhodesian-ridgeback-club",
+      "region": 10,
+      "initials": "OCRRC"
+    },
+    {
+      "club_raw": "BASENJI CLUB OF AMERICA, Inc.",
+      "date": "2026-10-04",
+      "location": "Shelbyville, TN",
+      "state": "TN",
+      "entries": 9,
+      "note": "Basenji National Specialty",
+      "by_program": {
+        "breed": 4,
+        "singles": 5,
+        "lci": 0,
+        "absent": 0
+      },
+      "by_breed": {
+        "Singles": 5,
+        "Basenji": 4
+      },
+      "results_url": "https://www.asfa.org/trial/index1026.html#R4",
+      "club": "Basenji Club of America, Inc.",
+      "club_slug": "basenji-club-of-america-inc",
+      "region": 5,
+      "initials": "BaCOA"
+    },
+    {
+      "club_raw": "IOWA COURSING ASSOCIATION, INC",
+      "date": "2026-10-04",
+      "location": "Cedar Falls, IA",
+      "state": "IA",
+      "entries": 35,
+      "note": "",
+      "by_program": {
+        "breed": 23,
+        "singles": 6,
+        "lci": 6,
+        "absent": 0
+      },
+      "by_breed": {
+        "Whippet": 8,
+        "Ibizan Hound": 7,
+        "Singles": 6,
+        "Saluki": 5,
+        "LCI Large": 3,
+        "Basenji": 2,
+        "LCI Small": 2,
+        "Borzoi": 1,
+        "LCI Sighthound Mix": 1
+      },
+      "results_url": "https://www.asfa.org/trial/index1026.html#R5",
+      "club": "Iowa Coursing Association",
+      "club_slug": "iowa-coursing-association",
+      "region": 5,
+      "initials": "ICA"
+    },
+    {
+      "club_raw": "LURE ENTHUSIASTS OF GEORGIA COURSING CLUB",
+      "date": "2026-10-04",
+      "location": "Whitesburg, GA",
+      "state": "GA",
+      "entries": 18,
+      "note": "",
+      "by_program": {
+        "breed": 17,
+        "singles": 0,
+        "lci": 1,
+        "absent": 0
+      },
+      "by_breed": {
+        "Borzoi": 4,
+        "Pharaoh Hound": 4,
+        "Rhodesian Ridgeback": 3,
+        "Silken Windhound": 2,
+        "Whippet": 2,
+        "Azawakh": 1,
+        "Greyhound": 1,
+        "LCI Large": 1
+      },
+      "results_url": "https://www.asfa.org/trial/index1026.html#R6",
+      "club": "Lure Enthusiasts of Georgia Sighthounds",
+      "club_slug": "lure-enthusiasts-of-georgia-sighthounds",
+      "region": 7,
+      "initials": "LEGS"
+    },
+    {
+      "club_raw": "ORANGE COAST RHODESIAN RIDGEBACK CLUB",
+      "date": "2026-10-04",
+      "location": "Chino, CA",
+      "state": "CA",
+      "entries": 9,
+      "note": "Silken Windhound Specialty with LCI Stakes",
+      "by_program": {
+        "breed": 4,
+        "singles": 2,
+        "lci": 3,
+        "absent": 0
+      },
+      "by_breed": {
+        "Silken Windhound": 4,
+        "Singles": 2,
+        "LCI Large": 1,
+        "LCI Sighthound Mix": 1,
+        "LCI Small": 1
+      },
+      "results_url": "https://www.asfa.org/trial/index1026.html#R7",
+      "club": "Orange Coast Rhodesian Ridgeback Club",
+      "club_slug": "orange-coast-rhodesian-ridgeback-club",
+      "region": 10,
+      "initials": "OCRRC"
     }
   ]
 }
