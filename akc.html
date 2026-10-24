@@ -65,6 +65,24 @@
       const stateList = [...new Set(events.map((e) => e.state))].sort();
       const clubList = [...new Set(events.map((e) => e.club))].sort((a, b) => a.localeCompare(b));
 
+      // Every section has its own address (akc#clubs) to share: the jump bar
+      // lists them, and each heading's button copies its section's link.
+      const SECTIONS_ON_PAGE = [
+        ['months', 'By month'], ['states', 'States'], ...(breedTable ? [['breeds', 'Breeds']] : []),
+        ['clubs', 'Clubs'], ['largest', 'Largest trials'], ['events', 'All events'], ['about', 'About'],
+      ];
+      // The button sits beside the heading rather than inside it, so a
+      // screen reader's list of headings reads "Clubs", not "Clubs Copy link".
+      const heading = (id, text) => `<div class="card-title flex items-baseline justify-between gap-3">
+          <h2>${text}</h2>
+          <button type="button" data-section="${id}"
+            class="no-print inline-flex items-center gap-1 font-mono text-[11px] font-normal uppercase tracking-[0.1em] text-asfa-text/50 hover:text-asfa-text"
+            aria-label="Copy the link to the ${text} section">${icon('link')}<span aria-hidden="true">Copy link</span></button>
+        </div>`;
+      // The address a shared link arrived with; the filters below rewrite the
+      // query on their first paint, so it is read before they run.
+      const arrivedAt = decodeURIComponent(location.hash.slice(1));
+
       main.innerHTML = `
         <div class="flex flex-wrap items-start justify-between gap-x-6 gap-y-3">
           <div class="max-w-3xl">
@@ -82,6 +100,12 @@
           <a href="trials.html" class="btn shrink-0 whitespace-nowrap text-asfa-accent" title="The ASFA counterpart">ASFA trials by the numbers →</a>
         </div>
 
+        <nav aria-label="On this page" class="no-print flex flex-wrap items-center gap-1">
+          <span class="font-mono text-xs uppercase tracking-[0.1em] text-asfa-text/50 py-1.5">Jump to</span>
+          ${SECTIONS_ON_PAGE.map(([id, label]) => `<a href="#${id}"
+            class="pill-hover px-2.5 py-1.5 font-mono text-xs uppercase tracking-[0.1em] text-asfa-muted hover:text-asfa-text">${label}</a>`).join('')}
+        </nav>
+
         <section class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3" aria-label="Totals">
           ${[
             [n(stats.events), 'events held'],
@@ -95,8 +119,8 @@
         </section>
 
         <div class="grid grid-cols-1 gap-6">
-          <section class="card">
-            <h2 class="card-title">By month</h2>
+          <section class="card" id="months">
+            ${heading('months', 'By month')}
             <p class="text-xs text-asfa-text/55 mb-2">Entries count only events whose results AKC has posted. Avg trial counts LC trial entries and Singles starters.</p>
             <div class="tbl-wrap"><table class="tbl">
               <thead><tr>
@@ -122,7 +146,7 @@
           </section>
 
           <section class="card" id="states">
-            <h2 class="card-title">States</h2>
+            ${heading('states', 'States')}
             <p class="text-xs text-asfa-text/55 mb-2">Ranked by entries, Singles included. <span class="font-semibold">Events held</span> is every event in the state; <span class="font-semibold">With results</span> is only the trials AKC has posted results for, and those are what the entries and averages count.</p>
             <div id="states-table"></div>
           </section>
@@ -130,7 +154,7 @@
 
         ${breedTable ? `
         <section class="card" id="breeds">
-          <h2 class="card-title">Starters by breed</h2>
+          ${heading('breeds', 'Starters by breed')}
           <p class="text-xs text-asfa-text/55 mb-2">Each breed's Open, Specials and Veterans stakes at the trials with results posted, ranked on starters. A hound counts once in every trial it runs, so a hound that ran six trials counts six times.</p>
           <div class="tbl-wrap"><table class="tbl">
             <thead><tr>
@@ -158,8 +182,8 @@
           </p>
         </section>` : ''}
 
-        <section class="card">
-          <h2 class="card-title">Clubs</h2>
+        <section class="card" id="clubs">
+          ${heading('clubs', 'Clubs')}
           <p class="text-xs text-asfa-text/55 mb-2">Every club that held an AKC lure coursing event this year, ranked on trial entries and Singles starters at events with results posted.</p>
           <div class="tbl-wrap"><table class="tbl">
             <thead><tr>
@@ -184,13 +208,13 @@
         </section>
 
         <section class="card" id="largest">
-          <h2 class="card-title">Largest trials</h2>
+          ${heading('largest', 'Largest trials')}
           <p class="text-xs text-asfa-text/55 mb-2">Trials with results posted, by entries: LC trial entries and Singles starters together; tied trials share a rank.</p>
           <div id="largest-table"></div>
         </section>
 
-        <section class="card no-print">
-          <h2 class="card-title">All events</h2>
+        <section class="card no-print" id="events">
+          ${heading('events', 'All events')}
           <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
             <label class="block">
               <span class="text-xs font-semibold text-asfa-text/60 uppercase tracking-wide">State</span>
@@ -237,7 +261,7 @@
         </section>
 
         <section class="card" id="about">
-          <h2 class="card-title">About this page</h2>
+          ${heading('about', 'About this page')}
           <ul class="text-sm leading-relaxed list-disc pl-5 space-y-1">
             <li>AKC calls each trial an event: the lure coursing trial plus any tests run with it, under
               one event number.</li>
@@ -396,7 +420,8 @@
         const q = new URLSearchParams();
         for (const key of ['state', 'club', 'scope', 'results']) if (els[key].value) q.set(key, els[key].value);
         const qs = q.toString();
-        history.replaceState(null, '', qs ? `?${qs}` : location.pathname);
+        // The section a shared link points at stays in the address.
+        history.replaceState(null, '', `${qs ? `?${qs}` : location.pathname}${location.hash}`);
       }
 
       function selected() {
@@ -448,6 +473,29 @@
       }
       for (const key of ['state', 'club', 'scope', 'results']) els[key].addEventListener('change', paintEvents);
       paintEvents();
+
+      /* ----- shareable sections: copy a section's link, and land on it */
+      main.addEventListener('click', async (event) => {
+        const button = event.target.closest('button[data-section]');
+        if (!button) return;
+        const id = button.dataset.section;
+        const label = button.querySelector('span');
+        history.replaceState(null, '', `${location.search || location.pathname}#${id}`);
+        try {
+          await navigator.clipboard.writeText(`${location.origin}${location.pathname}#${id}`);
+          const spoken = button.getAttribute('aria-label');
+          label.textContent = 'Copied';
+          button.setAttribute('aria-label', 'Link copied');
+          setTimeout(() => { label.textContent = 'Copy link'; button.setAttribute('aria-label', spoken); }, 2000);
+        } catch {
+          // Clipboard blocked: the section's address is in the address bar
+          // to copy by hand, and no copy is claimed that did not happen.
+        }
+      });
+      // The page draws after its data arrives, too late for the browser's own
+      // jump to a link's section; make that jump now.
+      const target = arrivedAt && document.getElementById(arrivedAt);
+      if (target) target.scrollIntoView();
     }
   </script>
 </body>
