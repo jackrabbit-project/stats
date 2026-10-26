@@ -1358,6 +1358,7 @@ RACING = {
         # in data/wra/meets-run.json; racing this year is a last meet in the
         # season.
         "last_raced_file": "data/wra/meets-run.json",
+        "meets_run_unmatched_max": 3,
         "undecoded_share": 1.0,
     },
     "notra-whippets": {
@@ -1622,13 +1623,20 @@ def check_racing(check: Checker, org: str) -> None:
             check.expect(all(re.fullmatch(r"\d{4}-\d{2}-\d{2}", when) and when <= run["fetched"]
                              for when in page.values()),
                          f"{label}: a last meet in {last_raced_file} is malformed or after its fetch")
-            check.expect(all(name in by_call and by_call[name]["active"] for name in page),
+            # A dog can reach the page before the guide lists it (WRA's
+            # "showtime", first raced October 24, 2026, on the page two days
+            # later with no registered name); a few such names are kept in
+            # the feed's meets_run_unmatched, more would be a broken join.
+            unlisted = sorted(name for name in page if name not in by_call)
+            check.expect(len(unlisted) <= spec.get("meets_run_unmatched_max", 0),
+                         f"{label}: {last_raced_file} names {len(unlisted)} dogs the guide does not list: {unlisted[:5]}")
+            check.expect(all(by_call[name]["active"] for name in page if name in by_call),
                          f"{label}: {last_raced_file} names a dog not on the active list")
             check.expect(feed.get("meets_run_date") == run["fetched"]
-                         and feed.get("meets_run_unmatched") == [],
+                         and feed.get("meets_run_unmatched") == unlisted,
                          f"{label}: the feed's Meets Run by Dog date or join disagrees with the file")
-            check.expect(stats.get("raced_two_years") == len(page),
-                         f"{label}: stats.raced_two_years is not the dogs on the Meets Run page")
+            check.expect(stats.get("raced_two_years") == len(page) - len(unlisted),
+                         f"{label}: stats.raced_two_years is not the guide's dogs on the Meets Run page")
             body = run_path.read_text(encoding="utf-8")
             check.expect(not re.search(r"[\w.+-]+@[\w-]+\.[\w.]+|\(\d{3}\)\s*\d{3}-\d{4}", body),
                          f"{label}: {last_raced_file} carries contact details")

@@ -5,8 +5,8 @@
  "season": 2026,
  "standings_kind": "Mid-Year",
  "source_url": "https://www.continentalwhippetalliance.com/2026-toptens",
- "sha256": "813de78da3f3cc0e24014f36fd2cd8da711bec9a1aca70e0740ba8022f650f45",
- "fetched": "2026-10-22",
+ "sha256": "d2c50f18084fcb467b53dff395c15db2a3289a897a676f710f7b9c1a117f5f4e",
+ "fetched": "2026-10-26",
  "standings": {
   "high_combined": {
    "label": "2026 High Combined Standings as of 9/30/2026 (42 Race Meets)",
@@ -5109,6 +5109,24 @@
      "title": "ARX",
      "name": "Wildabout Alternate You Heard Right ARX",
      "earned": "2026-10-03",
+     "year": 2026,
+     "owners": null,
+     "status": null
+    },
+    {
+     "number": 462,
+     "title": "ARX",
+     "name": "Domino Cloud Atlas PR TRP ARX",
+     "earned": "2026-10-10",
+     "year": 2026,
+     "owners": null,
+     "status": null
+    },
+    {
+     "number": 463,
+     "title": "ARX",
+     "name": "Wheatland Cuts Like A Knife ARX",
+     "earned": "2026-10-18",
      "year": 2026,
      "owners": null,
      "status": null
@@ -11708,6 +11726,15 @@
      "number": 13,
      "title": "HCX",
      "name": "Cherche' Disa Come Monday TRP ARX DPCX PRX HCX",
+     "earned": null,
+     "year": 2026,
+     "owners": null,
+     "status": null
+    },
+    {
+     "number": 14,
+     "title": "HCX",
+     "name": "J&R Mariner Dam-the Torpedoes At Cali TRP ARX NARX2 PRX HCX DPCX",
      "earned": null,
      "year": 2026,
      "owners": null,
@@ -20780,6 +20807,15 @@
      "year": 2026,
      "owners": null,
      "status": null
+    },
+    {
+     "number": 999,
+     "title": "TRP",
+     "name": "Wheatland Comin' N Hot PR ARX TRP",
+     "earned": "2026-10-17",
+     "year": 2026,
+     "owners": null,
+     "status": null
     }
    ]
   },
@@ -22451,7 +22487,7 @@
     {
      "cwa_no": "3758",
      "call_name": "Brock",
-     "registered_name": "Wheatland Comin' N Hot PR ARX",
+     "registered_name": "Wheatland Comin' N Hot PR ARX TRP",
      "owner_raw": "Hoehn",
      "grade": "B",
      "avg": 14.0,
@@ -23627,13 +23663,13 @@
     {
      "cwa_no": "3706",
      "call_name": "Derek",
-     "registered_name": "GCH In Vogue's Sinphonic Sound TRP ARX DPCX",
+     "registered_name": "GCHB In Vogue's Sinphonic Sound TRP ARX DPCX",
      "owner_raw": "LaFortune",
      "grade": "B",
      "avg": 10.0,
      "dpc_points": null,
      "dpc_status": "CH",
-     "hc": 1.0,
+     "hc": 2.0,
      "arx_points": null,
      "arx_status": "ARX",
      "narx": null,
@@ -25127,7 +25163,7 @@
     {
      "cwa_no": "3473",
      "call_name": "Goosey",
-     "registered_name": "Domino Cloud Atlas PR TRP",
+     "registered_name": "Domino Cloud Atlas PR TRP ARX",
      "owner_raw": "Miner",
      "grade": "B",
      "avg": 13.5,
@@ -27171,7 +27207,7 @@
      "pr_points": 132.0,
      "year_last_run": 2026,
      "never_raced": false,
-     "completed_meets": null
+     "completed_meets": 12
     },
     {
      "cwa_no": "3543",
@@ -27249,7 +27285,7 @@
      "pr_points": 123.0,
      "year_last_run": 2026,
      "never_raced": false,
-     "completed_meets": null
+     "completed_meets": 12
     },
     {
      "cwa_no": "3764",
@@ -33116,7 +33152,7 @@
     {
      "cwa_no": "3756",
      "call_name": "Zip",
-     "registered_name": "Wheatland Cuts Like A Knife",
+     "registered_name": "Wheatland Cuts Like A Knife ARX",
      "owner_raw": "Krouse / Koons",
      "grade": "B",
      "avg": 14.66666667,
