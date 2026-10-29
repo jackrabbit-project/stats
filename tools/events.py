@@ -48,10 +48,7 @@ PAGE_ENCODING = "cp1252"
 # calendar's initials and start date, each with the note the Events page
 # prints. Applied only while the calendar still lists the trial as on; once
 # ASFA marks it cancelled the calendar is the record and the entry can go.
-REPORTED_CANCELLED = {
-    ("LVCC", "2026-10-24"): "Cancellation posted in the lure coursing group on Facebook, "
-                            "October 19, 2026; ASFA's calendar does not show it yet.",
-}
+REPORTED_CANCELLED = {}
 
 MONTHS = {
     "january": 1, "february": 2, "march": 3, "april": 4, "may": 5, "june": 6,
