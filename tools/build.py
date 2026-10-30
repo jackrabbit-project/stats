@@ -27,6 +27,15 @@ OUTPUT = ROOT / "data" / "season.json"
 
 SOURCE_URL = "https://www.asfa.org/20/index.htm"
 
+# Registered names corrected at the owner's request while ASFA's Top 20 still
+# prints a name ASFA has been asked to fix, keyed by the name as published.
+# Applied only while the standings still read that way; once ASFA corrects it
+# the entry matches nothing and can go. A one-off exception, not a policy:
+# every other name stays exactly as ASFA publishes it.
+NAME_CORRECTIONS = {
+    "Surrano Archie Provisional TCP": "Surrano Archie TCP",
+}
+
 
 def load_snapshots() -> list[dict]:
     paths = sorted(SNAPSHOT_DIR.glob("*.json"))
@@ -408,6 +417,7 @@ def build(snapshots: list[dict]) -> dict:
 
     sections = []
     dogs = []
+    corrected: set[str] = set()
     for section in current["sections"]:
         sections.append({
             "breed": section["breed"],
@@ -417,6 +427,11 @@ def build(snapshots: list[dict]) -> dict:
             "ranked": len(section["dogs"]),
         })
         for dog in section["dogs"]:
+            registered = NAME_CORRECTIONS.get(dog["registered_name"], dog["registered_name"])
+            titles = [t.strip(".,") for t in dog["titles_suffix"]]
+            if registered != dog["registered_name"]:
+                corrected.add(dog["registered_name"])
+                titles = [t for t in titles if t in registered.split()]
             dogs.append({
                 "id": dog["id"],
                 "hound_key": hound_key(dog),
@@ -426,12 +441,12 @@ def build(snapshots: list[dict]) -> dict:
                 "total_competing": section["total_competing"],
                 "rank": dog["rank"],
                 "call_name": dog["call_name"],
-                "registered_name": dog["registered_name"],
+                "registered_name": registered,
                 "core_name": dog["core_name"],
                 # Earned titles, as suffixes on the registered name. The LCI
                 # program is built around them (LCI, LCA, LCC, LCE), so the
                 # LCI page counts them.
-                "titles": [t.strip(".,") for t in dog["titles_suffix"]],
+                "titles": titles,
                 "owner_raw": dog["owner_raw"],
                 "owners": [dict(owner) for owner in dog["owners"]],
                 "region": dog["region"],
@@ -456,6 +471,10 @@ def build(snapshots: list[dict]) -> dict:
         for owner in dog["owners"]:
             owner["entity"] = owner_identity(
                 owner["key"], dog["region"], homes)[0]
+
+    for published in NAME_CORRECTIONS.keys() - corrected:
+        print(f"NAME_CORRECTIONS {published!r}: no longer in ASFA's standings; "
+              f"the entry can go.")
 
     unique = dedupe_hounds(dogs)
     stats = {
