@@ -105,7 +105,9 @@ const ORGS = {
       ['last_raced', 'Last raced', '', -1],
     ],
     rules: 'AOK9 Sprint Racing Rule Book 3.0',
-    calendar: 'https://aok9racing.com/calendar.html',
+    // AOK9's 2026 calendar, the Google Sheet of race dates itself. It is a
+    // season's sheet: look for the new one when the 2027 season opens.
+    calendar: 'https://docs.google.com/spreadsheets/d/1P1QQaexZZYeHwUKWXOMNwAxPhrGBmwI8xT_y4D_u2us/edit?usp=sharing',
     guideName: 'AOK9 sprint racing grading guide',
     officer: 'registrar',
     titledTile: (stats) => [stats.titled_champion, 'BRC or MRC titled, all time'],
