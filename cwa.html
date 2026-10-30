@@ -20,7 +20,7 @@
   <link rel="preload" href="assets/fonts/fraunces-latin-var.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/plex-mono-400.woff2" as="font" type="font/woff2" crossorigin>
   <script src="js/theme.js?v=20260823"></script>
-  <link rel="stylesheet" href="css/app.css?v=20261011k">
+  <link rel="stylesheet" href="css/app.css?v=20261029a">
   <link rel="icon" href="assets/favicon.ico?v=4" sizes="any">
   <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png?v=4">
   <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png?v=4">
@@ -30,8 +30,8 @@
   <main id="main" class="flex-1 max-w-6xl mx-auto w-full px-4 py-6 space-y-8"></main>
   <footer id="site-footer" class="bg-asfa-navy text-white py-8"></footer>
 
-  <script src="js/app.js?v=20261023a"></script>
-  <script src="js/racing.js?v=20261013a"></script>
+  <script src="js/app.js?v=20261029a"></script>
+  <script src="js/racing.js?v=20261029a"></script>
   <script>
     /* CWA in the Whippet racing section (beta). The whippets are CWA's
        grading guides, keyed by CWA number: the current guide in
@@ -340,14 +340,17 @@
       const TABS = [['overview', 'Overview'], ['standings', 'Standings'], ['browse', 'Browse'], ['kennels', 'Kennels'],
         ['alltime', 'All-time'], ['titles', 'Titles'], ['about', 'About']];
       main.innerHTML = `
-        <div>
-          <h1 class="font-display text-3xl text-asfa-text">CWA whippet racing</h1>
-          <p class="text-sm text-asfa-text/70 mt-1">
-            Every whippet on the Continental Whippet Alliance's ${external(feed.guide_url, 'grading guide')}, updated
-            ${formatDate(stats.guide_updated)}, with CWA's standings, its all-time list and every title holder, as published at
-            ${external(feed.site_url, 'continentalwhippetalliance.com')}. CWA races and shows whippets; these pages
-            cover its racing and its High Combined awards.
-          </p>
+        <div class="page-head">
+          <div>
+            <h1 class="font-display text-3xl text-asfa-text">CWA whippet racing</h1>
+            <p class="text-sm text-asfa-text/70 mt-1">
+              Every whippet on the Continental Whippet Alliance's ${external(feed.guide_url, 'grading guide')}, updated
+              ${formatDate(stats.guide_updated)}, with CWA's standings, its all-time list and every title holder, as published at
+              ${external(feed.site_url, 'continentalwhippetalliance.com')}. CWA races and shows whippets; these pages
+              cover its racing and its High Combined awards.
+            </p>
+          </div>
+          ${calendarButton('https://www.continentalwhippetalliance.com/events', 'CWA events and results', 'cwa')}
         </div>
         <nav class="flex flex-wrap gap-2 no-print subtabs-whippet" aria-label="CWA pages" id="sub-tabs">
           ${TABS.map(([id, label]) => `<a href="#${id}" class="tab" data-tab="${id}">${label}</a>`).join('')}

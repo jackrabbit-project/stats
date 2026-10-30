@@ -916,13 +916,15 @@ function renderRacingOverview(org, feed, main, singles = null) {
     </nav>` : '';
 
   main.innerHTML = `
-    <div>
-      <h1 class="font-display text-3xl text-asfa-text">${spec.title || `${spec.name} ${spec.program}`}</h1>
-      <p class="text-sm text-asfa-text/70 mt-1">
-        ${spec.intro ? spec.intro(feed) : `${season} standings from the grading guide ${guideDate(feed)}, as published by
-        <a href="${esc(feed.site_url)}" class="lnk" target="_blank" rel="noopener noreferrer">${esc(feed.site_url.replace(/^https?:\/\//, ''))}</a>.`}
-        <a href="${spec.calendar}" class="lnk whitespace-nowrap" target="_blank" rel="noopener noreferrer">${spec.calendarLabel || `${spec.name} race calendar`} →</a>
-      </p>
+    <div class="page-head">
+      <div>
+        <h1 class="font-display text-3xl text-asfa-text">${spec.title || `${spec.name} ${spec.program}`}</h1>
+        <p class="text-sm text-asfa-text/70 mt-1">
+          ${spec.intro ? spec.intro(feed) : `${season} standings from the grading guide ${guideDate(feed)}, as published by
+          <a href="${esc(feed.site_url)}" class="lnk" target="_blank" rel="noopener noreferrer">${esc(feed.site_url.replace(/^https?:\/\//, ''))}</a>.`}
+        </p>
+      </div>
+      ${calendarButton(spec.calendar, spec.calendarLabel || `${spec.name} race calendar`, org)}
     </div>
     ${subTabs}
 
