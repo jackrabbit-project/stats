@@ -131,13 +131,16 @@ function icon(name, cls = '') {
   return `<svg class="ic${cls ? ` ${cls}` : ''}" viewBox="0 0 24 24" width="1em" height="1em" ${attrs} aria-hidden="true">${stroke || ICON_FILLS[name]}</svg>`;
 }
 
-/** A body's own event calendar, as a button in its program's colour beside
-    the page title: where to race next is the first thing many visitors want. */
-const CALENDAR_PROGRAMS = { lgra: 'lgra', aok9: 'aok9', notra: 'notra', wra: 'whippet', 'notra-whippets': 'whippet', cwa: 'whippet' };
+/** A program's event calendar, as a button in its program's colour near the
+    page title: where to run next is the first thing many visitors want. The
+    racing bodies' calendars open on their own sites; ASFA's is the Events page. */
+const CALENDAR_PROGRAMS = { asfa: 'asfa', lgra: 'lgra', aok9: 'aok9', notra: 'notra', wra: 'whippet', 'notra-whippets': 'whippet', cwa: 'whippet' };
 
 function calendarButton(href, label, sectionKey) {
-  return `<a href="${esc(href)}" class="btn btn-calendar program-${CALENDAR_PROGRAMS[sectionKey]} no-print" target="_blank"
-    rel="noopener noreferrer">${icon('calendar')}${esc(label)}${icon('external')}<span class="sr-only"> (opens in a new tab)</span></a>`;
+  const external = /^https?:/.test(href);
+  return `<a href="${esc(href)}" class="btn btn-calendar program-${CALENDAR_PROGRAMS[sectionKey]} no-print"${
+    external ? ' target="_blank" rel="noopener noreferrer"' : ''}>${icon('calendar')}${esc(label)}${
+    external ? `${icon('external')}<span class="sr-only"> (opens in a new tab)</span>` : ''}</a>`;
 }
 
 /* ---------------------------------------------------------------- utilities */

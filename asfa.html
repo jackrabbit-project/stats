@@ -47,6 +47,7 @@
         </div>
 
         <p class="mt-3 text-xs text-asfa-text/60" id="coverage"></p>
+        <p class="mt-5" id="calendar-link"></p>
       </div>
     </section>
 
@@ -117,8 +118,10 @@
 
   <footer id="site-footer" class="bg-asfa-navy text-white py-8"></footer>
 
-  <script src="js/app.js?v=20261030a"></script>
+  <script src="js/app.js?v=20261030b"></script>
   <script>
+    document.getElementById('calendar-link').innerHTML = calendarButton('events.html', 'ASFA trial calendar', 'asfa');
+
     page('asfa.html', (season) => {
       const hounds = groupHounds(season.dogs);
       const stats = season.stats;
