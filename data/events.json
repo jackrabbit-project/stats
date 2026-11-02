@@ -2,9 +2,9 @@
   "seasons": [
     2026
   ],
-  "fetched": "2026-10-26",
+  "fetched": "2026-11-02",
   "source_url": "https://www.asfa.org/event/index.htm",
-  "calendar_pdf_url": "https://www.asfa.org/event/ASFA%20Calendar%2010-21-2026%20Updates.pdf",
+  "calendar_pdf_url": "https://www.asfa.org/event/ASFA%20Calendar%2010-28-2026%20Updates.pdf",
   "region_source": "ASFA Constitution & By-Laws, rev. 08/01/2026, Article V, Section 3",
   "regions": [
     {
@@ -1822,7 +1822,7 @@
       "venue": "Whitesburg",
       "state": "GA",
       "region": 7,
-      "premium_url": "https://www.asfa.org/event/premiums/LEGS%20Premium%20-%20November%2014-15%202026%20(1).pdf",
+      "premium_url": "https://www.asfa.org/event/Premium/LEGS%20Premium%20-%20November%2014-15%202026%20(2).pdf",
       "premium_inferred": false,
       "club": "Lure Enthusiasts of Georgia Sighthounds"
     },
