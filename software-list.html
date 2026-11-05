@@ -233,6 +233,22 @@ html{scroll-behavior:smooth}
 .finding summary h2{margin:0}
 .finding summary:hover h2{color:var(--flag)}
 .finding-body{padding:0 clamp(1.1rem,3vw,1.9rem) 1.5rem}
+
+/* Back to top: bottom-right once a reader is a screen down; hidden, and out
+   of the tab order, until then. Same behaviour as the rest of the site. */
+.to-top{
+  position:fixed;right:max(1rem,env(safe-area-inset-right));bottom:max(1rem,env(safe-area-inset-bottom));z-index:40;
+  display:inline-flex;align-items:center;gap:.4rem;
+  font-family:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;font-weight:500;font-size:.72rem;
+  text-transform:uppercase;letter-spacing:.08em;
+  color:var(--ink);background:var(--surface);border:1px solid var(--line);box-shadow:0 2px 8px rgba(20,24,15,.18);
+  padding:.6rem .85rem;cursor:pointer;
+  opacity:0;visibility:hidden;transform:translateY(.5rem);transition:opacity .2s,transform .2s,visibility .2s;
+}
+.to-top.is-shown{opacity:1;visibility:visible;transform:none}
+.to-top:hover{border-color:var(--ink)}
+@media (prefers-reduced-motion: reduce){.to-top{transition:none}}
+@media print{.to-top{display:none}}
 </style>
 </head>
 <body>
@@ -556,6 +572,20 @@ html{scroll-behavior:smooth}
 </footer>
 
 </div>
+
+<button type="button" class="to-top" id="to-top" aria-label="Back to top"><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 7-7 7 7"/><path d="M12 19V5"/></svg><span aria-hidden="true">Top</span></button>
+<script>
+  (() => {
+    const button = document.getElementById('to-top');
+    button.addEventListener('click', () => {
+      const still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      window.scrollTo({ top: 0, behavior: still ? 'instant' : 'smooth' });
+    });
+    const update = () => button.classList.toggle('is-shown', window.scrollY > Math.max(600, window.innerHeight));
+    window.addEventListener('scroll', update, { passive: true });
+    update();
+  })();
+</script>
 
 </body>
 </html>

@@ -1416,6 +1416,28 @@ function renderChrome(feed, current, sectionKey = sectionOf(current)) {
         </p>
       </div>`;
   }
+
+  initBackToTop();
+}
+
+/** "Back to top", shown once a reader is a screen or more down the page, so
+    short pages, which never scroll that far, don't show it at all. */
+function initBackToTop() {
+  if (document.getElementById('to-top')) return;
+  const button = document.createElement('button');
+  button.type = 'button';
+  button.id = 'to-top';
+  button.className = 'to-top no-print';
+  button.setAttribute('aria-label', 'Back to top');
+  button.innerHTML = `${icon('arrowUp')}<span aria-hidden="true">Top</span>`;
+  button.addEventListener('click', () => {
+    const still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    window.scrollTo({ top: 0, behavior: still ? 'instant' : 'smooth' });
+  });
+  document.body.appendChild(button);
+  const update = () => button.classList.toggle('is-shown', window.scrollY > Math.max(600, window.innerHeight));
+  window.addEventListener('scroll', update, { passive: true });
+  update();
 }
 
 function showFailure(heading, detail, advice) {

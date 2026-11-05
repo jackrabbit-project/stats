@@ -1074,6 +1074,47 @@ ol.rb-l { list-style: decimal; }
 
 /* Chrome ------------------------------------------------------------------ */
 
+/* Back to top: pinned bottom-right once a reader is a screen down a long
+   page; hidden, and out of the tab order, until then. */
+.to-top {
+  position: fixed;
+  right: max(1rem, env(safe-area-inset-right));
+  bottom: max(1rem, env(safe-area-inset-bottom));
+  z-index: 40;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-weight: 500;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: rgb(var(--ink));
+  background: rgb(var(--surface));
+  border: 1px solid rgb(var(--line-strong));
+  box-shadow: 0 2px 8px rgb(20 18 16 / 0.18);
+  padding: 0.6rem 0.85rem;
+  cursor: pointer;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(0.5rem);
+  transition: opacity 0.2s, transform 0.2s, visibility 0.2s;
+}
+
+.to-top.is-shown {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+}
+
+.to-top:hover {
+  border-color: rgb(var(--ink));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .to-top { transition: none; }
+}
+
 /* Hidden until keyboard focus, then a small chip pinned top-left. */
 .skip-link {
   position: fixed;
