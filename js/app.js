@@ -1235,9 +1235,10 @@ function footerSource(sectionKey, feed) {
     const guide = racing[2];
     return feed ? `
         <p>
-          Figures reproduced from the ${link(feed.source_url, guide)}
+          Figures reproduced from the ${feed.source_url ? link(feed.source_url, guide) : guide}
           ${guideDate(feed)}${feed.records_url ? `, with titles from the ${link(feed.records_url, "Registrar's Whippet Point Records")}
-          of ${formatDate(feed.records_date)}` : ''}, published at
+          of ${formatDate(feed.records_date)}` : ''}, ${feed.pdf ? `posted as a PDF in ${esc(feed.pdf.posted_in)}, with the
+          Inactive sheet from the ${formatDate(feed.pdf.workbook_date)} workbook at` : 'published at'}
           ${link(feed.source_page, esc(feed.source_page.replace(/^https?:\/\//, '')))}.
           The published ${feed.records_url ? 'records are' : 'guide is'} authoritative wherever ${feed.records_url ? 'they disagree' : 'it disagrees'} with this page.
         </p>` : `

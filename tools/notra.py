@@ -23,12 +23,21 @@ Usage:
     python tools/notra.py --force            # archive even if unchanged
     python tools/notra.py --seen YYYY-MM-DD  # first-seen day for a re-issued guide
     python tools/notra.py --file PATH --date YYYY-MM-DD
+    python tools/notra.py --pdf PATH --date YYYY-MM-DD   # a guide posted as a PDF only
     python tools/notra.py --offline          # rebuild from the snapshots alone
+
+A guide the recorder posts only as a PDF (the November 4, 2026 guide went to
+the Facebook group, not the website) is the Active sheet printed from Excel:
+its rows are read from the PDF, and the Inactive sheet, which the PDF does not
+print, comes from the newest workbook on file.
 """
 
 from __future__ import annotations
 
 import argparse
+import csv
+import io
+import json
 import re
 import sys
 import zipfile
@@ -43,8 +52,9 @@ import requests
 from racing import (
     DATA, RacingParseError, build_movement, build_owners, cell_num, cell_str,
     compact_registry, cumulative_titles, derive_identity, fetch_bytes, fetch_text,
-    file_raw, grade, last_raced, load_snapshots, rank_by, redate_if_label_stale,
-    sha256, slug, super_level, today, wave, write_json, write_snapshot_if_changed,
+    file_raw, grade, last_raced, load_snapshots, newest_snapshot, rank_by,
+    redate_if_label_stale, sha256, slug, super_level, today, wave, write_json,
+    write_snapshot_if_changed,
 )
 
 ORG = "notra"
@@ -52,6 +62,9 @@ SITE_URL = "https://www.notra.org"
 GUIDE_PAGE = "https://www.notra.org/index.html"
 DOWNLOADS_PAGE = "https://www.notra.org/Downloads.html"
 RULES_URL = "https://www.notra.org/downloads/rulebk1.pdf"
+# NOTRA's race calendar: a published Google Sheet embedded on this page.
+CALENDAR_PAGE = "https://www.notra.org/RaceDates.html"
+CALENDAR_SHEET_RE = re.compile(r'src="(https://docs\.google\.com/spreadsheets/d/e/[^"/]+)/pubhtml')
 RAW_DIR = DATA / "notra" / "raw"
 SNAPSHOT_DIR = DATA / "notra" / "snapshots"
 FEED = DATA / "notra.json"
@@ -170,6 +183,141 @@ def fetch() -> tuple[Path, date | None, str]:
     return target, label, url
 
 
+def read_calendar() -> dict | None:
+    """The days NOTRA's race calendar lists a meet the other breeds can run:
+    every dated row that is not a Whippet-only meet and not cancelled. Only
+    the dates are kept."""
+    try:
+        match = CALENDAR_SHEET_RE.search(fetch_text(CALENDAR_PAGE))
+        if not match:
+            print(f"No race calendar sheet on {CALENDAR_PAGE}; dates are read without it.")
+            return None
+        text = fetch_bytes(f"{match.group(1)}/pub?output=csv").decode("utf-8", "replace")
+    except requests.RequestException as error:
+        print(f"Could not read NOTRA's race calendar ({error}); dates are read without it.")
+        return None
+    days = set()
+    for row in csv.DictReader(io.StringIO(text)):
+        kind, notes = (row.get("Event type") or ""), (row.get("Notes") or "")
+        found = re.fullmatch(r"\s*(\d{1,2})/(\d{1,2})/(\d{4})\s*", row.get("Date") or "")
+        if not found or "cancel" in (kind + notes).lower() or kind.strip().lower() == "whippet":
+            continue
+        month, day, year = (int(part) for part in found.groups())
+        try:
+            days.add(date(year, month, day).isoformat())
+        except ValueError:
+            continue
+    return {"source": CALENDAR_PAGE, "days": sorted(days)}
+
+
+# --------------------------------------------------------------- PDF guide
+#
+# The PDF is the Active sheet printed from Excel: one row per line, each
+# cell's text drawn as one run of characters, and the header framed by thin
+# rectangles at the column edges. A run belongs to the cell its centre falls
+# in; a long meet status that touches its score or its date (the narrow score
+# column cannot hold "dnf1/2-scr3") is split where each part sits best
+# centred in its own cell. Read against the June 10, 2026 guide, which NOTRA
+# posted as both PDF and workbook, every cell agrees but three zero NORC
+# figures the print leaves blank and the last row, which falls below the
+# print area.
+
+PDF_GAP = 1.0                  # points between characters of two different cells
+PDF_SCORE_COLUMNS = {12, 15, 18}
+PDF_DATE_COLUMNS = {14, 17, 20}
+PDF_DATE_RE = re.compile(r"\d{1,2}/\d{1,2}/\d{2,4}")
+PDF_NUMBER_RE = re.compile(r"\d+(?:\.\d+)?")
+
+
+def _pdf_edges(page) -> list[float]:
+    xs = sorted({round((r["x0"] + r["x1"]) / 2, 1)
+                 for r in page.rects if r["width"] < 1.5 and r["height"] > 5})
+    edges: list[float] = []
+    for x in xs:
+        if not edges or x - edges[-1] > 3:
+            edges.append(x)
+    return edges
+
+
+def _pdf_column(x: float, edges: list[float]) -> int:
+    if x < edges[0]:
+        return 0
+    return next((i for i in range(len(HEADERS)) if x < edges[i + 1]), len(HEADERS) - 1)
+
+
+def _pdf_place(run: list[dict], edges: list[float]) -> list[tuple[int, str]]:
+    text = "".join(c["text"] for c in run).strip()
+    if not text:
+        return []
+    x0, x1 = min(c["x0"] for c in run), max(c["x1"] for c in run)
+    crosses = [i for i in range(len(HEADERS)) if x0 < edges[i + 1] - 2 and x1 > edges[i + 1] + 2]
+    if crosses and 12 <= crosses[0] < len(HEADERS) - 1:
+        best = None
+        for k in range(1, len(run)):
+            left, right = run[:k], run[k:]
+            left_text = "".join(c["text"] for c in left).strip()
+            right_text = "".join(c["text"] for c in right).strip()
+            if not left_text or not right_text:
+                continue
+            left_col = _pdf_column((left[0]["x0"] + left[-1]["x1"]) / 2, edges)
+            right_col = _pdf_column((right[0]["x0"] + right[-1]["x1"]) / 2, edges)
+            if right_col != left_col + 1 or left_col < 12:
+                continue
+            if right_col in PDF_DATE_COLUMNS and not PDF_DATE_RE.fullmatch(right_text):
+                continue
+            if left_col in PDF_SCORE_COLUMNS and not PDF_NUMBER_RE.fullmatch(left_text):
+                continue
+            error = sum(abs((part[0]["x0"] + part[-1]["x1"]) / 2 - (edges[col] + edges[col + 1]) / 2)
+                        for part, col in ((left, left_col), (right, right_col)))
+            if best is None or error < best[0]:
+                best = (error, [(left_col, left_text), (right_col, right_text)])
+        if best:
+            return best[1]
+    return [(_pdf_column((x0 + x1) / 2, edges), text)]
+
+
+def read_pdf_rows(path: Path) -> list[list]:
+    """The hound rows of a printed Active sheet, 21 cells each, as text."""
+    import pdfplumber  # only a PDF-only guide needs it
+
+    rows: list[list] = []
+    with pdfplumber.open(path) as pdf:
+        edges = _pdf_edges(pdf.pages[0])
+        if len(edges) != len(HEADERS) + 1:
+            raise RacingParseError(f"{path.name}: {len(edges) - 1} framed columns, not {len(HEADERS)}")
+        for page in pdf.pages:
+            if _pdf_edges(page) != edges:
+                raise RacingParseError(f"{path.name} page {page.page_number}: the columns moved")
+            # A row's characters can sit a fraction of a point apart in height.
+            lines: dict[float, list[dict]] = {}
+            for char in page.chars:
+                top = next((t for t in lines if abs(t - char["top"]) < 2), char["top"])
+                lines.setdefault(top, []).append(char)
+            texts = {top: "".join(c["text"] for c in chars).replace(" ", "")
+                     for top, chars in lines.items()}
+            header = [top for top, text in texts.items() if text.startswith("NRNCALLNAME")]
+            norc = [top for top, text in texts.items() if text.startswith("NORCNORC")]
+            if not header or not norc:
+                raise RacingParseError(f"{path.name} page {page.page_number}: no header rows")
+            for top in sorted(lines):
+                if top <= max(norc) or texts[top].startswith("Page"):
+                    continue
+                runs, run, previous = [], [], None
+                for char in lines[top]:          # drawn cell by cell
+                    if previous is not None and abs(char["x0"] - previous["x1"]) > PDF_GAP:
+                        runs.append(run)
+                        run = []
+                    run.append(char)
+                    previous = char
+                runs.append(run)
+                cells = [""] * len(HEADERS)
+                for run in runs:
+                    for column, text in _pdf_place(run, edges):
+                        cells[column] = f"{cells[column]} {text}".strip()
+                rows.append([cell or None for cell in cells])
+    return rows
+
+
 # ------------------------------------------------------------------- parse
 
 def _norm_header(value) -> str:
@@ -204,8 +352,8 @@ def meet_date(value) -> tuple[str | None, str]:
     return None, text
 
 
-def parse_workbook(path: Path, guide_date: date, date_source: str,
-                   source_url: str | None = None) -> dict:
+def workbook_sheets(path: Path) -> list[tuple[str, list[list]]]:
+    """Each sheet that opens with the guide's header row, rows below it."""
     book = openpyxl.load_workbook(path, read_only=True, data_only=True)
     sheets: list[tuple[str, list[list]]] = []
     for sheet in book.worksheets:
@@ -223,7 +371,50 @@ def parse_workbook(path: Path, guide_date: date, date_source: str,
     book.close()
     if not sheets:
         raise RacingParseError("no sheet opens with the NRN / CALL NAME header row")
+    return sheets
 
+
+def parse_workbook(path: Path, guide_date: date, date_source: str,
+                   source_url: str | None = None) -> dict:
+    return parse_sheets(workbook_sheets(path), guide_date, date_source, source_url,
+                        path.name, path.read_bytes())
+
+
+def parse_pdf(pdf_path: Path, workbook_path: Path, guide_date: date) -> dict:
+    """A guide posted only as a PDF of the Active sheet. The Inactive sheet,
+    which the PDF does not print, and any Active rows below the print area
+    (June 10, 2026: the last row, SW-PEND Zula) come from the workbook."""
+    printed = read_pdf_rows(pdf_path)
+    if not printed:
+        raise RacingParseError(f"{pdf_path.name}: no hound rows")
+    sheets = workbook_sheets(workbook_path)
+    active = next((i for i, (title, _) in enumerate(sheets)
+                   if "active" in title.lower() and "inactive" not in title.lower()), None)
+    if active is None:
+        raise RacingParseError(f"{workbook_path.name}: no Active sheet to stand in for")
+    title, rows = sheets[active]
+
+    def key(row: list) -> tuple[str, str]:
+        return cell_str(row[0]), cell_str(row[1])
+
+    listed = [row for row in rows if any(cell_str(cell) for cell in row[:6])]
+    at = next((i for i, row in enumerate(listed) if key(row) == key(printed[-1])), None)
+    printed_keys = {key(row) for row in printed}
+    below = [row for row in (listed[at + 1:] if at is not None else [])
+             if key(row) not in printed_keys]
+    sheets[active] = (title, printed + below)
+    snapshot = parse_sheets(sheets, guide_date, "pdf", None, pdf_path.name, pdf_path.read_bytes())
+    snapshot["workbook"] = {
+        "file": workbook_path.name,
+        "sha256": sha256(workbook_path.read_bytes()),
+        "sheets": [name for name, _ in sheets if name != title],
+        "rows_below_print": [f"{cell_str(row[0])} {cell_str(row[1])}" for row in below],
+    }
+    return snapshot
+
+
+def parse_sheets(sheets: list[tuple[str, list[list]]], guide_date: date, date_source: str,
+                 source_url: str | None, source_file: str, raw: bytes) -> dict:
     by_breed: dict[str, list[dict]] = {}
     numbered: dict[str, dict] = {}
     counts: Counter = Counter()
@@ -309,7 +500,6 @@ def parse_workbook(path: Path, guide_date: date, date_source: str,
         {"breed_raw": breed, "prefixes": sorted({d["prefix"] for d in dogs}), "dogs": dogs}
         for breed, dogs in sorted(by_breed.items())
     ]
-    raw = path.read_bytes()
     return {
         "org": ORG,
         "guide_date": guide_date.isoformat(),
@@ -317,7 +507,7 @@ def parse_workbook(path: Path, guide_date: date, date_source: str,
         "season": guide_date.year,
         "source_url": source_url,
         "source_page": GUIDE_PAGE,
-        "source_file": path.name,
+        "source_file": source_file,
         "sha256": sha256(raw),
         "fetched": today(),
         "columns": HEADERS,
@@ -395,6 +585,7 @@ def derive(snapshot: dict) -> list[dict]:
     """Every hound in a snapshot with the site's derived fields and ranks."""
     season = snapshot["season"]
     guide_date = snapshot["guide_date"]
+    calendar = set((snapshot.get("calendar") or {}).get("days", []))
     dogs: list[dict] = []
     for section in snapshot["sections"]:
         for raw in section["dogs"]:
@@ -417,6 +608,14 @@ def derive(snapshot: dict) -> list[dict]:
                     swapped = swap_day_month(when)
                     if swapped and EARLIEST_MEET_YEAR <= int(swapped[:4]) and swapped <= guide_date:
                         when, read = swapped, "day/month"
+                # Some of the November 4, 2026 guide's dates are typed day
+                # first (4/7/2026 for SWEPT's July 4 meet). A date that is a
+                # day on NOTRA's race calendar only the other way round is
+                # read that way.
+                elif when and calendar and when not in calendar:
+                    swapped = swap_day_month(when)
+                    if swapped and swapped in calendar and swapped <= guide_date:
+                        when, read = swapped, "calendar"
                 # A date the recorder mistyped (year 2206) is kept as written
                 # and carries no year.
                 if when and not (EARLIEST_MEET_YEAR <= int(when[:4]) and when <= guide_date):
@@ -580,6 +779,12 @@ def build(snapshots: list[dict]) -> tuple[dict, dict]:
         "source_page": GUIDE_PAGE,
         "site_url": SITE_URL,
         "rules_url": RULES_URL,
+        # A guide posted only as a PDF: where, and the workbook its Inactive
+        # sheet comes from.
+        "pdf": ({"posted_in": current.get("posted_in"),
+                 "workbook_date": Path(current["workbook"]["file"]).stem}
+                if current["guide_date_source"] == "pdf" else None),
+        "calendar_url": (current.get("calendar") or {}).get("source"),
         "snapshots": [snap["guide_date"] for snap in snapshots],
         "active_since": f"{season - 1}-01-01",
         "stats": stats,
@@ -631,6 +836,28 @@ def build(snapshots: list[dict]) -> tuple[dict, dict]:
     return feed, registry
 
 
+def newest_guide() -> dict | None:
+    newest = newest_snapshot(SNAPSHOT_DIR)
+    return json.loads(newest.read_text(encoding="utf-8")) if newest else None
+
+
+def without_calendar(snapshot: dict) -> dict:
+    return {k: v for k, v in snapshot.items()
+            if k not in ("calendar", "fetched", "sha256", "source_url", "source_file")}
+
+
+def older_guide_on_file(snapshot: dict) -> bool:
+    """The website's guide is older than the newest one archived (a guide
+    posted only as a PDF) and says just what its own snapshot says: keep it
+    from being re-dated as new and displacing the newer guide."""
+    newest = newest_snapshot(SNAPSHOT_DIR)
+    same_day = SNAPSHOT_DIR / f"{snapshot['guide_date']}.json"
+    if newest is None or not same_day.exists() or newest == same_day:
+        return False
+    kept = json.loads(same_day.read_text(encoding="utf-8"))
+    return without_calendar(kept) == without_calendar(snapshot)
+
+
 # -------------------------------------------------------------------- main
 
 def main() -> int:
@@ -640,6 +867,11 @@ def main() -> int:
                         help="archive even if the guide is unchanged")
     parser.add_argument("--file", type=Path,
                         help="parse this workbook instead of fetching (needs --date)")
+    parser.add_argument("--pdf", type=Path,
+                        help="parse a guide posted only as a PDF (needs --date); the Inactive "
+                             "sheet comes from the newest workbook in data/notra/raw")
+    parser.add_argument("--posted-in", default="NOTRA's Facebook group",
+                        help="where the PDF was posted, as the site should say it")
     parser.add_argument("--date", type=date.fromisoformat,
                         help="the guide's date, when it cannot be read from the home page")
     parser.add_argument("--offline", action="store_true",
@@ -649,7 +881,19 @@ def main() -> int:
                              "seen (default: today, UTC)")
     args = parser.parse_args()
 
-    if not args.offline:
+    if args.pdf:
+        if not args.date:
+            parser.error("--pdf needs --date, the guide's own date")
+        workbooks = sorted(RAW_DIR.glob("*.xlsx"))
+        if not workbooks:
+            parser.error(f"--pdf needs a workbook in {RAW_DIR} for the Inactive sheet")
+        snapshot = parse_pdf(args.pdf, workbooks[-1], args.date)
+        snapshot["posted_in"] = args.posted_in
+        snapshot["calendar"] = read_calendar()
+        print(f"Read {args.pdf.name}: Inactive sheet from {workbooks[-1].name}; "
+              f"{len(snapshot['workbook']['rows_below_print'])} row(s) below the print area kept")
+        write_snapshot_if_changed(SNAPSHOT_DIR, snapshot, force=args.force)
+    elif not args.offline:
         try:
             if args.file:
                 if not args.date:
@@ -669,11 +913,27 @@ def main() -> int:
                 if saved and label and abs((saved - label).days) > 14:
                     print(f"Note: the page label says {label} but the workbook was saved {saved}.")
             snapshot = parse_workbook(path, guide_date, source, source_url)
-            if source != "cli":
-                snapshot = redate_if_label_stale(SNAPSHOT_DIR, snapshot, args.seen or today())
-            if not args.file:
-                file_raw(path, snapshot)
-            write_snapshot_if_changed(SNAPSHOT_DIR, snapshot, force=args.force)
+            if older_guide_on_file(snapshot):
+                print(f"notra.org still carries the guide of {snapshot['guide_date']}, which is "
+                      f"on file; a newer guide is archived. Nothing archived.")
+                if not args.file:
+                    path.unlink(missing_ok=True)
+            else:
+                kept = newest_guide()
+                # The workbook of a guide first read from its PDF is that
+                # guide: it replaces the PDF reading under the same date.
+                if source != "cli" and not (kept and kept["guide_date_source"] == "pdf"
+                                            and snapshot["guide_date"] >= kept["guide_date"]):
+                    snapshot = redate_if_label_stale(SNAPSHOT_DIR, snapshot, args.seen or today())
+                # A guide that says anything new is read against the race
+                # calendar of the day; an unchanged one keeps the calendar it had.
+                if kept and without_calendar(kept) == without_calendar(snapshot):
+                    snapshot["calendar"] = kept.get("calendar")
+                else:
+                    snapshot["calendar"] = read_calendar()
+                if not args.file:
+                    file_raw(path, snapshot)
+                write_snapshot_if_changed(SNAPSHOT_DIR, snapshot, force=args.force)
         except requests.RequestException as error:
             if not list(SNAPSHOT_DIR.glob("*.json")):
                 print(f"Could not fetch the NOTRA guide and no snapshot exists: {error}",

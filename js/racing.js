@@ -159,7 +159,10 @@ const ORGS = {
     calendar: 'https://www.notra.org/RaceDates.html',
     calendarLabel: 'NOTRA race calendar',
     intro: (feed) => `${feed.season} oval racing standings for every sighthound breed but the Whippet, from NOTRA's
-        Other-Breed (OB) grading guide ${guideDate(feed)}, as published by
+        Other-Breed (OB) grading guide ${guideDate(feed)}, ${feed.pdf
+          ? `which NOTRA posted as a PDF in ${esc(feed.pdf.posted_in.replace(/^NOTRA's /, 'its '))}; hounds on its
+        Inactive sheet come from the ${formatDate(feed.pdf.workbook_date)} workbook at`
+          : 'as published by'}
         <a href="${esc(feed.site_url)}" class="lnk" target="_blank" rel="noopener noreferrer">${esc(feed.site_url.replace(/^https?:\/\//, ''))}</a>.`,
     overviewNote: () => crossLink(
       '<strong>Whippets have pages of their own.</strong> NOTRA keeps a separate Whippet grading guide with its own rules; its standings, ratings and titles are under NOTRA Whippets, in the Whippet racing section.',
@@ -1471,7 +1474,16 @@ const ABOUT = {
         its last three meets. The arithmetic follows the
         <a href="${esc(feed.rules_url)}" class="lnk" target="_blank" rel="noopener noreferrer">NOTRA Rules</a>
         (February 2025). The guide's date is read from the "Current as of" note beside its link.
-      </p>
+      </p>${feed.pdf ? `
+      <p class="text-sm leading-relaxed mt-2">
+        The guide of ${formatDate(feed.guide_date)} was posted only as a PDF, in ${esc(feed.pdf.posted_in)},
+        not on notra.org. Its Active sheet is read from the PDF, which prints WAVEs and ORC points
+        to two decimals and leaves a few zero National points blank; the Inactive sheet, which the
+        PDF does not print, comes from the ${formatDate(feed.pdf.workbook_date)} workbook. Some of its
+        dates are typed day first (4/7/2026 for July 4): a date that falls on a meet day on
+        ${feed.calendar_url ? `<a href="${esc(feed.calendar_url)}" class="lnk" target="_blank" rel="noopener noreferrer">NOTRA's race calendar</a>` : "NOTRA's race calendar"}
+        only when read day first is read that way, and each hound's page says so beside the meet.
+      </p>` : ''}
       <ul class="text-sm leading-relaxed list-disc pl-5 mt-2 space-y-1">
         <li><strong>Standings</strong> rank the guide's YTD NORC column, this year's National points, within each breed and across breeds. NOTRA's own Top 10 by breed, kept in the same workbook, ranks the same figure.</li>
         <li><strong>Career standings</strong> rank lifetime National points (the LFTM NORC column) across every hound registered.</li>
@@ -1850,7 +1862,9 @@ function renderRacingDog(org, feed, main, singles = null) {
           <p class="text-xs text-asfa-text/65 mt-2">${meets.filter((m) => m.read).map((m) =>
             `<span class="font-mono">${esc(m.code)}</span> is read as ${formatDateShort(m.date)}: ${m.read === 'order'
               ? 'the guide lists meets newest first, and only that reading keeps them in order'
-              : "the cell falls after the guide's own date, so its day and month are taken the other way round"}.`).join(' ')}</p>` : ''}` : `<p class="text-sm text-asfa-text/70">No meets listed.</p>`}
+              : m.read === 'calendar'
+                ? `${feed.calendar_url ? `<a href="${esc(feed.calendar_url)}" class="lnk" target="_blank" rel="noopener noreferrer">NOTRA's race calendar</a>` : "NOTRA's race calendar"} lists a meet on that day, and none on the date read month first`
+                : "the cell falls after the guide's own date, so its day and month are taken the other way round"}.`).join(' ')}</p>` : ''}` : `<p class="text-sm text-asfa-text/70">No meets listed.</p>`}
         </section>`;
     }).join('');
 
