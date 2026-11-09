@@ -5,8 +5,8 @@
  "season": 2026,
  "standings_kind": "Mid-Year",
  "source_url": "https://www.continentalwhippetalliance.com/2026-toptens",
- "sha256": "0df16bfd36158e83ac387af44eb2b1853377a4f133b404f6ee0afecb142842ce",
- "fetched": "2026-11-05",
+ "sha256": "4bd91e4455d5a4f4fa3713afcbcb4f77fe45b5a0649d8fbd296155a60b467d97",
+ "fetched": "2026-11-09",
  "standings": {
   "high_combined": {
    "label": "2026 High Combined Standings as of 9/30/2026 (42 Race Meets)",
@@ -31817,7 +31817,7 @@
      "arx_status": null,
      "narx": null,
      "trp_meets": null,
-     "trp_status": "TRP47",
+     "trp_status": "TRP48",
      "dq": null,
      "dq_date": null,
      "meets": [

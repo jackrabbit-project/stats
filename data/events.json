@@ -2,9 +2,9 @@
   "seasons": [
     2026
   ],
-  "fetched": "2026-11-02",
+  "fetched": "2026-11-09",
   "source_url": "https://www.asfa.org/event/index.htm",
-  "calendar_pdf_url": "https://www.asfa.org/event/ASFA%20Calendar%2010-28-2026%20Updates.pdf",
+  "calendar_pdf_url": "https://www.asfa.org/event/ASFA%20Calendar%2011-04-2026%20Updates.pdf",
   "region_source": "ASFA Constitution & By-Laws, rev. 08/01/2026, Article V, Section 3",
   "regions": [
     {
@@ -125,7 +125,7 @@
   "stats": {
     "events": 125,
     "cancelled": 8,
-    "with_premium": 105
+    "with_premium": 108
   },
   "unmatched_initials": [
     "IWALE"
@@ -1792,7 +1792,7 @@
       "venue": "Hanover Lure Coursing Complex, Littlestown",
       "state": "PA",
       "region": 8,
-      "premium_url": "https://www.asfa.org/event/premiums/MDIHC%20ASFA%20Regional%20Trial%20Premium%20--2026%20Final-.pdf",
+      "premium_url": "https://www.asfa.org/event/Premium/NEWMDIHC%20ASFA%20Regional%20Trial%20Premium%20--2026%20Final3-.pdf",
       "premium_inferred": false,
       "club": "Mason Dixon Ibizan Hound Club"
     },
@@ -1846,10 +1846,10 @@
       "end": "2026-11-22",
       "type": "AB/LCI",
       "initials": "RMIWA",
-      "specialty": true,
+      "specialty": false,
       "national": false,
       "cancelled": false,
-      "venue": "Bennett",
+      "venue": "Golden",
       "state": "CO",
       "region": 3,
       "premium_url": null,
@@ -1927,13 +1927,13 @@
       "venue": "Slippery Rock",
       "state": "PA",
       "region": 8,
-      "premium_url": null,
+      "premium_url": "https://www.asfa.org/event/Premium/TSSC%202026.12.5-6%20pdf.pdf",
       "premium_inferred": false,
       "club": "Tri-State Sighthound Club"
     },
     {
-      "start": "2026-12-19",
-      "end": "2026-12-20",
+      "start": "2026-12-12",
+      "end": "2026-12-13",
       "type": "AB/LCI",
       "initials": "CLCA",
       "specialty": false,
@@ -1942,7 +1942,7 @@
       "venue": "Peyton",
       "state": "CO",
       "region": 3,
-      "premium_url": null,
+      "premium_url": "https://www.asfa.org/event/Premium/CLCA%20ASFA%20December%202026%20Premium%20(2).pdf",
       "premium_inferred": false,
       "club": "Colorado Lure Coursing Association"
     },
@@ -1957,7 +1957,7 @@
       "venue": "Chino Hills",
       "state": "CA",
       "region": 10,
-      "premium_url": null,
+      "premium_url": "https://www.asfa.org/event/Premium/OCRRC%20Dec%2019-20%20ASFA%20RR%20Specialty%20(1).pdf",
       "premium_inferred": false,
       "club": "Orange Coast Rhodesian Ridgeback Club"
     },
