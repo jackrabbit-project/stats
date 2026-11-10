@@ -1859,8 +1859,9 @@ function renderRacingDog(org, feed, main, singles = null) {
             }).join('')}</tbody>
           </table></div>${spec.statusLegend ? `
           <p class="text-xs text-asfa-text/65 mt-2">${spec.statusLegend}</p>` : ''}${meets.some((m) => m.read) ? `
-          <p class="text-xs text-asfa-text/65 mt-2">${meets.filter((m) => m.read).map((m) =>
-            `<span class="font-mono">${esc(m.code)}</span> is read as ${formatDateShort(m.date)}: ${m.read === 'order'
+          <p class="text-xs text-asfa-text/65 mt-2">${meets.filter((m) => m.read).map((m) => m.read === 'unkeyed'
+            ? `<span class="font-mono">${esc(m.code)}</span> is not in the guide's key of meets yet; it comes after the last code the key dates, so it counts as a ${m.year} meet.`
+            : `<span class="font-mono">${esc(m.code)}</span> is read as ${formatDateShort(m.date)}: ${m.read === 'order'
               ? 'the guide lists meets newest first, and only that reading keeps them in order'
               : m.read === 'calendar'
                 ? `${feed.calendar_url ? `<a href="${esc(feed.calendar_url)}" class="lnk" target="_blank" rel="noopener noreferrer">NOTRA's race calendar</a>` : "NOTRA's race calendar"} lists a meet on that day, and none on the date read month first`

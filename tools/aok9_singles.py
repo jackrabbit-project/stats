@@ -308,15 +308,26 @@ def sprint_titles_added(singles_name: str | None, sprint_name: str | None) -> li
     records give bare. AOK9 adds a title to the registered name and the sprint
     guide carries it where the Singles records may not: Acorn (APBT-29) is
     "Ice Road's Acorn Currency NSR-S" there, a companion title earned in
-    Singles, and plain "Ice Road's Acorn Currency" here. Any other difference
-    between the two names is left alone."""
+    Singles, and plain "Ice Road's Acorn Currency" here. A title the Singles
+    name already carries must still be there, or be raised: RenneR (WH-37) is
+    "... RenneR BRC" in the Singles records and "... RenneR SBRC BOC" in the
+    guide of November 10, 2026. Any other difference between the two names
+    is left alone."""
     def tidy(name: str | None) -> str:
         return re.sub(r"\s+", " ", re.sub(r"[‘’`]", "'", name or "")).strip()
-    bare, full = tidy(singles_name), tidy(sprint_name)
+    words = tidy(singles_name).split()
+    own: list[str] = []
+    while words and TITLE_WORD.fullmatch(words[-1]):
+        own.insert(0, words.pop())
+    bare, full = " ".join(words), tidy(sprint_name)
     if not bare or not full.startswith(bare + " "):
         return []
     added = full[len(bare):].split()
-    return added if all(TITLE_WORD.fullmatch(word) for word in added) else []
+    if not all(TITLE_WORD.fullmatch(word) for word in added):
+        return []
+    if not all(any(title == mine or title.endswith(mine) for title in added) for mine in own):
+        return []
+    return added if added != own else []
 
 
 def calls_agree(singles: dict, sprint: dict) -> bool:
@@ -608,9 +619,10 @@ def build(snapshots: list[dict], sprint_feed: dict, sprint_registry: dict) -> di
             "Singles Turtle titles as in the regular stakes; the rule book gives "
             "those no abbreviation.",
             "Where the sprint grading guide writes titles after the registered "
-            "name the Singles records give the same dog bare (same registration "
-            "number and owner; Acorn's NSR-S, a companion title earned in "
-            "Singles), the dog carries the sprint guide's name and singles_name "
+            "name the Singles records give the same dog bare, or with a title "
+            "the guide has since raised (same registration number and owner; "
+            "Acorn's NSR-S, a companion title earned in Singles; RenneR's BRC, "
+            "now SBRC), the dog carries the sprint guide's name and singles_name "
             "keeps the Singles records' one.",
         ],
     }

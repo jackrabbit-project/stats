@@ -2240,13 +2240,20 @@ def check_singles(check: Checker) -> None:
             check.expect(all(t in shown for t in trailing_titles(row["registered_name"])),
                          f"{label}: {d['id']} leaves off titles its sprint-guide name carries")
         if d.get("singles_name"):
-            bare = tidy(d["singles_name"])
+            # The Singles name less the titles it carries; each of those must
+            # still be in the sprint guide's name, or be raised there (BRC to
+            # SBRC: RenneR, WH-37, November 10, 2026).
+            own = trailing_titles(d["singles_name"])
+            words = tidy(d["singles_name"]).split()
+            bare = " ".join(words[:len(words) - len(own)])
+            added = tidy(row["registered_name"])[len(bare):].split() if row else []
             check.expect(row is not None and d.get("joined_by") == "number" and d["reg"] == row["id"]
                          and norm(d["owner_raw"]) == norm(row["owner_raw"])
                          and norm(d["call_name"]) == norm(row["call_name"])
                          and d["registered_name"] == row["registered_name"]
                          and tidy(row["registered_name"]).startswith(bare + " ")
-                         and all(title_word(w) for w in tidy(row["registered_name"])[len(bare):].split()),
+                         and all(title_word(w) for w in added)
+                         and all(any(t == mine or t.endswith(mine) for t in added) for mine in own),
                          f"{label}: {d['id']} took a sprint-guide name without being the same dog "
                          f"under the same name plus titles")
             if snapshot:
