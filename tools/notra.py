@@ -387,6 +387,12 @@ def parse_pdf(pdf_path: Path, workbook_path: Path, guide_date: date) -> dict:
     printed = read_pdf_rows(pdf_path)
     if not printed:
         raise RacingParseError(f"{pdf_path.name}: no hound rows")
+    # Excel prints ### for a number its column is too narrow to show (Lena's
+    # and Emira's JOR on November 4, 2026): no value to read, so say which.
+    hidden = [f"{row[0]} {row[1]} {HEADERS[i]}" for row in printed
+              for i, cell in enumerate(row) if cell and set(cell) == {"#"}]
+    if hidden:
+        print(f"{len(hidden)} cell(s) print as ### and read as blank: {', '.join(hidden)}")
     sheets = workbook_sheets(workbook_path)
     active = next((i for i, (title, _) in enumerate(sheets)
                    if "active" in title.lower() and "inactive" not in title.lower()), None)
@@ -846,6 +852,30 @@ def without_calendar(snapshot: dict) -> dict:
             if k not in ("calendar", "fetched", "sha256", "source_url", "source_file")}
 
 
+def guide_content(snapshot: dict) -> dict:
+    """What a guide says: no calendar, per-fetch keys or date."""
+    return {k: v for k, v in without_calendar(snapshot).items()
+            if k not in ("guide_date", "guide_date_source", "season")}
+
+
+def retire_pdf_readings() -> None:
+    """A guide read from its PDF stands in until NOTRA posts the workbook.
+    Once a workbook guide of the same date or later is the newest on file,
+    the PDF reading goes: the workbook carries the same guide in full
+    (November 5, 2026's carried November 4's), and leaving the PDF's rounded
+    figures as the previous guide would make movement and new titles out of
+    rounding and print blanks."""
+    newest = newest_guide()
+    if newest is None or newest["guide_date_source"] == "pdf":
+        return
+    for path in sorted(SNAPSHOT_DIR.glob("*.json")):
+        kept = json.loads(path.read_text(encoding="utf-8"))
+        if kept["guide_date_source"] == "pdf" and kept["guide_date"] <= newest["guide_date"]:
+            path.unlink()
+            print(f"Retired {path.name}, the PDF reading of a guide whose workbook "
+                  f"({newest['guide_date']}) is now on file.")
+
+
 def older_guide_on_file(snapshot: dict) -> bool:
     """The website's guide is older than the newest one archived (a guide
     posted only as a PDF) and says just what its own snapshot says: keep it
@@ -920,20 +950,23 @@ def main() -> int:
                     path.unlink(missing_ok=True)
             else:
                 kept = newest_guide()
+                # An unchanged guide keeps the race calendar it was read
+                # against, so the comparisons below see only the guide.
+                if kept and guide_content(kept) == guide_content(snapshot):
+                    snapshot["calendar"] = kept.get("calendar")
                 # The workbook of a guide first read from its PDF is that
-                # guide: it replaces the PDF reading under the same date.
+                # guide: it is not re-dated against the PDF reading.
                 if source != "cli" and not (kept and kept["guide_date_source"] == "pdf"
                                             and snapshot["guide_date"] >= kept["guide_date"]):
                     snapshot = redate_if_label_stale(SNAPSHOT_DIR, snapshot, args.seen or today())
                 # A guide that says anything new is read against the race
-                # calendar of the day; an unchanged one keeps the calendar it had.
-                if kept and without_calendar(kept) == without_calendar(snapshot):
-                    snapshot["calendar"] = kept.get("calendar")
-                else:
+                # calendar of the day.
+                if "calendar" not in snapshot:
                     snapshot["calendar"] = read_calendar()
                 if not args.file:
                     file_raw(path, snapshot)
                 write_snapshot_if_changed(SNAPSHOT_DIR, snapshot, force=args.force)
+            retire_pdf_readings()
         except requests.RequestException as error:
             if not list(SNAPSHOT_DIR.glob("*.json")):
                 print(f"Could not fetch the NOTRA guide and no snapshot exists: {error}",
