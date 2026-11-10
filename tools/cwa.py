@@ -24,10 +24,15 @@ shows whippets and recognises both. It publishes:
   DPC, DPCX, HC, HCX (levels), TRP and TRPX, each holder with the date or
   year earned.
 
-Twenty-two downloads a week, a second or two apart: five pages from CWA's
+Twenty-eight downloads a week, a second or two apart: five pages from CWA's
 own site (the grading guides page, the standings index, this year's
 standings page, the titles page and the all-time page, read for their
 links), then three charts from Datawrapper and fourteen sheets from Google.
+Each chart is followed to its newest version: the standings page embeds
+the version current when it was edited, whose address then only forwards a
+visitor to the newest one, while its data file stays as it was (on November
+9, 2026 the page embedded the racing standings of July 31; the chart a
+visitor saw was of October 31). The chart's own title gives the date.
 
 Each whippet on a grading guide is keyed by its CWA number (a second
 whippet the archive gives the same number gets "-2"); rows on the standings
@@ -169,6 +174,25 @@ def chart_frames(page_html: bytes) -> list[tuple[str, str]]:
     return frames
 
 
+def newer_chart(chart_html: bytes | None, src: str) -> str | None:
+    """The newest version of a chart, when the embedded one only forwards to
+    it ('url=https://datawrapper.dwcdn.net/q52Ij/12/')."""
+    if not chart_html:
+        return None
+    match = re.search(r"url=(https://datawrapper\.dwcdn\.net/[A-Za-z0-9]+/\d+/)",
+                      chart_html.decode("utf-8", "replace"))
+    return match.group(1) if match and match.group(1) != src else None
+
+
+def chart_title(chart_html: bytes | None) -> str | None:
+    """The title a chart carries itself, which the page's iframe may not have
+    caught up with."""
+    if not chart_html:
+        return None
+    match = CHART_TITLE_RE.search(chart_html.decode("utf-8", "replace"))
+    return match.group(0) if match else None
+
+
 def chart_name(src: str) -> str:
     """'https://datawrapper.dwcdn.net/q52Ij/3/' -> 'q52Ij-3'."""
     match = re.search(r"dwcdn\.net/([A-Za-z0-9]+)/(\d+)/", src)
@@ -241,7 +265,11 @@ def fetch_all() -> dict[str, bytes]:
     _, _, page_url = standings_link(keep("index.html", INDEX_URL))
     page = keep("standings.html", page_url)
     for src, _title in chart_frames(page):
-        keep(f"chart-{chart_name(src)}.csv", src + "dataset.csv")
+        embedded = keep(f"chart-{chart_name(src)}.html", src)
+        newest = newer_chart(embedded, src)
+        if newest:
+            keep(f"chart-{chart_name(newest)}.html", newest)
+        keep(f"chart-{chart_name(newest or src)}.csv", (newest or src) + "dataset.csv")
     titles = keep("titles.html", TITLES_URL)
     for code, sheet in title_sheets(titles).items():
         keep(f"title-{code.lower()}.csv", SHEET_CSV.format(id=sheet), browser=True)
@@ -501,6 +529,8 @@ def parse_all(files: dict[str, bytes]) -> dict:
     season, kind, page_url = standings_link(files["index.html"])
     standings = {}
     for src, title in chart_frames(files["standings.html"]):
+        src = newer_chart(files.get(f"chart-{chart_name(src)}.html"), src) or src
+        title = chart_title(files.get(f"chart-{chart_name(src)}.html")) or title
         chart_kind, chart = parse_chart(files[f"chart-{chart_name(src)}.csv"], title)
         if chart_kind == "conformation":
             continue   # conformation alone is outside this site's scope
