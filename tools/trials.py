@@ -108,7 +108,10 @@ MONTH_NAMES = ("January", "February", "March", "April", "May", "June", "July",
 # trial is counted under is set. Greater Twin Cities Whippet Club's September
 # 12, 2026 trial reads "Farmington, NMN"; its trial the next day, same field,
 # reads "Farmington, MN".
-VENUE_STATES = {"Farmington, NMN": "MN"}
+VENUE_STATES = {"Farmington, NMN": "MN",
+                # Michigan Gazehound Association, October 17, 2026 ("Rockwood, <O";
+                # its October 18 row reads "Rockwood, MI").
+                "Rockwood, &lt;O": "MI"}
 
 
 class TrialParseError(RuntimeError):
@@ -544,23 +547,29 @@ def main() -> int:
                   f"({month_rows[0]['date']} to {month_rows[-1]['date']}); reading the "
                   f"{len(headers)} trials from the results blocks")
             month_rows = detail_rows(html)
-        claimed = {row["detail_ref"] for row in month_rows if row["detail_ref"] in programs}
+        def heading(row: dict) -> tuple[str, int, str]:
+            return row["date"], row["entries"], _club_words(row["club_raw"])
+
+        # A summary link is taken as written when the block it names heads
+        # with the same trial. Otherwise (ASFA's typos: "#R1-" for "#R10" in
+        # September 2026; in October 2026 every link from NCIWC's on points
+        # one block too far, the list skipping R10) the row's trial is the
+        # one unclaimed block whose heading has the same club, date and Entry.
+        claimed = {row["detail_ref"] for row in month_rows
+                   if row["detail_ref"] in programs and headers.get(row["detail_ref"]) == heading(row)}
         for row in month_rows:
             ref = row.pop("detail_ref")
-            if ref not in programs:
-                # A summary link that names no detail block (ASFA's typo):
-                # the one unclaimed block whose heading has the same club,
-                # date and Entry figure is this trial's.
-                want = (row["date"], row["entries"], _club_words(row["club_raw"]))
-                matches = [r for r, head in headers.items() if head == want and r not in claimed]
-                if len(matches) != 1:
+            if headers.get(ref) != heading(row):
+                matches = [r for r, head in headers.items() if head == heading(row) and r not in claimed]
+                if len(matches) == 1:
+                    print(f"  {season}-{month:02d}: {row['club_raw']} {row['date']} links to "
+                          f"'#R{ref}' on ASFA's page; paired with block R{matches[0]} by club, date and entry")
+                    ref = matches[0]
+                    claimed.add(ref)
+                elif ref not in programs:
                     raise TrialParseError(
                         f"{season}-{month:02d}: {row['club_raw']} links to '#R{ref}', which is "
                         f"not a detail block, and {len(matches)} unclaimed blocks match it")
-                print(f"  {season}-{month:02d}: {row['club_raw']} {row['date']} links to "
-                      f"'#R{ref}' on ASFA's page; paired with block R{matches[0]} by club, date and entry")
-                ref = matches[0]
-                claimed.add(ref)
             tally = programs.get(ref)
             if tally is None:
                 raise TrialParseError(
