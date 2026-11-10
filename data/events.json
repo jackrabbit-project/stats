@@ -2,7 +2,7 @@
   "seasons": [
     2026
   ],
-  "fetched": "2026-11-09",
+  "fetched": "2026-11-10",
   "source_url": "https://www.asfa.org/event/index.htm",
   "calendar_pdf_url": "https://www.asfa.org/event/ASFA%20Calendar%2011-04-2026%20Updates.pdf",
   "region_source": "ASFA Constitution & By-Laws, rev. 08/01/2026, Article V, Section 3",
@@ -125,7 +125,7 @@
   "stats": {
     "events": 125,
     "cancelled": 8,
-    "with_premium": 108
+    "with_premium": 111
   },
   "unmatched_initials": [
     "IWALE"
@@ -1837,7 +1837,7 @@
       "venue": "Couch Ranch, Vinita",
       "state": "OK",
       "region": 4,
-      "premium_url": null,
+      "premium_url": "https://www.asfa.org/event/Premium/ASFA%20November%20trial%202026%20(3).pdf",
       "premium_inferred": false,
       "club": "Oklahoma Racing and Coursing Association"
     },
@@ -1867,7 +1867,7 @@
       "venue": "Couch Ranch, Vinita",
       "state": "OK",
       "region": 4,
-      "premium_url": null,
+      "premium_url": "https://www.asfa.org/event/Premium/ASFA%20Nov%20Regional%20Invitational%202026.pdf",
       "premium_inferred": false,
       "club": "Oklahoma Racing and Coursing Association"
     },
@@ -1897,7 +1897,7 @@
       "venue": "Hanover",
       "state": "PA",
       "region": 8,
-      "premium_url": null,
+      "premium_url": "https://www.asfa.org/event/Premium/Thanksgiving%20Premium%202026%20-%20Rev%203%20UCBSC.pdf",
       "premium_inferred": false,
       "club": "Upper Chesapeake Bay Saluki Club"
     },

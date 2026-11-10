@@ -28,7 +28,7 @@
   <main id="main" class="flex-1 max-w-5xl mx-auto w-full px-4 py-6 space-y-6"></main>
   <footer id="site-footer" class="bg-asfa-navy text-white py-8"></footer>
 
-  <script src="js/app.js?v=20261105a"></script>
+  <script src="js/app.js?v=20261110a"></script>
   <script src="js/card.js?v=20260924k"></script>
   <script>
     page('dog.html', (season) => {
@@ -154,7 +154,15 @@
 
         <section class="card">
           <h2 class="card-title">Standing</h2>
-          ${dog.total_competing ? `
+          ${dog.total_competing && dog.rank_by_points ? `
+            <p class="text-sm">
+              ASFA reports <strong>${competitorsLabel(dog, dog.total_competing)}</strong>
+              competing so far in ${season.season}. Its Top 20 ranks ${esc(dog.call_name)}
+              <strong>#${dog.rank}</strong>, a place the ${dog.points} point${dog.points === 1 ? '' : 's'}
+              listed do not give: by points, ${esc(dog.call_name)} would be
+              ${dog.rank_by_points}${ordinalSuffix(dog.rank_by_points)}. The rank is shown as ASFA
+              prints it, so no standing is worked out from it.
+            </p>` : dog.total_competing ? `
             <p class="text-sm">
               ASFA reports <strong>${competitorsLabel(dog, dog.total_competing)}</strong>
               competing so far in ${season.season}.

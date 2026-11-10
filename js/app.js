@@ -244,6 +244,12 @@ function param(name) {
   return new URLSearchParams(window.location.search).get(name);
 }
 
+/** The suffix of an ordinal: 1st, 2nd, 3rd, 11th, 22nd. */
+function ordinalSuffix(n) {
+  if (n % 100 >= 11 && n % 100 <= 13) return 'th';
+  return { 1: 'st', 2: 'nd', 3: 'rd' }[n % 10] || 'th';
+}
+
 /** "top 4.2%" — the fair way to compare hounds across breeds of different size. */
 function percentileLabel(dog) {
   if (dog.percentile == null) return '—';

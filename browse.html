@@ -40,7 +40,7 @@
 
   <footer id="site-footer" class="bg-asfa-navy text-white py-8"></footer>
 
-  <script src="js/app.js?v=20261105a"></script>
+  <script src="js/app.js?v=20261110a"></script>
   <script>
     page('browse.html', (season) => {
       const grid = document.getElementById('breed-grid');
@@ -143,6 +143,12 @@
                 : competitorsLabel(section, section.total_competing)}
               ASFA reports competing this season.
             </p>
+            ${section.printed_ranks ? `
+              <p class="text-xs text-asfa-text/65 mt-2">
+                ${section.printed_ranks.map((p) => `ASFA's page ranks ${esc(p.call_name)} ${p.printed}${ordinalSuffix(p.printed)}`).join(' and ')}, places
+                the points listed do not give: by points ${section.printed_ranks.map((p) => `${esc(p.call_name)} would be ${p.by_points}${ordinalSuffix(p.by_points)}`).join(' and ')}.
+                The ranks are shown as ASFA prints them.
+              </p>` : ''}
             ${section.is_breed ? '' : `
               <p class="text-xs text-asfa-text/65 mt-2">
                 ${section.breed === 'Singles'

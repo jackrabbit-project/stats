@@ -70,12 +70,36 @@ def parse_section_header(text: str) -> tuple[str, int | None]:
     return breed, total
 
 
-def validate_ranks(breed: str, rows: list[dict]) -> None:
+def validate_ranks(breed: str, rows: list[dict]) -> list[dict]:
     """Ranks must form a valid competition sequence: 1,2,2,4 — never 1,2,2,3.
 
     Ties are common (three hounds can share rank 1), so this is the only
     structural check that catches a dropped or duplicated row.
+
+    One exception, kept as ASFA prints it: ranks that still run in order
+    down a list whose points do too, but skip ahead (Irish Wolfhound,
+    October 30, 2026: 1, 2, 2, 4, 5, 6, 6, 8, 8, 18, 20, the 18 and the 20
+    on 2 and 1 points, 15 competing). That is ASFA's figure, not a row lost
+    or doubled; the hounds whose printed rank is not the rank their points
+    give are returned, for the pages to say so.
     """
+    try:
+        _check_rank_sequence(breed, rows)
+        return []
+    except ParseError:
+        ranks = [row["rank"] for row in rows]
+        points = [row["points"] for row in rows]
+        if ranks[0] != 1 or ranks != sorted(ranks) or points != sorted(points, reverse=True):
+            raise
+    printed = []
+    for row in rows:
+        by_points = 1 + sum(other["points"] > row["points"] for other in rows)
+        if row["rank"] != by_points:
+            printed.append({"call_name": row["call_name"], "printed": row["rank"], "by_points": by_points})
+    return printed
+
+
+def _check_rank_sequence(breed: str, rows: list[dict]) -> None:
     if not rows:
         return
     ranks = [row["rank"] for row in rows]
@@ -173,7 +197,11 @@ def parse_html(html: str, as_of: str, season: int, source: str) -> dict:
         })
 
     for section in sections:
-        validate_ranks(section["breed"], section["dogs"])
+        printed = validate_ranks(section["breed"], section["dogs"])
+        if printed:
+            section["printed_ranks"] = printed
+            print(f"  {section['breed']}: ASFA prints ranks the points do not give - "
+                  + ", ".join(f"{p['call_name']} {p['printed']} (by points {p['by_points']})" for p in printed))
         total = section["total_competing"]
         listed = len(section["dogs"])
         if total is not None and listed > total:

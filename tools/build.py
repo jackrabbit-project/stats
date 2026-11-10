@@ -425,7 +425,10 @@ def build(snapshots: list[dict]) -> dict:
             "is_breed": section["is_breed"],
             "total_competing": section["total_competing"],
             "ranked": len(section["dogs"]),
+            # Ranks ASFA prints that the points do not give, kept as printed.
+            **({"printed_ranks": section["printed_ranks"]} if section.get("printed_ranks") else {}),
         })
+        printed = {row["call_name"]: row for row in section.get("printed_ranks", [])}
         for dog in section["dogs"]:
             registered = NAME_CORRECTIONS.get(dog["registered_name"], dog["registered_name"])
             titles = [t.strip(".,") for t in dog["titles_suffix"]]
@@ -455,6 +458,8 @@ def build(snapshots: list[dict]) -> dict:
                 "bif": dog["bif"],
                 "provisional": dog["provisional"],
                 "percentile": percentile(dog["rank"], section["total_competing"]),
+                **({"rank_by_points": printed[dog["call_name"]]["by_points"]}
+                   if dog["call_name"] in printed else {}),
                 "movement": movement.get(dog["id"]),
             })
 
