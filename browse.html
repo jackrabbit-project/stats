@@ -145,8 +145,10 @@
             </p>
             ${section.printed_ranks ? `
               <p class="text-xs text-asfa-text/65 mt-2">
-                ${section.printed_ranks.map((p) => `ASFA's page ranks ${esc(p.call_name)} ${p.printed}${ordinalSuffix(p.printed)}`).join(' and ')}, places
-                the points listed do not give: by points ${section.printed_ranks.map((p) => `${esc(p.call_name)} would be ${p.by_points}${ordinalSuffix(p.by_points)}`).join(' and ')}.
+                ASFA's page ranks ${section.printed_ranks.map((p) => `${esc(p.call_name)} ${p.printed}${ordinalSuffix(p.printed)}`).join(' and ')},
+                ${section.printed_ranks.length === 1 ? 'a place its points do' : 'places their points do'} not give: by points
+                ${section.printed_ranks.length === 1 ? `${esc(section.printed_ranks[0].call_name)} would be` : 'they would be'}
+                ${section.printed_ranks.map((p) => `${p.by_points}${ordinalSuffix(p.by_points)}`).join(' and ')}.
                 The ranks are shown as ASFA prints them.
               </p>` : ''}
             ${section.is_breed ? '' : `
