@@ -375,6 +375,16 @@ def derive(snapshot: dict) -> list[dict]:
     season = snapshot["season"]
     guide_date = snapshot["guide_date"]
     key = snapshot["meet_key"]
+    # Codes run in sequence (QA, QB, QC ...). A code the key does not list yet
+    # but that comes after the last one it dates was run between that meet and
+    # the guide: QE in the guide of November 5, 2026, whose key stops at QD
+    # (October 25). Within one year that settles the year, not the day. The
+    # last code is the one with the latest date: the key also lists RC,
+    # dated February 22, 2026, out of sequence.
+    keyed = [code for code, entry in key.items() if entry["date"] and re.fullmatch(r"[A-Z]{2}", code)]
+    last_keyed = max(keyed, key=lambda code: (key[code]["date"], code), default=None)
+    open_year = (int(guide_date[:4]) if last_keyed and key[last_keyed]["date"][:4] == guide_date[:4]
+                 else None)
     dogs: list[dict] = []
     for section in snapshot["sections"]:
         for raw in section["dogs"]:
@@ -395,9 +405,13 @@ def derive(snapshot: dict) -> list[dict]:
                 if when and not (EARLIEST_MEET_YEAR <= int(when[:4]) and when <= guide_date):
                     when = None
                 year = int(when[:4]) if when else (entry["year"] if entry and entry["otr_only"] else None)
+                read = None
+                if (entry is None and open_year and re.fullmatch(r"[A-Z]{2}", meet["code"])
+                        and meet["code"] > last_keyed):
+                    year, read = open_year, "unkeyed"
                 meets.append({
                     "code": meet["code"], "year": year, "date": when, "score": meet["score"],
-                    "complete": meet["status"] in ("N", "F"), "status": meet["status"], "read": None,
+                    "complete": meet["status"] in ("N", "F"), "status": meet["status"], "read": read,
                     "placing": meet["placing"], "graded": not meet["code"].startswith("#"),
                 })
             dog["meets"] = meets
