@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#F7F5EF">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#1B1917">
+  <title>NLCC lure coursing records — Gazehound Stats</title>
+  <meta name="description" content="Every hound in the National Lure Coursing Club's records, with the courses each has run, won, lost and drawn, and every meeting since 2022. Unofficial; NLCC's records govern.">
+  <link rel="canonical" href="https://stats.gazehound.io/nlcc.html">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Gazehound Stats">
+  <meta property="og:title" content="NLCC lure coursing records — Gazehound Stats">
+  <meta property="og:description" content="Every hound in the National Lure Coursing Club's records, with the courses each has run, won, lost and drawn. Unofficial; NLCC's records govern.">
+  <meta property="og:url" content="https://stats.gazehound.io/nlcc.html">
+  <meta property="og:image" content="https://stats.gazehound.io/assets/og.png?v=4">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="preload" href="assets/fonts/fraunces-latin-var.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/plex-mono-400.woff2" as="font" type="font/woff2" crossorigin>
+  <script src="js/theme.js?v=20260823"></script>
+  <link rel="stylesheet" href="css/app.css?v=20261116n">
+  <link rel="icon" href="assets/favicon.ico?v=4" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png?v=4">
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png?v=4">
+</head>
+<body class="min-h-screen flex flex-col">
+  <header id="site-header"></header>
+  <main id="main" class="flex-1 max-w-6xl mx-auto w-full px-4 py-6 space-y-6"></main>
+  <footer id="site-footer" class="bg-asfa-navy text-white py-8"></footer>
+
+  <script src="js/app.js?v=20261116n"></script>
+  <script>
+    /* The National Lure Coursing Club's own records, NLCC Records: its
+       meetings, and each hound's courses run, won, lost and drawn, shown as
+       the club keeps them. The one thing added is a ranking by win
+       percentage among hounds with enough courses to rank. Rendered from
+       data/nlcc.json, built by tools/nlcc.py. */
+    pageFeed('nlcc.html', 'nlcc', 'data/nlcc.json', render);
+
+    function render(feed) {
+      const main = document.getElementById('main');
+      const { stats, dogs, breeds, meetings } = feed;
+      const n = (v) => (v == null ? '—' : Number(v).toLocaleString('en-US'));
+      // The records show win percentage to two places (66.67%); so does the page.
+      const pct = (v) => (v == null ? '—' : `${(v * 100).toFixed(2)}%`);
+      const shortDate = (iso) => (iso ? new Date(`${iso}T00:00:00Z`).toLocaleDateString('en-US',
+        { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' }) : '—');
+      const monthYear = (iso) => new Date(`${iso}T00:00:00Z`).toLocaleDateString('en-US',
+        { month: 'long', year: 'numeric', timeZone: 'UTC' });
+      const tile = ([value, label]) =>
+        `<div class="tile"><div class="tile-value">${value}</div><div class="tile-label">${label}</div></div>`;
+      const meetingLabel = (code) => {
+        const m = meetings.find((x) => x.code === code);
+        return code ? `<span class="font-mono text-xs">${esc(code)}</span>${m && m.date
+          ? `<span class="block text-[10px] text-asfa-text/55">${shortDate(m.date)}</span>` : ''}` : '—';
+      };
+
+      const SECTIONS_ON_PAGE = [
+        ['leaders', 'Win percentage'], ['hounds', 'Hounds'], ['breeds', 'Breeds'],
+        ['meetings', 'Meetings'], ['about', 'About'],
+      ];
+      // The button sits beside the heading rather than inside it, so a
+      // screen reader's list of headings reads "Hounds", not "Hounds Copy link".
+      const heading = (id, text) => `<div class="card-title flex items-baseline justify-between gap-3">
+          <h2>${text}</h2>
+          <button type="button" data-section="${id}"
+            class="no-print inline-flex items-center gap-1 font-mono text-[11px] font-normal uppercase tracking-[0.1em] text-asfa-text/50 hover:text-asfa-text"
+            aria-label="Copy the link to the ${text} section">${icon('link')}<span aria-hidden="true">Copy link</span></button>
+        </div>`;
+      const arrivedAt = decodeURIComponent(location.hash.slice(1));
+      const ranked = dogs.filter((d) => d.rank != null).sort((a, b) => a.rank - b.rank
+        || (b.wins || 0) - (a.wins || 0) || (b.courses || 0) - (a.courses || 0) || a.call_name.localeCompare(b.call_name));
+      const breedNames = breeds.map((b) => b.breed);
+
+      main.innerHTML = `
+        <div class="max-w-3xl">
+          <h1 class="font-display text-3xl text-asfa-text">NLCC lure coursing</h1>
+          <p class="text-sm text-asfa-text/70 mt-1">
+            The National Lure Coursing Club's records: every meeting since ${monthYear(stats.first_meeting)} and
+            every hound that has run, with the courses each has run, won, lost and drawn, as of
+            <span class="font-semibold text-asfa-text">${formatDate(feed.as_of)}</span>. Hounds are listed by breed
+            and call name, as the records list them.
+          </p>
+        </div>
+
+        <nav aria-label="On this page" class="no-print flex flex-wrap items-center gap-1">
+          <span class="font-mono text-xs uppercase tracking-[0.1em] text-asfa-text/50 py-1.5">Jump to</span>
+          ${SECTIONS_ON_PAGE.map(([id, label]) => `<a href="#${id}"
+            class="pill-hover px-2.5 py-1.5 font-mono text-xs uppercase tracking-[0.1em] text-asfa-muted hover:text-asfa-text">${label}</a>`).join('')}
+        </nav>
+
+        <section class="grid grid-cols-2 md:grid-cols-5 gap-3" aria-label="Totals">
+          ${[
+            [n(stats.hounds), 'hounds in the records'],
+            [n(stats.meetings), `meetings since ${monthYear(stats.first_meeting)}`],
+            [n(stats.breeds), 'breeds'],
+            [n(stats.clubs), 'clubs holding meetings'],
+            [new Date(`${stats.latest_meeting}T00:00:00Z`).toLocaleDateString('en-US',
+              { month: 'short', year: 'numeric', timeZone: 'UTC' }), `latest meeting, ${shortDate(stats.latest_meeting)}`],
+          ].map(tile).join('')}
+        </section>
+
+        <section class="card" id="leaders">
+          ${heading('leaders', 'Win percentage')}
+          <p class="text-xs text-asfa-text/60 mb-3">Ranked here, not by NLCC: the ${n(ranked.length)} hounds with at least
+            ${feed.min_courses} courses, by win percentage, wins over courses run as the records count it. Ties share a rank.</p>
+          <div class="tbl-wrap"><table class="tbl">
+            <thead><tr>
+              <th scope="col" class="num">Rank</th><th scope="col">Hound</th>
+              <th scope="col" class="num">Courses</th><th scope="col" class="num">Won</th>
+              <th scope="col" class="num">Lost</th><th scope="col" class="num">Drawn</th><th scope="col" class="num">Win %</th>
+            </tr></thead>
+            <tbody>
+              ${ranked.map((d) => `
+                <tr>
+                  <td class="num font-semibold">${d.rank}</td>
+                  <td><span class="font-semibold">${esc(d.call_name)}</span><span class="block text-xs text-asfa-text/60">${esc(d.breed)}</span></td>
+                  <td class="num">${n(d.courses)}</td><td class="num">${n(d.wins)}</td>
+                  <td class="num">${n(d.losses)}</td><td class="num">${n(d.draws)}</td>
+                  <td class="num font-semibold">${pct(d.win_pct)}</td>
+                </tr>`).join('')}
+            </tbody>
+          </table></div>
+        </section>
+
+        <section class="card" id="hounds">
+          ${heading('hounds', 'Hounds')}
+          <div class="no-print flex flex-wrap items-end gap-3 mb-3">
+            <label class="block">
+              <span class="text-xs font-semibold text-asfa-text/60 uppercase tracking-wide">Breed</span>
+              <select id="f-breed" class="mt-1 select">
+                <option value="">All breeds</option>
+                ${breedNames.map((b) => `<option value="${esc(b)}">${esc(b)}</option>`).join('')}
+              </select>
+            </label>
+            <p class="text-sm text-asfa-text/70 pb-2" id="hound-count" aria-live="polite"></p>
+          </div>
+          <div id="hound-table"></div>
+        </section>
+
+        <section class="card" id="breeds">
+          ${heading('breeds', 'Breeds')}
+          <p class="text-xs text-asfa-text/60 mb-3">Each breed's hounds' figures added together; the win percentage is the breed's wins over its courses run.</p>
+          <div class="tbl-wrap"><table class="tbl">
+            <thead><tr>
+              <th scope="col">Breed</th><th scope="col" class="num">Hounds</th><th scope="col" class="num">Courses</th>
+              <th scope="col" class="num">Won</th><th scope="col" class="num">Lost</th><th scope="col" class="num">Drawn</th>
+              <th scope="col" class="num">Win %</th>
+            </tr></thead>
+            <tbody>
+              ${breeds.map((b) => `
+                <tr>
+                  <td class="font-semibold">${esc(b.breed)}</td><td class="num">${n(b.hounds)}</td>
+                  <td class="num">${n(b.courses)}</td><td class="num">${n(b.wins)}</td>
+                  <td class="num">${n(b.losses)}</td><td class="num">${n(b.draws)}</td>
+                  <td class="num">${pct(b.win_pct)}</td>
+                </tr>`).join('')}
+            </tbody>
+          </table></div>
+        </section>
+
+        <section class="card" id="meetings">
+          ${heading('meetings', 'Meetings')}
+          <p class="text-xs text-asfa-text/60 mb-3">Newest first, numbered as the records number them.</p>
+          <div class="tbl-wrap"><table class="tbl">
+            <thead><tr>
+              <th scope="col">Meeting</th><th scope="col">Date</th><th scope="col">Club</th>
+              <th scope="col">Event</th><th scope="col">Format</th><th scope="col">Judge(s)</th>
+            </tr></thead>
+            <tbody>
+              ${[...meetings].reverse().map((m) => `
+                <tr>
+                  <td class="font-mono text-xs whitespace-nowrap">${esc(m.code)}</td>
+                  <td class="whitespace-nowrap">${shortDate(m.date)}</td>
+                  <td>${esc(m.club)}</td><td>${esc(m.event)}</td>
+                  <td class="text-sm">${esc(m.format)}</td><td class="text-sm">${m.judges ? esc(m.judges) : '—'}</td>
+                </tr>`).join('')}
+            </tbody>
+          </table></div>
+        </section>
+
+        <section class="card" id="about">
+          ${heading('about', 'About these records')}
+          <div class="space-y-3 text-sm leading-relaxed">
+            <p>
+              NLCC Records is the National Lure Coursing Club's own record of its meetings. It lists each
+              meeting with its club, event, judges and format, Brace Elimination/Point Tally or Scored Trios,
+              and each hound with the courses it has run and how many of them it won, lost or drew.
+            </p>
+            <ul class="list-disc pl-5 space-y-1">
+              <li><strong>Win percentage</strong> is wins over courses run, as the records count it, so a
+                draw counts as a course run without a win: 3 wins, 1 loss and 1 draw is 60%.</li>
+              <li><strong>The ranking</strong> is this page's, not NLCC's: hounds with at least
+                ${feed.min_courses} courses, by win percentage, ties sharing a rank. Below ${feed.min_courses}
+                courses a single course weighs too much to rank on.</li>
+              <li><strong>Hounds</strong> are listed by breed and call name, as the records list them; two hounds
+                of different breeds can share a call name.</li>
+              <li><strong>Figures</strong> are shown as the records keep them, blanks included. Questions about a
+                hound's record go to the National Lure Coursing Club, not here.</li>
+            </ul>
+            <p class="text-xs text-asfa-text/65">
+              This page is an independent, unofficial project. It is <strong>not authorized, approved, or endorsed by
+              the National Lure Coursing Club</strong>, and it is not an NLCC publication. NLCC's name is used only to
+              identify the source of the records. Wherever this page and NLCC's records disagree, <strong>the records
+              govern</strong>.
+            </p>
+          </div>
+        </section>`;
+
+      /* ----- all hounds: a breed filter and sortable columns */
+      const els = {
+        breed: document.getElementById('f-breed'),
+        count: document.getElementById('hound-count'),
+        table: document.getElementById('hound-table'),
+      };
+      const initial = param('breed') || '';
+      if (initial && breedNames.includes(initial)) els.breed.value = initial;
+
+      const columns = [
+        ['call_name', 'Hound', '', 1],
+        ['breed', 'Breed', '', 1],
+        ['first_meeting', 'First meeting', '', 1],
+        ['meets', 'Meetings', 'num', -1],
+        ['latest_meeting', 'Latest', '', -1],
+        ['courses', 'Courses', 'num', -1],
+        ['wins', 'Won', 'num', -1],
+        ['losses', 'Lost', 'num', -1],
+        ['draws', 'Drawn', 'num', -1],
+        ['win_pct', 'Win %', 'num', -1],
+      ];
+      const sort = { key: 'breed', dir: 1 };
+      function sorted(rows) {
+        return [...rows].sort((a, b) => {
+          const av = a[sort.key];
+          const bv = b[sort.key];
+          let order;
+          if (av == null && bv == null) order = 0;
+          else if (av == null) return 1;
+          else if (bv == null) return -1;
+          else if (typeof av === 'string') order = sort.dir * av.localeCompare(bv);
+          else order = sort.dir * (av - bv);
+          return order || a.breed.localeCompare(b.breed) || a.call_name.localeCompare(b.call_name);
+        });
+      }
+
+      function paintHounds() {
+        const breed = els.breed.value;
+        const q = new URLSearchParams();
+        if (breed) q.set('breed', breed);
+        const qs = q.toString();
+        // The section a shared link points at stays in the address.
+        history.replaceState(null, '', `${qs ? `?${qs}` : location.pathname}${location.hash}`);
+        const rows = sorted(dogs.filter((d) => !breed || d.breed === breed));
+        els.count.textContent = `Showing ${rows.length} of ${dogs.length} hounds.`;
+        els.table.innerHTML = `
+          <div class="tbl-wrap"><table class="tbl">
+            ${sortableHead(columns, sort)}
+            <tbody>
+              ${rows.map((d) => `
+                <tr>
+                  <td class="font-semibold">${esc(d.call_name)}</td>
+                  <td class="text-asfa-text/80">${esc(d.breed)}</td>
+                  <td class="whitespace-nowrap">${shortDate(d.first_meeting)}</td>
+                  <td class="num">${n(d.meets)}</td>
+                  <td class="whitespace-nowrap">${meetingLabel(d.latest_meeting)}</td>
+                  <td class="num">${n(d.courses)}</td><td class="num">${n(d.wins)}</td>
+                  <td class="num">${n(d.losses)}</td><td class="num">${n(d.draws)}</td>
+                  <td class="num font-semibold">${pct(d.win_pct)}</td>
+                </tr>`).join('')}
+            </tbody>
+          </table></div>`;
+        wireSort(els.table, columns, sort, paintHounds);
+      }
+      els.breed.addEventListener('change', paintHounds);
+      paintHounds();
+
+      /* ----- shareable sections: copy a section's link, and land on it */
+      main.addEventListener('click', async (event) => {
+        const button = event.target.closest('button[data-section]');
+        if (!button) return;
+        const id = button.dataset.section;
+        const label = button.querySelector('span');
+        history.replaceState(null, '', `${location.search || location.pathname}#${id}`);
+        try {
+          await navigator.clipboard.writeText(`${location.origin}${location.pathname}#${id}`);
+          const spoken = button.getAttribute('aria-label');
+          label.textContent = 'Copied';
+          button.setAttribute('aria-label', 'Link copied');
+          setTimeout(() => { label.textContent = 'Copy link'; button.setAttribute('aria-label', spoken); }, 2000);
+        } catch {
+          // Clipboard blocked: the section's address is in the address bar
+          // to copy by hand, and no copy is claimed that did not happen.
+        }
+      });
+      const target = arrivedAt && document.getElementById(arrivedAt);
+      if (target) target.scrollIntoView({ block: 'start', behavior: 'instant' });
+    }
+  </script>
+</body>
+</html>

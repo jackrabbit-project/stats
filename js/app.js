@@ -973,10 +973,19 @@ const SECTIONS = {
     disclaimer: 'akc.html#about', about: 'akc.html#about',
     menu: false,
   },
+  // NLCC lure coursing: the National Lure Coursing Club's own records, one
+  // page in the hub's nav and plain ink, not yet in any menu.
+  nlcc: {
+    home: 'nlcc.html', nav: NAV_HUB,
+    program: 'NLCC lure coursing',
+    color: 'text-asfa-text', line: 'border-asfa-text',
+    disclaimer: 'nlcc.html#about', about: 'nlcc.html#about',
+    menu: false,
+  },
 };
 const PAGE_SECTIONS = {
   'index.html': 'hub', 'lgra.html': 'lgra', 'aok9.html': 'aok9', 'notra.html': 'notra', 'akc.html': 'akc',
-  'wra.html': 'wra', 'notra-whippets.html': 'notra-whippets', 'cwa.html': 'cwa',
+  'wra.html': 'wra', 'notra-whippets.html': 'notra-whippets', 'cwa.html': 'cwa', 'nlcc.html': 'nlcc',
 };
 
 function sectionOf(current) {
@@ -1233,6 +1242,14 @@ function footerSource(sectionKey, feed) {
         <p>Event entry counts compiled from the American Kennel Club's public Event Search.
           AKC's event pages are authoritative wherever they disagree with this one.</p>`;
   }
+  if (sectionKey === 'nlcc') {
+    return `
+        <p>
+          Meetings, courses, wins, losses and draws reproduced from NLCC Records, the National
+          Lure Coursing Club's own record of its meetings${feed ? `, as of ${formatDate(feed.as_of)}` : ''}.
+          NLCC's records are authoritative wherever they disagree with this page.
+        </p>`;
+  }
   if (sectionKey === 'cwa') {
     return feed ? `
         <p>
@@ -1416,11 +1433,12 @@ function renderChrome(feed, current, sectionKey = sectionOf(current)) {
       <div class="max-w-4xl mx-auto px-4 text-sm text-asfa-wellink/85 space-y-4">${footerLinks()}${footerSource(sectionKey, feed)}
         <p class="text-xs text-asfa-wellink/65">
           <span class="font-semibold text-asfa-wellink/85">Unofficial fan site</span> — not an ASFA, LGRA, AOK9, NOTRA, WRA${
-            sectionKey === 'akc' ? ', CWA or AKC' : ' or CWA'} publication.
+            sectionKey === 'akc' ? ', CWA or AKC' : sectionKey === 'nlcc' ? ', CWA or NLCC' : ' or CWA'} publication.
           Not affiliated with, endorsed by, or sponsored by the American Sighthound Field
           Association, the Large Gazehound Racing Association, Racing and Coursing
           Enthusiasts (R.A.C.E.), which runs the AOK9 program, the National Oval Track
-          Racing Association, the Whippet Racing Association, ${sectionKey === 'akc' ? 'the Continental Whippet Alliance, or the American Kennel Club. "AKC" and "American Kennel Club" are marks of the American Kennel Club, used here only to identify the source of the event listings.' : 'or the Continental Whippet Alliance.'}
+          Racing Association, the Whippet Racing Association, ${sectionKey === 'akc' ? 'the Continental Whippet Alliance, or the American Kennel Club. "AKC" and "American Kennel Club" are marks of the American Kennel Club, used here only to identify the source of the event listings.'
+            : sectionKey === 'nlcc' ? 'the Continental Whippet Alliance, or the National Lure Coursing Club.' : 'or the Continental Whippet Alliance.'}
           ${sectionKey === 'hub' ? '' : `<a href="${section.disclaimer}" class="underline hover:text-asfa-wellink whitespace-nowrap">Full disclaimer</a>`}
         </p>
         <p class="text-xs text-asfa-wellink/65 flex flex-wrap items-center justify-center gap-x-2 gap-y-1.5 text-center">

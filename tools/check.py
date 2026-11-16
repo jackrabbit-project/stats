@@ -88,7 +88,7 @@ def main() -> int:
     args = parser.parse_args()
     only = [org for org in args.only.split(",") if org]
     skip = {org for org in args.skip.split(",") if org}
-    known = [*RACING, "cwa"]
+    known = [*RACING, "cwa", "nlcc"]
     unknown = sorted((set(only) | skip) - set(known))
     if unknown:
         print(f"Unknown program(s): {', '.join(unknown)}; "
@@ -99,6 +99,8 @@ def main() -> int:
         for org in only:
             if org == "cwa":
                 check_cwa(check)
+            elif org == "nlcc":
+                check_nlcc(check)
             else:
                 check_racing(check, org)
         return check.report()
@@ -394,7 +396,98 @@ def main() -> int:
     check_singles(check)
     if "cwa" not in skip:
         check_cwa(check)
+    if "nlcc" not in skip:
+        check_nlcc(check)
     return check.report()
+
+
+def check_nlcc(check: Checker) -> None:
+    """Verify data/nlcc.json against the newest NLCC snapshot: every hound
+    and meeting as the records keep them, each win percentage the records'
+    own wins over courses, the ranking and totals re-derived, and nothing
+    personal in the feed."""
+    import datetime as dt
+
+    path = ROOT / "data" / "nlcc.json"
+    snapshot_dir = ROOT / "data" / "nlcc" / "snapshots"
+    if not path.exists():
+        check.expect(False, "data/nlcc.json missing - run tools/nlcc.py")
+        return
+    feed = json.loads(path.read_text(encoding="utf-8"))
+    snapshots = sorted(snapshot_dir.glob("*.json"))
+    check.expect(bool(snapshots), "nlcc: no snapshot under data/nlcc/snapshots")
+    if not snapshots:
+        return
+    check.expect(feed["snapshots"] == [p.stem for p in snapshots], "nlcc: feed.snapshots does not list the snapshots")
+    snapshot = json.loads(snapshots[-1].read_text(encoding="utf-8"))
+    check.expect(feed["as_of"] == snapshot["as_of"] == snapshots[-1].stem,
+                 "nlcc: the feed is not built from the newest snapshot")
+    check.expect(feed["meetings"] == snapshot["meetings"], "nlcc: meetings differ from the snapshot")
+    fields = ("breed", "call_name", "first_meeting", "meets", "latest_meeting",
+              "courses", "wins", "losses", "draws", "win_pct")
+    check.expect([{k: d[k] for k in fields} for d in feed["dogs"]] == snapshot["dogs"],
+                 "nlcc: hounds differ from the snapshot")
+
+    as_of = dt.date.fromisoformat(feed["as_of"])
+    codes = {m["code"]: m["date"] for m in feed["meetings"]}
+    check.expect(len(codes) == len(feed["meetings"]), "nlcc: a meeting number repeats")
+    for m in feed["meetings"]:
+        check.expect(re.fullmatch(r"\d{4}-\d{2}", m["code"]) is not None and m["date"]
+                     and m["date"][:4] in (m["code"][:4], str(int(m["code"][:4]) + 1))
+                     and dt.date.fromisoformat(m["date"]) <= as_of,
+                     f"nlcc: meeting {m['code']} dated {m['date']}")
+    min_courses = feed["min_courses"]
+    ids = set()
+    for d in feed["dogs"]:
+        label = f"nlcc: {d['call_name']} ({d['breed']})"
+        check.expect(d["id"] not in ids, f"{label}: id {d['id']} repeats")
+        ids.add(d["id"])
+        check.expect(d["latest_meeting"] is None or d["latest_meeting"] in codes,
+                     f"{label}: latest meeting {d['latest_meeting']} is not a meeting")
+        check.expect(d["latest_date"] == codes.get(d["latest_meeting"]), f"{label}: latest date")
+        check.expect(d["first_meeting"] is None or dt.date.fromisoformat(d["first_meeting"]) <= as_of,
+                     f"{label}: first meeting after the records")
+        if d["courses"]:
+            check.expect(d["win_pct"] is not None and abs(d["win_pct"] - (d["wins"] or 0) / d["courses"]) < 1e-6,
+                         f"{label}: win % {d['win_pct']} is not wins over courses")
+        else:
+            check.expect(d["win_pct"] in (None, 0), f"{label}: win % without courses")
+
+    # The ranking: hounds with min_courses courses or more, by win
+    # percentage as shown, ties sharing a rank.
+    eligible = [d for d in feed["dogs"] if (d["courses"] or 0) >= min_courses and d["win_pct"] is not None]
+    shown = sorted({round(d["win_pct"], 6) for d in eligible}, reverse=True)
+    for d in feed["dogs"]:
+        if d in eligible:
+            expected = 1 + sum(1 for e in eligible if round(e["win_pct"], 6) > round(d["win_pct"], 6))
+            check.expect(d["rank"] == expected, f"nlcc: {d['call_name']} ranked {d['rank']}, expected {expected}")
+        else:
+            check.expect(d["rank"] is None, f"nlcc: {d['call_name']} ranked with {d['courses']} courses")
+    check.expect(bool(shown) or not eligible, "nlcc: no ranking")
+
+    by_breed = {}
+    for d in feed["dogs"]:
+        b = by_breed.setdefault(d["breed"], {"hounds": 0, "courses": 0, "wins": 0, "losses": 0, "draws": 0})
+        b["hounds"] += 1
+        for k in ("courses", "wins", "losses", "draws"):
+            b[k] += d[k] or 0
+    check.expect([b["breed"] for b in feed["breeds"]] == sorted(by_breed), "nlcc: breeds out of order")
+    for b in feed["breeds"]:
+        expected = by_breed.get(b["breed"], {})
+        check.expect(all(b[k] == expected.get(k) for k in ("hounds", "courses", "wins", "losses", "draws")),
+                     f"nlcc: breed {b['breed']} totals")
+    stats = feed["stats"]
+    check.expect(stats["hounds"] == len(feed["dogs"]) and stats["breeds"] == len(by_breed)
+                 and stats["meetings"] == len(feed["meetings"])
+                 and stats["clubs"] == len({m["club"] for m in feed["meetings"]})
+                 and stats["courses"] == sum(d["courses"] or 0 for d in feed["dogs"])
+                 and stats["wins"] == sum(d["wins"] or 0 for d in feed["dogs"])
+                 and stats["hounds_ranked"] == len(eligible),
+                 "nlcc: stats disagree with the hounds and meetings")
+    body = path.read_text(encoding="utf-8")
+    for name, pattern in (("email address", r"[\w.+-]+@[\w-]+\.[\w.]+"),
+                          ("phone number", r"\(\d{3}\)\s*\d{3}-\d{4}|\b\d{3}[-.]\d{3}[-.]\d{4}\b")):
+        check.expect(not re.search(pattern, body), f"nlcc: the feed carries an {name}")
 
 
 def check_trial_breakdowns(check: Checker, trials: dict, raw_dir: Path) -> None:

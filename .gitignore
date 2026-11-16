@@ -35,6 +35,9 @@ data/wra/raw/
 # CWA's pages, chart data and title sheets as downloaded; its pages carry a
 # contact address. data/cwa/snapshots is the archive.
 data/cwa/raw/
+# NLCC Records as exported: a private sheet the club shared, so the workbook
+# stays out of git and data/nlcc/snapshots is the archive.
+data/nlcc/raw/
 # The AKC collections under data/akc/raw/ ARE committed: they hold club
 # names, cities and entry counts only, and check.py greps them for anything
 # else.
