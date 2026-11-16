@@ -30,7 +30,7 @@
   <main id="main" class="flex-1 max-w-6xl mx-auto w-full px-4 py-6 space-y-8"></main>
   <footer id="site-footer" class="bg-asfa-navy text-white py-8"></footer>
 
-  <script src="js/app.js?v=20261110a"></script>
+  <script src="js/app.js?v=20261116a"></script>
   <script src="js/racing.js?v=20261109a"></script>
   <script>
     /* CWA in the Whippet racing section (beta). The whippets are CWA's
@@ -67,7 +67,10 @@
       const dogLink = (id, text) => `<a href="cwa.html?dog=${encodeURIComponent(id)}" class="lnk font-semibold">${esc(text)}</a>`;
       const racing = feed.standings.racing;
       const hc = feed.standings.high_combined;
-      const chartNote = (chart) => `As of ${formatDate(chart.as_of)}${chart.meets ? `, after ${chart.meets} race meets` : ''}; ties share a place.`;
+      const chartNote = (chart) => {
+        const when = cwaAsOf(chart.as_of, feed.fetched);
+        return `${when[0].toUpperCase()}${when.slice(1)}${chart.meets ? `, after ${chart.meets} race meets` : ''}; ties share a place.`;
+      };
       const CWA_BANDS = [[5, 'C'], [10, 'B'], [15, 'A']];
       const bandOf = (avg) => (avg == null ? null : avg >= 15 ? 'A' : avg >= 10 ? 'B' : avg >= 5 ? 'C' : 'D');
       const gradeOf = (w) => (!w.grade ? '' : w.grade === 'FTE'
@@ -160,8 +163,8 @@
         const h = hc.rows.find((row) => row.dog === w.id);
         const a = feed.all_time.rows.find((row) => row.dog === w.id);
         const standingLines = [
-          r ? `Racing standings: <strong>#${r.place}</strong> on ${ptsLabel(r.points)} NARX points this year, as of ${formatDate(racing.as_of)}.` : '',
-          h ? `High Combined: <strong>#${h.place}</strong> on ${ptsLabel(h.points)} wins this year, as of ${formatDate(hc.as_of)}.` : '',
+          r ? `Racing standings: <strong>#${r.place}</strong> on ${ptsLabel(r.points)} NARX points this year, ${cwaAsOf(racing.as_of, feed.fetched)}.` : '',
+          h ? `High Combined: <strong>#${h.place}</strong> on ${ptsLabel(h.points)} wins this year, ${cwaAsOf(hc.as_of, feed.fetched)}.` : '',
           a ? `All-time top race whippets: <strong>#${a.place}</strong> on ${ptsLabel(a.points)} NARX points, ${esc(feed.all_time.period)}.` : '',
         ].filter(Boolean);
         const where = current

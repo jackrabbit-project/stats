@@ -244,6 +244,15 @@ function param(name) {
   return new URLSearchParams(window.location.search).get(name);
 }
 
+/** When CWA's standings stand. CWA dates them by the end of the month they
+    cover, and posts them before it ends: on November 16, 2026 the charts read
+    "as of 11/30/2026". A date still to come reads as that month so far. */
+function cwaAsOf(iso, fetched) {
+  if (!iso || !fetched || iso <= fetched) return `as of ${formatDate(iso)}`;
+  const month = new Date(`${iso}T00:00:00Z`).toLocaleDateString('en-US', { month: 'long', timeZone: 'UTC' });
+  return `for ${month} so far (CWA dates them ${formatDate(iso)})`;
+}
+
 /** The suffix of an ordinal: 1st, 2nd, 3rd, 11th, 22nd. */
 function ordinalSuffix(n) {
   if (n % 100 >= 11 && n % 100 <= 13) return 'th';
@@ -1229,8 +1238,8 @@ function footerSource(sectionKey, feed) {
         <p>
           Grading guides, standings, the all-time list and titles reproduced from the Continental
           Whippet Alliance at ${link(feed.site_url, 'continentalwhippetalliance.com')}: the grading guide
-          updated ${formatDate(feed.stats.guide_updated)}, racing standings as of ${formatDate(feed.stats.racing_as_of)},
-          High Combined as of ${formatDate(feed.stats.high_combined_as_of)}, titles read ${formatDate(feed.fetched)}.
+          updated ${formatDate(feed.stats.guide_updated)}, racing standings ${cwaAsOf(feed.stats.racing_as_of, feed.fetched)},
+          High Combined ${cwaAsOf(feed.stats.high_combined_as_of, feed.fetched)}, titles read ${formatDate(feed.fetched)}.
           CWA's own records are authoritative wherever they disagree with this page.
         </p>` : `
         <p>Grading guides, standings and titles reproduced from the Continental Whippet Alliance.
