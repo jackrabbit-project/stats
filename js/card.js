@@ -287,16 +287,19 @@ function drawRacingCard(canvas, card) {
   });
   ctx.textAlign = 'left';
 
-  // Owner, labelled, in the same place as on the ASFA card.
-  const ownerY = statTop + 165;
-  ctx.fillStyle = CARD_COLORS.muted;
-  ctx.font = cardFont(23, 'mono', '500');
-  ctx.fillText('OWNER', pad, ownerY);
-  const labelWidth = ctx.measureText('OWNER').width + 16;
-  ctx.fillStyle = CARD_COLORS.ink;
-  const ownerSize = fitText(ctx, card.owner || '—', inner - labelWidth, 30, 'sans');
-  ctx.font = cardFont(ownerSize, 'sans');
-  ctx.fillText(card.owner || '—', pad + labelWidth, ownerY);
+  // Owner, labelled, in the same place as on the ASFA card. A record that
+  // names no owners at all (NLCC's) leaves the line out rather than print a dash.
+  if (!card.noOwner) {
+    const ownerY = statTop + 165;
+    ctx.fillStyle = CARD_COLORS.muted;
+    ctx.font = cardFont(23, 'mono', '500');
+    ctx.fillText('OWNER', pad, ownerY);
+    const labelWidth = ctx.measureText('OWNER').width + 16;
+    ctx.fillStyle = CARD_COLORS.ink;
+    const ownerSize = fitText(ctx, card.owner || '—', inner - labelWidth, 30, 'sans');
+    ctx.font = cardFont(ownerSize, 'sans');
+    ctx.fillText(card.owner || '—', pad + labelWidth, ownerY);
+  }
 
   // Footer: where the numbers come from.
   ctx.fillStyle = CARD_COLORS.line;

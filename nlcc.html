@@ -20,7 +20,7 @@
   <link rel="preload" href="assets/fonts/fraunces-latin-var.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/plex-mono-400.woff2" as="font" type="font/woff2" crossorigin>
   <script src="js/theme.js?v=20260823"></script>
-  <link rel="stylesheet" href="css/app.css?v=20261116n">
+  <link rel="stylesheet" href="css/app.css?v=20261117a">
   <link rel="icon" href="assets/favicon.ico?v=4" sizes="any">
   <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png?v=4">
   <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png?v=4">
@@ -31,26 +31,34 @@
   <footer id="site-footer" class="bg-asfa-navy text-white py-8"></footer>
 
   <script src="js/app.js?v=20261116n"></script>
+  <script src="js/card.js?v=20261117a"></script>
   <script>
     /* The National Lure Coursing Club's own records, NLCC Records: its
        meetings, and each hound's courses run, won, lost and drawn, shown as
        the club keeps them. The one thing added is a ranking by win
-       percentage among hounds with enough courses to rank. Rendered from
-       data/nlcc.json, built by tools/nlcc.py. */
+       percentage among hounds with enough courses to rank. ?dog=<id> shows
+       one hound. Rendered from data/nlcc.json, built by tools/nlcc.py. */
     pageFeed('nlcc.html', 'nlcc', 'data/nlcc.json', render);
 
+    const n = (v) => (v == null ? '—' : Number(v).toLocaleString('en-US'));
+    // The records show win percentage to two places (66.67%); so does the page.
+    const pct = (v) => (v == null ? '—' : `${(v * 100).toFixed(2)}%`);
+    const shortDate = (iso) => (iso ? new Date(`${iso}T00:00:00Z`).toLocaleDateString('en-US',
+      { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' }) : '—');
+    const monthYear = (iso) => new Date(`${iso}T00:00:00Z`).toLocaleDateString('en-US',
+      { month: 'long', year: 'numeric', timeZone: 'UTC' });
+    const tile = ([value, label]) =>
+      `<div class="tile"><div class="tile-value">${value}</div><div class="tile-label">${label}</div></div>`;
+    const dogLink = (d) => `<a href="nlcc.html?dog=${encodeURIComponent(d.id)}" class="lnk font-semibold">${esc(d.call_name)}</a>`;
+
     function render(feed) {
+      const dogId = param('dog');
+      if (dogId) {
+        renderDog(feed, dogId);
+        return;
+      }
       const main = document.getElementById('main');
       const { stats, dogs, breeds, meetings } = feed;
-      const n = (v) => (v == null ? '—' : Number(v).toLocaleString('en-US'));
-      // The records show win percentage to two places (66.67%); so does the page.
-      const pct = (v) => (v == null ? '—' : `${(v * 100).toFixed(2)}%`);
-      const shortDate = (iso) => (iso ? new Date(`${iso}T00:00:00Z`).toLocaleDateString('en-US',
-        { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' }) : '—');
-      const monthYear = (iso) => new Date(`${iso}T00:00:00Z`).toLocaleDateString('en-US',
-        { month: 'long', year: 'numeric', timeZone: 'UTC' });
-      const tile = ([value, label]) =>
-        `<div class="tile"><div class="tile-value">${value}</div><div class="tile-label">${label}</div></div>`;
       const meetingLabel = (code) => {
         const m = meetings.find((x) => x.code === code);
         return code ? `<span class="font-mono text-xs">${esc(code)}</span>${m && m.date
@@ -116,7 +124,7 @@
               ${ranked.map((d) => `
                 <tr>
                   <td class="num font-semibold">${d.rank}</td>
-                  <td><span class="font-semibold">${esc(d.call_name)}</span><span class="block text-xs text-asfa-text/60">${esc(d.breed)}</span></td>
+                  <td>${dogLink(d)}<span class="block text-xs text-asfa-text/60">${esc(d.breed)}</span></td>
                   <td class="num">${n(d.courses)}</td><td class="num">${n(d.wins)}</td>
                   <td class="num">${n(d.losses)}</td><td class="num">${n(d.draws)}</td>
                   <td class="num font-semibold">${pct(d.win_pct)}</td>
@@ -127,6 +135,7 @@
 
         <section class="card" id="hounds">
           ${heading('hounds', 'Hounds')}
+          <p class="text-xs text-asfa-text/60 mb-3">Every hound in the records. A hound's name opens its own page, with a stat card to share.</p>
           <div class="no-print flex flex-wrap items-end gap-3 mb-3">
             <label class="block">
               <span class="text-xs font-semibold text-asfa-text/60 uppercase tracking-wide">Breed</span>
@@ -260,7 +269,7 @@
             <tbody>
               ${rows.map((d) => `
                 <tr>
-                  <td class="font-semibold">${esc(d.call_name)}</td>
+                  <td>${dogLink(d)}</td>
                   <td class="text-asfa-text/80">${esc(d.breed)}</td>
                   <td class="whitespace-nowrap">${shortDate(d.first_meeting)}</td>
                   <td class="num">${n(d.meets)}</td>
@@ -296,6 +305,145 @@
       });
       const target = arrivedAt && document.getElementById(arrivedAt);
       if (target) target.scrollIntoView({ block: 'start', behavior: 'instant' });
+    }
+
+    /* ----- one hound: its record, where it stands, its meetings, its card */
+    function renderDog(feed, id) {
+      const main = document.getElementById('main');
+      const { stats, breeds, meetings } = feed;
+      const d = feed.dogs.find((x) => x.id === id);
+      if (!d) {
+        main.innerHTML = `<div class="card"><h1 class="card-title">Hound not found</h1>
+          <p class="text-sm">No hound in NLCC's records goes by that address.
+          <a href="nlcc.html#hounds" class="lnk">Every NLCC hound →</a></p></div>`;
+        return;
+      }
+      document.title = `${d.call_name} — ${d.breed} — NLCC — Gazehound Stats`;
+      const breed = breeds.find((b) => b.breed === d.breed) || {};
+      const min = feed.min_courses;
+      const meetingOf = (code) => meetings.find((m) => m.code === code);
+      const first = meetings.find((m) => m.date === d.first_meeting);
+      const latest = meetingOf(d.latest_meeting);
+      const counted = (d.wins || 0) + (d.losses || 0) + (d.draws || 0);
+      // The bar splits the courses the records give a result for.
+      const bar = counted ? [
+        ['Won', d.wins || 0, 'var(--green)'],
+        ['Lost', d.losses || 0, 'var(--rust)'],
+        ['Drawn', d.draws || 0, 'var(--line-strong)'],
+      ].filter(([, count]) => count) : [];
+      const meetingRow = (label, m, when) => `
+        <div class="flex flex-wrap gap-x-4 gap-y-1 py-2 border-b border-asfa-border last:border-0">
+          <span class="w-36 shrink-0 font-mono text-xs uppercase tracking-wide text-asfa-text/55">${label}</span>
+          ${m ? `<span class="flex-1 min-w-0"><span class="font-semibold">${esc(m.event)}</span>, ${esc(m.club)}
+            <span class="block text-xs text-asfa-text/65">${shortDate(m.date)} · meeting ${esc(m.code)} · ${esc(m.format)}</span></span>`
+            : `<span class="flex-1">${when ? shortDate(when) : '—'}</span>`}
+        </div>`;
+
+      main.innerHTML = `
+        <nav class="text-sm" aria-label="Breadcrumb">
+          <a href="nlcc.html" class="lnk">NLCC lure coursing</a> ›
+          <a href="nlcc.html?breed=${encodeURIComponent(d.breed)}#hounds" class="lnk">${esc(d.breed)}</a>
+        </nav>
+
+        <section class="card">
+          <div class="flex flex-wrap items-start gap-x-6 gap-y-4">
+            <div class="text-center w-24 shrink-0">
+              <div class="font-display text-5xl text-asfa-text leading-none">${d.rank != null ? `#${d.rank}` : '—'}</div>
+              <div class="font-mono text-[10px] uppercase tracking-widest text-asfa-text/55 mt-1">${d.rank != null ? 'by win %' : 'not ranked'}</div>
+            </div>
+            <div class="flex-1 min-w-[12rem]">
+              <h1 class="font-display text-3xl text-asfa-text leading-tight">${esc(d.call_name)}</h1>
+              <p class="text-sm text-asfa-text/70 mt-1">${esc(d.breed)} · ${n(d.meets)} meeting${d.meets === 1 ? '' : 's'}${
+                d.first_meeting ? ` since ${monthYear(d.first_meeting)}` : ''}</p>
+            </div>
+            ${typeof openRacingCard === 'function' && d.courses
+              ? `<button type="button" id="card-btn" class="btn btn-primary no-print">${icon('share', 'mr-1')}Stat card</button>` : ''}
+          </div>
+        </section>
+
+        <section class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3" aria-label="Record">
+          ${[
+            [n(d.courses), 'courses run'],
+            [n(d.wins), 'won'],
+            [n(d.losses), 'lost'],
+            [n(d.draws), 'drawn'],
+            [pct(d.win_pct), 'of courses won'],
+          ].map(tile).join('')}
+        </section>
+
+        ${bar.length ? `
+        <section class="card" aria-label="Won, lost and drawn">
+          <div class="flex h-4 w-full overflow-hidden rounded-sm">
+            ${bar.map(([label, count, color]) => `<div style="width:${(100 * count / counted).toFixed(2)}%;background:rgb(${color})" title="${label}: ${count}"></div>`).join('')}
+          </div>
+          <div class="flex flex-wrap gap-x-5 gap-y-1 mt-2 text-xs text-asfa-text/70">
+            ${bar.map(([label, count, color]) => `<span class="inline-flex items-center gap-1.5"><span class="inline-block w-2.5 h-2.5 rounded-sm" style="background:rgb(${color})"></span>${label} ${count}</span>`).join('')}
+          </div>
+        </section>` : ''}
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <section class="card">
+            <h2 class="card-title">Where ${esc(d.call_name)} stands</h2>
+            ${d.rank != null ? `
+            <p class="text-sm leading-relaxed"><strong>#${d.rank}</strong> of the ${n(stats.hounds_ranked)} NLCC hounds
+              with ${min} or more courses, ranked by win percentage.</p>
+            <p class="text-sm leading-relaxed mt-2"><strong>#${d.rank_breed}</strong> of the ${n(breed.ranked)}
+              ${esc(d.breed)}${breed.ranked === 1 ? '' : 's'} ranked.</p>` : `
+            <p class="text-sm leading-relaxed">Not ranked: the ranking takes hounds with ${min} or more courses,
+              and ${esc(d.call_name)} has ${d.courses ? n(d.courses) : 'no'} course${d.courses === 1 ? '' : 's'} on record.</p>`}
+            <p class="text-sm leading-relaxed mt-2 text-asfa-text/75">${esc(d.breed)}s in NLCC's records have won
+              ${pct(breed.win_pct)} of their ${n(breed.courses)} courses between them.</p>
+            <p class="text-xs text-asfa-text/55 mt-3">The ranking is this site's, not NLCC's; see
+              <a href="nlcc.html#about" class="lnk">About these records</a>.</p>
+          </section>
+
+          <section class="card">
+            <h2 class="card-title">Meetings</h2>
+            ${meetingRow('First meeting', first, d.first_meeting)}
+            ${meetingRow('Latest meeting', latest, d.latest_date)}
+            <p class="text-xs text-asfa-text/60 mt-3">NLCC's records give each hound's totals. Its results meeting by
+              meeting will appear here when the records list them.</p>
+          </section>
+        </div>
+
+        <p class="text-sm"><a href="nlcc.html?breed=${encodeURIComponent(d.breed)}#hounds" class="lnk">Every ${esc(d.breed)} in NLCC's records →</a></p>`;
+
+      const button = document.getElementById('card-btn');
+      if (button) button.addEventListener('click', () => openRacingCard(nlccCard(feed, d, breed)));
+    }
+
+    /* What a hound's stat card says; card.js draws it. */
+    function nlccCard(feed, d, breed) {
+      const min = feed.min_courses;
+      const record = `${d.wins || 0}-${d.losses || 0}-${d.draws || 0}`;
+      const headline = d.rank != null
+        ? { big: `#${d.rank}`, line1: 'by win percentage',
+            line2: `of ${feed.stats.hounds_ranked} hounds with ${min}+ courses`,
+            line3: `#${d.rank_breed} of ${breed.ranked} ${d.breed}${breed.ranked === 1 ? '' : 's'} ranked`.toUpperCase() }
+        : { big: pct(d.win_pct), line1: 'of courses won',
+            line2: `${d.courses} course${d.courses === 1 ? '' : 's'}; ranking starts at ${min}` };
+      const figures = d.rank != null
+        ? [[pct(d.win_pct), 'WIN %'], [record, 'WON · LOST · DRAWN'], [n(d.courses), 'COURSES RUN']]
+        : [[n(d.courses), 'COURSES RUN'], [record, 'WON · LOST · DRAWN'], [n(d.meets), 'MEETINGS']];
+      const stem = d.call_name.replace(/[^\w-]+/g, '-').toLowerCase().replace(/^-|-$/g, '') || 'hound';
+      return {
+        band: `NLCC lure coursing · ${feed.season}`.toUpperCase(),
+        callName: d.call_name,
+        registeredName: '',
+        meta: `${d.breed} · ${n(d.meets)} meeting${d.meets === 1 ? '' : 's'}${d.first_meeting ? ` since ${monthYear(d.first_meeting)}` : ''}`,
+        headline,
+        figures,
+        noOwner: true,
+        footer: `NLCC Records as of ${formatDate(feed.as_of)} · National Lure Coursing Club`,
+        share: {
+          name: d.call_name,
+          filename: `${stem}-nlcc-${feed.season}.png`,
+          shareTitle: `${d.call_name} — Gazehound Stats`,
+          shareText: d.rank != null
+            ? `${d.call_name}, #${d.rank} by win percentage in NLCC lure coursing: ${d.wins} wins in ${d.courses} courses.`
+            : `${d.call_name}, NLCC lure coursing: ${d.wins || 0} wins in ${d.courses} courses.`,
+        },
+      };
     }
   </script>
 </body>

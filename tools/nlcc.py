@@ -158,11 +158,11 @@ def parse_workbook(path: Path, as_of: date) -> dict:
 
 # ------------------------------------------------------------------- build
 
-def rank_win_pct(dogs: list[dict]) -> None:
+def rank_win_pct(dogs: list[dict], key: str = "rank") -> None:
     """Competition ranking on win percentage among hounds with MIN_COURSES
     courses or more: ties share a rank and the next skips (1, 2, 2, 4)."""
     for dog in dogs:
-        dog["rank"] = None
+        dog[key] = None
     eligible = sorted(
         (dog for dog in dogs if (dog["courses"] or 0) >= MIN_COURSES and dog["win_pct"] is not None),
         key=lambda dog: (-dog["win_pct"], -(dog["wins"] or 0), -(dog["courses"] or 0), dog["call_name"]),
@@ -173,7 +173,7 @@ def rank_win_pct(dogs: list[dict]) -> None:
         shown = round(dog["win_pct"], 6)
         if shown != previous:
             rank, previous = position, shown
-        dog["rank"] = rank
+        dog[key] = rank
 
 
 def build(snapshot: dict) -> dict:
@@ -192,11 +192,14 @@ def build(snapshot: dict) -> dict:
     breeds = []
     for breed in sorted({dog["breed"] for dog in dogs}):
         members = [dog for dog in dogs if dog["breed"] == breed]
+        # The same ranking within the breed, for each hound's own page.
+        rank_win_pct(members, "rank_breed")
         courses = sum(dog["courses"] or 0 for dog in members)
         wins = sum(dog["wins"] or 0 for dog in members)
         breeds.append({
             "breed": breed,
             "hounds": len(members),
+            "ranked": sum(dog["rank_breed"] is not None for dog in members),
             "courses": courses,
             "wins": wins,
             "losses": sum(dog["losses"] or 0 for dog in members),
