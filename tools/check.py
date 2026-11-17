@@ -472,15 +472,16 @@ def check_nlcc(check: Checker) -> None:
 
     by_breed = {}
     for d in feed["dogs"]:
-        b = by_breed.setdefault(d["breed"], {"hounds": 0, "ranked": 0, "courses": 0, "wins": 0, "losses": 0, "draws": 0})
+        b = by_breed.setdefault(d["breed"], {"hounds": 0, "ranked": 0, "leaders": []})
         b["hounds"] += 1
         b["ranked"] += d in eligible
-        for k in ("courses", "wins", "losses", "draws"):
-            b[k] += d[k] or 0
+        if d["rank_breed"] == 1:
+            b["leaders"].append(d["id"])
     check.expect([b["breed"] for b in feed["breeds"]] == sorted(by_breed), "nlcc: breeds out of order")
     for b in feed["breeds"]:
         expected = by_breed.get(b["breed"], {})
-        check.expect(all(b[k] == expected.get(k) for k in ("hounds", "ranked", "courses", "wins", "losses", "draws")),
+        check.expect(all(b[k] == expected.get(k) for k in ("hounds", "ranked", "leaders"))
+                     and "win_pct" not in b,
                      f"nlcc: breed {b['breed']} totals")
     stats = feed["stats"]
     check.expect(stats["hounds"] == len(feed["dogs"]) and stats["breeds"] == len(by_breed)

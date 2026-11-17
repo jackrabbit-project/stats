@@ -151,21 +151,24 @@
 
         <section class="card" id="breeds">
           ${heading('breeds', 'Breeds')}
-          <p class="text-xs text-asfa-text/60 mb-3">Each breed's hounds' figures added together; the win percentage is the breed's wins over its courses run.</p>
+          <p class="text-xs text-asfa-text/60 mb-3">Each breed's hounds, how many have the ${feed.min_courses} courses to be ranked,
+            and its best-ranked hound by win percentage.</p>
           <div class="tbl-wrap"><table class="tbl">
             <thead><tr>
-              <th scope="col">Breed</th><th scope="col" class="num">Hounds</th><th scope="col" class="num">Courses</th>
-              <th scope="col" class="num">Won</th><th scope="col" class="num">Lost</th><th scope="col" class="num">Drawn</th>
-              <th scope="col" class="num">Win %</th>
+              <th scope="col">Breed</th><th scope="col" class="num">Hounds</th><th scope="col" class="num">Ranked</th>
+              <th scope="col">Best ranked</th><th scope="col" class="num">Win %</th><th scope="col" class="num">Overall</th>
             </tr></thead>
             <tbody>
-              ${breeds.map((b) => `
+              ${breeds.map((b) => {
+                const leaders = b.leaders.map((id) => dogs.find((d) => d.id === id)).filter(Boolean);
+                return `
                 <tr>
-                  <td class="font-semibold">${esc(b.breed)}</td><td class="num">${n(b.hounds)}</td>
-                  <td class="num">${n(b.courses)}</td><td class="num">${n(b.wins)}</td>
-                  <td class="num">${n(b.losses)}</td><td class="num">${n(b.draws)}</td>
-                  <td class="num">${pct(b.win_pct)}</td>
-                </tr>`).join('')}
+                  <td class="font-semibold">${esc(b.breed)}</td><td class="num">${n(b.hounds)}</td><td class="num">${n(b.ranked)}</td>
+                  <td>${leaders.length ? leaders.map(dogLink).join(', ') : '<span class="text-asfa-text/55">none ranked yet</span>'}</td>
+                  <td class="num">${leaders.length ? pct(leaders[0].win_pct) : '—'}</td>
+                  <td class="num">${leaders.length ? `#${leaders[0].rank}` : '—'}</td>
+                </tr>`;
+              }).join('')}
             </tbody>
           </table></div>
         </section>
@@ -391,8 +394,6 @@
               ${esc(d.breed)}${breed.ranked === 1 ? '' : 's'} ranked.</p>` : `
             <p class="text-sm leading-relaxed">Not ranked: the ranking takes hounds with ${min} or more courses,
               and ${esc(d.call_name)} has ${d.courses ? n(d.courses) : 'no'} course${d.courses === 1 ? '' : 's'} on record.</p>`}
-            <p class="text-sm leading-relaxed mt-2 text-asfa-text/75">${esc(d.breed)}s in NLCC's records have won
-              ${pct(breed.win_pct)} of their ${n(breed.courses)} courses between them.</p>
             <p class="text-xs text-asfa-text/55 mt-3">The ranking is this site's, not NLCC's; see
               <a href="nlcc.html#about" class="lnk">About these records</a>.</p>
           </section>

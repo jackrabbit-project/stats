@@ -192,19 +192,15 @@ def build(snapshot: dict) -> dict:
     breeds = []
     for breed in sorted({dog["breed"] for dog in dogs}):
         members = [dog for dog in dogs if dog["breed"] == breed]
-        # The same ranking within the breed, for each hound's own page.
+        # The same ranking within the breed, for each hound's own page. A
+        # breed's courses are not added up into a win percentage of its own:
+        # its hounds run against each other, so it would say nothing.
         rank_win_pct(members, "rank_breed")
-        courses = sum(dog["courses"] or 0 for dog in members)
-        wins = sum(dog["wins"] or 0 for dog in members)
         breeds.append({
             "breed": breed,
             "hounds": len(members),
             "ranked": sum(dog["rank_breed"] is not None for dog in members),
-            "courses": courses,
-            "wins": wins,
-            "losses": sum(dog["losses"] or 0 for dog in members),
-            "draws": sum(dog["draws"] or 0 for dog in members),
-            "win_pct": wins / courses if courses else None,
+            "leaders": [dog["id"] for dog in members if dog["rank_breed"] == 1],
         })
 
     meetings = snapshot["meetings"]
