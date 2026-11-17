@@ -166,6 +166,10 @@ jobs:
           MSG=$(IFS=';'; echo "${PARTS[*]}" | sed 's/;/; /g')
           git add data/
           git commit -m "$MSG"
+          # A change pushed to main while this run was refreshing (the NLCC
+          # page, November 16, 2026) makes a plain push fail and loses the
+          # week's data: replay this commit on top of it first.
+          git pull --rebase origin main
           git push
 
       - name: Flag whippet data held back
