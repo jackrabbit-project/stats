@@ -407,7 +407,7 @@ function waveBar(value, max = 22, bands = null, title = 'WAVE') {
   const at = (n) => Math.round(n * max / 22 * 10) / 10;
   const tick = (n, label) => `
     <span class="absolute top-0 bottom-0 border-l border-asfa-border" style="left:${pct(n)}" aria-hidden="true"></span>
-    <span class="absolute -bottom-4 text-[10px] font-mono text-asfa-text/55 -translate-x-1/2" style="left:${pct(n)}" aria-hidden="true">${label}</span>`;
+    <span class="absolute -bottom-4 text-[11px] font-mono text-asfa-text/55 -translate-x-1/2" style="left:${pct(n)}" aria-hidden="true">${label}</span>`;
   // A program with bands of its own (NOTRA's four-program whippet column,
   // WRA's average) ticks them as its rules print them.
   const ticks = bands || [[at(5.5), 'C'], [at(8), 'B'], [at(11), 'A']];
@@ -415,7 +415,7 @@ function waveBar(value, max = 22, bands = null, title = 'WAVE') {
     <div class="relative h-3 bg-asfa-bg2 border border-asfa-border mt-3 mb-5" role="img" aria-label="${title} ${waveLabel(value)} of a possible ${max}">
       <div class="h-full bg-asfa-accent" style="width:${pct(value)}"></div>
       ${ticks.map(([n, label]) => tick(n, label)).join('')}
-      <span class="absolute -bottom-4 right-0 text-[10px] font-mono text-asfa-text/55" aria-hidden="true">${max}</span>
+      <span class="absolute -bottom-4 right-0 text-[11px] font-mono text-asfa-text/55" aria-hidden="true">${max}</span>
     </div>`;
 }
 
@@ -452,8 +452,8 @@ function twoMarkBar(value, bitch, dog, label, note = '') {
            aria-label="${label}: ${ptsLabel(v)} lifetime National points; the mark is ${bitch} for a bitch, ${dog} for a dog">
         <div class="h-full bg-asfa-accent" style="width:${pct(v)}%"></div>
         <span class="absolute -top-1 -bottom-1 border-l-2 border-asfa-text/60" style="left:${pct(bitch)}%" aria-hidden="true"></span>
-        <span class="absolute -bottom-4 text-[10px] font-mono text-asfa-text/60 -translate-x-1/2 whitespace-nowrap" style="left:${pct(bitch)}%" aria-hidden="true">bitch ${bitch}</span>
-        <span class="absolute -bottom-4 right-0 text-[10px] font-mono text-asfa-text/60 whitespace-nowrap" aria-hidden="true">dog ${dog}</span>
+        <span class="absolute -bottom-4 text-[11px] font-mono text-asfa-text/60 -translate-x-1/2 whitespace-nowrap" style="left:${pct(bitch)}%" aria-hidden="true">bitch ${bitch}</span>
+        <span class="absolute -bottom-4 right-0 text-[11px] font-mono text-asfa-text/60 whitespace-nowrap" aria-hidden="true">dog ${dog}</span>
       </div>
       ${note ? `<p class="text-xs text-asfa-text/60">${note}</p>` : ''}
     </div>`;

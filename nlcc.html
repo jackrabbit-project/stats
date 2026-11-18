@@ -20,7 +20,7 @@
   <link rel="preload" href="assets/fonts/fraunces-latin-var.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/plex-mono-400.woff2" as="font" type="font/woff2" crossorigin>
   <script src="js/theme.js?v=20260823"></script>
-  <link rel="stylesheet" href="css/app.css?v=20261117a">
+  <link rel="stylesheet" href="css/app.css?v=20261118a">
   <link rel="icon" href="assets/favicon.ico?v=4" sizes="any">
   <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png?v=4">
   <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png?v=4">
@@ -30,7 +30,7 @@
   <main id="main" class="flex-1 max-w-6xl mx-auto w-full px-4 py-6 space-y-6"></main>
   <footer id="site-footer" class="bg-asfa-navy text-white py-8"></footer>
 
-  <script src="js/app.js?v=20261116n"></script>
+  <script src="js/app.js?v=20261118a"></script>
   <script src="js/card.js?v=20261117a"></script>
   <script>
     /* The National Lure Coursing Club's own records, NLCC Records: its
@@ -62,7 +62,7 @@
       const meetingLabel = (code) => {
         const m = meetings.find((x) => x.code === code);
         return code ? `<span class="font-mono text-xs">${esc(code)}</span>${m && m.date
-          ? `<span class="block text-[10px] text-asfa-text/55">${shortDate(m.date)}</span>` : ''}` : '—';
+          ? `<span class="block text-[11px] text-asfa-text/55">${shortDate(m.date)}</span>` : ''}` : '—';
       };
 
       const SECTIONS_ON_PAGE = [
@@ -352,7 +352,7 @@
           <div class="flex flex-wrap items-start gap-x-6 gap-y-4">
             <div class="text-center w-24 shrink-0">
               <div class="font-display text-5xl text-asfa-text leading-none">${d.rank != null ? `#${d.rank}` : '—'}</div>
-              <div class="font-mono text-[10px] uppercase tracking-widest text-asfa-text/55 mt-1">${d.rank != null ? 'by win %' : 'not ranked'}</div>
+              <div class="font-mono text-[11px] uppercase tracking-widest text-asfa-text/55 mt-1">${d.rank != null ? 'by win %' : 'not ranked'}</div>
             </div>
             <div class="flex-1 min-w-[12rem]">
               <h1 class="font-display text-3xl text-asfa-text leading-tight">${esc(d.call_name)}</h1>

@@ -1206,7 +1206,7 @@ function footerLinks() {
   return `
         <div class="grid sm:grid-cols-2 lg:grid-cols-5 gap-x-6 gap-y-4">${FOOTER_LINKS.map(([heading, links]) => `
           <div>
-            <p class="font-mono text-[10px] uppercase tracking-widest text-asfa-wellink/60 mb-1.5">${heading}</p>
+            <p class="font-mono text-[11px] uppercase tracking-widest text-asfa-wellink/60 mb-1.5">${heading}</p>
             <ul class="space-y-1">${links.map(([glyph, label, href]) => `
               <li><a href="${href}"${href.startsWith('http') ? ' target="_blank" rel="noopener noreferrer"' : ''} class="underline hover:text-asfa-wellink">${icon(glyph, 'mr-1.5')}${label}</a></li>`).join('')}
             </ul>
@@ -1349,6 +1349,20 @@ function initProgramMenu(header) {
   });
 }
 
+/** Fades whichever edge of a sideways-scrolling row still has items past it
+    (.edge-fade in app.css), kept up to date as it scrolls and as the window
+    resizes. A row that fits fades nowhere. */
+function edgeFade(row) {
+  const update = () => {
+    const spare = row.scrollWidth - row.clientWidth;
+    row.classList.toggle('fade-left', spare > 1 && row.scrollLeft > 1);
+    row.classList.toggle('fade-right', spare > 1 && row.scrollLeft < spare - 1);
+  };
+  row.addEventListener('scroll', update, { passive: true });
+  window.addEventListener('resize', update);
+  update();
+}
+
 function renderChrome(feed, current, sectionKey = sectionOf(current)) {
   const section = SECTIONS[sectionKey];
   const links = section.nav.map(([href, label]) =>
@@ -1414,6 +1428,7 @@ function renderChrome(feed, current, sectionKey = sectionOf(current)) {
       const offset = activeLink.getBoundingClientRect().left - nav.getBoundingClientRect().left;
       nav.scrollLeft = Math.max(0, offset - (nav.clientWidth - activeLink.offsetWidth) / 2);
     }
+    if (nav) edgeFade(nav);
   }
 
   const footer = document.getElementById('site-footer');

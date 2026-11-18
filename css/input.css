@@ -58,6 +58,7 @@
     --green-hi: 31 76 51;      /* green hover                  #1F4C33 */
     --rust: 164 74 47;         /* accents, active, focus ring  #A44A2F */
     --rust-hi: 122 52 34;      /* rust hover                   #7A3422 */
+    --chart-line: 164 74 47;   /* the points chart on a hound's page, ASFA rust */
     --slate: 61 90 128;        /* the LGRA program colour      #3D5A80 */
     --amber: 143 98 16;        /* the NOTRA program colour     #8F6210 */
     --akc: 0 53 148;           /* the AKC page, AKC's own blue  #003594 */
@@ -89,6 +90,7 @@
       --green-hi: 169 205 182;  /* #A9CDB6 — hover lightens, not darkens */
       --rust: 206 134 99;       /* #CE8663 */
       --rust-hi: 224 164 137;   /* #E0A489 */
+      --chart-line: 196 122 87; /* #C47A57, a step under the rust: inside the chart lightness band */
       --slate: 138 168 205;     /* #8AA8CD */
       --amber: 217 179 92;      /* #D9B35C */
       --akc: 143 176 242;       /* #8FB0F2 */
@@ -116,6 +118,7 @@
     --green-hi: 169 205 182;  /* #A9CDB6 — hover lightens, not darkens */
     --rust: 206 134 99;       /* #CE8663 */
     --rust-hi: 224 164 137;   /* #E0A489 */
+    --chart-line: 196 122 87; /* #C47A57 */
     --slate: 138 168 205;     /* #8AA8CD */
     --amber: 217 179 92;      /* #D9B35C */
     --akc: 143 176 242;       /* #8FB0F2 */
@@ -1175,3 +1178,103 @@ ol.rb-l { list-style: decimal; }
 }
 
 @tailwind utilities;
+
+/* Secondary text ---------------------------------------------------------- */
+
+/* The faint opacities (/50 to /65) fall below WCAG AA (4.5:1) for small text
+   on the light paper (3.4:1 to 4.5:1, measured November 2026); in light mode
+   they are lifted to one readable muted shade. Dark mode passes from /55 up,
+   so only /50 is lifted there. Kept after the utilities so it wins. */
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) .text-asfa-text\/50,
+  :root:not([data-theme="dark"]) .text-asfa-text\/55,
+  :root:not([data-theme="dark"]) .text-asfa-text\/60,
+  :root:not([data-theme="dark"]) .text-asfa-text\/65 { color: rgb(var(--ink) / 0.74); }
+}
+:root[data-theme="light"] .text-asfa-text\/50,
+:root[data-theme="light"] .text-asfa-text\/55,
+:root[data-theme="light"] .text-asfa-text\/60,
+:root[data-theme="light"] .text-asfa-text\/65 { color: rgb(var(--ink) / 0.74); }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .text-asfa-text\/50 { color: rgb(var(--ink) / 0.62); }
+}
+:root[data-theme="dark"] .text-asfa-text\/50 { color: rgb(var(--ink) / 0.62); }
+
+/* Scrolling rows (the header menu, tab rows, jump bars) --------------------- */
+
+/* A row wider than the screen scrolls sideways; its edge fades where more
+   items wait, so it reads as a row that continues rather than one cut off.
+   app.js (edgeFade) sets the classes from the scroll position. */
+.edge-fade.fade-right { -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 2.5rem), transparent); mask-image: linear-gradient(to right, #000 calc(100% - 2.5rem), transparent); }
+.edge-fade.fade-left { -webkit-mask-image: linear-gradient(to left, #000 calc(100% - 2.5rem), transparent); mask-image: linear-gradient(to left, #000 calc(100% - 2.5rem), transparent); }
+.edge-fade.fade-left.fade-right { -webkit-mask-image: linear-gradient(to right, transparent, #000 2.5rem, #000 calc(100% - 2.5rem), transparent); mask-image: linear-gradient(to right, transparent, #000 2.5rem, #000 calc(100% - 2.5rem), transparent); }
+
+/* Tap targets --------------------------------------------------------------- */
+
+/* Header buttons and footer links get a finger-sized hit area (44px for the
+   phone header's buttons, 24px for the program switch and for links in a
+   list) without changing how they look or taking width from the header:
+   an invisible layer around each button takes the tap. On a 375px phone
+   the search button is 31x29 and the theme button 28x36; the layers make
+   both 44x44 and stop 2px apart. */
+#program-menu-button, .search-trigger, #theme-toggle { position: relative; }
+#program-menu-button::after, .search-trigger::after, #theme-toggle::after {
+  content: "";
+  position: absolute;
+}
+#program-menu-button::after { inset: -4px 0; }
+@media (max-width: 639.98px) {
+  .search-trigger::after { inset: -8px -2px -8px -11px; }
+  #theme-toggle::after { inset: -4px -14px -4px -2px; }
+}
+#site-footer li a { display: inline-block; padding-block: 0.25rem; }
+button[data-section] { min-height: 32px; }
+
+/* Number tiles -------------------------------------------------------------- */
+
+/* Five tiles in a two-column grid leave the fifth alone on its row on a
+   phone; it takes the full row instead. */
+@media (max-width: 639.98px) {
+  .grid > .tile:last-child:nth-child(odd) { grid-column: span 2 / span 2; }
+}
+/* The racing pages keep two columns up to the wide layout. */
+@media (min-width: 640px) and (max-width: 767.98px) {
+  #tiles > .tile:last-child:nth-child(odd) { grid-column: span 2 / span 2; }
+}
+
+/* "What's new" on the hub: each body's name in its program's colour. */
+.update-program { color: rgb(var(--program)); }
+
+/* The points chart on a hound's page ----------------------------------------- */
+
+/* One series in the chart colour: a 2px line, 8px dots with a 2px ring of
+   the card colour, a 10% wash under the line; hairline gridlines and muted
+   axis text, so the data is the only loud thing. */
+.season-chart { outline: none; }
+.season-chart:focus-visible { box-shadow: 0 0 0 2px rgb(var(--rust)); }
+.season-chart svg { display: block; overflow: visible; font-family: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11px; }
+.chart-grid line { stroke: rgb(var(--line)); stroke-width: 1; }
+.chart-axis text { fill: rgb(var(--ink-muted)); }
+.chart-area { fill: rgb(var(--chart-line) / 0.10); stroke: none; }
+.chart-line { fill: none; stroke: rgb(var(--chart-line)); stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
+.chart-dot { fill: rgb(var(--chart-line)); stroke: rgb(var(--surface)); stroke-width: 2; }
+.chart-end { fill: rgb(var(--ink)); font-weight: 600; }
+.chart-cross { stroke: rgb(var(--ink-muted)); stroke-width: 1; }
+.chart-cross.hidden { display: none; }
+.chart-hit { fill: transparent; cursor: crosshair; }
+.chart-tip {
+  position: absolute;
+  top: -0.25rem;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  padding: 0.35rem 0.55rem;
+  background: rgb(var(--surface));
+  border: 1px solid rgb(var(--line-strong));
+  font-size: 0.8rem;
+  white-space: nowrap;
+}
+.chart-tip strong { color: rgb(var(--ink)); }
+.chart-tip span { color: rgb(var(--ink-muted)); font-size: 0.75rem; }
+.chart-tip.hidden { display: none; }

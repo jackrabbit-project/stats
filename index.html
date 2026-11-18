@@ -20,7 +20,7 @@
   <link rel="preload" href="assets/fonts/fraunces-latin-var.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/plex-mono-400.woff2" as="font" type="font/woff2" crossorigin>
   <script src="js/theme.js?v=20260823"></script>
-  <link rel="stylesheet" href="css/app.css?v=20261117a">
+  <link rel="stylesheet" href="css/app.css?v=20261118a">
   <link rel="icon" href="assets/favicon.ico?v=4" sizes="any">
   <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png?v=4">
   <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png?v=4">
@@ -46,6 +46,7 @@
     </section>
 
     <div class="max-w-6xl mx-auto w-full px-4 py-8 space-y-8">
+      <section id="latest" class="card hidden" aria-labelledby="latest-title"></section>
       <section id="programs" class="grid md:grid-cols-2 gap-6"></section>
 
       <!-- Share targets are plain links, as on the AOK9 and II guide sites: no
@@ -62,8 +63,8 @@
 
   <footer id="site-footer" class="bg-asfa-navy text-white py-8"></footer>
 
-  <script src="js/app.js?v=20261116n"></script>
-  <script src="js/racing.js?v=20261109a"></script>
+  <script src="js/app.js?v=20261118a"></script>
+  <script src="js/racing.js?v=20261118a"></script>
   <script>
     pageHub(({ asfa, lgra, aok9, trials, singles, notra, wra, notraWhippets, cwa }) => {
       const programs = document.getElementById('programs');
@@ -83,7 +84,7 @@
         return `
           <figure class="-mx-5 -mt-5 mb-4 relative">
             <img src="${src}" alt="${alt}" class="w-full h-auto block ${imgClass}" onerror="this.parentElement.remove()">
-            ${credit ? `<figcaption class="absolute bottom-1 right-2 font-mono text-[9px] uppercase tracking-widest text-white/85 drop-shadow">${credit}</figcaption>` : ''}
+            ${credit ? `<figcaption class="absolute bottom-1.5 right-2 font-mono text-[11px] uppercase tracking-widest text-white bg-black/60 px-1.5 py-0.5">${credit}</figcaption>` : ''}
           </figure>`;
       };
       /* The cards are flex columns so the call to action sits on the bottom
@@ -92,7 +93,7 @@
         <a href="${href}" class="card program-card program-${program} flex flex-col">
           ${photo(program)}
           <h2 class="font-display text-3xl text-asfa-text">${title}</h2>
-          <p class="font-mono text-[10px] uppercase tracking-widest text-asfa-muted mt-0.5">${sub}${note}</p>
+          <p class="font-mono text-[11px] uppercase tracking-widest text-asfa-muted mt-0.5">${sub}${note}</p>
           <div class="mt-4">${body}</div>
           <p class="text-sm mt-auto pt-4 underline underline-offset-2 text-asfa-text/80">${cta} →</p>
         </a>`;
@@ -113,7 +114,7 @@
             ${halves.map(([org, title, sub, body, cta, note]) => `
             <a href="${org}.html" class="program-${org} flex flex-col group">
               <h2 class="font-display text-3xl text-asfa-text">${title}</h2>
-              <p class="font-mono text-[10px] uppercase tracking-widest text-asfa-muted mt-0.5">${sub}${note || ''}</p>
+              <p class="font-mono text-[11px] uppercase tracking-widest text-asfa-muted mt-0.5">${sub}${note || ''}</p>
               <div class="mt-4">${body}</div>
               <p class="text-sm mt-auto pt-4 underline underline-offset-2 text-asfa-text/80 group-hover:text-asfa-text">${cta} →</p>
             </a>`).join('')}
@@ -123,6 +124,7 @@
         <div class="grid grid-cols-2 gap-2">${pairs.map(([value, label]) =>
           `<div class="tile"><div class="tile-value">${value}</div><div class="tile-label">${label}</div></div>`).join('')}</div>`;
       const unavailable = (name) => `<p class="text-sm text-asfa-text/70">The ${name} data is not available right now. The section page will say more.</p>`;
+      const updatedLine = (text) => `<p class="text-xs text-asfa-muted mt-2">${text}</p>`;
 
       let asfaBody = unavailable('ASFA');
       if (asfa) {
@@ -139,7 +141,8 @@
             ? [trials.stats.trials, 'trials this year']
             : [asfa.stats.bif, 'Best in Field'],
           [asfa.stats.total_competing.toLocaleString('en-US'), 'hounds competing'],
-        ]) + (leader ? `<p class="text-sm text-asfa-text/70 mt-3">Highest standing: <span class="font-semibold text-asfa-green">${esc(leader.call_name)}</span>, ${esc(leader.breed)} #${leader.rank}, ${percentileLabel(leader)}.</p>` : '');
+        ]) + (leader ? `<p class="text-sm text-asfa-text/70 mt-3">Highest standing: <span class="font-semibold text-asfa-green">${esc(leader.call_name)}</span>, ${esc(leader.breed)} #${leader.rank}, ${percentileLabel(leader)}.</p>` : '')
+          + updatedLine(`Standings through ${formatDate(asfa.as_of)}${trials ? `, trial results through ${formatDate(trials.as_of)}` : ''}`);
         coverage.push(`ASFA standings through ${formatDate(asfa.as_of)}${
           trials ? `, trials through ${formatDate(trials.as_of)}` : ''}`);
       }
@@ -156,7 +159,8 @@
           [combined ? combined.breeds_raced : feed.stats.breeds_raced, 'breeds racing this year'],
           [combined ? combined.meets_this_year : feed.stats.meets_this_year, 'meets this year'],
           titled,
-        ]) + (leader ? `<p class="text-sm text-asfa-text/70 mt-3">Leading all breeds: <span class="font-semibold text-asfa-green">${esc(leader.call_name)}</span>, ${esc(leader.breed)}, ${ptsLabel(leader.ytd)} points.</p>` : '');
+        ]) + (leader ? `<p class="text-sm text-asfa-text/70 mt-3">Leading all breeds: <span class="font-semibold text-asfa-green">${esc(leader.call_name)}</span>, ${esc(leader.breed)}, ${ptsLabel(leader.ytd)} points.</p>` : '')
+          + updatedLine(`Grading guide ${guideDate(feed, 'of')}`);
       };
       const lgraBody = racingCard(lgra, 'lgra', 'LGRA', 'hounds');
       const aok9Body = racingCard(aok9, 'aok9', 'AOK9', 'dogs', aok9 && singles ? singles.combined : null);
@@ -175,7 +179,8 @@
           [feed.stats.hounds_ytd, 'with points this year'],
           [feed.stats.meets_this_year, 'meets this year'],
           ORGS[org].titledTile(feed.stats),
-        ]) + (leader ? `<p class="text-sm text-asfa-text/70 mt-3">Leading this year: <span class="font-semibold text-asfa-green">${esc(leader.call_name)}</span>, ${ptsLabel(leader.ytd)} points.</p>` : '');
+        ]) + (leader ? `<p class="text-sm text-asfa-text/70 mt-3">Leading this year: <span class="font-semibold text-asfa-green">${esc(leader.call_name)}</span>, ${ptsLabel(leader.ytd)} points.</p>` : '')
+          + updatedLine(`Grading guide ${guideDate(feed, 'of')}`);
       };
       const wraBody = whippetCard(wra, 'wra', 'WRA');
       const notraWhippetsBody = whippetCard(notraWhippets, 'notra-whippets', 'NOTRA Whippets');
@@ -190,20 +195,21 @@
           [s.titles_this_year, 'titles earned this year'],
           [s.arx_total.toLocaleString('en-US'), 'ARX titles, all time'],
           [s.dpc_total.toLocaleString('en-US'), 'DPC titles, all time'],
-        ]) + (s.leader ? `<p class="text-sm text-asfa-text/70 mt-3">Leading the racing standings: <span class="font-semibold text-asfa-green">${esc(s.leader.call_name)}</span>, ${ptsLabel(s.leader.points)} NARX points.</p>` : '');
+        ]) + (s.leader ? `<p class="text-sm text-asfa-text/70 mt-3">Leading the racing standings: <span class="font-semibold text-asfa-green">${esc(s.leader.call_name)}</span>, ${ptsLabel(s.leader.points)} NARX points.</p>` : '')
+          + updatedLine(`Grading guide of ${formatDate(s.guide_updated)}`);
       }
-      const betaBadge = '<span class="badge badge-flat ml-2 align-middle font-mono text-[10px] uppercase tracking-widest">Beta</span>';
+      const betaBadge = '<span class="badge badge-flat ml-2 align-middle font-mono text-[11px] uppercase tracking-widest">Beta</span>';
       const whippetPair = `
         <div class="card program-card program-whippet flex flex-col md:col-span-2">
           <h2 class="font-display text-3xl text-asfa-text">Whippet racing${betaBadge}</h2>
-          <p class="font-mono text-[10px] uppercase tracking-widest text-asfa-muted mt-0.5">${ORGS.wra.hubLine || 'Whippet racing records'}</p>
+          <p class="font-mono text-[11px] uppercase tracking-widest text-asfa-muted mt-0.5">${ORGS.wra.hubLine || 'Whippet racing records'}</p>
           <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-y-8 md:gap-x-8 mt-5">
             ${[['wra', 'WRA', ORGS.wra.hubSub, wraBody, 'Standings, grades, titles'],
               ['notra-whippets', 'NOTRA Whippets', ORGS['notra-whippets'].hubSub, notraWhippetsBody, 'Standings, grades, titles'],
               ['cwa', 'CWA', 'Racing and High Combined', cwaBody, 'Standings, grades, titles']].map(([org, title, sub, body, cta]) => `
             <a href="${org}.html" class="program-whippet flex flex-col group">
               <h3 class="font-display text-2xl program-label">${title}</h3>
-              <p class="font-mono text-[10px] uppercase tracking-widest text-asfa-muted mt-0.5">${sub || ''}</p>
+              <p class="font-mono text-[11px] uppercase tracking-widest text-asfa-muted mt-0.5">${sub || ''}</p>
               <div class="mt-4">${body}</div>
               <p class="text-sm mt-auto pt-4 underline underline-offset-2 text-asfa-text/80 group-hover:text-asfa-text">${cta} →</p>
             </a>`).join('')}
@@ -232,8 +238,87 @@
       animateTiles(programs);
 
       document.getElementById('coverage').textContent = coverage.length
-        ? `${coverage.join(' · ')}.`
+        ? "Refreshed every week from each body's own records. Each card below gives its date."
         : 'No data could be loaded.';
+      paintLatest({ asfa, lgra, aok9, notra, wra, notraWhippets, cwa });
+
+      /* ----- What's new: each body's latest update and what it added, newest
+         first. A racing guide lists the titles it added over its last four
+         weeks (titles_recent, measured against a guide at least 28 days
+         older, so a revision a few days later does not empty it); ASFA, the
+         titles dated since its previous standings and the hounds new at #1;
+         CWA, the titles it dated in the four weeks to its guide. */
+      async function paintLatest({ asfa, lgra, aok9, notra, wra, notraWhippets, cwa }) {
+        const box = document.getElementById('latest');
+        const SHOW = 4;
+        const short = (iso) => new Date(`${iso}T00:00:00Z`).toLocaleDateString('en-US',
+          { month: 'short', day: 'numeric', timeZone: 'UTC' });
+        const named = (links, total) => links.join(', ') + (total > links.length ? ` and ${total - links.length} more` : '');
+        const rows = [];
+
+        if (asfa) {
+          const parts = [];
+          try {
+            const titles = await loadJson('data/titles.json');
+            const fresh = asfa.previous_as_of
+              ? titles.titles.filter((row) => row.date > asfa.previous_as_of && row.date <= asfa.as_of) : [];
+            if (fresh.length) {
+              parts.push(`<a href="titles.html" class="lnk">${fresh.length} title${fresh.length === 1 ? '' : 's'}</a> dated since ${short(asfa.previous_as_of)}`);
+            }
+          } catch (error) { console.warn(error); }
+          const tops = asfa.dogs.filter((dog) => dog.rank === 1 && dog.movement
+            && (dog.movement.new || dog.movement.rank_delta > 0));
+          if (tops.length) {
+            parts.push(`new at #1: ${named(tops.slice(0, SHOW).map((dog) =>
+              `<a href="${dogUrl(dog.id)}" class="lnk">${esc(dog.call_name)}</a> (${esc(dog.breed)})`), tops.length)}`);
+          }
+          rows.push({ date: asfa.as_of, program: 'asfa', name: 'ASFA Top 20', href: 'asfa.html',
+            text: parts.length ? `${parts.join('; ')}.` : `standings through ${formatDate(asfa.as_of)}.` });
+        }
+
+        for (const [feed, org, name] of [[lgra, 'lgra', 'LGRA'], [aok9, 'aok9', 'AOK9'], [notra, 'notra', 'NOTRA OB'],
+          [wra, 'wra', 'WRA'], [notraWhippets, 'notra-whippets', 'NOTRA Whippets']]) {
+          if (!feed || !feed.titles_recent) continue;
+          const { since, titles } = feed.titles_recent;
+          rows.push({ date: feed.guide_date, program: ['wra', 'notra-whippets'].includes(org) ? 'whippet' : org,
+            name, href: `${org}.html`,
+            text: titles.length
+              ? `${titles.length} new title${titles.length === 1 ? '' : 's'} since ${short(since)}: ${named(titles.slice(0, SHOW).map((row) =>
+                  `<a href="${racingDogUrl(org, row.id)}" class="lnk">${esc(row.call_name)}</a> ${esc(row.title)}`), titles.length)}.`
+              : `no new titles since ${short(since)}.` });
+        }
+
+        if (cwa) {
+          const from = new Date(`${cwa.stats.guide_updated}T00:00:00Z`);
+          from.setUTCDate(from.getUTCDate() - 28);
+          const since = from.toISOString().slice(0, 10);
+          const callName = new Map(cwa.whippets.map((row) => [row[cwa.whippet_columns.indexOf('id')],
+            row[cwa.whippet_columns.indexOf('call_name')]]));
+          const col = (name) => cwa.title_columns.indexOf(name);
+          const fresh = cwa.titles.filter((row) => row[col('earned')] && row[col('earned')] > since);
+          rows.push({ date: cwa.stats.guide_updated, program: 'whippet', name: 'CWA', href: 'cwa.html',
+            text: fresh.length
+              ? `${fresh.length} title${fresh.length === 1 ? '' : 's'} dated since ${short(since)}: ${named(fresh.slice(0, SHOW).map((row) => {
+                  const dog = row[col('dog')];
+                  const label = esc(callName.get(dog) || row[col('name')]);
+                  return `${dog ? `<a href="cwa.html?dog=${encodeURIComponent(dog)}" class="lnk">${label}</a>` : label} ${esc(row[col('title')])}`;
+                }), fresh.length)}.`
+              : `no titles dated since ${short(since)}.` });
+        }
+
+        if (!rows.length) return;
+        rows.sort((a, b) => b.date.localeCompare(a.date));
+        box.innerHTML = `
+          <h2 id="latest-title" class="card-title">What's new</h2>
+          <p class="text-sm text-asfa-text/70">The latest update from each body, newest first.</p>
+          <ul class="mt-2 divide-y divide-asfa-border">${rows.map((row) => `
+            <li class="grid sm:grid-cols-[6rem_1fr] gap-x-4 gap-y-0.5 py-2.5">
+              <span class="font-mono text-xs text-asfa-muted sm:pt-0.5">${short(row.date)}</span>
+              <p class="text-sm"><a href="${row.href}" class="font-semibold update-program program-${row.program}">${row.name}</a>: ${row.text}</p>
+            </li>`).join('')}
+          </ul>`;
+        box.classList.remove('hidden');
+      }
 
       /* ----- one search box over every program */
       const row = (dog) => `

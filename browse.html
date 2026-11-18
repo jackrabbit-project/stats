@@ -20,7 +20,7 @@
   <link rel="preload" href="assets/fonts/fraunces-latin-var.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/plex-mono-400.woff2" as="font" type="font/woff2" crossorigin>
   <script src="js/theme.js?v=20260823"></script>
-  <link rel="stylesheet" href="css/app.css?v=20261117a">
+  <link rel="stylesheet" href="css/app.css?v=20261118a">
   <link rel="icon" href="assets/favicon.ico?v=4" sizes="any">
   <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png?v=4">
   <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png?v=4">
@@ -34,16 +34,23 @@
       <p class="text-sm text-asfa-text/70 mt-1">Pick a breed, an LCI division, or the Singles stake to see who ASFA has ranked in it this season.</p>
     </div>
 
-    <div id="breed-grid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2"></div>
+    <!-- On a phone the 25 sections are a dropdown, so the chosen table sits
+         right under it instead of below a screen of buttons. -->
+    <label class="block sm:hidden">
+      <span class="text-xs font-semibold text-asfa-text/70 uppercase tracking-wide">Breed or division</span>
+      <select id="breed-select" class="mt-1 w-full select"></select>
+    </label>
+    <div id="breed-grid" class="hidden sm:grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2"></div>
     <section id="table-panel"></section>
   </main>
 
   <footer id="site-footer" class="bg-asfa-navy text-white py-8"></footer>
 
-  <script src="js/app.js?v=20261116n"></script>
+  <script src="js/app.js?v=20261118a"></script>
   <script>
     page('browse.html', (season) => {
       const grid = document.getElementById('breed-grid');
+      const picker = document.getElementById('breed-select');
       const panel = document.getElementById('table-panel');
       let sort = { key: 'rank', dir: 1 };
 
@@ -67,6 +74,9 @@
         grid.querySelectorAll('button[data-slug]').forEach((button) => {
           button.addEventListener('click', () => select(button.dataset.slug));
         });
+        picker.innerHTML = sections.map((section) => `<option value="${section.slug}"
+          ${section.slug === activeSlug ? 'selected' : ''} ${section.ranked === 0 ? 'disabled' : ''}>${esc(section.breed)}${
+            section.ranked ? ` (${section.ranked} ranked)` : ' (none ranked)'}</option>`).join('');
       }
 
       function paintTable(slug) {
@@ -83,12 +93,15 @@
           return dir * (av - bv) || a.rank - b.rank;
         });
 
+        // On a phone the registered name rides under the call name, and owner
+        // and region wait for a wider screen, so Points shows without scrolling.
+        const wide = 'hidden md:table-cell';
         const columns = [
           ['rank', 'Rank', 'num'],
           ['call_name', 'Call name', ''],
-          ['registered_name', 'Registered name', ''],
-          ['owner_raw', 'Owner', ''],
-          ['region', 'Region', 'num'],
+          ['registered_name', 'Registered name', wide],
+          ['owner_raw', 'Owner', wide],
+          ['region', 'Region', `num ${wide}`],
           ['points', 'Points', 'num'],
           // Best of Breed and Best in Field do not exist in the Singles stake
           // or the LCI divisions, so the columns are dropped there rather than
@@ -123,10 +136,11 @@
                   <tr>
                     <td class="num font-semibold">${dog.rank}</td>
                     <td><a href="${dogUrl(dog.id)}" class="lnk font-semibold">${esc(dog.call_name)}</a>${
-                      dog.provisional ? ' <span class="badge badge-prov">provisional</span>' : ''}</td>
-                    <td class="text-asfa-text/80">${esc(dog.registered_name)}</td>
-                    <td class="text-asfa-text/80">${asfaOwners(dog, season)}</td>
-                    <td class="num">${dog.region ?? '—'}</td>
+                      dog.provisional ? ' <span class="badge badge-prov">provisional</span>' : ''}
+                      <span class="block md:hidden text-xs text-asfa-text/70 mt-0.5">${esc(dog.registered_name)}</span></td>
+                    <td class="text-asfa-text/80 ${wide}">${esc(dog.registered_name)}</td>
+                    <td class="text-asfa-text/80 ${wide}">${asfaOwners(dog, season)}</td>
+                    <td class="num ${wide}">${dog.region ?? '—'}</td>
                     <td class="num font-semibold">${dog.points}</td>
                     ${section.is_breed ? `
                       <td class="num">${dog.bob}</td>
@@ -184,6 +198,8 @@
         paintGrid(slug);
         paintTable(slug);
       }
+
+      picker.addEventListener('change', () => select(picker.value));
 
       const requested = param('breed');
       const initial = sections.find((s) => s.slug === requested && s.ranked)
