@@ -386,6 +386,56 @@ def main() -> int:
         "a hound lists the same owner entity twice",
     )
 
+    # The points history behind each hound's chart: one [points, rank] per
+    # standings update of the season (null where unlisted), re-read from the
+    # parsed snapshots, the last one this standings' own figures.
+    history_path = ROOT / "data" / "season-history.json"
+    check.expect(history_path.exists(), "data/season-history.json missing; run tools/build.py")
+    if history_path.exists():
+        history = json.loads(history_path.read_text(encoding="utf-8"))
+        parsed = sorted((json.loads(p.read_text(encoding="utf-8"))
+                         for p in (ROOT / "data" / "snapshots").glob("*.json")),
+                        key=lambda snap: snap["as_of"])
+        parsed = [snap for snap in parsed if snap["season"] == season["season"]]
+        check.expect(history["snapshots"] == [snap["as_of"] for snap in parsed],
+                     "season-history.json: its updates are not the season's snapshots")
+        check.expect(set(history["hounds"]) == {d["id"] for d in dogs},
+                     "season-history.json: its hounds are not the ranked hounds")
+        listed = [{dog["id"]: [dog["points"], dog["rank"]]
+                   for section in snap["sections"] for dog in section["dogs"]} for snap in parsed]
+        # A re-spelled hound: at each update before its current name, the
+        # name ASFA printed then, found in the same breed, under an id that
+        # never appears alongside or after the current one.
+        by_name = [{(dog["id"].rsplit("--", 1)[1], dog["registered_name"]): dog["id"]
+                    for section in snap["sections"] for dog in section["dogs"]} for snap in parsed]
+        printed = history.get("printed", {})
+        check.expect(set(printed) <= set(history["hounds"]),
+                     "season-history.json: a printed name for a hound it does not list")
+        for d in dogs:
+            series = history["hounds"].get(d["id"], [])
+            names = printed.get(d["id"]) or [None] * len(parsed)
+            breed = d["id"].rsplit("--", 1)[1]
+            expected, old_ids = [], set()
+            for i, by_id in enumerate(listed):
+                old = by_name[i].get((breed, names[i])) if names[i] else None
+                if old:
+                    old_ids.add(old)
+                expected.append(by_id.get(old) if old else by_id.get(d["id"]))
+            check.expect(series == expected,
+                         f"season-history.json: {d['id']} disagrees with the snapshots")
+            check.expect(bool(series) and series[-1] == [d["points"], d["rank"]],
+                         f"season-history.json: {d['id']}'s last update is not its current standing")
+            if any(names):
+                current_from = next(i for i, by_id in enumerate(listed) if d["id"] in by_id)
+                check.expect(d["id"] not in old_ids and all(
+                    old not in listed[i] for old in old_ids for i in range(current_from, len(listed))),
+                    f"season-history.json: {d['id']} is joined to a name still listed beside it")
+                check.expect(all(names[i] is None for i in range(current_from, len(listed))),
+                             f"season-history.json: {d['id']} has a printed name after its current one")
+            points = [entry[0] for entry in series if entry]
+            check.expect(points == sorted(points),
+                         f"season-history.json: {d['id']}'s season total drops ({points})")
+
     check_trials(check)
     check_events(check)
     check_akc(check)
@@ -2014,6 +2064,39 @@ def check_racing(check: Checker, org: str) -> None:
                                   else None)
                 check.expect(move["ytd_delta"] == expected_delta,
                              f"{label}: {dog['id']} ytd_delta disagrees")
+
+    # 8b. The hub's "What's new": titles measured against the newest guide on
+    # file at least 28 days older than this one (the oldest when none is),
+    # each row a hound in this feed, none listed twice. Titles only build up,
+    # so everything new since the previous guide is new since an older one
+    # too, and from the same guide the two lists are the same.
+    from datetime import date as _date, timedelta as _timedelta
+    recent = feed.get("titles_recent")
+    on_file = feed["snapshots"]
+    if len(on_file) < 2:
+        check.expect(recent is None, f"{label}: titles_recent with one guide on file")
+    else:
+        cutoff = (_date.fromisoformat(feed["guide_date"]) - _timedelta(days=28)).isoformat()
+        older = [day for day in on_file[:-1] if day <= cutoff]
+        check.expect(recent is not None and recent["since"] == (older[-1] if older else on_file[0]),
+                     f"{label}: titles_recent is not measured from the guide 28 days back")
+        rows = (recent or {}).get("titles", [])
+        by_id = {dog["id"]: dog for dog in feed["dogs"]}
+        for row in rows:
+            dog = by_id.get(row["id"])
+            check.expect(dog is not None and dog.get("active", True)
+                         and (row["call_name"], row["breed"]) == (dog["call_name"], dog["breed"]),
+                         f"{label}: titles_recent {row['id']} is not a hound in the feed")
+        found = {(row["id"], row["title"]) for row in rows}
+        check.expect(len(found) == len(rows), f"{label}: titles_recent lists a title twice")
+        since_previous = {(row["id"], row["title"]) for row in feed["titles_since_previous"]}
+        if recent and previous and recent["since"] == previous:
+            check.expect(found == since_previous,
+                         f"{label}: titles_recent and titles_since_previous differ from the same guide")
+        elif recent and previous and recent["since"] < previous:
+            check.expect(since_previous <= found,
+                         f"{label}: titles new since the previous guide missing from titles_recent: "
+                         f"{sorted(since_previous - found)[:3]}")
 
     # 9. Nothing personal beyond names travels into the published data.
     for path in (feed_path, registry_path, snapshot_path):

@@ -32,3 +32,4 @@ data/cwa/snapshots/*.json -diff
 
 * text=auto
 data/akc/singles.json -diff eol=lf
+data/season-history.json -diff

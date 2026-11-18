@@ -50,6 +50,7 @@ import openpyxl
 import requests
 
 from racing import (
+    recent_titles,
     DATA, RacingParseError, build_movement, build_owners, cell_num, cell_str,
     compact_registry, cumulative_titles, derive_identity, fetch_bytes, fetch_text,
     file_raw, grade, last_raced, load_snapshots, newest_snapshot, rank_by,
@@ -798,6 +799,7 @@ def build(snapshots: list[dict]) -> tuple[dict, dict]:
         "dogs": [compact_dog(dog) for dog in active],
         "owners": owners,
         "titles_since_previous": titles_since,
+        "titles_recent": recent_titles(snapshots, dogs, derive, titles_of),
         "meet_columns": ["code", "year", "date", "score", "complete", "status", "read"],
         "notes": [
             "Other Breeds only: NOTRA's Whippet guide, with its own layout and "

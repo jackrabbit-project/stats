@@ -53,6 +53,7 @@ import requests
 from bs4 import BeautifulSoup
 
 from racing import (
+    recent_titles,
     DATA, RacingParseError, build_movement, build_owners, compact_registry,
     derive_identity, fetch_bytes, load_snapshots, rank_by, redate_if_label_stale,
     sha256, slug, today, write_json, write_snapshot_if_changed,
@@ -728,6 +729,7 @@ def build(snapshots: list[dict], meets_run: dict | None = None) -> tuple[dict, d
         "dogs": [compact(dog) for dog in active],
         "owners": owners,
         "titles_since_previous": titles_since,
+        "titles_recent": recent_titles(snapshots, dogs, derive, titles_of),
         "meet_columns": ["code", "year", "date", "score", "complete", "status", "read"],
         "dq_columns": ["code", "date"],
         "unmatched_records": current["records"]["unmatched_active"],

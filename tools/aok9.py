@@ -38,6 +38,7 @@ from pathlib import Path
 import requests
 
 from racing import (
+    recent_titles,
     DATA, RacingParseError, breed_display, build_movement, build_owners,
     cell_num, cell_str, compact_registry, cumulative_titles, decode_aok9_meet,
     decode_or_keep, last_raced,
@@ -513,6 +514,7 @@ def build(snapshots: list[dict]) -> tuple[dict, dict]:
         "dogs": [compact_dog(dog) for dog in active],
         "owners": owners,
         "titles_since_previous": titles_since,
+        "titles_recent": recent_titles(snapshots, dogs, derive, titles_of),
         "meet_columns": ["code", "year", "date", "score", "complete"],
         "dq_columns": ["code", "date"],
         "notes": [

@@ -586,6 +586,29 @@ def build_movement(current: list[dict], previous: list[dict] | None,
     return movement
 
 
+RECENT_DAYS = 28
+
+
+def recent_titles(snapshots: list[dict], dogs: list[dict], derive, titles_of,
+                  days: int = RECENT_DAYS) -> dict | None:
+    """The titles a body's guides added over its last four weeks, for the
+    hub's "What's new". Measured against the newest guide at least `days`
+    older than the current one (the oldest on file when none is), so a guide
+    revised in place a few days later does not empty the list the way the
+    comparison with the previous guide does (WRA, November 17, 2026)."""
+    if len(snapshots) < 2:
+        return None
+    cutoff = (date.fromisoformat(snapshots[-1]["guide_date"]) - timedelta(days=days)).isoformat()
+    older = [snap for snap in snapshots[:-1] if snap["guide_date"] <= cutoff]
+    base = older[-1] if older else snapshots[0]
+    before = {dog["id"]: set(titles_of(dog)) for dog in derive(base)}
+    titles = [{"id": dog["id"], "call_name": dog["call_name"], "breed": dog["breed"], "title": title}
+              for dog in dogs if dog.get("active", True)
+              for title in titles_of(dog) if title not in before.get(dog["id"], set())]
+    titles.sort(key=lambda row: (row["breed"], row["call_name"], row["title"]))
+    return {"since": base["guide_date"], "titles": titles}
+
+
 def build_owners(dogs: list[dict], sum_fields: list[str],
                  best_field: str) -> list[dict]:
     """Owner aggregates over the active hounds, one row per surname per breed.

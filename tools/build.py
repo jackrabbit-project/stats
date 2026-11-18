@@ -17,6 +17,7 @@ import json
 import sys
 from collections import Counter
 from datetime import timezone, datetime
+from difflib import SequenceMatcher
 from pathlib import Path
 
 from regions import REGIONS
@@ -24,6 +25,7 @@ from regions import REGIONS
 ROOT = Path(__file__).resolve().parent.parent
 SNAPSHOT_DIR = ROOT / "data" / "snapshots"
 OUTPUT = ROOT / "data" / "season.json"
+HISTORY = ROOT / "data" / "season-history.json"
 
 SOURCE_URL = "https://www.asfa.org/20/index.htm"
 
@@ -526,10 +528,86 @@ def build(snapshots: list[dict]) -> dict:
     }
 
 
+def same_name(old: str, new: str) -> bool:
+    """Two id stems name the same hound: a spelling fix (nearly the same
+    letters: Domiiko / Domiko) or a word added or dropped (every word of the
+    shorter name in the longer one, in order: Bakari African Tunde / Bakari
+    African Treasure Tunde)."""
+    if SequenceMatcher(None, old, new).ratio() >= 0.9:
+        return True
+    shorter, longer = sorted((old.split("-"), new.split("-")), key=len)
+    words = iter(longer)
+    return len(shorter) >= 2 and all(word in words for word in shorter)
+
+
+def renamed(listed: list[dict]) -> dict:
+    """{new id: old id} for each hound ASFA re-spelled during the season,
+    which changes its id. Linked only when the old name's last listing is
+    the update just before the new name's first (so the two never appear
+    together), both are in the same breed or division, the points did not
+    drop, and the names are nearly the same."""
+    first, last = {}, {}
+    for i, by_id in enumerate(listed):
+        for dog_id in by_id:
+            first.setdefault(dog_id, i)
+            last[dog_id] = i
+    links = {}
+    for new, i in first.items():
+        if i == 0:
+            continue
+        stem, breed = new.rsplit("--", 1)
+        olds = [old for old, j in last.items()
+                if j == i - 1 and old.rsplit("--", 1)[1] == breed
+                and listed[i][new][0] >= listed[i - 1][old][0]
+                and same_name(old.rsplit("--", 1)[0], stem)]
+        if len(olds) == 1 and olds[0] not in links.values():
+            links[new] = olds[0]
+    return links
+
+
+def build_history(snapshots: list[dict], bundle: dict) -> dict:
+    """Each ranked hound's points and rank at every standings update of the
+    season, for the chart on its page: [points, rank] per update, null where
+    the hound was not listed. A hound ASFA re-spelled mid-season is followed
+    across the change, with the name as ASFA printed it at those updates in
+    "printed". Kept apart from season.json so only a hound's page loads it."""
+    season = [snap for snap in snapshots if snap["season"] == bundle["season"]]
+    listed = [{dog["id"]: [dog["points"], dog["rank"], dog["registered_name"]]
+               for section in snap["sections"] for dog in section["dogs"]}
+              for snap in season]
+    links = renamed(listed)
+    hounds, printed = {}, {}
+    for dog in bundle["dogs"]:
+        chain = [dog["id"]]
+        while chain[-1] in links:
+            chain.append(links[chain[-1]])
+        series, names = [], []
+        for by_id in listed:
+            hit = next((dog_id for dog_id in chain if dog_id in by_id), None)
+            series.append(by_id[hit][:2] if hit else None)
+            names.append(by_id[hit][2] if hit and hit != dog["id"] else None)
+        hounds[dog["id"]] = series
+        if len(chain) > 1:
+            printed[dog["id"]] = names
+            print(f"season history: {dog['id']} followed back through "
+                  f"{', '.join(chain[1:])} (re-spelled by ASFA)")
+    return {
+        "season": bundle["season"],
+        "snapshots": [snap["as_of"] for snap in season],
+        "hounds": hounds,
+        "printed": printed,
+    }
+
+
 def main() -> int:
-    bundle = build(load_snapshots())
+    snapshots = load_snapshots()
+    bundle = build(snapshots)
     OUTPUT.write_text(
         json.dumps(bundle, ensure_ascii=False, separators=(",", ":")),
+        encoding="utf-8",
+    )
+    HISTORY.write_text(
+        json.dumps(build_history(snapshots, bundle), ensure_ascii=False, separators=(",", ":")),
         encoding="utf-8",
     )
     size_kb = OUTPUT.stat().st_size / 1024

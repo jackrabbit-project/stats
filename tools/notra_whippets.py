@@ -49,6 +49,7 @@ import requests
 
 from names import split_owners
 from racing import (
+    recent_titles,
     DATA, RacingParseError, build_movement, build_owners, cell_num, cell_str,
     compact_registry, fetch_bytes, fetch_text, file_raw, last_raced, load_snapshots,
     rank_by, read_rows_xls, redate_if_label_stale, sha256, slug, today, write_json,
@@ -531,6 +532,7 @@ def build(snapshots: list[dict]) -> tuple[dict, dict]:
         "dogs": [compact(dog) for dog in active],
         "owners": owners,
         "titles_since_previous": titles_since,
+        "titles_recent": recent_titles(snapshots, dogs, derive, titles_of),
         "meet_columns": ["code", "year", "date", "score", "complete", "status", "read", "placing", "graded"],
         "notes": [
             "Standings rank this season's National points (Curr NORC); career "
