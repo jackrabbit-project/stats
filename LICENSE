@@ -70,9 +70,9 @@ the following, which are included under separate terms:
 6. WRA DATA — "data/wra.json", "data/wra-registry.json" and the archived
    snapshots under "data/wra/" are derived from the grading guide reports
    and the Registrar's Whippet Point Records published by the Whippet Racing
-   Association (WRA) at whippetracing.org, and are published here at the
-   WRA's request. That material remains the property of the WRA; the WRA's
-   own records are authoritative wherever the two disagree.
+   Association (WRA) at whippetracing.org. That material remains the
+   property of the WRA; the WRA's own records are authoritative wherever the
+   two disagree.
 
 7. CWA DATA — "data/cwa.json", "data/cwa-registry.json" and the archived
    snapshots under "data/cwa/" are derived from the grading guides, the
@@ -83,8 +83,8 @@ the following, which are included under separate terms:
 
    In each case the name and marks of ASFA, LGRA, AOK9, R.A.C.E., NOTRA, the
    WRA, the CWA and the AKC are used descriptively to identify the source.
-   This project is independent and, apart from the WRA's request noted
-   above, is not authorized, approved, or endorsed by any of them. The raw workbooks and reports the racing guides are distributed
+   This project is independent and is not authorized, approved, or
+   endorsed by any of them. The raw workbooks and reports the racing guides are distributed
    as are not stored in this repository.
 
 8. PHOTOGRAPHS — "assets/card-aok9.jpg" is by Susan Wilson and is reproduced

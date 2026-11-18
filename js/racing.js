@@ -1594,7 +1594,7 @@ const ABOUT = {
       </ul>`,
     disclaimer: `
       <p class="text-sm leading-relaxed">
-        These pages are an independent, unofficial project, added at the WRA's request. They are
+        These pages are an independent, unofficial project. They are
         not a WRA publication, service, or software, and they are not endorsed by the Whippet
         Racing Association. The WRA's name is used only to identify the source of the reports,
         the Point Records and the rule book cited here. Those are the WRA's work and remain its

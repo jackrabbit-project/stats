@@ -29,8 +29,7 @@ dog's last raced date.
 This script archives a parsed snapshot under data/wra/snapshots/ whenever
 the reports or the Point Records change, then rebuilds data/wra.json (the
 dogs on WRA's active list) and data/wra-registry.json (every dog) from all
-snapshots. The raw downloads stay out of git (data/wra/raw/). The site
-publishes WRA's records at the WRA's request.
+snapshots. The raw downloads stay out of git (data/wra/raw/).
 
 Usage:
     python tools/wra.py                    # fetch, archive if changed, rebuild
