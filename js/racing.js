@@ -837,7 +837,7 @@ function renderRacingOverview(org, feed, main, singles = null) {
     .sort((a, b) => b.leader.ytd - a.leader.ytd || a.breed.localeCompare(b.breed));
   const leadersBoard = single ? '' : `
       <div class="card">
-        <h2 class="card-title">Breed leaders</h2>
+        <h2 class="card-title">${icon('crown')}Breed leaders</h2>
         <p class="text-xs text-asfa-text/60 mb-3">The ${spec.noun} at the top of each breed's standings, by ${spec.seasonLabel}.</p>
         ${leaders.length ? `<div class="tbl-wrap"><table class="tbl">
           <thead><tr><th scope="col">${spec.noun[0].toUpperCase() + spec.noun.slice(1)}</th><th scope="col">Breed</th><th scope="col" class="num">Points</th></tr></thead>
@@ -860,7 +860,7 @@ function renderRacingOverview(org, feed, main, singles = null) {
       .slice(0, careerRows);
     return `
       <div class="card">
-        <h2 class="card-title">${label}</h2>
+        <h2 class="card-title">${icon('trophy')}${label}</h2>
         <p class="text-xs text-asfa-text/60 mb-3">All-time totals. Rank is against every ${spec.noun} ever registered; only ${nouns} still racing are listed, so retired ${nouns} hold the gaps. ${spec.careerNote || `Thirty points make a ${supremeLabel}, sixty a ${supremeLabel}2, and so on.`}</p>
         ${top.length ? `<div class="tbl-wrap"><table class="tbl">
           <thead><tr><th scope="col" class="num">Rank</th><th scope="col">${spec.noun[0].toUpperCase() + spec.noun.slice(1)}</th>${single ? '' : '<th scope="col">Breed</th>'}<th scope="col" class="num">Points</th><th scope="col">Title</th></tr></thead>
@@ -879,7 +879,7 @@ function renderRacingOverview(org, feed, main, singles = null) {
   const newTitles = feed.titles_since_previous || [];
   const titlesBoard = hasPrevious ? `
       <div class="card">
-        <h2 class="card-title">New titles since ${formatDate(feed.previous_guide_date)}</h2>
+        <h2 class="card-title">${icon('medal')}New titles since ${formatDate(feed.previous_guide_date)}</h2>
         <p class="text-xs text-asfa-text/60 mb-3">${spec.titlesBoardNote || 'Read from the points columns of consecutive guides.'}</p>
         ${newTitles.length ? `<div class="tbl-wrap"><table class="tbl"><tbody>${newTitles.slice(0, 40).map((row) => `
           <tr><td><a href="${racingDogUrl(org, row.id)}" class="lnk font-semibold">${esc(row.call_name)}</a></td>
@@ -917,7 +917,7 @@ function renderRacingOverview(org, feed, main, singles = null) {
   const TAB_LABELS = [['overview', 'Overview'], ['standings', 'Standings'], ['browse', 'Browse'], ['kennels', 'Kennels'], ['about', 'About']];
   const subTabs = spec.subTabs ? `
     <nav class="flex flex-wrap gap-2 no-print subtabs-${spec.subTabs}" aria-label="${esc(spec.name)} pages" id="sub-tabs">
-      ${TAB_LABELS.map(([id, label]) => `<a href="#${id}" class="tab" data-tab="${id}">${label}</a>`).join('')}
+      ${TAB_LABELS.map(([id, label]) => `<a href="#${id}" class="tab" data-tab="${id}">${navIcon(label)}${label}</a>`).join('')}
     </nav>` : '';
 
   main.innerHTML = `
@@ -942,7 +942,7 @@ function renderRacingOverview(org, feed, main, singles = null) {
 
     <section class="grid grid-cols-1 md:grid-cols-3 gap-6">
       <div class="card md:row-span-2">
-        <h2 class="card-title">${single ? 'Standings' : 'All-breed standings'}</h2>
+        <h2 class="card-title">${icon('ranking')}${single ? 'Standings' : 'All-breed standings'}</h2>
         <p class="text-xs text-asfa-text/60 mb-3">${spec.seasonLabel}${single ? '' : ', all breeds'}.</p>
         <div class="tbl-wrap"><table class="tbl">
           <thead><tr><th scope="col" class="num">Rank</th><th scope="col">${Noun}</th>${single ? '' : '<th scope="col">Breed</th>'}<th scope="col" class="num">Points</th></tr></thead>

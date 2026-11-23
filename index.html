@@ -21,7 +21,7 @@
   <link rel="preload" href="assets/fonts/fraunces-latin-var.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/plex-mono-400.woff2" as="font" type="font/woff2" crossorigin>
   <script src="js/theme.js?v=20260823"></script>
-  <link rel="stylesheet" href="css/app.css?v=20261118a">
+  <link rel="stylesheet" href="css/app.css?v=20261122a">
   <link rel="icon" href="assets/favicon.ico?v=4" sizes="any">
   <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png?v=4">
   <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png?v=4">
@@ -64,8 +64,8 @@
 
   <footer id="site-footer" class="bg-asfa-navy text-white py-8"></footer>
 
-  <script src="js/app.js?v=20261118a"></script>
-  <script src="js/racing.js?v=20261118b"></script>
+  <script src="js/app.js?v=20261122a"></script>
+  <script src="js/racing.js?v=20261122a"></script>
   <script>
     pageHub(({ asfa, lgra, aok9, trials, singles, notra, wra, notraWhippets, cwa }) => {
       const programs = document.getElementById('programs');
@@ -310,7 +310,7 @@
         if (!rows.length) return;
         rows.sort((a, b) => b.date.localeCompare(a.date));
         box.innerHTML = `
-          <h2 id="latest-title" class="card-title">What's new</h2>
+          <h2 id="latest-title" class="card-title">${icon('sparkle')}What's new</h2>
           <p class="text-sm text-asfa-text/70">The latest update from each body, newest first.</p>
           <ul class="mt-2 divide-y divide-asfa-border">${rows.map((row) => `
             <li class="grid sm:grid-cols-[6rem_1fr] gap-x-4 gap-y-0.5 py-2.5">

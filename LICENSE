@@ -108,3 +108,8 @@ the following, which are included under separate terms:
    typeface (Copyright 2017 IBM Corp.), each licensed under the SIL Open
    Font License, Version 1.1 (https://openfontlicense.org), not the MIT
    license above.
+
+11. ICONS — the interface icons in "js/app.js" and the inline icons in the
+   pages are Phosphor Icons (https://phosphoricons.com, Copyright 2023
+   Phosphor Icons), used under the MIT License; the notice is reproduced at
+   the head of the icon set in "js/app.js".

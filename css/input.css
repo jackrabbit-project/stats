@@ -200,12 +200,24 @@
 /* Site components. Plain rules (not @layer) so nothing is tree-shaken and
    they emit here — after the components layer, before utilities. */
 
-/* Inline SVG icons emitted by icon() in js/app.js and as static markup.
-   Sized 1em so they track the surrounding text; nudged onto the baseline. */
+/* Inline SVG icons emitted by icon() in js/app.js and as static markup:
+   Phosphor, regular weight. A shade over 1em, as on the AOK9 site, since
+   Phosphor's line is lighter; nudged onto the baseline. */
 .ic {
   display: inline-block;
-  vertical-align: -0.125em;
+  width: 1.15em;
+  height: 1.15em;
+  vertical-align: -0.2em;
   flex: none;
+}
+
+/* A section heading's icon takes the accent, at the heading's own size. */
+.card-title > .ic {
+  width: 1em;
+  height: 1em;
+  margin-right: 0.4em;
+  vertical-align: -0.12em;
+  color: rgb(var(--rust));
 }
 
 .card {
