@@ -174,6 +174,7 @@ const NAV_ICONS = {
   Overview: 'overview', Standings: 'ranking', Leaders: 'crown', Kennels: 'kennel',
   Titles: 'medal', Regions: 'map', Trials: 'chart', LCI: 'dog', Events: 'calendar',
   Bowen: 'calculator', Rulebooks: 'book', About: 'info', Browse: 'dog', Singles: 'timer',
+  'All-time': 'trophy',
 };
 const navIcon = (label) => (NAV_ICONS[label] ? icon(NAV_ICONS[label], 'mr-1') : '');
 

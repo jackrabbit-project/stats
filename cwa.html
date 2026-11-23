@@ -30,7 +30,7 @@
   <main id="main" class="flex-1 max-w-6xl mx-auto w-full px-4 py-6 space-y-8"></main>
   <footer id="site-footer" class="bg-asfa-navy text-white py-8"></footer>
 
-  <script src="js/app.js?v=20261122b"></script>
+  <script src="js/app.js?v=20261122c"></script>
   <script src="js/racing.js?v=20261122a"></script>
   <script>
     /* CWA in the Whippet racing section (beta). The whippets are CWA's
@@ -356,7 +356,7 @@
           ${calendarButton('https://www.continentalwhippetalliance.com/events', 'CWA events and results', 'cwa')}
         </div>
         <nav class="flex flex-wrap gap-2 no-print subtabs-whippet" aria-label="CWA pages" id="sub-tabs">
-          ${TABS.map(([id, label]) => `<a href="#${id}" class="tab" data-tab="${id}">${label}</a>`).join('')}
+          ${TABS.map(([id, label]) => `<a href="#${id}" class="tab" data-tab="${id}">${navIcon(label)}${label}</a>`).join('')}
         </nav>
 
         <section id="overview" class="space-y-8">
@@ -373,18 +373,18 @@
           </div>
           <section class="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div class="card">
-              <h2 class="card-title">Racing standings</h2>
+              <h2 class="card-title">${icon('ranking')}Racing standings</h2>
               <p class="text-xs text-asfa-text/60 mb-3">NARX points this year. ${chartNote(racing)}</p>
               ${standingsTable(racing, 'Points', false)}
               <a href="#standings" class="lnk text-sm inline-block mt-3">Owners and registered names →</a>
             </div>
             <div class="card">
-              <h2 class="card-title">High Combined</h2>
+              <h2 class="card-title">${icon('trophy')}High Combined</h2>
               <p class="text-xs text-asfa-text/60 mb-3">High Combined wins this year, racing and conformation placements together. ${chartNote(hc)}</p>
               ${standingsTable(hc, 'Wins', false)}
             </div>
             <div class="card">
-              <h2 class="card-title">Newest titles</h2>
+              <h2 class="card-title">${icon('medal')}Newest titles</h2>
               <p class="text-xs text-asfa-text/60 mb-3">The latest dated titles on CWA's title lists.</p>
               <div class="tbl-wrap"><table class="tbl"><tbody>${newest.map((row) => `
                 <tr><td class="whitespace-nowrap">${titleBadge(row)}</td>
