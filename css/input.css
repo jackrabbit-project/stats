@@ -212,7 +212,8 @@
 }
 
 /* A section heading's icon takes the accent, at the heading's own size. */
-.card-title > .ic {
+.card-title > .ic,
+.card-title > h2 > .ic {
   width: 1em;
   height: 1em;
   margin-right: 0.4em;
