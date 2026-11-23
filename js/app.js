@@ -951,6 +951,7 @@ const NAV_HUB = [
   ['aok9.html', 'AOK9 racing'],
   ['notra.html', 'NOTRA OB racing'],
   ['wra.html', 'Whippet racing'],
+  ['nlcc.html', 'NLCC'],
   ['akc.html', 'AKC stats'],
 ];
 
@@ -1028,14 +1029,14 @@ const SECTIONS = {
     disclaimer: 'akc.html#about', about: 'akc.html#about',
     menu: false,
   },
-  // NLCC lure coursing: the National Lure Coursing Club's own records, one
-  // page in the hub's nav and plain ink, not yet in any menu.
+  // NLCC lure coursing, in beta: the National Lure Coursing Club's own
+  // records, one page in plain ink. It is in the program menu and the hub's
+  // nav (before AKC stats) but has no card on the hub.
   nlcc: {
     home: 'nlcc.html', nav: NAV_HUB,
-    program: 'NLCC lure coursing',
+    program: 'NLCC lure coursing', beta: true,
     color: 'text-asfa-text', line: 'border-asfa-text',
     disclaimer: 'nlcc.html#about', about: 'nlcc.html#about',
-    menu: false,
   },
 };
 const PAGE_SECTIONS = {

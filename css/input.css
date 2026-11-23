@@ -635,6 +635,12 @@ ol.rb-l { list-style: decimal; }
    wordmark rather than push the search and theme buttons off the screen.
    Each line has its own width; below it the program name stays and the
    season goes. The line truncates as a last resort. */
+@media (max-width: 411.98px) {
+  .tagline-year-nlcc {
+    display: none;
+  }
+}
+
 @media (max-width: 401.98px) {
   .tagline-year-hub {
     display: none;
@@ -652,7 +658,6 @@ ol.rb-l { list-style: decimal; }
   .tagline-year-aok9,
   .tagline-year-notra,
   .tagline-year-akc,
-  .tagline-year-nlcc,
   .tagline-year-wra,
   .tagline-year-notra-whippets,
   .tagline-year-cwa {

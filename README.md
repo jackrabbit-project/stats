@@ -33,7 +33,7 @@ index.html            The hub: one search across every program, the program card
 asfa.html  events.html  browse.html  dog.html  leaders.html  kennels.html  titles.html
 regions.html  trials.html  lci.html  bowen.html  rulebooks.html  rulebook.html  about.html  404.html
 akc.html              AKC lure coursing by the numbers: the year's events and entries
-nlcc.html             NLCC lure coursing: the National Lure Coursing Club's records, not yet in any menu (?dog=<id> shows one hound, with its stat card)
+nlcc.html             NLCC lure coursing: the National Lure Coursing Club's records, in the program menu and the hub's nav but with no hub card (?dog=<id> shows one hound, with its stat card)
 lgra.html  aok9.html  notra.html  racing-dog.html   The racing sections (tabbed pages, one hound page)
 wra.html  notra-whippets.html  cwa.html   Whippet racing (beta): one section, each body's page with its own tabs
 software-list.html    A standalone survey of dog-sport software, deliberately unlinked
