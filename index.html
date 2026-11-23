@@ -21,7 +21,7 @@
   <link rel="preload" href="assets/fonts/fraunces-latin-var.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/plex-mono-400.woff2" as="font" type="font/woff2" crossorigin>
   <script src="js/theme.js?v=20260823"></script>
-  <link rel="stylesheet" href="css/app.css?v=20261122b">
+  <link rel="stylesheet" href="css/app.css?v=20261123a">
   <link rel="icon" href="assets/favicon.ico?v=4" sizes="any">
   <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png?v=4">
   <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png?v=4">
@@ -90,14 +90,23 @@
       };
       /* The cards are flex columns so the call to action sits on the bottom
          edge of each, whatever the body's height. */
-      const card = (href, title, sub, body, cta, program, note = '') => `
-        <a href="${href}" class="card program-card program-${program} flex flex-col">
-          ${photo(program)}
-          <h2 class="font-display text-3xl text-asfa-text">${title}</h2>
-          <p class="font-mono text-[11px] uppercase tracking-widest text-asfa-muted mt-0.5">${sub}${note}</p>
-          <div class="mt-4">${body}</div>
-          <p class="text-sm mt-auto pt-4 underline underline-offset-2 text-asfa-text/80">${cta} →</p>
-        </a>`;
+      /* Quick links under a card: a few of the program's own tabs, each with
+         its tab's icon. The card body stays one link to the program's home;
+         the quick links sit below it, outside it, since a link cannot hold
+         links. */
+      const quick = (title, links) => (links && links.length ? `
+          <nav class="quick-links" aria-label="${title} pages">${links.map(([href, label]) =>
+            `<a href="${href}">${navIcon(label)}${label}</a>`).join('')}</nav>` : '');
+      const card = (href, title, sub, body, cta, program, note = '', links = []) => `
+        <div class="card program-card program-${program} flex flex-col">
+          <a href="${href}" class="flex flex-col flex-1 group">
+            ${photo(program)}
+            <h2 class="font-display text-3xl text-asfa-text">${title}</h2>
+            <p class="font-mono text-[11px] uppercase tracking-widest text-asfa-muted mt-0.5">${sub}${note}</p>
+            <div class="mt-4">${body}</div>
+            <p class="text-sm mt-auto pt-4 underline underline-offset-2 text-asfa-text/80 group-hover:text-asfa-text">${cta} →</p>
+          </a>${quick(title, links)}
+        </div>`;
       /* LGRA and NOTRA, the two sighthound racing bodies, share one card
          under the photograph of hounds breaking from the boxes: straight
          racing above, oval racing below, each half a link to its own
@@ -108,17 +117,20 @@
          with its own title in its own colour, figures, leader and link.
          Nothing stretches: the single cards share one row, this card has
          a row of its own. */
+      const tabs = (page, labels) => labels.map((label) => [`${page}#${label.toLowerCase()}`, label]);
       const racingPair = (halves) => `
         <div class="card program-card program-lgra flex flex-col md:col-span-2">
           ${photo('lgra', 'md:max-h-56 md:object-cover')}
           <div class="grid md:grid-cols-2 gap-y-8 md:gap-x-8">
-            ${halves.map(([org, title, sub, body, cta, note]) => `
-            <a href="${org}.html" class="program-${org} flex flex-col group">
-              <h2 class="font-display text-3xl text-asfa-text">${title}</h2>
-              <p class="font-mono text-[11px] uppercase tracking-widest text-asfa-muted mt-0.5">${sub}${note || ''}</p>
-              <div class="mt-4">${body}</div>
-              <p class="text-sm mt-auto pt-4 underline underline-offset-2 text-asfa-text/80 group-hover:text-asfa-text">${cta} →</p>
-            </a>`).join('')}
+            ${halves.map(([org, title, sub, body, cta, note, links]) => `
+            <div class="program-${org} flex flex-col">
+              <a href="${org}.html" class="flex flex-col flex-1 group">
+                <h2 class="font-display text-3xl text-asfa-text">${title}</h2>
+                <p class="font-mono text-[11px] uppercase tracking-widest text-asfa-muted mt-0.5">${sub}${note || ''}</p>
+                <div class="mt-4">${body}</div>
+                <p class="text-sm mt-auto pt-4 underline underline-offset-2 text-asfa-text/80 group-hover:text-asfa-text">${cta} →</p>
+              </a>${quick(title, links)}
+            </div>`).join('')}
           </div>
         </div>`;
       const tiles = (pairs) => `
@@ -205,15 +217,17 @@
           <h2 class="font-display text-3xl text-asfa-text">Whippet racing${betaBadge}</h2>
           <p class="font-mono text-[11px] uppercase tracking-widest text-asfa-muted mt-0.5">${ORGS.wra.hubLine || 'Whippet racing records'}</p>
           <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-y-8 md:gap-x-8 mt-5">
-            ${[['wra', 'WRA', ORGS.wra.hubSub, wraBody, 'Standings, grades, titles'],
-              ['notra-whippets', 'NOTRA Whippets', ORGS['notra-whippets'].hubSub, notraWhippetsBody, 'Standings, grades, titles'],
-              ['cwa', 'CWA', 'Racing and High Combined', cwaBody, 'Standings, grades, titles']].map(([org, title, sub, body, cta]) => `
-            <a href="${org}.html" class="program-whippet flex flex-col group">
-              <h3 class="font-display text-2xl program-label">${title}</h3>
-              <p class="font-mono text-[11px] uppercase tracking-widest text-asfa-muted mt-0.5">${sub || ''}</p>
-              <div class="mt-4">${body}</div>
-              <p class="text-sm mt-auto pt-4 underline underline-offset-2 text-asfa-text/80 group-hover:text-asfa-text">${cta} →</p>
-            </a>`).join('')}
+            ${[['wra', 'WRA', ORGS.wra.hubSub, wraBody, 'Standings, grades, titles', tabs('wra.html', ['Standings', 'Browse', 'Kennels'])],
+              ['notra-whippets', 'NOTRA Whippets', ORGS['notra-whippets'].hubSub, notraWhippetsBody, 'Standings, grades, titles', tabs('notra-whippets.html', ['Standings', 'Browse', 'Kennels'])],
+              ['cwa', 'CWA', 'Racing and High Combined', cwaBody, 'Standings, grades, titles', tabs('cwa.html', ['Standings', 'Browse', 'Titles'])]].map(([org, title, sub, body, cta, links]) => `
+            <div class="program-whippet flex flex-col">
+              <a href="${org}.html" class="flex flex-col flex-1 group">
+                <h3 class="font-display text-2xl program-label">${title}</h3>
+                <p class="font-mono text-[11px] uppercase tracking-widest text-asfa-muted mt-0.5">${sub || ''}</p>
+                <div class="mt-4">${body}</div>
+                <p class="text-sm mt-auto pt-4 underline underline-offset-2 text-asfa-text/80 group-hover:text-asfa-text">${cta} →</p>
+              </a>${quick(title, links)}
+            </div>`).join('')}
           </div>
         </div>`;
 
@@ -229,11 +243,13 @@
       const notraNote = notra && isNew ? newNote('Now includes NOTRA oval racing') : '';
 
       programs.innerHTML =
-        card('asfa.html', 'ASFA lure coursing', `Top 20 standings${asfa ? ` · ${asfa.season}` : ''}`, asfaBody, 'Standings, titles, LCI', 'asfa')
-        + card('aok9.html', 'AOK9 racing', 'All-breed sprint racing', aok9Body, 'Standings by breed, WAVE, titles', 'aok9', singlesNote)
+        card('asfa.html', 'ASFA lure coursing', `Top 20 standings${asfa ? ` · ${asfa.season}` : ''}`, asfaBody, 'Standings, titles, LCI', 'asfa', '',
+          [['browse.html', 'Standings'], ['titles.html', 'Titles'], ['trials.html', 'Trials'], ['events.html', 'Events']])
+        + card('aok9.html', 'AOK9 racing', 'All-breed sprint racing', aok9Body, 'Standings by breed, WAVE, titles', 'aok9', singlesNote,
+          tabs('aok9.html', ['Standings', 'Browse', 'Kennels', 'Singles']))
         + racingPair([
-          ['lgra', 'LGRA racing', 'Straight racing · 200 yards', lgraBody, 'Standings by breed, WAVE, titles', ''],
-          ['notra', 'NOTRA OB racing', 'Oval racing · Other Breeds', notraBody, 'Standings by breed, WAVE, titles', notraNote]])
+          ['lgra', 'LGRA racing', 'Straight racing · 200 yards', lgraBody, 'Standings by breed, WAVE, titles', '', tabs('lgra.html', ['Standings', 'Browse', 'Kennels'])],
+          ['notra', 'NOTRA OB racing', 'Oval racing · Other Breeds', notraBody, 'Standings by breed, WAVE, titles', notraNote, tabs('notra.html', ['Standings', 'Browse', 'Kennels'])]])
         + whippetPair;
       // The one place figures roll up: see countUp in app.js.
       animateTiles(programs);

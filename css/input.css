@@ -267,6 +267,29 @@
 /* Inside a shared card, each half's label takes that half's own colour. */
 .program-card .program-label { color: rgb(var(--program)); }
 
+/* Quick links under a hub card: a few of the program's own tabs, in the
+   tabs' type and icons, the icon in the program's colour. */
+.quick-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 1rem;
+  margin-top: 1rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid rgb(var(--line));
+}
+.quick-links a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+  font-family: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: rgb(var(--ink-muted));
+}
+.quick-links a:hover { color: rgb(var(--ink)); text-decoration: underline; text-underline-offset: 3px; }
+.quick-links .ic { color: rgb(var(--program)); }
+
 .card-title {
   font-family: 'Fraunces', Georgia, serif;
   font-weight: 560;
