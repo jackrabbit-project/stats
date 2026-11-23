@@ -5,8 +5,8 @@
  "season": 2026,
  "standings_kind": "Mid-Year",
  "source_url": "https://www.continentalwhippetalliance.com/2026-toptens",
- "sha256": "c04cf0034fe216f7f9d90a619bce2ac59f1d7191f514120cfcac275bb3e93e66",
- "fetched": "2026-11-16",
+ "sha256": "2bb062a29c5d1715c32718d3f319aea5707873edfdea7298b883d5fe06a7759e",
+ "fetched": "2026-11-23",
  "standings": {
   "high_combined": {
    "label": "2026 High Combined Standings as of 11/30/2026 (56 Race Meets)",
@@ -28176,6 +28176,29 @@
      "pr_points": 0.0,
      "year_last_run": 2025,
      "never_raced": false,
+     "completed_meets": null
+    },
+    {
+     "cwa_no": "3854",
+     "call_name": "Numi",
+     "registered_name": "Zinka Ableaim Purely Peppermint",
+     "owner_raw": "Derr / Boyd",
+     "grade": "FTE",
+     "avg": 0.0,
+     "dpc_points": null,
+     "dpc_status": null,
+     "hc": null,
+     "arx_points": null,
+     "arx_status": null,
+     "narx": null,
+     "trp_meets": null,
+     "trp_status": null,
+     "dq": null,
+     "dq_date": null,
+     "meets": [],
+     "pr_points": 0.0,
+     "year_last_run": null,
+     "never_raced": true,
      "completed_meets": null
     },
     {

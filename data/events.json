@@ -2,7 +2,7 @@
   "seasons": [
     2026
   ],
-  "fetched": "2026-11-10",
+  "fetched": "2026-11-23",
   "source_url": "https://www.asfa.org/event/index.htm",
   "calendar_pdf_url": "https://www.asfa.org/event/ASFA%20Calendar%2011-04-2026%20Updates.pdf",
   "region_source": "ASFA Constitution & By-Laws, rev. 08/01/2026, Article V, Section 3",
@@ -125,7 +125,7 @@
   "stats": {
     "events": 125,
     "cancelled": 8,
-    "with_premium": 111
+    "with_premium": 112
   },
   "unmatched_initials": [
     "IWALE"
@@ -1852,7 +1852,7 @@
       "venue": "Golden",
       "state": "CO",
       "region": 3,
-      "premium_url": null,
+      "premium_url": "https://www.asfa.org/event/Premium/RMIWA%20Premium%20November%2021%20&%2023%20%202026%20DRaft%201C.pdf",
       "premium_inferred": false,
       "club": "Rocky Mountain Irish Wolfhound Association"
     },
@@ -1942,7 +1942,7 @@
       "venue": "Peyton",
       "state": "CO",
       "region": 3,
-      "premium_url": "https://www.asfa.org/event/Premium/CLCA%20ASFA%20December%202026%20Premium%20(2).pdf",
+      "premium_url": "https://www.asfa.org/event/Premium/CLCA%20ASFA%20December%202026%20Premium%20(4).pdf",
       "premium_inferred": false,
       "club": "Colorado Lure Coursing Association"
     },
