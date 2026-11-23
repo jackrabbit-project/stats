@@ -12267,16 +12267,77 @@
    "state": "IA",
    "event_number": "2026259720",
    "event_type": "LCTR/LCTS",
-   "scope": null,
+   "scope": "All-breed",
    "specialty": false,
-   "trial_entries": null,
-   "trial_competitors": null,
-   "test_entries": null,
-   "test_competitors": null,
-   "total_entries": null,
-   "results_posted": false,
+   "trial_entries": 26,
+   "trial_competitors": 25,
+   "test_entries": 6,
+   "test_competitors": 6,
+   "total_entries": 32,
+   "results_posted": true,
    "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026259720",
-   "trial_stakes": []
+   "trial_stakes": [
+    [
+     "Open",
+     "Borzoi",
+     5
+    ],
+    [
+     "Open",
+     "Ibizan Hound",
+     2
+    ],
+    [
+     "Open",
+     "Rhodesian Ridgeback",
+     1
+    ],
+    [
+     "Open",
+     "Saluki",
+     2
+    ],
+    [
+     "Open",
+     "Whippet",
+     5
+    ],
+    [
+     "Special",
+     "Basenji",
+     1
+    ],
+    [
+     "Special",
+     "Borzoi",
+     2
+    ],
+    [
+     "Special",
+     "Ibizan Hound",
+     4
+    ],
+    [
+     "Special",
+     "Rhodesian Ridgeback",
+     1
+    ],
+    [
+     "Special",
+     "Saluki",
+     1
+    ],
+    [
+     "Special",
+     "Whippet",
+     1
+    ],
+    [
+     "Veteran",
+     "Rhodesian Ridgeback",
+     0
+    ]
+   ]
   },
   {
    "date": "2026-11-07",
@@ -12286,16 +12347,72 @@
    "state": "NJ",
    "event_number": "2026283916",
    "event_type": "LCTR/LCTS",
-   "scope": null,
+   "scope": "All-breed",
    "specialty": false,
-   "trial_entries": null,
-   "trial_competitors": null,
-   "test_entries": null,
-   "test_competitors": null,
-   "total_entries": null,
-   "results_posted": false,
+   "trial_entries": 24,
+   "trial_competitors": 24,
+   "test_entries": 9,
+   "test_competitors": 9,
+   "total_entries": 33,
+   "results_posted": true,
    "url": "https://www.apps.akc.org/apps/events/search/index_results.cfm?action=plan&event_number=2026283916",
-   "trial_stakes": []
+   "trial_stakes": [
+    [
+     "Open",
+     "Borzoi",
+     2
+    ],
+    [
+     "Open",
+     "Greyhound",
+     1
+    ],
+    [
+     "Open",
+     "Rhodesian Ridgeback",
+     3
+    ],
+    [
+     "Open",
+     "Saluki",
+     3
+    ],
+    [
+     "Open",
+     "Whippet",
+     3
+    ],
+    [
+     "Open",
+     "Silken Windhound",
+     2
+    ],
+    [
+     "Special",
+     "Borzoi",
+     3
+    ],
+    [
+     "Special",
+     "Pharaoh Hound",
+     1
+    ],
+    [
+     "Special",
+     "Rhodesian Ridgeback",
+     1
+    ],
+    [
+     "Special",
+     "Whippet",
+     4
+    ],
+    [
+     "Veteran",
+     "Pharaoh Hound",
+     1
+    ]
+   ]
   },
   {
    "date": "2026-11-07",
