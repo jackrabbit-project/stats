@@ -1229,31 +1229,31 @@ function paintNav(navEl, current, nav, line = 'border-asfa-accent') {
 const FOOTER_LINKS = [
   ['ASFA lure coursing', [
     ['globe', 'asfa.org, the official site', 'https://www.asfa.org'],
-    ['link', 'Trial calendar (Events page)', 'events.html'],
+    ['calendar', 'Trial calendar (Events page)', 'events.html'],
     ['facebook', 'ASFA on Facebook', 'https://www.facebook.com/AmericanSighthoundFieldAssociation'],
     ['facebook', 'ASFA II group', 'https://www.facebook.com/groups/1046065245418921'],
   ]],
   ['LGRA straight racing', [
     ['globe', 'lgra.club, the official site', 'https://lgra.club'],
-    ['link', 'Race calendar', 'https://lgra.club/calendar'],
+    ['calendar', 'Race calendar', 'https://lgra.club/calendar'],
     ['facebook', 'LGRA / AOK9 / OB NOTRA group', 'https://www.facebook.com/groups/1265142357415139'],
   ]],
   ['AOK9 sprint racing', [
     ['globe', 'aok9racing.com, the official site', 'https://aok9racing.com'],
-    ['link', 'Race calendar', 'https://docs.google.com/spreadsheets/d/1P1QQaexZZYeHwUKWXOMNwAxPhrGBmwI8xT_y4D_u2us/edit?usp=sharing'],
+    ['calendar', 'Race calendar', 'https://docs.google.com/spreadsheets/d/1P1QQaexZZYeHwUKWXOMNwAxPhrGBmwI8xT_y4D_u2us/edit?usp=sharing'],
     ['facebook', 'R.A.C.E. & AOK9 Racing group', 'https://www.facebook.com/groups/772408469471681'],
   ]],
   ['NOTRA OB racing', [
     ['globe', 'notra.org, the official site', 'https://www.notra.org'],
-    ['link', 'Race dates', 'https://www.notra.org/RaceDates.html'],
+    ['calendar', 'Race dates', 'https://www.notra.org/RaceDates.html'],
     ['facebook', 'Notra OB Racing group', 'https://www.facebook.com/groups/notraob'],
   ]],
   ['Whippet racing', [
     ['globe', 'whippetracing.org, the WRA site', 'https://www.whippetracing.org'],
-    ['link', 'WRA race meets', 'https://www.whippetracing.org/MeetListDisplay.cfm'],
-    ['link', 'NOTRA race dates', 'https://www.notra.org/RaceDates.html'],
+    ['calendar', 'WRA race meets', 'https://www.whippetracing.org/MeetListDisplay.cfm'],
+    ['calendar', 'NOTRA race dates', 'https://www.notra.org/RaceDates.html'],
     ['globe', 'continentalwhippetalliance.com, the CWA site', 'https://www.continentalwhippetalliance.com'],
-    ['link', 'CWA events and results', 'https://www.continentalwhippetalliance.com/events'],
+    ['calendar', 'CWA events and results', 'https://www.continentalwhippetalliance.com/events'],
   ]],
 ];
 
@@ -1262,8 +1262,16 @@ function footerLinks() {
         <div class="grid sm:grid-cols-2 lg:grid-cols-5 gap-x-6 gap-y-4">${FOOTER_LINKS.map(([heading, links]) => `
           <div>
             <p class="font-mono text-[11px] uppercase tracking-widest text-asfa-wellink/60 mb-1.5">${heading}</p>
-            <ul class="space-y-1">${links.map(([glyph, label, href]) => `
-              <li><a href="${href}"${href.startsWith('http') ? ' target="_blank" rel="noopener noreferrer"' : ''} class="underline hover:text-asfa-wellink">${icon(glyph, 'mr-1.5')}${label}</a></li>`).join('')}
+            <ul class="space-y-1">${links.map(([glyph, label, href]) => {
+              // Calendars that open another site in a new tab say so with an arrow.
+              const away = href.startsWith('http');
+              // The arrow stays with the label's last word rather than wrapping alone.
+              const text = away && glyph === 'calendar'
+                ? label.replace(/(\S+)$/, (word) => `<span class="whitespace-nowrap">${word}${icon('external', 'ml-1')}</span><span class="sr-only"> (opens in a new tab)</span>`)
+                : label;
+              return `
+              <li><a href="${href}"${away ? ' target="_blank" rel="noopener noreferrer"' : ''} class="underline hover:text-asfa-wellink">${icon(glyph, 'mr-1.5')}${text}</a></li>`;
+            }).join('')}
             </ul>
           </div>`).join('')}
         </div>`;
